@@ -116,3 +116,14 @@ class DocController:
             print(e)
             return JsonResponse({'status': 'False', "message": "Internal Server Error"}, status=500)
             pass
+
+
+# Document List API by Waqar
+    @staticmethod
+    def GetDocumentList(request):
+        try:   
+            data = doctracking.objects.filter(due_date__lt=datetime.today()).values()
+            serializer = DocListSerializer(data, many=True)
+            return JsonResponse({'message':'Welcome to Home Page','Data List': serializer.data}, status=200)
+        except:
+            return JsonResponse({'message':'Sorry! No list found.'}, status=204)
