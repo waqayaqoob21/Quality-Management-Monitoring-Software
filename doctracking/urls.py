@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import path
 from django.urls import path, include
 
-from doctracking.views import AddDocAPIVIEW, docTracingListAPIVIEW, docPendingListAPIVIEW,GetDocumentListAPIVIEW
+from doctracking.views import AddDocAPIVIEW, docTracingListAPIVIEW, docPendingListAPIVIEW,GetDocumentListAPIVIEW, GetDocumentsPDFAPIVIEW
 from usermanagement.views import UserLoginApiView
 
 urlpatterns = [
@@ -26,5 +26,7 @@ urlpatterns = [
     path('docTracingList/', docTracingListAPIVIEW.as_view(), name='docTracingList'),
     path('docPendingList/', docPendingListAPIVIEW.as_view(), name='docPendingList'),
     path('documentList/', GetDocumentListAPIVIEW.as_view(), name='documentList'),
+    path('documentpdf/', GetDocumentsPDFAPIVIEW.as_view(), name='documentpdf'),
+
 
 ]

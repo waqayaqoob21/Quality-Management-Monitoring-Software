@@ -5,6 +5,8 @@ from dateutil.relativedelta import relativedelta
 from django.db import connection
 from django.http import JsonResponse
 from passlib.utils.compat import izip
+import textwrap
+from django.http import FileResponse
 
 from doctracking.serializer import DocListSerializer
 from usermanagement.models import doctracking
@@ -127,3 +129,36 @@ class DocController:
             return JsonResponse({'message':'Welcome to Home Page','Data List': serializer.data}, status=200)
         except:
             return JsonResponse({'message':'Sorry! No list found.'}, status=204)
+
+
+    @staticmethod
+    def GetDocumentPDFList(request):
+        wrapper = textwrap.TextWrapper(width=10)
+
+        pdf = FPDF('L', 'mm', 'Legal')
+        pdf.add_page()
+        pdf.set_font('courier', 'B', 16)
+        pdf.cell(40, 10, 'Final Report',0,1)
+        pdf.cell(40, 10, '',0,1)
+        pdf.set_font("Times", size=10)
+        line_height = pdf.font_size * 2.5
+        col_width = pdf.epw / 16
+        TABLE_COL_NAMES = ("Serial Number","Documnet Name", "Document Type", "Sender", "Receive Date", "Marked To", "Marked Date", "Due Date", "Task Date", "Status", "Sent To", "Sent Date", "Is Active","Base_64 File", "Attachment", "Remarks")
+        def render_table_header():
+            pdf.set_font(style="B")  # enabling bold text
+            for col_name in TABLE_COL_NAMES:
+                pdf.multi_cell(col_width, line_height, wrapper.fill(col_name), border=1, ln=3)
+            pdf.ln(line_height)
+            pdf.set_font(style="")  # disabling bold text
+       
+        render_table_header()
+
+        table_data = doctracking.objects.filter(due_date__lt=datetime.today()).values()
+        for row in table_data:
+            if pdf.will_page_break(line_height):
+                render_table_header()
+            for data in row:
+                pdf.multi_cell(col_width, line_height, data, border=1, ln=3)
+            pdf.ln(line_height)
+        pdf.output("report.pdf")
+        return FileResponse(open('report.pdf', 'rb'), as_attachment=True, content_type='application/pdf')

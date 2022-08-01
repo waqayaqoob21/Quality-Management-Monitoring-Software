@@ -38,3 +38,8 @@ class GetDocumentListAPIVIEW(APIView):
     def get(self, request):
         result = doc_obj.GetDocumentList(request)
         return result
+class GetDocumentsPDFAPIVIEW(APIView):
+    permission_classes = [AllowAny]
+    def get(self, request):
+        result = doc_obj.GetDocumentPDFList(request)
+        return result
