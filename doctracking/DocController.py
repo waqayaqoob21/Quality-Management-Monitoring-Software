@@ -133,29 +133,49 @@ class DocController:
 
     @staticmethod
     def GetDocumentPDFList(request):
+        TABLE_COL_NAMES = ("Document Name", "Document Type", "Sender", "Receive Date", "Marked To", "Marked Date", "Due Date", "Task Date", "Status", "Sent To", "Sent Date","Remarks")
+        data = doctracking.objects.filter(due_date__lt=datetime.today()).values('doc_name','doc_type','sender','receive_date','marked_to','marked_date','due_date','task_date','status','sent_to','sent_date','remarks')
+
         pdf = FPDF('L', 'mm', 'Legal')
         pdf.add_page()
-        pdf.set_font('courier', 'B', 16)
-        pdf.cell(40, 10, 'Final Report',0,1)
+        pdf.set_font('courier', 'B', 26)
+        pdf.cell(330, 10, 'Final Report', border=0,align='C', ln=2)
         pdf.cell(40, 10, '',0,1)
         pdf.set_font("Times", size=10)
         line_height = pdf.font_size * 2.5
-        col_width = pdf.epw / 13
-        TABLE_COL_NAMES = ("Documnet Name", "Document Type", "Sender", "Receive Date", "Marked To", "Marked Date", "Due Date", "Task Date", "Status", "Sent To", "Sent Date", "Active","Remarks")
+        col_width = pdf.epw / 12
+    
         def render_table_header():
             pdf.set_font(style="B") 
             for col_name in TABLE_COL_NAMES:
-                pdf.multi_cell(col_width, line_height, col_name, border=1, ln=3)
+                pdf.multi_cell(col_width, line_height, col_name, border=1,align='C', ln=3, max_line_height=pdf.font_size)
             pdf.ln(line_height)
             pdf.set_font(style="")
         render_table_header()
 
-        table_data = doctracking.objects.values('doc_name','doc_type','sender','receive_date','marked_to','marked_date','due_date','task_date','status','sent_to','sent_date','isActive','remarks')
-        for row_data in table_data:
+        lh_list = []
+        use_default_height = 0 
+        for row in data:
+            for datum in row:
+                word_list = datum.split()
+                number_of_words = len(word_list)
+                if number_of_words>2:
+                    use_default_height = 1
+                    new_line_height = pdf.font_size * (number_of_words/2)
+            if not use_default_height:
+                lh_list.append(line_height)
+            else:
+                lh_list.append(new_line_height)
+                use_default_height = 0
+
+        for j,row in enumerate(data):
+            line_height = lh_list[j] 
             if pdf.will_page_break(line_height):
                 render_table_header()
-            for key, data  in  row_data.items():
-                pdf.multi_cell(col_width, line_height, f"{data}", border=1, ln=3)
+            for key, datum in row.items():
+                line_height = lh_list[j] 
+                pdf.multi_cell(col_width, line_height, f"{datum}", border=1,align='C',ln=3, 
+                max_line_height=pdf.font_size)
             pdf.ln(line_height)
-        pdf.output("report.pdf")
+        pdf.output('report.pdf')
         return FileResponse(open('report.pdf', 'rb'), as_attachment=True, content_type='application/pdf')
