@@ -1,13 +1,12 @@
 import base64
 from datetime import datetime, timedelta
-
 from dateutil.relativedelta import relativedelta
 from django.db import connection
 from django.http import JsonResponse
 from passlib.utils.compat import izip
-import textwrap
 from django.http import FileResponse
-
+from django.http import HttpResponse
+import xlwt
 from doctracking.serializer import DocListSerializer
 from usermanagement.models import doctracking
 
@@ -179,3 +178,25 @@ class DocController:
             pdf.ln(line_height)
         pdf.output('report.pdf')
         return FileResponse(open('report.pdf', 'rb'), as_attachment=True, content_type='application/pdf')
+
+    @staticmethod
+    def GetDocumentExcelList(request):
+        response = HttpResponse(content_type = 'application/ms-excel')
+        response['Content-Disposition'] = 'attachment; filename="DocumentExcelSheet.xls"'
+        wb = xlwt.Workbook(encoding='utf-8')
+        ws = wb.add_sheet('ExcelSheet')
+        row_num = 0
+        font_style = xlwt.XFStyle()
+        font_style.font.bold = True
+        TABLE_COL_NAMES = ("Document Name", "Document Type", "Sender", "Receive Date", "Marked To", "Marked Date", "Due Date", "Task Date", "Status", "Sent To", "Sent Date","Remarks")
+        for col_num in range(len(TABLE_COL_NAMES)):
+            ws.write(row_num,col_num,TABLE_COL_NAMES[col_num], font_style)
+        font_style = xlwt.XFStyle()
+
+        data = doctracking.objects.filter(due_date__lt=datetime.today()).values_list('doc_name','doc_type','sender','receive_date','marked_to','marked_date','due_date','task_date','status','sent_to','sent_date','remarks')
+        for row in data:
+            row_num += 1
+            for col_num in range(len(row)):
+                ws.write(row_num,col_num,str(row[col_num]), font_style)
+        wb.save(response)
+        return response

@@ -31,15 +31,25 @@ class docPendingListAPIVIEW(APIView):
     def get(self, request):
         result = doc_obj.GetPendingDocumentList(request)
         return result
-# Waqar
+
+# Waqar==============================
 class GetDocumentListAPIVIEW(APIView):
     permission_classes = [AllowAny]
 
     def get(self, request):
         result = doc_obj.GetDocumentList(request)
         return result
+
+
 class GetDocumentsPDFAPIVIEW(APIView):
     permission_classes = [AllowAny]
     def get(self, request):
         result = doc_obj.GetDocumentPDFList(request)
+        return result
+
+
+class GetDocumentsExcelAPIVIEW(APIView):
+    permission_classes = [AllowAny]
+    def get(self, request):
+        result = doc_obj.GetDocumentExcelList(request)
         return result
