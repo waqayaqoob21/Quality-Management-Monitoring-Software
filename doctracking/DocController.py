@@ -6,6 +6,7 @@ from django.http import JsonResponse
 from passlib.utils.compat import izip
 from django.http import FileResponse
 from django.http import HttpResponse
+from fpdf import FPDF
 import xlwt
 from doctracking.serializer import DocListSerializer
 from usermanagement.models import doctracking
@@ -129,11 +130,12 @@ class DocController:
         except:
             return JsonResponse({'message':'Sorry! No list found.'}, status=204)
 
+    # API for PDF generator with table and Text_wraping
 
     @staticmethod
     def GetDocumentPDFList(request):
         TABLE_COL_NAMES = ("Document Name", "Document Type", "Sender", "Receive Date", "Marked To", "Marked Date", "Due Date", "Task Date", "Status", "Sent To", "Sent Date","Remarks")
-        data = doctracking.objects.filter(due_date__lt=datetime.today()).values('doc_name','doc_type','sender','receive_date','marked_to','marked_date','due_date','task_date','status','sent_to','sent_date','remarks')
+        data = doctracking.objects.filter(due_date__lt=datetime.today()).order_by('-id').values_list('doc_name','doc_type','sender','receive_date','marked_to','marked_date','due_date','task_date','status','sent_to','sent_date','remarks')
 
         pdf = FPDF('L', 'mm', 'Legal')
         pdf.add_page()
@@ -156,7 +158,8 @@ class DocController:
         use_default_height = 0 
         for row in data:
             for datum in row:
-                word_list = datum.split()
+                dd = str(datum)
+                word_list = dd.split()
                 number_of_words = len(word_list)
                 if number_of_words>2:
                     use_default_height = 1
@@ -171,9 +174,9 @@ class DocController:
             line_height = lh_list[j] 
             if pdf.will_page_break(line_height):
                 render_table_header()
-            for key, datum in row.items():
+            for col_num in range(len(row)):
                 line_height = lh_list[j] 
-                pdf.multi_cell(col_width, line_height, f"{datum}", border=1,align='C',ln=3, 
+                pdf.multi_cell(col_width, line_height, f"{row[col_num]}", border=1,align='C',ln=3, 
                 max_line_height=pdf.font_size)
             pdf.ln(line_height)
         pdf.output('report.pdf')
