@@ -11,7 +11,8 @@ import xlwt
 from doctracking.serializer import DocListSerializer
 from usermanagement.models import doctracking
 
-
+from django.core.mail import EmailMessage
+from django.conf import settings
 class DocController:
 
     @staticmethod
@@ -203,3 +204,86 @@ class DocController:
                 work_sheet.write(row_num,col_num,str(row[col_num]), font_style)
         work_book.save(response)
         return response
+
+# API for PDF and EXCEL Sheet generator with table and Text_wraping
+    @staticmethod
+    def GetDocumentEmailList(request):
+        TABLE_COL_NAMES = ("Document Name", "Document Type", "Sender", "Receive Date", "Marked To", "Marked Date", "Due Date", "Task Date", "Status", "Sent To", "Sent Date","Remarks")
+        data = doctracking.objects.filter(due_date__lt=datetime.today()).order_by('-id').values_list('doc_name','doc_type','sender','receive_date','marked_to','marked_date','due_date','task_date','status','sent_to','sent_date','remarks')
+
+        # -----------------Excel Sheet Code Starts----------------------
+        wb = xlwt.Workbook(encoding='utf-8')
+        ws = wb.add_sheet('ExcelSheet')
+        row_num = 0
+        font_style = xlwt.XFStyle()
+        font_style.font.bold = True
+        for col_num in range(len(TABLE_COL_NAMES)):
+            ws.write(row_num,col_num,TABLE_COL_NAMES[col_num], font_style)
+        font_style = xlwt.XFStyle()
+        # -----------------Excel Sheet Code Ends--------------------
+
+        # -----------------PDF File Code Starts----------------------
+        pdf = FPDF('L', 'mm', 'Legal')
+        pdf.add_page()
+        pdf.set_font('courier', 'B', 26)
+        pdf.cell(330, 10, 'Final Report', border=0,align='C', ln=2)
+        pdf.cell(40, 10, '',0,1)
+        pdf.set_font("Times", size=10)
+        line_height = pdf.font_size * 2.5
+        col_width = pdf.epw / 12
+        def render_table_header():
+            pdf.set_font(style="B") 
+            for col_name in TABLE_COL_NAMES:
+                pdf.multi_cell(col_width, line_height, col_name, border=1,align='C', ln=3, max_line_height=pdf.font_size)
+            pdf.ln(line_height)
+            pdf.set_font(style="")
+        render_table_header()
+        lh_list = []
+        use_default_height = 0 
+        for row in data:
+            for datum in row:
+                dd = str(datum)
+                word_list = dd.split()
+                number_of_words = len(word_list)
+                if number_of_words>2:
+                    use_default_height = 1
+                    new_line_height = pdf.font_size * (number_of_words/2)
+            if not use_default_height:
+                lh_list.append(line_height)
+            else:
+                lh_list.append(new_line_height)
+                use_default_height = 0
+        # -----------------PDF File Code Ends----------------------
+       
+        # -----------------File Generating Code Starts----------------------
+        for j,row in enumerate(data):
+            row_num += 1
+            line_height = lh_list[j] 
+            if pdf.will_page_break(line_height):
+                render_table_header()
+            for col_num in range(len(row)):
+                ws.write(row_num,col_num,f"{row[col_num]}", font_style)
+                line_height = lh_list[j] 
+                pdf.multi_cell(col_width, line_height, f"{row[col_num]}", border=1,align='C',ln=3, 
+                max_line_height=pdf.font_size)
+            pdf.ln(line_height)
+        pdf.output('pdf_report.pdf', 'F')
+        wb.save('excel_report.xls')
+        pdf_file_report =  FileResponse(open('pdf_report.pdf', 'rb'), as_attachment=True, content_type='application/pdf')
+        excel_file_report =  FileResponse(open('excel_report.xls', 'rb'), as_attachment=True, content_type='application/ms-excel')
+        send_action_email(excel_file_report.getvalue(), pdf_file_report.getvalue())
+        return JsonResponse({'Success':'Email has been Sent Successfully'}, status=200)
+
+def send_action_email(excel_file_report,pdf_file_report):
+        try:
+            body = f'Hi Sir! Please find attached files below:'
+            subject = 'Record Files'
+            from_email= settings.EMAIL_HOST_USER
+            to_email = ['waqaryaqoob6@gmail.com']
+            email = EmailMessage(subject, body, from_email, to_email)
+            email.content_subtype='html'
+            email.attach('report.xls', excel_file_report, 'application/ms-excel')
+            email.attach('report.pdf', pdf_file_report, 'applicaiton/pdf')
+            email.send()
+        except:
+            return JsonResponse({'Error':'Email Could not Send'}, status=400)

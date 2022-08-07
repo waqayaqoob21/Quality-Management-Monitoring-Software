@@ -28,6 +28,8 @@ urlpatterns = [
     path('documentList/', GetDocumentListAPIVIEW.as_view(), name='documentList'),
     path('documentpdf/', GetDocumentsPDFAPIVIEW.as_view(), name='documentpdf'),
     path('documentexcel/', GetDocumentsExcelAPIVIEW.as_view(), name='documentexcel'),
+    path('documentemail/', GetDocumentsEmailAPIVIEW.as_view(), name='documentemail'),
+
 
 
 

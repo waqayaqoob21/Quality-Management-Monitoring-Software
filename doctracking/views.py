@@ -53,3 +53,9 @@ class GetDocumentsExcelAPIVIEW(APIView):
     def get(self, request):
         result = doc_obj.GetDocumentExcelList(request)
         return result
+
+class GetDocumentsEmailAPIVIEW(APIView):
+    permission_classes = [AllowAny]
+    def get(self, request):
+        result = doc_obj.GetDocumentEmailList(request)
+        return result
