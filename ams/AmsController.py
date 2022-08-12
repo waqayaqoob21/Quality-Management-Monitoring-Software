@@ -9,19 +9,13 @@ class AmsController:
     def AddTask(request):
         taskModel = TaskSummary()
         try:
-            taskModel.task = request['task']
+            taskModel.task_name = request['task_name']
             taskModel.assigned_by = request['assigned_by']
-            taskModel.assigned_date_by = request['assigned_date_by']
-            taskModel.target_date_by = request['target_date_by']
+            taskModel.assigned_date = request['assigned_date']
             taskModel.assigned_to = request['assigned_to']
-            taskModel.assigned_date_to = request['assigned_date_to']
-            taskModel.target_date_to = request['target_date_to']
+            taskModel.target_date = request['target_date']
             taskModel.status = request['status']
-            taskModel.attachment = request['attachment']
-            if request['isActive'] == '1':
-                taskModel.isActive = 'True'
-            else:
-                taskModel.isActive = 'False'
+            taskModel.remarks = request['remarks']
             taskModel.save()
             return JsonResponse({'Success': "Task Created Successfully"},status=200)
         except Exception as e:
@@ -31,21 +25,14 @@ class AmsController:
     @staticmethod
     def EditTask(request): 
         try:
-            pk = 1
-            task = TaskSummary.objects.get(id=pk)
-            task.task = request['task']
+            task = TaskSummary.objects.get(id=request['id'])
+            task.task_name = request['task_name']
             task.assigned_by = request['assigned_by']
-            task.assigned_date_by = request['assigned_date_by']
-            task.target_date_by = request['target_date_by']
+            task.assigned_date = request['assigned_date']
             task.assigned_to = request['assigned_to']
-            task.assigned_date_to = request['assigned_date_to']
-            task.target_date_to = request['target_date_to']
+            task.target_date = request['target_date']
             task.status = request['status']
-            task.attachment = request['attachment']
-            if request['isActive'] == '1':
-                task.isActive = 'True'
-            else:
-                task.isActive = 'False'
+            task.remarks = request['remarks']
             task.save()
             return JsonResponse({'Success':'Task Updated Successfully!'}, status=201)
         except:

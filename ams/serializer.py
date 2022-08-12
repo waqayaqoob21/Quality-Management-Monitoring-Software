@@ -5,6 +5,6 @@ from .models import *
 class TaskSummarySerialzer(serializers.ModelSerializer):
     class Meta:
         model = TaskSummary
-        fields = ['id','task', 'assigned_by','assigned_date_by','target_date_by',
-                'assigned_to','assigned_date_to','target_date_to','attachment','isActive']
+        fields = ['id','task_name', 'assigned_by','assigned_date',
+                'assigned_to','target_date','status','remarks']
         
