@@ -22,4 +22,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     url(r'^usermanagement/', include('usermanagement.urls')),
     url(r'^doctracking/', include('doctracking.urls')),
+    url(r'^ams/', include('ams.urls')),
+
 ]

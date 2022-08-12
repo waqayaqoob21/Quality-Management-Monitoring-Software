@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'corsheaders',
     'usermanagement',
-    'doctracking'
+    'doctracking',
+    'ams'
 ]
 
 MIDDLEWARE = [
