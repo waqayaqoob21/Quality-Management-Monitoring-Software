@@ -29,3 +29,15 @@ class GetTaskListAPIVIEW(APIView):
     def get(self, request):
         result = task_obj.GetTaskList(request.data)
         return result
+class GetDocumentPDFAPIVIEW(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        result = task_obj.GetDocumentPDFList(request.data)
+        return result
+class GetDocumentExcelAPIVIEW(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        result = task_obj.GetDocumentExcelList(request.data)
+        return result
