@@ -7,6 +7,13 @@ from datetime import datetime, timedelta
 from django.http import FileResponse
 from django.http import HttpResponse
 
+import fitz #pip install PyMuPDF Pillow
+import io
+from PIL import Image
+from pytesseract import pytesseract # install tesseract-ocr-w64-setup-v5.2.0.20220712.exe (64 bit) resp. 
+                                    # from https://github.com/UB-Mannheim/tesseract/wiki 
+                                    # pip install pytesseract
+
 class AmsController:
 
     @staticmethod
@@ -51,12 +58,12 @@ class AmsController:
         except:
             return JsonResponse({'message':'Sorry! No Task found.'}, status=200)
 
-       # API for PDF generator with table and Text_wraping
+    # API for PDF generator with table and Text_wraping
 
     @staticmethod
     def GetDocumentPDFList(request):
         TABLE_COL_NAMES = ("Task Name", "Assigned By", "Assigned Date", "Assigned To", "Target Date", "Status","Remarks")
-        data = TaskSummary.objects.filter(due_date__lt=datetime.today()).order_by('-id').values_list('task_name','assigned_by','assigned_date','assigned_to','target_date','status','remarks')
+        data = TaskSummary.objects.all().order_by('-id').values_list('task_name','assigned_by','assigned_date','assigned_to','target_date','status','remarks')
 
         pdf = FPDF('L', 'mm', 'Legal')
         pdf.add_page()
@@ -124,3 +131,94 @@ class AmsController:
                 work_sheet.write(row_num,col_num,str(row[col_num]), font_style)
         work_book.save(response)
         return response
+    
+    @staticmethod
+    def OcrPDF(request):
+        ocrModel = OcrDataModel()
+
+        # filename = "report.pdf"
+        attachment = request['uploaded_file']
+        # open file
+        with fitz.open(attachment) as my_pdf_file:
+            # loop through every page
+            for page_number in range(1, len(my_pdf_file) + 1):
+                # acess individual page
+                page = my_pdf_file[page_number - 1]
+                # accesses all images of the page
+                images = page.get_images(full=False)
+                # check if images are there
+                if images:
+                    print(f"There are {len(images)} image/s on page number {page_number}[+]")
+                else:
+                    print(f"There are No image/s on page number {page_number}[!]")
+                # loop through all images present in the page
+                for image_number, image in enumerate(page.get_images(), start=1):
+                    # access image xerf
+                    xref_value = image[0]
+                    # extract image information
+                    base_image = my_pdf_file.extract_image(xref_value)
+                    # access the image itself
+                    image_bytes = base_image["image"]
+                    # get image extension
+                    ext = base_image["ext"]
+                    # load image
+                    image = Image.open(io.BytesIO(image_bytes))
+                    # save image locally
+                    image.save(open(f"Page{page_number}Image{image_number}.{ext}", "wb"))
+
+        path_to_tesseract = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
+        image_path = r"Page1Image1.png"
+        img = Image.open(image_path)
+        pytesseract.tesseract_cmd = path_to_tesseract
+        text = pytesseract.image_to_string(img)
+        data= text.split("\n")
+        final_list = [y for x in data for y in x.split(':')]
+        for i in range(len(final_list)):
+            ocrModel.organization = "NATIONAL DEVELOPMENT COMPLEX (NDC)"
+            ocrModel.senior_directorate = "Waqar Afzal"
+            ocrModel.site = "13A"
+            if final_list[i]=="Test Report No":
+                ocrModel.test_report_no = final_list[i+1]
+                print(ocrModel.test_report_no )
+            # # ocrModel.test_report_no = final_list[i+1] if final_list[i]=="Test Report No" else "Null"
+
+            # ocrModel.job_card_no = final_list[i+1] if final_list[i]=="Job Card No" else "Null"
+            if final_list[i]=="Job Card No":
+                ocrModel.job_card_no = final_list[i+1]
+
+            ocrModel.test_report_date = "2022-09-03"
+
+            # ocrModel.product_name = final_list[i+1] if final_list[i]=="Product Name" else "Null"
+            if final_list[i]=="Product Name":
+                ocrModel.product_name = final_list[i+1]
+
+            # ocrModel.id_no = final_list[i+1] if final_list[i]=="ID No" else " "
+            if final_list[i]=="ID No":
+                ocrModel.id_no = final_list[i+1]
+
+            # ocrModel.lot_no_lot_size = final_list[i+1] if final_list[i]=="Lot No & Lot Size" else "Null"
+            if final_list[i]=="Lot No & Lot Size":
+                ocrModel.lot_no_lot_size = final_list[i+1]
+
+            ocrModel.test_name = "Random Vibration"
+            ocrModel.test_type = "General"
+
+            # ocrModel.qualification_standard = final_list[i+1] if final_list[i]=="Qualification Standard" else "Null"
+            if final_list[i]=="Qualification Standard":
+                ocrModel.qualification_standard = final_list[i+1]
+            ocrModel.test_specifications ="1400 Hz 0016 g%/Hz"
+            ocrModel.results ="Qualified"
+            ocrModel.remarks = "Not given"
+        ocrModel.save()
+        return JsonResponse({'Success': 'OCR has been completed Successfully!'}, status=200)
+
+    @staticmethod
+    def getOcrData(request):
+        try:
+            data = OcrDataModel.objects.all().order_by('id')
+            serializer = OcrDataSerializer(data, many=True)
+            return JsonResponse({'Success': 'OCR has been completed Successfully!', 'data': serializer.data},
+                                status=200)
+        except:
+            return JsonResponse({'Success': 'OCR data', 'data': serializer.data},
+                                status=200)
