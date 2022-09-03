@@ -180,30 +180,23 @@ class AmsController:
             if final_list[i]=="Test Report No":
                 ocrModel.test_report_no = final_list[i+1]
                 print(ocrModel.test_report_no )
-            # # ocrModel.test_report_no = final_list[i+1] if final_list[i]=="Test Report No" else "Null"
 
-            # ocrModel.job_card_no = final_list[i+1] if final_list[i]=="Job Card No" else "Null"
             if final_list[i]=="Job Card No":
                 ocrModel.job_card_no = final_list[i+1]
 
             ocrModel.test_report_date = "2022-09-03"
-
-            # ocrModel.product_name = final_list[i+1] if final_list[i]=="Product Name" else "Null"
             if final_list[i]=="Product Name":
                 ocrModel.product_name = final_list[i+1]
 
-            # ocrModel.id_no = final_list[i+1] if final_list[i]=="ID No" else " "
             if final_list[i]=="ID No":
                 ocrModel.id_no = final_list[i+1]
 
-            # ocrModel.lot_no_lot_size = final_list[i+1] if final_list[i]=="Lot No & Lot Size" else "Null"
             if final_list[i]=="Lot No & Lot Size":
                 ocrModel.lot_no_lot_size = final_list[i+1]
 
             ocrModel.test_name = "Random Vibration"
             ocrModel.test_type = "General"
 
-            # ocrModel.qualification_standard = final_list[i+1] if final_list[i]=="Qualification Standard" else "Null"
             if final_list[i]=="Qualification Standard":
                 ocrModel.qualification_standard = final_list[i+1]
             ocrModel.test_specifications ="1400 Hz 0016 g%/Hz"
