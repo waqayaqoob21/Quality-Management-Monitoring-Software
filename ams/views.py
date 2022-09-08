@@ -45,11 +45,11 @@ class GetDocumentExcelAPIVIEW(APIView):
 class OcrPdfAPIVIEW(APIView):
     permission_classes = [AllowAny]
     def post(self, request):
-        result = std_obj.OcrPDF(request.data)
+        result = task_obj.OcrPDF(request.data)
         return result
 
 class GetOcrDataAPIVIEW(APIView):
     permission_classes = [AllowAny]
     def get(self, request):
-        result = std_obj.getOcrData(request.data)
+        result = task_obj.getOcrData(request.data)
         return result
