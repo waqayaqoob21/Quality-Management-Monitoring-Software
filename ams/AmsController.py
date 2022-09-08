@@ -1,3 +1,4 @@
+from importlib import import_module
 from django.http import JsonResponse
 from ams.serializer import *
 from ams.models import *
@@ -10,6 +11,7 @@ from django.core.files.storage import FileSystemStorage
 import re
 import fitz #pip install PyMuPDF Pillow
 import io
+import os
 from PIL import Image
 from pytesseract import pytesseract # install tesseract-ocr-w64-setup-v5.2.0.20220712.exe (64 bit) resp. 
                                     # from https://github.com/UB-Mannheim/tesseract/wiki 
@@ -133,23 +135,6 @@ class AmsController:
         work_book.save(response)
         return response
     
-   @staticmethod
-    def GetStudentList(request):
-        try:
-            data = StdModel.objects.all().order_by('id')
-            serializer = StdSerializer(data, many=True)
-            return JsonResponse(serializer.data, safe=False, status=201)
-        except:
-            return JsonResponse({'message': 'Sorry! No student found.'}, status=400)
-
-    @staticmethod
-    def DeleteStudent(request, pk):
-        try:
-            student = StdModel.objects.get(id=pk)
-            student.delete()
-            return JsonResponse({'message': 'Student has been deleted'}, status=201)
-        except:
-            return JsonResponse({'message': 'Sorry! No student found.'}, status=400)
 
     @staticmethod
     def OcrPDF(request):
