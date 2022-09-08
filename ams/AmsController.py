@@ -150,7 +150,7 @@ class AmsController:
             return JsonResponse({'message': 'Student has been deleted'}, status=201)
         except:
             return JsonResponse({'message': 'Sorry! No student found.'}, status=400)
-            
+
     @staticmethod
     def OcrPDF(request):
         ocrModel = OcrDataModel()
@@ -199,17 +199,17 @@ class AmsController:
             if 'Group & Site' in final_list[i]:
                 data = []
                 data = final_list[i+1].split(" D")
-                print(data[0])
                 ocrModel.site = data[0]
 
-            if final_list[i]=="Test Report No":
+            if 'Test Report No' in final_list[i]:
                 ocrModel.test_report_no = final_list[i+1]
 
-            if final_list[i]=="Job Card No":
-                ocrModel.job_card_no = final_list[i+1]
+            if 'Job Card No' in final_list[i]:
+                data = []
+                data = final_list[i + 1].split(" D")
+                ocrModel.job_card_no = data[0]
 
-
-            if final_list[i] == "Test Date":
+            if 'Test Date' in final_list[i]:
                 date = final_list[i+1]
                 match_date = re.search(r'\d{2}-\d{2}-\d{2}', date)
                 test_date = datetime.strptime(match_date.group(), '%d-%m-%y').date()
@@ -224,8 +224,10 @@ class AmsController:
                 id_data = final_list[i+1]
                 ocrModel.id_no = id_data
 
-            if final_list[i]=="Lot No & Lot Size":
-                ocrModel.lot_no_lot_size = final_list[i+1]
+            if 'Lot No & Lot Size' in final_list[i]:
+                data = []
+                data = final_list[i + 1].split(" R")
+                ocrModel.lot_no_lot_size = data[0]
 
             if 'Test Name' in final_list[i]:
                 data = []
