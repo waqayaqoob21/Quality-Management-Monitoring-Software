@@ -6,7 +6,8 @@ import xlwt
 from datetime import datetime, timedelta
 from django.http import FileResponse
 from django.http import HttpResponse
-
+from django.core.files.storage import FileSystemStorage
+import re
 import fitz #pip install PyMuPDF Pillow
 import io
 from PIL import Image
@@ -132,14 +133,32 @@ class AmsController:
         work_book.save(response)
         return response
     
+   @staticmethod
+    def GetStudentList(request):
+        try:
+            data = StdModel.objects.all().order_by('id')
+            serializer = StdSerializer(data, many=True)
+            return JsonResponse(serializer.data, safe=False, status=201)
+        except:
+            return JsonResponse({'message': 'Sorry! No student found.'}, status=400)
+
+    @staticmethod
+    def DeleteStudent(request, pk):
+        try:
+            student = StdModel.objects.get(id=pk)
+            student.delete()
+            return JsonResponse({'message': 'Student has been deleted'}, status=201)
+        except:
+            return JsonResponse({'message': 'Sorry! No student found.'}, status=400)
+            
     @staticmethod
     def OcrPDF(request):
         ocrModel = OcrDataModel()
-
-        # filename = "report.pdf"
+        fs = FileSystemStorage()
         attachment = request['uploaded_file']
-        # open file
-        with fitz.open(attachment) as my_pdf_file:
+        target_path = 'C:/Users/viCky/DjnagoAngularAPIs/djangoangularapi/files/'
+        fs.save(target_path + attachment.name, attachment)
+        with fitz.open(target_path + attachment.name) as my_pdf_file:
             # loop through every page
             for page_number in range(1, len(my_pdf_file) + 1):
                 # acess individual page
@@ -164,10 +183,10 @@ class AmsController:
                     # load image
                     image = Image.open(io.BytesIO(image_bytes))
                     # save image locally
-                    image.save(open(f"Page{page_number}Image{image_number}.{ext}", "wb"))
-
+                    image.save(open(f"files/Page{page_number}Image{image_number}.{ext}", "wb"))
+        os.remove("files/" + attachment.name)
         path_to_tesseract = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
-        image_path = r"Page1Image1.png"
+        image_path = r"files/Page1Image1.png"
         img = Image.open(image_path)
         pytesseract.tesseract_cmd = path_to_tesseract
         text = pytesseract.image_to_string(img)
@@ -176,33 +195,68 @@ class AmsController:
         for i in range(len(final_list)):
             ocrModel.organization = "NATIONAL DEVELOPMENT COMPLEX (NDC)"
             ocrModel.senior_directorate = "Waqar Afzal"
-            ocrModel.site = "13A"
+
+            if 'Group & Site' in final_list[i]:
+                data = []
+                data = final_list[i+1].split(" D")
+                print(data[0])
+                ocrModel.site = data[0]
+
             if final_list[i]=="Test Report No":
                 ocrModel.test_report_no = final_list[i+1]
-                print(ocrModel.test_report_no )
 
             if final_list[i]=="Job Card No":
                 ocrModel.job_card_no = final_list[i+1]
 
-            ocrModel.test_report_date = "2022-09-03"
-            if final_list[i]=="Product Name":
-                ocrModel.product_name = final_list[i+1]
 
-            if final_list[i]=="ID No":
-                ocrModel.id_no = final_list[i+1]
+            if final_list[i] == "Test Date":
+                date = final_list[i+1]
+                match_date = re.search(r'\d{2}-\d{2}-\d{2}', date)
+                test_date = datetime.strptime(match_date.group(), '%d-%m-%y').date()
+                ocrModel.test_report_date = test_date
+
+            if 'Product Name' in final_list[i]:
+                    data =[]
+                    data = final_list[i+1].split(" ")
+                    ocrModel.product_name = data[1]
+
+            if 'ID No' in final_list[i]:
+                id_data = final_list[i+1]
+                ocrModel.id_no = id_data
 
             if final_list[i]=="Lot No & Lot Size":
                 ocrModel.lot_no_lot_size = final_list[i+1]
 
-            ocrModel.test_name = "Random Vibration"
-            ocrModel.test_type = "General"
+            if 'Test Name' in final_list[i]:
+                data = []
+                data = final_list[i].split("e ")
+                ocrModel.test_name = data[1]
 
-            if final_list[i]=="Qualification Standard":
-                ocrModel.qualification_standard = final_list[i+1]
-            ocrModel.test_specifications ="1400 Hz 0016 g%/Hz"
-            ocrModel.results ="Qualified"
-            ocrModel.remarks = "Not given"
+            if 'Test Type' in final_list[i]:
+                data = []
+                data = final_list[i].split("e ")
+                ocrModel.test_type = data[1]
+
+            if 'Qualification Standard' in final_list[i]:
+                data = []
+                data = final_list[i].split("|")
+                ocrModel.qualification_standard = data[1]
+
+            if 'Test Specifications' in final_list[i]:
+                data = final_list[i].partition('Specifications')[2]
+                ocrModel.test_specifications = data
+
+            if 'Results' in final_list[i]:
+                data = final_list[i].partition(' e ')[2]
+                ocrModel.results = data
+
+            if 'Remarks' in final_list[i]:
+                if final_list[i+1]=="":
+                    ocrModel.remarks = "No remarks are given."
+                else:
+                    ocrModel.remarks = final_list[i+1]
         ocrModel.save()
+
         return JsonResponse({'Success': 'OCR has been completed Successfully!'}, status=200)
 
     @staticmethod
