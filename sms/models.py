@@ -1,0 +1,55 @@
+from os import system
+from django.db import models
+
+# Create your models here.
+class ProductionSystemStatus(models.Model):
+    system = models.CharField(max_length=300)
+    organization = models.CharField(max_length=300)
+    set_id = models.CharField(max_length=300)
+    blt_status = models.CharField(max_length=300)
+    pre_hil_status = models.CharField(max_length=300)
+    vibaration_status = models.CharField(max_length=300)
+    post_hil_status = models.CharField(max_length=300)
+    fgt_status = models.CharField(max_length=300)
+    final_integration_st = models.CharField(max_length=300)
+    bhd_status = models.CharField(max_length=300)
+    fqm_status = models.CharField(max_length=300)
+    qm_certification_st  = models.CharField(max_length=300)
+    attachment = models.TextField()
+    remarks = models.TextField()
+    Created_at = models.DateTimeField(auto_now_add=True)
+
+
+class FlightSystemStatus(models.Model):
+    system = models.CharField(max_length=300)
+    organization = models.CharField(max_length=300)
+    set_id = models.CharField(max_length=300)
+    blt_status = models.CharField(max_length=300)
+    pre_hil_status = models.CharField(max_length=300)
+    vibaration_status = models.CharField(max_length=300)
+    post_hil_status = models.CharField(max_length=300)
+    fgt_status = models.CharField(max_length=300)
+    final_integration_st = models.CharField(max_length=300)
+    bhd_status = models.CharField(max_length=500)
+    fqm_status = models.CharField(max_length=500)
+    qm_certification_st  = models.CharField(max_length=300)
+    attachment = models.TextField()
+    remarks = models.TextField()
+    Created_at = models.DateTimeField(auto_now_add=True)
+
+class RelifingSystemStatus(models.Model):
+    system = models.CharField(max_length=300)
+    organization = models.CharField(max_length=300)
+    set_id = models.CharField(max_length=300)
+    blt_status = models.CharField(max_length=300)
+    pre_hil_status = models.CharField(max_length=300)
+    vibaration_status = models.CharField(max_length=300)
+    post_hil_status = models.CharField(max_length=300)
+    fgt_status = models.CharField(max_length=300)
+    final_integration_st = models.CharField(max_length=300)
+    bhd_status = models.CharField(max_length=400)
+    fqm_status = models.CharField(max_length=400)
+    qm_certification_st  = models.CharField(max_length=300)
+    attachment = models.TextField()
+    remarks = models.TextField()
+    Created_at = models.DateTimeField(auto_now_add=True)

@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'corsheaders',
     'usermanagement',
     'doctracking',
-    'ams'
+    'ams',
+    'sms'
 ]
 
 MIDDLEWARE = [
@@ -85,7 +86,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'nescdb',
         'USER': 'postgres',
-        'PASSWORD': '1234',
+        'PASSWORD': 'abc123**',
         'HOST': '127.0.0.1',
         #'HOST': '192.168.11.225',
         'PORT': '5432',

@@ -23,5 +23,7 @@ urlpatterns = [
     url(r'^usermanagement/', include('usermanagement.urls')),
     url(r'^doctracking/', include('doctracking.urls')),
     url(r'^ams/', include('ams.urls')),
+    url(r'^sms/', include('sms.urls')),
+
 
 ]
