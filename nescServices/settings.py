@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'usermanagement',
     'doctracking',
     'ams',
-    'sms'
+    'sms',
+    'mpm',
 ]
 
 MIDDLEWARE = [

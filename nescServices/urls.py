@@ -24,6 +24,8 @@ urlpatterns = [
     url(r'^doctracking/', include('doctracking.urls')),
     url(r'^ams/', include('ams.urls')),
     url(r'^sms/', include('sms.urls')),
+    url(r'^mpm/', include('mpm.urls')),
+
 
 
 ]
