@@ -65,7 +65,7 @@ class QmsController:
         try:
             data = QmsAudit.objects.all().order_by('id')
             serializer = QmsAuditSerializer(data, many=True)
-            return JsonResponse(serializer.data, safe=False, status=200)
+            return JsonResponse({'data':serializer.data}, safe=False, status=200)
         except:
             return JsonResponse({'message': 'Sorry! No QMS Audit found.'}, status=500)
 
@@ -129,7 +129,7 @@ class QmsController:
         try:
             data = CespAudit.objects.all().order_by('id')
             serializer = CespAuditSerializer(data, many=True)
-            return JsonResponse(serializer.data, safe=False, status=200)
+            return JsonResponse({'data':serializer.data}, safe=False, status=200)
         except:
             return JsonResponse({'message': 'Sorry! No Audit found.'}, status=500)
 
