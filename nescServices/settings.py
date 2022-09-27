@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'ams',
     'sms',
     'mpm',
+    'qms'
 ]
 
 MIDDLEWARE = [
