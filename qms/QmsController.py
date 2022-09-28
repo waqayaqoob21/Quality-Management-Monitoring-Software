@@ -78,6 +78,89 @@ class QmsController:
         except:
             return JsonResponse({'message': 'Sorry! No QMS Audit found.'}, status=500)
 
+    @staticmethod
+    def GetQmsAuditPDFList(request):
+        TABLE_COL_NAMES = (
+            "Audit ID", "Organization", "Site", "Certification Status", "Previous Standard", "Certification Validity",
+            "Audit Type", "Planned Date","Audit Start Date", "Audit Close Date", "Audit Status", "Standard", "Remarks")
+        data = QmsAudit.objects.all().values_list('audit_id', 'Organization', 'site', 'certification_status',
+                                                  'previous_standard', 'certification_validity', 'audit_type',
+                                                  'planned_date',
+                                                  'audit_start_date', 'audit_close_date', 'audit_status', 'standard',
+                                                  'remarks')
+
+        pdf = FPDF('L', 'mm', 'Legal')
+        pdf.add_page()
+        pdf.set_font('courier', 'B', 26)
+        pdf.cell(330, 10, 'Final Report', border=0, align='C', ln=2)
+        pdf.cell(40, 10, '', 0, 1)
+        pdf.set_font("Times", size=10)
+        line_height = pdf.font_size * 2.5
+        col_width = pdf.epw / 13
+
+        def render_table_header():
+            pdf.set_font(style="B")
+            for col_name in TABLE_COL_NAMES:
+                pdf.multi_cell(col_width, line_height, col_name, border=1, align='C', ln=3,
+                               max_line_height=pdf.font_size)
+            pdf.ln(line_height)
+            pdf.set_font(style="")
+
+        render_table_header()
+
+        lh_list = []
+        use_default_height = 0
+        for row in data:
+            for datum in row:
+                dd = str(datum)
+                word_list = dd.split()
+                number_of_words = len(word_list)
+                if number_of_words > 2:
+                    use_default_height = 1
+                    new_line_height = pdf.font_size*2 * (number_of_words / 2)
+            if not use_default_height:
+                lh_list.append(line_height)
+            else:
+                lh_list.append(new_line_height)
+                use_default_height = 0
+
+        for j, row in enumerate(data):
+            line_height = lh_list[j]
+            if pdf.will_page_break(line_height):
+                render_table_header()
+            for col_num in range(len(row)):
+                line_height = lh_list[j]
+                pdf.multi_cell(col_width, line_height, f"{row[col_num]}", border=1, align='C', ln=3,
+                               max_line_height=pdf.font_size)
+            pdf.ln(line_height)
+        pdf.output('report.pdf')
+        return FileResponse(open('report.pdf', 'rb'), as_attachment=True, content_type='application/pdf')
+
+    @staticmethod
+    def GetQmsAuditExcelList(request):
+        response = HttpResponse(content_type='application/ms-excel')
+        response['Content-Disposition'] = 'attachment; filename="DocumentExcelSheet.xls"'
+        work_book = xlwt.Workbook(encoding='utf-8')
+        work_sheet = work_book.add_sheet('ExcelSheet')
+        row_num = 0
+        font_style = xlwt.XFStyle()
+        font_style.font.bold = True
+        TABLE_COL_NAMES = (
+        "Audit ID", "Organization", "Site", "Certification Status", "Previous Standard", "Certification Validity", "Audit Type","Planned Date",
+        "Audit Start Date","Audit Close Date","Audit Status","Standard","Remarks")
+        for col_num in range(len(TABLE_COL_NAMES)):
+            work_sheet.write(row_num, col_num, TABLE_COL_NAMES[col_num], font_style)
+        font_style = xlwt.XFStyle()
+
+        data = QmsAudit.objects.all().values_list('audit_id','Organization','site','certification_status',
+                                                                                  'previous_standard','certification_validity','audit_type','planned_date',
+                                                                                  'audit_start_date','audit_close_date','audit_status','standard','remarks')
+        for row in data:
+            row_num += 1
+            for col_num in range(len(row)):
+                work_sheet.write(row_num, col_num, str(row[col_num]), font_style)
+        work_book.save(response)
+        return response
 
 #=========================CeSP Audit==================================== 
     @staticmethod
@@ -141,3 +224,89 @@ class QmsController:
             return JsonResponse({'message': 'CeSP Audit has been deleted'}, status=200)
         except:
             return JsonResponse({'message': 'Sorry! No Audit found.'}, status=500)
+
+    @staticmethod
+    def GetCespAuditPDFList(request):
+        TABLE_COL_NAMES = (
+            "Audit ID", "Organization", "Site", "Certification Status", "Previous Standard", "Certification Validity",
+            "Audit Type", "Planned Date","Audit Start Date", "Audit Close Date", "Audit Status", "Standard", "Remarks")
+        data = CespAudit.objects.all().values_list('audit_id', 'Organization', 'site', 'certification_status',
+                                                  'previous_standard', 'certification_validity', 'audit_type',
+                                                  'planned_date','audit_start_date', 'audit_close_date', 'audit_status',
+                                                  'standard','remarks')
+
+        pdf = FPDF('L', 'mm', 'Legal')
+        pdf.add_page()
+        pdf.set_font('courier', 'B', 26)
+        pdf.cell(330, 10, 'Final Report', border=0, align='C', ln=2)
+        pdf.cell(40, 10, '', 0, 1)
+        pdf.set_font("Times", size=10)
+        line_height = pdf.font_size * 2.5
+        col_width = pdf.epw / 13
+
+        def render_table_header():
+            pdf.set_font(style="B")
+            for col_name in TABLE_COL_NAMES:
+                pdf.multi_cell(col_width, line_height, col_name, border=1, align='C', ln=3,
+                               max_line_height=pdf.font_size)
+            pdf.ln(line_height)
+            pdf.set_font(style="")
+
+        render_table_header()
+
+        lh_list = []
+        use_default_height = 0
+        for row in data:
+            for datum in row:
+                dd = str(datum)
+                word_list = dd.split()
+                number_of_words = len(word_list)
+                if number_of_words > 2:
+                    use_default_height = 1
+                    new_line_height = pdf.font_size* 2 * (number_of_words / 2)
+            if not use_default_height:
+                lh_list.append(line_height)
+            else:
+                lh_list.append(new_line_height)
+                use_default_height = 0
+
+        for j, row in enumerate(data):
+            line_height = lh_list[j]
+            if pdf.will_page_break(line_height):
+                render_table_header()
+            for col_num in range(len(row)):
+                line_height = lh_list[j]
+                pdf.multi_cell(col_width, line_height, f"{row[col_num]}", border=1, align='C', ln=3,
+                               max_line_height=pdf.font_size)
+            pdf.ln(line_height)
+        pdf.output('report.pdf')
+        return FileResponse(open('report.pdf', 'rb'), as_attachment=True, content_type='application/pdf')
+
+    @staticmethod
+    def GetCespAuditExcelList(request):
+        response = HttpResponse(content_type='application/ms-excel')
+        response['Content-Disposition'] = 'attachment; filename="DocumentExcelSheet.xls"'
+        work_book = xlwt.Workbook(encoding='utf-8')
+        work_sheet = work_book.add_sheet('ExcelSheet')
+        row_num = 0
+        font_style = xlwt.XFStyle()
+        font_style.font.bold = True
+        TABLE_COL_NAMES = (
+            "Audit ID", "Organization", "Site", "Certification Status", "Previous Standard", "Certification Validity",
+            "Audit Type", "Planned Date", "Audit Start Date", "Audit Close Date", "Audit Status", "Standard", "Remarks")
+        for col_num in range(len(TABLE_COL_NAMES)):
+            work_sheet.write(row_num, col_num, TABLE_COL_NAMES[col_num], font_style)
+        font_style = xlwt.XFStyle()
+
+
+        data = CespAudit.objects.all().values_list('audit_id', 'Organization', 'site', 'certification_status',
+                                                  'previous_standard', 'certification_validity', 'audit_type',
+                                                  'planned_date', 'audit_start_date', 'audit_close_date',
+                                                  'audit_status',
+                                                  'standard', 'remarks')
+        for row in data:
+            row_num += 1
+            for col_num in range(len(row)):
+                work_sheet.write(row_num, col_num, str(row[col_num]), font_style)
+        work_book.save(response)
+        return response

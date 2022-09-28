@@ -25,6 +25,19 @@ class GetQmsAuditListAPIVIEW(APIView):
         result = qms_obj.GetQmsAuditList(request.data)
         return result
 
+class GetQmsAuditPDFAPIVIEW(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        result = qms_obj.GetQmsAuditPDFList(request.data)
+        return result
+
+class GetQmsAuditExcelAPIVIEW(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        result = qms_obj.GetQmsAuditExcelList(request.data)
+        return result
 # ======================CeSP Audit===============
 
 class AddCespAuditAPIVIEW(APIView):
@@ -44,4 +57,18 @@ class GetCespAuditListAPIVIEW(APIView):
 
     def get(self, request):
         result = qms_obj.GetCespAuditList(request.data)
+        return result
+
+class GetCespAuditPDFAPIVIEW(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        result = qms_obj.GetCespAuditPDFList(request.data)
+        return result
+
+class GetCespAuditExcelAPIVIEW(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        result = qms_obj.GetCespAuditExcelList(request.data)
         return result
