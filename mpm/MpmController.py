@@ -144,77 +144,62 @@ class MpmController:
 
     @staticmethod
     def GetActiveMotorPDFList(request):
-        TABLE_COL_NAMES = ("System", "Motor ID", "Qualification of raw materials of insulation, lining and propellant","Qualification of raw materials of insulation, lining and propellant remarks",
-         "Acceptance of casting","Acceptance of casting remarks", "Sandblasting", "Sandblasting remarks","Insulation","Insulation remarks","UT and RT of Insulated Case","UT and RT of Insulated Case remarks",
-         "Acceptance of Silver Material","Acceptance of Silver Material remarks","Silver Application","Silver Application remarks","Formulation tailoring of liner and propellant","Formulation tailoring of liner and propellant remarks",
-         "Conditioning of raw materials","Conditioning of raw materials remarks","Lining","Lining remarks","Casting","Casting remarks","Curing","Curing remarks","Liner Mechanical Properties","Liner Mechanical Properties remarks",
-         "Propellant Mechanical Properties","Propellant Mechanical Properties remarks","Interface bond strentgh","Interface bond strentgh remarks","Propellant burn rate","Propellant burn rate remarks","Trimming of propellant grain",
-         "Trimming of propellant grain remarks","Trimming of propellant grain remarks","Mass of liner, Insulation, propellant and SRM","Mass of liner, Insulation, propellant and SRM remarks","UT, endoscopy and RT of grain",
-         "UT, endoscopy and RT of grain remarks","NCR Status","NCR Status remarks", "Overall Status","Overall remarks")
-        data = ActiveMotors.objects.all().order_by('-id').values_list('system','motor_id','qualification_insulation_lining_propellant_rm','qualification_insulation_lining_propellant_rm_remarks',
-                                                                        'acceptance_casting','acceptance_casting_remarks','sandblasting','sandblasting_remarks','insulation', 'insulation_remarks','ut_rt_insulated_case',
-                                                                        'ut_rt_insulated_case_remarks','acceptance_silver_material','acceptance_silver_material_remarks','silver_application','silver_application_remarks',
-                                                                        'formulation_tailoring_liner_propellant', 'formulation_tailoring_liner_propellant_remarks','conditioning_raw_materials',
-                                                                        'conditioning_raw_materials_remarks', 'lining', 'lining_remarks','casting','casting_remarks',
-                                                                        'curing','curing_remarks','liner_mechanical_properties','liner_mechanical_properties_remarks',
-                                                                        'propellant_mechanical_properties','propellant_mechanical_properties_remarks','interface_bond_strength',
-                                                                        'interface_bond_strength_remarks','propellant_burn_rate','propellant_burn_rate_remarks','trimming_Propellant_grain',
-                                                                        'trimming_Propellant_grain_remarks','mass_liner_insulation_propellant_srm','mass_liner_insulation_propellant_srm_remarks',
-                                                                        'ut_endoscopy_rt_grain','ut_endoscopy_rt_grain_remarks','ncr_status','ncr_status_remarks','overall_status','overall_remarks')
+        TABLE_COL_NAMES = ("Acceptance of casting and raw materials","Sandblasting"," Insulation application and UT/RT status",
+         "Silver Acceptance and application","Formulation tailoring",
+         "Conditioning of raw materials","Lining ","Casting UT, endoscopy and RT ", "Liner Mechanical Properties",
+         "Propellant Mechanical Properties","Interface bond strentgh","Propellant burn rate",
+         "Mass of liner, Insulation, propellant and SRM","Remarks")
+        data = ActiveMotors.objects.all().order_by('-id').values_list('acceptance_casting','sandblasting','ut_rt_insulated_case','acceptance_silver_material',
+                                                                        'formulation_tailoring_liner_propellant','conditioning_raw_materials','lining',
+                                                                        'ut_endoscopy_rt_grain','liner_mechanical_properties','propellant_mechanical_properties',
+                                                                        'interface_bond_strength','propellant_burn_rate','mass_liner_insulation_propellant_srm','overall_remarks')
 
         pdf = FPDF('L', 'mm', 'Legal')
         pdf.add_page()
-        pdf.page_no()
         pdf.set_font('courier', 'B', 26)
-        pdf.cell(330, 10, 'Final Report', border=0,align='C', ln=2)
-        pdf.cell(40, 10, '',0,1)
-        pdf.set_font("Times", size=10)
-        line_height = pdf.font_size * 14
-        col_width = pdf.epw / 24
-        count_col = 0;
-        def column_headings():
-            pdf.set_font(style="B") 
+        pdf.cell(330, 10, 'Final Report', border=0, align='C', ln=2)
+        pdf.cell(40, 10, '', 0, 1)
+        pdf.set_font("arial", size=10)
+        line_height = pdf.font_size * 3.5
+        col_width = pdf.epw / 14
+
+        def render_table_header():
+            pdf.set_font(style="B")
             for col_name in TABLE_COL_NAMES:
-                pdf.multi_cell(col_width, line_height,col_name, border=1,align='L', ln=3, max_line_height=pdf.font_size)
+                pdf.multi_cell(col_width, line_height, col_name, border=1, align='C', ln=3,
+                               max_line_height=pdf.font_size)
             pdf.ln(line_height)
             pdf.set_font(style="")
-        column_headings()
+
+        render_table_header()
+
         lh_list = []
-        use_default_height = 0 
+        use_default_height = 0
         for row in data:
             for datum in row:
                 dd = str(datum)
                 word_list = dd.split()
                 number_of_words = len(word_list)
-                if number_of_words>2:
-                    use_default_height = 1
-                    new_line_height = pdf.font_size * (number_of_words/2)
+                if number_of_words > 2:
+                    use_default_height = 2
+                    new_line_height = pdf.font_size * (number_of_words / 2)
             if not use_default_height:
                 lh_list.append(line_height)
             else:
                 lh_list.append(new_line_height)
                 use_default_height = 0
-        # count = 0;
-        for j,row in enumerate(data):
-            line_height = lh_list[j] 
+
+        for j, row in enumerate(data):
+            line_height = lh_list[j]
             if pdf.will_page_break(line_height):
-                    print(line_height)
-                    column_headings()
+                render_table_header()
             for col_num in range(len(row)):
-            
-                # line_height = lh_list[j] 
-                if col_num<=22:
-                    pdf.multi_cell(col_width, line_height, f"{row[col_num]}", border=1,align='L',ln=3, max_line_height=pdf.font_size)
-                if col_num == 23:
-                    # print("Second",col_num)
-                    pdf.add_page()
-                if col_num >=23:
-                    # print("third",col_num)
-                    pdf.multi_cell(col_width, line_height, f"{row[col_num]}", border=1,align='L',ln=3, max_line_height=pdf.font_size)
-                # count_col += 1;
+                pdf.multi_cell(col_width, line_height, f"{row[col_num]}", border=1, align='C', ln=3,
+                               max_line_height=pdf.font_size)
             pdf.ln(line_height)
         pdf.output('report.pdf')
         return FileResponse(open('report.pdf', 'rb'), as_attachment=True, content_type='application/pdf')
+
 
     @staticmethod
     def GetActiveMotorExcelList(request):
@@ -253,3 +238,5 @@ class MpmController:
                 work_sheet.write(row_num,col_num,str(row[col_num]), font_style)
         work_book.save(response)
         return response
+
+    
