@@ -159,8 +159,8 @@ class MpmController:
         pdf.set_font('courier', 'B', 26)
         pdf.cell(330, 10, 'Final Report', border=0, align='C', ln=2)
         pdf.cell(40, 10, '', 0, 1)
-        pdf.set_font("arial", size=10)
-        line_height = pdf.font_size * 3.5
+        pdf.set_font("arial", size=11)
+        line_height = pdf.font_size * 5
         col_width = pdf.epw / 14
 
         def render_table_header():
@@ -239,4 +239,4 @@ class MpmController:
         work_book.save(response)
         return response
 
-    
+   
