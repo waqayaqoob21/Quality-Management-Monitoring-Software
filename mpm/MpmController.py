@@ -1,4 +1,7 @@
+from audioop import add
 from importlib import import_module
+from tkinter.ttk import Style
+from turtle import left
 from django.http import JsonResponse
 from ams.serializer import *
 from ams.models import *
@@ -11,6 +14,7 @@ from django.core.files.storage import FileSystemStorage
 
 from mpm.models import ActiveMotors
 from mpm.serializer import ActiveMotorSerializer
+import pandas as pd
 
 
 class MpmController:
@@ -149,29 +153,20 @@ class MpmController:
          "Conditioning of raw materials","Lining ","Casting UT, endoscopy and RT ", "Liner Mechanical Properties",
          "Propellant Mechanical Properties","Interface bond strentgh","Propellant burn rate",
          "Mass of liner, Insulation, propellant and SRM","Remarks")
-        data = ActiveMotors.objects.all().order_by('-id').values_list('acceptance_casting','sandblasting','ut_rt_insulated_case','acceptance_silver_material',
+        
+        datum = list(ActiveMotors.objects.values_list('acceptance_casting','sandblasting','ut_rt_insulated_case','acceptance_silver_material',
                                                                         'formulation_tailoring_liner_propellant','conditioning_raw_materials','lining',
                                                                         'ut_endoscopy_rt_grain','liner_mechanical_properties','propellant_mechanical_properties',
-                                                                        'interface_bond_strength','propellant_burn_rate','mass_liner_insulation_propellant_srm','overall_remarks')
-
+                                                                        'interface_bond_strength','propellant_burn_rate','mass_liner_insulation_propellant_srm','overall_remarks'))
+        data = list(zip(TABLE_COL_NAMES,*datum))
         pdf = FPDF('L', 'mm', 'Legal')
         pdf.add_page()
         pdf.set_font('courier', 'B', 26)
-        pdf.cell(330, 10, 'Final Report', border=0, align='C', ln=2)
+        pdf.cell(330, 10, 'Active Motor Final Report', border=0, align='C', ln=2)
         pdf.cell(40, 10, '', 0, 1)
         pdf.set_font("arial", size=11)
-        line_height = pdf.font_size * 5
-        col_width = pdf.epw / 14
-
-        def render_table_header():
-            pdf.set_font(style="B")
-            for col_name in TABLE_COL_NAMES:
-                pdf.multi_cell(col_width, line_height, col_name, border=1, align='C', ln=3,
-                               max_line_height=pdf.font_size)
-            pdf.ln(line_height)
-            pdf.set_font(style="")
-
-        render_table_header()
+        line_height = pdf.font_size * 4
+        col_width = pdf.epw / 5
 
         lh_list = []
         use_default_height = 0
@@ -182,20 +177,25 @@ class MpmController:
                 number_of_words = len(word_list)
                 if number_of_words > 2:
                     use_default_height = 2
-                    new_line_height = pdf.font_size * (number_of_words / 2)
+                    new_line_height = pdf.font_size  * (number_of_words / 2)
             if not use_default_height:
                 lh_list.append(line_height)
             else:
                 lh_list.append(new_line_height)
                 use_default_height = 0
-
+        
         for j, row in enumerate(data):
             line_height = lh_list[j]
-            if pdf.will_page_break(line_height):
-                render_table_header()
             for col_num in range(len(row)):
-                pdf.multi_cell(col_width, line_height, f"{row[col_num]}", border=1, align='C', ln=3,
-                               max_line_height=pdf.font_size)
+                if pdf.get_x() <300:
+                    pdf.multi_cell(col_width, line_height, f"{row[col_num]}", border=1, align='L', ln=3,
+                               max_line_height=pdf.font_size)  
+                              
+                # pdf.set_auto_page_break(True,margin=0)
+                # if pdf.get_x() >299:
+                #     pdf.multi_cell(col_width, line_height, f"{row[col_num]}", border=1, align='L', ln=3,
+                #                max_line_height=pdf.font_size)
+            pdf.set_auto_page_break(True,margin=0)
             pdf.ln(line_height)
         pdf.output('report.pdf')
         return FileResponse(open('report.pdf', 'rb'), as_attachment=True, content_type='application/pdf')
@@ -239,4 +239,4 @@ class MpmController:
         work_book.save(response)
         return response
 
-   
+    
