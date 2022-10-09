@@ -171,18 +171,18 @@ class MpmController:
         pdf = FPDF("L", "mm", "Legal")
 
         def page_title():
-            pdf.set_font('Arial', 'BU', 24)
+            pdf.set_font('Helvetica', 'BU', 24)
             today = date.today()
             pdf.cell(330, 10, 'Weekly Status of SRMs at CPS (NDC) dt ' + f"{today}", border=0, align='C', ln=2)
             # title = ActiveMotors.objects.values_list('system',flat=True)
             # pdf.cell(40, 10, 'A. ' + f"{title}", 0, 1)
-            pdf.set_font('Arial', 'BU', 15)
+            pdf.set_font('Helvetica', 'BU', 15)
             pdf.cell(40, 10, 'A. SRMs for Ballistic System (SWS)', 0, 1)
-            pdf.set_font("Arial", size=11)
+            pdf.set_font("Helvetica", size=11)
 
         def footer():
                 pdf.set_y(-15)
-                pdf.set_font('Arial', 'B', 10)
+                pdf.set_font('Helvetica', 'B', 10)
                 pdf.cell(330, 10, 'Page ' + str(pdf.page_no()) + ' of ' + '{nb}', 0, 0, 'R')
 
         c_h = pdf.font_size * 2.7
