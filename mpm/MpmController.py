@@ -1,13 +1,13 @@
 from audioop import add
 from importlib import import_module
 from tkinter.ttk import Style
-from turtle import left
+from turtle import left, title
 from django.http import JsonResponse
 from ams.serializer import *
 from ams.models import *
 from fpdf import FPDF
 import xlwt
-from datetime import datetime, timedelta
+from datetime import date
 from django.http import FileResponse
 from django.http import HttpResponse
 from django.core.files.storage import FileSystemStorage
@@ -16,7 +16,7 @@ from mpm.models import ActiveMotors
 from mpm.serializer import ActiveMotorSerializer
 import pandas as pd
 
-
+from collections import Counter
 class MpmController:
     @staticmethod
     def AddActiveMotor(request):
@@ -148,57 +148,106 @@ class MpmController:
 
     @staticmethod
     def GetActiveMotorPDFList(request):
-        TABLE_COL_NAMES = ("Acceptance of casting and raw materials","Sandblasting"," Insulation application and UT/RT status",
-         "Silver Acceptance and application","Formulation tailoring",
-         "Conditioning of raw materials","Lining ","Casting UT, endoscopy and RT ", "Liner Mechanical Properties",
-         "Propellant Mechanical Properties","Interface bond strentgh","Propellant burn rate",
-         "Mass of liner, Insulation, propellant and SRM","Remarks")
-        
-        datum = list(ActiveMotors.objects.values_list('acceptance_casting','sandblasting','ut_rt_insulated_case','acceptance_silver_material',
-                                                                        'formulation_tailoring_liner_propellant','conditioning_raw_materials','lining',
-                                                                        'ut_endoscopy_rt_grain','liner_mechanical_properties','propellant_mechanical_properties',
-                                                                        'interface_bond_strength','propellant_burn_rate','mass_liner_insulation_propellant_srm','overall_remarks'))
-        data = list(zip(TABLE_COL_NAMES,*datum))
-        pdf = FPDF('L', 'mm', 'Legal')
-        pdf.add_page()
-        pdf.set_font('courier', 'B', 26)
-        pdf.cell(330, 10, 'Active Motor Final Report', border=0, align='C', ln=2)
-        pdf.cell(40, 10, '', 0, 1)
-        pdf.set_font("arial", size=11)
-        line_height = pdf.font_size * 4
-        col_width = pdf.epw / 5
+        TABLE_COL_NAMES = ("Process/SRM",
+        "Acceptance of casting and raw materials", "Sandblasting", " Insulation application and UT/RT status",
+        "Silver Acceptance and application", "Formulation tailoring",
+        "Conditioning of raw materials", "Lining ", "Casting UT, endoscopy and RT ", "Liner Mechanical Properties",
+        "Propellant Mechanical Properties", "Interface bond strentgh", "Propellant burn rate",
+        "Mass of liner, Insulation, propellant and SRM", "Remarks")
+        datum = list(ActiveMotors.objects.order_by('id').values_list('motor_id','acceptance_casting', 'sandblasting',
+                                                                     'ut_rt_insulated_case',
+                                                                     'acceptance_silver_material',
+                                                                     'formulation_tailoring_liner_propellant',
+                                                                     'conditioning_raw_materials', 'lining',
+                                                                     'ut_endoscopy_rt_grain',
+                                                                     'liner_mechanical_properties',
+                                                                     'propellant_mechanical_properties',
+                                                                     'interface_bond_strength', 'propellant_burn_rate',
+                                                                     'mass_liner_insulation_propellant_srm',
+                                                                     'overall_remarks'))
 
+
+        table = list(zip(TABLE_COL_NAMES,*datum))
+        pdf = FPDF("L", "mm", "Legal")
+
+        def page_title():
+            pdf.set_font('Arial', 'BU', 24)
+            today = date.today()
+            pdf.cell(330, 10, 'Weekly Status of SRMs at CPS (NDC) dt ' + f"{today}", border=0, align='C', ln=2)
+            # title = ActiveMotors.objects.values_list('system',flat=True)
+            # pdf.cell(40, 10, 'A. ' + f"{title}", 0, 1)
+            pdf.set_font('Arial', 'BU', 15)
+            pdf.cell(40, 10, 'A. SRMs for Ballistic System (SWS)', 0, 1)
+            pdf.set_font("Arial", size=11)
+
+        def footer():
+                pdf.set_y(-15)
+                pdf.set_font('Arial', 'B', 10)
+                pdf.cell(330, 10, 'Page ' + str(pdf.page_no()) + ' of ' + '{nb}', 0, 0, 'R')
+
+        c_h = pdf.font_size * 2.7
+        c_w = pdf.epw / 5
         lh_list = []
         use_default_height = 0
-        for row in data:
-            for datum in row:
-                dd = str(datum)
-                word_list = dd.split()
-                number_of_words = len(word_list)
-                if number_of_words > 2:
-                    use_default_height = 2
-                    new_line_height = pdf.font_size  * (number_of_words / 2)
-            if not use_default_height:
-                lh_list.append(line_height)
-            else:
-                lh_list.append(new_line_height)
-                use_default_height = 0
-        
-        for j, row in enumerate(data):
-            line_height = lh_list[j]
-            for col_num in range(len(row)):
-                if pdf.get_x() <300:
-                    pdf.multi_cell(col_width, line_height, f"{row[col_num]}", border=1, align='L', ln=3,
-                               max_line_height=pdf.font_size)  
-                              
-                # pdf.set_auto_page_break(True,margin=0)
-                # if pdf.get_x() >299:
-                #     pdf.multi_cell(col_width, line_height, f"{row[col_num]}", border=1, align='L', ln=3,
-                #                max_line_height=pdf.font_size)
-            pdf.set_auto_page_break(True,margin=0)
-            pdf.ln(line_height)
-        pdf.output('report.pdf')
-        return FileResponse(open('report.pdf', 'rb'), as_attachment=True, content_type='application/pdf')
+        for row in table:
+                for data_items in row:
+                    dd = str(data_items)
+                    word_list = dd.split()
+                    number_of_words = len(word_list)
+                    if number_of_words > 2:
+                        use_default_height = 2
+                        new_line_height = pdf.font_size * (number_of_words / 2)
+                if not use_default_height:
+                    lh_list.append(c_h)
+                else:
+                    lh_list.append(new_line_height)
+                    use_default_height = 0
+        rows_per_page = 15
+        cols_per_page = 5
+        num_rows = len(table)
+        num_cols = len(table[0])
+        row_offset = 0
+        while row_offset < num_rows:
+            row_max = row_offset + rows_per_page
+            if row_max > num_rows:
+                row_max = num_rows
+            col_offset = 0
+            while col_offset < num_cols:
+                col_max = col_offset + cols_per_page
+                if col_max > num_cols:
+                    col_max = num_cols
+                pdf.add_page()
+                pdf.t_margin =25
+                if col_max == 5:
+                    page_title()
+                    pdf.cell(40, 3, '', 0, 1)
+                for i in range(row_offset, row_max):
+                    c_h = lh_list[i]
+                    for j in range(col_offset, col_max):
+                        if i==0 and j<= num_rows:
+                            pdf.set_font(style="B")
+                            pdf.multi_cell(c_w, c_h, table[i][j], border=1, align='C', ln=3,
+                               max_line_height=pdf.font_size)
+                        elif i<=14 and j==0:
+                            pdf.set_font(style="B")
+                            pdf.multi_cell(c_w, c_h, table[i][j], border=1, align='L', ln=3,
+                               max_line_height=pdf.font_size)
+
+                        else:
+                            cell_value = table[i][j]
+                            pdf.set_font(style="")
+                            pdf.multi_cell(c_w, c_h, cell_value, border=1, align='L', ln=3,
+                               max_line_height=pdf.font_size)
+
+                    pdf.ln(c_h)
+                    pdf.set_auto_page_break(True, margin=1.5)
+
+                col_offset += cols_per_page
+                footer()
+
+            row_offset += rows_per_page
+        pdf.output("weekly-report.pdf", dest="F")
+        return FileResponse(open('weekly-report.pdf', 'rb'), as_attachment=True, content_type='application/pdf')
 
 
     @staticmethod
