@@ -22,7 +22,7 @@ class QmsController:
         try:
             id = request['id']
             if id == '0':
-                qmsModel.audit_id = request['audit_id']
+                qmsModel.audit_id = 0 #request['audit_id']
                 qmsModel.Organization = request['Organization']
                 qmsModel.site = request['site']
                 qmsModel.certification_status = request['certification_status']
@@ -35,13 +35,14 @@ class QmsController:
                 qmsModel.audit_status = request['audit_status']
                 qmsModel.standard = request['standard']
                 qmsModel.remarks = request['remarks']
+                qmsModel.certification_setup = request['certification_setup']
                 qmsModel.save()
                 return JsonResponse({'status': 'True', 'message': "QMS Audit Created Successfully!"},
                                 status=200)
             else:
                 get_qms = QmsAudit.objects.filter(id=id).first()
                 if get_qms is not None:
-                    get_qms.audit_id = request['audit_id']
+                    get_qms.audit_id = 0 #request['audit_id']
                     get_qms.Organization = request['Organization']
                     get_qms.site = request['site']
                     get_qms.certification_status = request['certification_status']
@@ -54,6 +55,7 @@ class QmsController:
                     get_qms.audit_status = request['audit_status']
                     get_qms.standard = request['standard']
                     get_qms.remarks = request['remarks']
+                    get_qms.certification_setup = request['certification_setup']
                     get_qms.save()
                     return JsonResponse({'status': 'True', 'message': "QMS Audit Updated Successfully!"},
                                 status=200)

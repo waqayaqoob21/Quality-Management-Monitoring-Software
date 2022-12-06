@@ -1,18 +1,25 @@
 import base64
+import textwrap
 from datetime import datetime, timedelta
+
 from dateutil.relativedelta import relativedelta
 from django.db import connection
-from django.http import JsonResponse
-from passlib.utils.compat import izip
-from django.http import FileResponse
-from django.http import HttpResponse
+from django.db.models import F, Q
+from django.http import JsonResponse, FileResponse, HttpResponse
 from fpdf import FPDF
 import xlwt
+
+from passlib.utils.compat import izip
+
+from ams.models import TaskSummary
+from doctracking.models import doctrackingHistory
 from doctracking.serializer import DocListSerializer
+from mpm.models import ActiveMotors
+from qms.models import QmsAudit, CespAudit
+from sms.models import ProductionSystemStatus, FlightSystemStatus, RelifingSystemStatus
 from usermanagement.models import doctracking
 
-from django.core.mail import EmailMessage
-from django.conf import settings
+
 class DocController:
 
     @staticmethod
@@ -33,6 +40,8 @@ class DocController:
                 docModal.status = request['status']
                 docModal.sent_to = request['sent_to']
                 docModal.sent_date = request['sent_date']
+                docModal.product_sr_no = request['product_sr_no']
+
                 if request['isActive'] == 'true':
                     docModal.isActive = 1
                 else:
@@ -43,26 +52,49 @@ class DocController:
             else:
                 get_doc = doctracking.objects.filter(id=id).first()
                 if get_doc is not None:
-                    get_doc.doc_name = request['doc_name']
-                    get_doc.doc_type = request['doc_type']
-                    get_doc.sender = request['sender']
-                    get_doc.receive_date = request['receive_date']
-                    get_doc.marked_to = request['marked_to']
-                    get_doc.marked_date = request['marked_date']
-                    get_doc.due_date = request['due_date']
-                    get_doc.task_date = request['task_date']
-                    get_doc.status = request['status']
-                    get_doc.sent_to = request['sent_to']
-                    get_doc.sent_date = request['sent_date']
-                    if request['isActive'] == 'true':
-                        get_doc.isActive = 1
-                    else:
-                        get_doc.isActive = 0
-                    get_doc.remarks = request['remarks']
-                    if request['attachement'] != '':
-                        get_doc.attachement = request['attachement']
-                    get_doc.save()
-                    print("here")
+                    if str(get_doc.receive_date.date()) != request['receive_date'] or str(get_doc.marked_date.date()) != \
+                            request['marked_date'] or str(get_doc.due_date.date()) != request['due_date'] or \
+                            str(get_doc.task_date.date()) != request['task_date']:
+                        # add entry in history table
+                        docHistoryModal = doctrackingHistory()
+                        docHistoryModal.doc_name = get_doc.doc_name
+                        docHistoryModal.doc_type = get_doc.doc_type
+                        docHistoryModal.sender = get_doc.sender
+                        docHistoryModal.receive_date = get_doc.receive_date
+                        docHistoryModal.marked_to = get_doc.marked_to
+                        docHistoryModal.marked_date = get_doc.marked_date
+                        docHistoryModal.due_date = get_doc.due_date
+                        docHistoryModal.task_date = get_doc.task_date
+                        docHistoryModal.status = get_doc.status
+                        docHistoryModal.sent_to = get_doc.sent_to
+                        docHistoryModal.sent_date = get_doc.sent_date
+                        docHistoryModal.product_sr_no = get_doc.product_sr_no
+                        docHistoryModal.remarks = get_doc.remarks
+                        docHistoryModal.doc_id = id
+                        docHistoryModal.save()
+                        # save data in history end
+
+                get_doc.doc_name = request['doc_name']
+                get_doc.doc_type = request['doc_type']
+                get_doc.sender = request['sender']
+                get_doc.receive_date = request['receive_date']
+                get_doc.marked_to = request['marked_to']
+                get_doc.marked_date = request['marked_date']
+                get_doc.due_date = request['due_date']
+                get_doc.task_date = request['task_date']
+                get_doc.status = request['status']
+                get_doc.sent_to = request['sent_to']
+                get_doc.sent_date = request['sent_date']
+                get_doc.product_sr_no = request['product_sr_no']
+                if request['isActive'] == 'true':
+                    get_doc.isActive = 1
+                else:
+                    get_doc.isActive = 0
+                get_doc.remarks = request['remarks']
+                if request['attachement'] != '':
+                    get_doc.attachement = request['attachement']
+                get_doc.save()
+                print("here")
             # print("Device Event Detail saved........", serializer.data)
             return JsonResponse({'status': 'True', 'message': "Record Created Successfully"},
                                 status=200)
@@ -73,13 +105,88 @@ class DocController:
             pass
 
     @staticmethod
+    def DeleteDocument(request):
+
+        try:
+            id = request.query_params['id']
+            delete = doctracking.objects.filter(id=id).delete()
+
+            return JsonResponse({'status': 'True', 'message': "Record Deleted"},
+                                status=200)
+
+        except Exception as e:
+            print(e)
+            return JsonResponse({'status': 'False', "message": "Doc Not Deleted"}, status=500)
+            pass
+
+    @staticmethod
+    def DeleteTask(request):
+
+        try:
+            id = request.query_params['id']
+            delete = TaskSummary.objects.filter(id=id).delete()
+
+            return JsonResponse({'status': 'True', 'message': "Record Deleted"},
+                                status=200)
+
+        except Exception as e:
+            print(e)
+            return JsonResponse({'status': 'False', "message": "Task Not Deleted"}, status=500)
+            pass
+
+    @staticmethod
     def GetDocumentList(request):
 
         try:
+            current_status = request.query_params.get('current_status')
+            current_year = request.query_params.get('year')
+            current_org = request.query_params.get('org')
+            current_type = request.query_params.get('type')
+            if current_status == 'Total Documents':
+                docList = doctracking.objects.all().order_by('-id')
+                if current_year != '':
+                    docList = docList.filter(receive_date__year=current_year)
+                if current_org != '':
+                    docList = docList.filter(sender=current_org)
+                if current_type != '':
+                    docList = docList.filter(doc_type=current_type)
+                # docList = docList.filter(sender=current_org)
+                serializer = DocListSerializer(docList, many=True)
+                # print(serializer)
+                return JsonResponse({'status': 'True', 'data': serializer.data},
+                                    status=200)
+            else:
+                if current_status == 'overdue':
+                    docList = doctracking.objects.filter(due_date__lt=F('task_date')).order_by('-id')
 
-            docList = doctracking.objects.all().order_by('-id')
+                    serializer = DocListSerializer(docList, many=True)
+                    return JsonResponse({'status': 'True', 'data': serializer.data},
+                                        status=200)
+                else:
+                    docList = doctracking.objects.filter(status=current_status).order_by('-id')
+                    if current_year != '':
+                        docList = docList.filter(receive_date__year=current_year)
+                    if current_org != '':
+                        docList = docList.filter(sender=current_org)
+                    if current_type != '':
+                        docList = docList.filter(doc_type=current_type)
+                    serializer = DocListSerializer(docList, many=True)
+                    return JsonResponse({'status': 'True', 'data': serializer.data},
+                                        status=200)
+
+        except Exception as e:
+            print(e)
+            return JsonResponse({'status': 'False', "message": "Internal Server Error"}, status=500)
+            pass
+
+    @staticmethod
+    def GetDocumentHistory(request):
+
+        try:
+            doc_id = request.query_params.get('id')
+
+            docList = doctrackingHistory.objects.filter(doc_id=doc_id).order_by('-id')
             serializer = DocListSerializer(docList, many=True)
-            print(serializer)
             return JsonResponse({'status': 'True', 'data': serializer.data},
                                 status=200)
 
@@ -89,7 +196,7 @@ class DocController:
             pass
 
     @staticmethod
-    def GetPendingDocumentList(request):
+    def GetPendingDocument(request):
 
         try:
 
@@ -110,6 +217,7 @@ class DocController:
                 row_dict = dict(izip(col_names, row))
                 doc_list.append(row_dict)
             # docList = doctracking.objects.all().order_by('-id')
+            # data = doctracking.objects.filter(due_date__lt=datetime.today()).values()
             serializer = DocListSerializer(doc_list, many=True)
             print(serializer)
             return JsonResponse({'status': 'True', 'data': serializer.data},
@@ -120,170 +228,544 @@ class DocController:
             return JsonResponse({'status': 'False', "message": "Internal Server Error"}, status=500)
             pass
 
-
-# Document List API by Waqar
-    @staticmethod
-    def GetDocumentList(request):
-        try:   
-            data = doctracking.objects.filter(due_date__lt=datetime.today()).values()
-            serializer = DocListSerializer(data, many=True)
-            return JsonResponse({'message':'Welcome to Home Page','Data List': serializer.data}, status=200)
-        except:
-            return JsonResponse({'message':'Sorry! No list found.'}, status=204)
-
-    # API for PDF generator with table and Text_wraping
-
     @staticmethod
     def GetDocumentPDFList(request):
-        TABLE_COL_NAMES = ("Document Name", "Document Type", "Sender", "Receive Date", "Marked To", "Marked Date", "Due Date", "Task Date", "Status", "Sent To", "Sent Date","Remarks")
-        data = doctracking.objects.filter(due_date__lt=datetime.today()).order_by('-id').values_list('doc_name','doc_type','sender','receive_date','marked_to','marked_date','due_date','task_date','status','sent_to','sent_date','remarks')
+        TABLE_COL_NAMES = (
+            "Document Name", "Document Type", "Sender", "Receive Date", "Marked To", "Marked Date", "Due Date",
+            "Task Date",
+            "Status", "Sent To", "Sent Date", "Remarks")
+
+        current_status = request.query_params.get('current_status')
+        data = []
+        if current_status == 'Total Documents':
+            data = doctracking.objects.all().order_by('-id').values_list('doc_name',
+                                                                         'doc_type',
+                                                                         'sender',
+                                                                         'receive_date',
+                                                                         'marked_to',
+                                                                         'marked_date',
+                                                                         'due_date',
+                                                                         'task_date',
+                                                                         'status',
+                                                                         'sent_to',
+                                                                         'sent_date',
+                                                                         'remarks')
+        else:
+            data = doctracking.objects.filter(status=current_status).order_by('-id').values_list('doc_name',
+                                                                                                 'doc_type',
+                                                                                                 'sender',
+                                                                                                 'receive_date',
+                                                                                                 'marked_to',
+                                                                                                 'marked_date',
+                                                                                                 'due_date',
+                                                                                                 'task_date',
+                                                                                                 'status',
+                                                                                                 'sent_to',
+                                                                                                 'sent_date',
+                                                                                                 'remarks')
 
         pdf = FPDF('L', 'mm', 'Legal')
         pdf.add_page()
         pdf.set_font('courier', 'B', 26)
-        pdf.cell(330, 10, 'Final Report', border=0,align='C', ln=2)
-        pdf.cell(40, 10, '',0,1)
+        pdf.cell(330, 10, 'QMS Report', border=0, align='C', ln=2)
+        pdf.cell(40, 10, '', 0, 1)
         pdf.set_font("Times", size=10)
         line_height = pdf.font_size * 2.5
         col_width = pdf.epw / 12
-    
+
         def render_table_header():
-            pdf.set_font(style="B") 
+            pdf.set_font(style="B")
             for col_name in TABLE_COL_NAMES:
-                pdf.multi_cell(col_width, line_height, col_name, border=1,align='C', ln=3, max_line_height=pdf.font_size)
+                pdf.multi_cell(col_width, line_height, col_name, border=1, align='C', ln=3,
+                               max_line_height=pdf.font_size)
             pdf.ln(line_height)
             pdf.set_font(style="")
+
         render_table_header()
 
         lh_list = []
-        use_default_height = 0 
+        use_default_height = 0
         for row in data:
             for datum in row:
                 dd = str(datum)
                 word_list = dd.split()
                 number_of_words = len(word_list)
-                if number_of_words>2:
+                if number_of_words > 2:
                     use_default_height = 1
-                    new_line_height = pdf.font_size * (number_of_words/2)
+                    new_line_height = pdf.font_size * (number_of_words / 2)
             if not use_default_height:
                 lh_list.append(line_height)
             else:
-                lh_list.append(new_line_height)
+                lh_list.append(20)
                 use_default_height = 0
 
-        for j,row in enumerate(data):
-            line_height = lh_list[j] 
+        for j, row in enumerate(data):
+            line_height = lh_list[j]
             if pdf.will_page_break(line_height):
                 render_table_header()
             for col_num in range(len(row)):
-                line_height = lh_list[j] 
-                pdf.multi_cell(col_width, line_height, f"{row[col_num]}", border=1,align='C',ln=3, 
-                max_line_height=pdf.font_size)
+                line_height = lh_list[j]
+                pdf.multi_cell(col_width, line_height, f"{row[col_num]}", border=1, align='C', ln=3,
+                               max_line_height=pdf.font_size)
             pdf.ln(line_height)
-        pdf.output('report.pdf')
-        return FileResponse(open('report.pdf', 'rb'), as_attachment=True, content_type='application/pdf')
+        pdf.output('QMS_Report.pdf')
+        return FileResponse(open('QMS_Report.pdf', 'rb'), as_attachment=True, content_type='application/pdf')
 
     @staticmethod
     def GetDocumentExcelList(request):
-        response = HttpResponse(content_type = 'application/ms-excel')
+        response = HttpResponse(content_type='application/ms-excel')
         response['Content-Disposition'] = 'attachment; filename="DocumentExcelSheet.xls"'
         work_book = xlwt.Workbook(encoding='utf-8')
         work_sheet = work_book.add_sheet('ExcelSheet')
         row_num = 0
         font_style = xlwt.XFStyle()
         font_style.font.bold = True
-        TABLE_COL_NAMES = ("Document Name", "Document Type", "Sender", "Receive Date", "Marked To", "Marked Date", "Due Date", "Task Date", "Status", "Sent To", "Sent Date","Remarks")
+        TABLE_COL_NAMES = (
+            "Document Name", "Document Type", "Sender", "Receive Date", "Marked To", "Marked Date", "Due Date",
+            "Task Date",
+            "Status", "Sent To", "Sent Date", "Remarks")
         for col_num in range(len(TABLE_COL_NAMES)):
-            work_sheet.write(row_num,col_num,TABLE_COL_NAMES[col_num], font_style)
+            work_sheet.write(row_num, col_num, TABLE_COL_NAMES[col_num], font_style)
         font_style = xlwt.XFStyle()
 
-        data = doctracking.objects.filter(due_date__lt=datetime.today()).values_list('doc_name','doc_type','sender','receive_date','marked_to','marked_date','due_date','task_date','status','sent_to','sent_date','remarks')
+        current_status = request.query_params.get('current_status')
+        data = []
+        if current_status == 'Total Documents':
+            data = doctracking.objects.all().values_list('doc_name', 'doc_type', 'sender',
+                                                         'receive_date', 'marked_to',
+                                                         'marked_date', 'due_date',
+                                                         'task_date', 'status', 'sent_to',
+                                                         'sent_date', 'remarks')
+        else:
+            data = doctracking.objects.filter(status=current_status).values_list('doc_name', 'doc_type', 'sender',
+                                                                                 'receive_date', 'marked_to',
+                                                                                 'marked_date', 'due_date',
+                                                                                 'task_date', 'status', 'sent_to',
+                                                                                 'sent_date', 'remarks')
         for row in data:
             row_num += 1
             for col_num in range(len(row)):
-                work_sheet.write(row_num,col_num,str(row[col_num]), font_style)
+                work_sheet.write(row_num, col_num, str(row[col_num]), font_style)
         work_book.save(response)
         return response
 
-# API for PDF and EXCEL Sheet generator with table and Text_wraping
     @staticmethod
-    def GetDocumentEmailList(request):
-        TABLE_COL_NAMES = ("Document Name", "Document Type", "Sender", "Receive Date", "Marked To", "Marked Date", "Due Date", "Task Date", "Status", "Sent To", "Sent Date","Remarks")
-        data = doctracking.objects.filter(due_date__lt=datetime.today()).order_by('-id').values_list('doc_name','doc_type','sender','receive_date','marked_to','marked_date','due_date','task_date','status','sent_to','sent_date','remarks')
-
-        # -----------------Excel Sheet Code Starts----------------------
-        wb = xlwt.Workbook(encoding='utf-8')
-        ws = wb.add_sheet('ExcelSheet')
-        row_num = 0
-        font_style = xlwt.XFStyle()
-        font_style.font.bold = True
-        for col_num in range(len(TABLE_COL_NAMES)):
-            ws.write(row_num,col_num,TABLE_COL_NAMES[col_num], font_style)
-        font_style = xlwt.XFStyle()
-        # -----------------Excel Sheet Code Ends--------------------
-
-        # -----------------PDF File Code Starts----------------------
-        pdf = FPDF('L', 'mm', 'Legal')
-        pdf.add_page()
-        pdf.set_font('courier', 'B', 26)
-        pdf.cell(330, 10, 'Final Report', border=0,align='C', ln=2)
-        pdf.cell(40, 10, '',0,1)
-        pdf.set_font("Times", size=10)
-        line_height = pdf.font_size * 2.5
-        col_width = pdf.epw / 12
-        def render_table_header():
-            pdf.set_font(style="B") 
-            for col_name in TABLE_COL_NAMES:
-                pdf.multi_cell(col_width, line_height, col_name, border=1,align='C', ln=3, max_line_height=pdf.font_size)
-            pdf.ln(line_height)
-            pdf.set_font(style="")
-        render_table_header()
-        lh_list = []
-        use_default_height = 0 
-        for row in data:
-            for datum in row:
-                dd = str(datum)
-                word_list = dd.split()
-                number_of_words = len(word_list)
-                if number_of_words>2:
-                    use_default_height = 1
-                    new_line_height = pdf.font_size * (number_of_words/2)
-            if not use_default_height:
-                lh_list.append(line_height)
-            else:
-                lh_list.append(new_line_height)
-                use_default_height = 0
-        # -----------------PDF File Code Ends----------------------
-       
-        # -----------------File Generating Code Starts----------------------
-        for j,row in enumerate(data):
-            row_num += 1
-            line_height = lh_list[j] 
-            if pdf.will_page_break(line_height):
-                render_table_header()
-            for col_num in range(len(row)):
-                ws.write(row_num,col_num,f"{row[col_num]}", font_style)
-                line_height = lh_list[j] 
-                pdf.multi_cell(col_width, line_height, f"{row[col_num]}", border=1,align='C',ln=3, 
-                max_line_height=pdf.font_size)
-            pdf.ln(line_height)
-        pdf.output('pdf_report.pdf', 'F')
-        wb.save('excel_report.xls')
-        pdf_file_report =  FileResponse(open('pdf_report.pdf', 'rb'), as_attachment=True, content_type='application/pdf')
-        excel_file_report =  FileResponse(open('excel_report.xls', 'rb'), as_attachment=True, content_type='application/ms-excel')
-        send_action_email(excel_file_report.getvalue(), pdf_file_report.getvalue())
-        return JsonResponse({'Success':'Email has been Sent Successfully'}, status=200)
-
-def send_action_email(excel_file_report,pdf_file_report):
+    def GetDashboardCount(request):
         try:
-            body = f'Hi Sir! Please find attached files below:'
-            subject = 'Record Files'
-            from_email= settings.EMAIL_HOST_USER
-            to_email = ['waqaryaqoob6@gmail.com']
-            email = EmailMessage(subject, body, from_email, to_email)
-            email.content_subtype='html'
-            email.attach('report.xls', excel_file_report, 'application/ms-excel')
-            email.attach('report.pdf', pdf_file_report, 'applicaiton/pdf')
-            email.send()
-        except:
-            return JsonResponse({'Error':'Email Could not Send'}, status=400)
+            DataCount = []
+            qm_total_doc = doctracking.objects.all().count()
+
+            today_date = datetime.today()
+            current_date = datetime.strptime(str(today_date.date()), "%Y-%m-%d") + relativedelta(hours=today_date.hour,
+                                                                                                 minutes=today_date.minute,
+                                                                                                 seconds=today_date.second,
+                                                                                                 microseconds=today_date.microsecond)
+            doc_list = []
+            cursor = connection.cursor()
+            query = "select *   " \
+                    " from usermanagement_doctracking doc " \
+                    " WHERE doc.due_date < '{0}'  ;".format(
+                current_date)
+            cursor.execute(query)
+            col_names = [col[0] for col in cursor.description]
+            for row in cursor.fetchall():
+                row_dict = dict(izip(col_names, row))
+                doc_list.append(row_dict)
+            # docList = doctracking.objects.all().order_by('-id')
+            # data = doctracking.objects.filter(due_date__lt=datetime.today()).values()
+            serializer = DocListSerializer(doc_list, many=True)
+
+            docList = doctracking.objects.all().order_by('-id')
+            serializer = DocListSerializer(docList, many=True)
+
+            autt_inProcess = doctracking.objects.filter(status='Audit in-process').count()
+            AuditCompleted = doctracking.objects.filter(status='Audit completed').count()
+            qm_certificateIssued = doctracking.objects.filter(status='QM Certificate issued').count()
+            am_observation_forwarded = doctracking.objects.filter(status='QM observations forwarded').count()
+            am_observation_forwarded_unsettled = doctracking.objects.filter(
+                status='QM observations forwarded (un-settled)').count()
+            total_tasks = TaskSummary.objects.all().count()
+            ams_completed = TaskSummary.objects.filter(status='Completed').count()
+            ams_not_completed = TaskSummary.objects.filter(status='Not Completed').count()
+            ams_group1 = TaskSummary.objects.filter(assigned_to='ADG (QM)').count()
+            ams_group2 = TaskSummary.objects.filter(assigned_to='DDG (Cert)').count()
+            ams_group3 = TaskSummary.objects.filter(assigned_to='DDG (Process)').count()
+            ams_group4 = TaskSummary.objects.filter(assigned_to='DDG (System)').count()
+            prodSysCount = ProductionSystemStatus.objects.all().count()
+            flightSysCount = FlightSystemStatus.objects.all().count()
+            refilingSysCount = RelifingSystemStatus.objects.all().count()
+
+            ams_group5 = TaskSummary.objects.filter(assigned_to='Dir (QMS)').count()
+            ams_group6 = TaskSummary.objects.filter(assigned_to='Dir (Reliablity)').count()
+            ams_group7 = TaskSummary.objects.filter(assigned_to='Dir (SQA)').count()
+            ams_group8 = TaskSummary.objects.filter(assigned_to='Dir (CeSP)').count()
+            active_motors = ActiveMotors.objects.filter().count()
+            cesp_audit = CespAudit.objects.all().count()
+            prodSysQmsInProcess = ProductionSystemStatus.objects.filter(
+                qm_certification_status='QM certification in-process').count()
+            prodSysQmsIssued = ProductionSystemStatus.objects.filter(
+                qm_certification_status='QM certification issued').count()
+
+            flightSysQmsInProcess = FlightSystemStatus.objects.filter(
+                qm_certification_status='QM certification in-process').count()
+            flightSysQmsInIssued = FlightSystemStatus.objects.filter(
+                qm_certification_status='QM certification issued').count()
+            qms_audit = QmsAudit.objects.all().count()
+
+            relifingSysQmsInProcess = RelifingSystemStatus.objects.filter(
+                qm_certification_status='QM certification in-process').count()
+            relifingSysQmsInIssued = RelifingSystemStatus.objects.filter(
+                qm_certification_status='QM certification issued').count()
+            dist = {
+                'qm_total_doc': qm_total_doc,
+                'qm_pending_doc': serializer.data.__len__(),
+                'qm_audit_inprocess_doc': autt_inProcess,
+                'qm_completed_doc': AuditCompleted,
+                'qm_certificateIssued': qm_certificateIssued,
+                'am_observation_forwarded': am_observation_forwarded,
+                'am_observation_forwarded_unsettled': am_observation_forwarded_unsettled,
+                'ams_total': total_tasks,
+                'ams_completed': ams_completed,
+                'ams_not_completed': ams_not_completed,
+                'ams_group1': ams_group1,
+                'ams_group2': ams_group2,
+                'ams_group3': ams_group3,
+                'ams_group4': ams_group4,
+                'prodSysCount': prodSysCount,
+                'flightSysCount': flightSysCount,
+                'ams_group5': ams_group5,
+                'ams_group6': ams_group6,
+                'ams_group7': ams_group7,
+                'ams_group8': ams_group8,
+                'refilingSysCount': refilingSysCount,
+                'active_motors': active_motors,
+                'cesp_audit': cesp_audit,
+                'qms_audit': qms_audit,
+                'prodSysQmsInProcess': prodSysQmsInProcess,
+                'prodSysQmsIssued': prodSysQmsIssued,
+                'flightSysQmsInProcess': flightSysQmsInProcess,
+                'flightSysQmsInIssued': flightSysQmsInIssued,
+                'relifingSysQmsInProcess': relifingSysQmsInProcess,
+                'relifingSysQmsInIssued': relifingSysQmsInIssued
+
+            }
+
+            DataCount.append(dist)
+            return JsonResponse({'status': 'True', 'data': DataCount},
+                                status=200)
+
+        except Exception as e:
+            print(e)
+            return JsonResponse({'status': 'False', "message": "Internal Server Error"}, status=500)
+            pass
+
+    @staticmethod
+    def GetDocTrackingDashboardCount(request, self=None):
+        try:
+
+            def get_filter(field_name, filter_condition, filter_value):
+                # thanks to the below post
+                # https://stackoverflow.com/questions/310732/in-django-how-does-one-filter-a-queryset-with-dynamic-field-lookups
+                # the idea to this below logic is very similar to that in the above mentioned post
+                if filter_condition.strip() == "contains":
+                    kwargs = {
+                        '{0}__icontains'.format(field_name): filter_value
+                    }
+                    return Q(**kwargs)
+
+                if filter_condition.strip() == "not_equal":
+                    kwargs = {
+                        '{0}__iexact'.format(field_name): filter_value
+                    }
+                    return ~Q(**kwargs)
+
+                if filter_condition.strip() == "starts_with":
+                    kwargs = {
+                        '{0}__istartswith'.format(field_name): filter_value
+                    }
+                    return Q(**kwargs)
+                if filter_condition.strip() == "equal":
+                    kwargs = {
+                        '{0}__iexact'.format(field_name): filter_value
+                    }
+                    return Q(**kwargs)
+
+                if filter_condition.strip() == "not_equal":
+                    kwargs = {
+                        '{0}__iexact'.format(field_name): filter_value
+                    }
+
+                    return ~Q(**kwargs)
+
+            selected_year = request.query_params.get('selected_year')
+            selected_org = request.query_params.get('selected_org')
+            selected_type = request.query_params.get('selected_type')
+            typeQuery = Q()
+            filter_objects = Q()
+            if selected_type == 'BHD':
+                filter_objects &= get_filter(
+                    'doc_type', 'equal',
+                    'BHD')
+            else:
+                filter_objects &= get_filter(
+                    'doc_type', 'not_equal',
+                    'BHD')
+
+            doc_count = 0
+            current_year_count = 0
+            doc_approved = 0
+            am_observation_forwarded = 0
+            am_observation_repeated = 0
+            audit_inProcess = 0
+            over_due_doc = 0
+            qm_certification_issued = 0
+            doc_approvedList = doctracking.objects.filter(status='Approved')
+            over_due_doc = doctracking.objects.filter(due_date__lt=F('task_date')).count()
+            doc_count = doctracking.objects.count()
+            if selected_year is '':
+                doc_approved = doctracking.objects.filter(status='Approved').count()
+                doc_approvedList = doctracking.objects.filter(status='Approved')
+                am_observation_repeated = doctracking.objects.filter(status='QM Observations Repeated').count()
+                am_observation_forwarded = doctracking.objects.filter(status='QM Observations Forwarded').count()
+
+                audit_inProcess = doctracking.objects.filter(status='Audit in-process').count()
+                qm_certification_issued = doctracking.objects.filter(status='QM Certificate issued').count()
+
+                if selected_type is not '' and selected_org is '':
+                    current_year_count = doctracking.objects.filter(filter_objects).count()
+                    doc_approved = doctracking.objects.filter(filter_objects, status='Approved').count()
+                    doc_approvedList = doctracking.objects.filter(filter_objects, status='Approved')
+                    am_observation_forwarded = doctracking.objects.filter(filter_objects, status='QM Observations Forwarded').count()
+                    am_observation_repeated = doctracking.objects.filter(filter_objects, status='QM Observations Repeated').count()
+                    audit_inProcess = doctracking.objects.filter(filter_objects, status='Audit in-process').count()
+                    qm_certification_issued = doctracking.objects.filter(filter_objects, status='QM Certificate issued').count()
+                    et_type = doctracking.objects.filter(filter_objects, ).count()
+                elif selected_type is '' and selected_org is not '':
+                    current_year_count = doctracking.objects.filter(sender=selected_org).count()
+                    doc_approved = doctracking.objects.filter(status='Approved', sender=selected_org).count()
+                    doc_approvedList = doctracking.objects.filter(status='Approved', sender=selected_org)
+                    am_observation_forwarded = doctracking.objects.filter(status='QM Observations Forwarded',
+                                                                          sender=selected_org).count()
+                    am_observation_repeated = doctracking.objects.filter(status='QM Observations Repeated',
+                                                                         sender=selected_org).count()
+                    audit_inProcess = doctracking.objects.filter(status='Audit in-process',
+                                                                 sender=selected_org).count()
+                    qm_certification_issued = doctracking.objects.filter(status='QM Certificate issued',
+                                                                         sender=selected_org).count()
+                elif selected_type is not '' and selected_org is not '':
+                    current_year_count = doctracking.objects.filter(filter_objects, sender=selected_org).count()
+                    doc_approved = doctracking.objects.filter(filter_objects, status='Approved', sender=selected_org).count()
+                    doc_approvedList = doctracking.objects.filter(filter_objects, status='Approved', sender=selected_org)
+                    am_observation_forwarded = doctracking.objects.filter(filter_objects, status='QM Observations Forwarded').count()
+                    am_observation_repeated = doctracking.objects.filter(filter_objects, status='QM Observations Repeated').count()
+                    audit_inProcess = doctracking.objects.filter(filter_objects, status='Audit in-process').count()
+                    qm_certification_issued = doctracking.objects.filter(filter_objects, status='QM Certificate issued').count()
+
+            else:
+                if selected_type is '' and selected_org is '':
+                    current_year_count = doctracking.objects.filter(receive_date__year=selected_year).count()
+                    doc_approved = doctracking.objects.filter(status='Approved',
+                                                              receive_date__year=selected_year).count()
+                    doc_approvedList = doctracking.objects.filter(status='Approved',
+                                                                  receive_date__year=selected_year)
+                    am_observation_forwarded = doctracking.objects.filter(status='QM Observations Forwarded',
+                                                                          receive_date__year=selected_year).count()
+                    am_observation_repeated = doctracking.objects.filter(status='QM Observations Repeated',
+                                                                         receive_date__year=selected_year).count()
+                    audit_inProcess = doctracking.objects.filter(status='Audit in-process',
+                                                                 receive_date__year=selected_year).count()
+                    qm_certification_issued = doctracking.objects.filter(status='QM Certificate issued',
+                                                                         receive_date__year=selected_year).count()
+
+                elif selected_org is not '' and selected_type is '':
+                    if selected_org == 'All':
+                        current_year_count = doctracking.objects.filter(receive_date__year=selected_year).count()
+                        doc_approved = doctracking.objects.filter(status='Approved',
+                                                                  receive_date__year=selected_year).count()
+                        doc_approvedList = doctracking.objects.filter(status='Approved',
+                                                                      receive_date__year=selected_year)
+                        am_observation_forwarded = doctracking.objects.filter(status='QM Observation Forwarded',
+                                                                              receive_date__year=selected_year).count()
+                        am_observation_repeated = doctracking.objects.filter(status='QM Observations Repeated',
+                                                                             receive_date__year=selected_year).count()
+                        audit_inProcess = doctracking.objects.filter(status='Audit in-process',
+                                                                     receive_date__year=selected_year).count()
+                        qm_certification_issued = doctracking.objects.filter(status='QM Certificate issued',
+                                                                             receive_date__year=selected_type).count()
+
+                    else:
+                        current_year_count = doctracking.objects.filter(receive_date__year=selected_year,
+                                                                        sender=selected_org).count()
+                        doc_approved = doctracking.objects.filter(status='Approved',
+                                                                  receive_date__year=selected_year,
+                                                                  sender=selected_org).count()
+                        doc_approvedList = doctracking.objects.filter(status='Approved',
+                                                                      receive_date__year=selected_year,
+                                                                      sender=selected_org)
+                        am_observation_forwarded = doctracking.objects.filter(status='QM Observations Forwarded',
+                                                                              receive_date__year=selected_year,
+                                                                              sender=selected_org).count()
+                        am_observation_repeated = doctracking.objects.filter(status='QM Observations Repeated',
+                                                                             receive_date__year=selected_year,
+                                                                             sender=selected_org).count()
+                        audit_inProcess = doctracking.objects.filter(status='Audit in-process',
+                                                                     receive_date__year=selected_year,
+                                                                     sender=selected_org).count()
+                        qm_certification_issued = doctracking.objects.filter(status='QM Certificate issued',
+                                                                             receive_date__year=selected_year,
+                                                                             sender=selected_org).count()
+
+                elif selected_org is '' and selected_type is not '':
+                    if selected_org == 'All':
+                        current_year_count = doctracking.objects.filter(filter_objects, receive_date__year=selected_year).count()
+                        doc_approved = doctracking.objects.filter(filter_objects, status='Approved',
+                                                                  receive_date__year=selected_year).count()
+                        doc_approvedList = doctracking.objects.filter(filter_objects, status='Approved',
+                                                                      receive_date__year=selected_year)
+                        am_observation_forwarded = doctracking.objects.filter(filter_objects, status='QM Observations Forwarded',
+                                                                              receive_date__year=selected_year).count()
+                        am_observation_repeated = doctracking.objects.filter(filter_objects, status='QM Observations Repeated',
+                                                                             receive_date__year=selected_year).count()
+                        audit_inProcess = doctracking.objects.filter(filter_objects, status='Audit in-process',
+                                                                     receive_date__year=selected_year).count()
+                        qm_certification_issued = doctracking.objects.filter(filter_objects, status='QM Certificate issued',
+                                                                             receive_date__year=selected_year).count()
+
+                    else:
+                        current_year_count = doctracking.objects.filter(filter_objects, receive_date__year=selected_year).count()
+                        doc_approved = doctracking.objects.filter(filter_objects, status='Approved',
+                                                                  receive_date__year=selected_year).count()
+                        doc_approvedList = doctracking.objects.filter(filter_objects, status='Approved',
+                                                                      receive_date__year=selected_year)
+                        am_observation_forwarded = doctracking.objects.filter(filter_objects, status='QM Observations Forwarded',
+                                                                              receive_date__year=selected_year).count()
+                        am_observation_repeated = doctracking.objects.filter(filter_objects, status='QM Observations Repeated',
+                                                                             receive_date__year=selected_year).count()
+                        audit_inProcess = doctracking.objects.filter(filter_objects, status='Audit in-process',
+                                                                     receive_date__year=selected_year).count()
+                        qm_certification_issued = doctracking.objects.filter(filter_objects, status='QM Certificate issued',
+                                                                             receive_date__year=selected_year).count()
+
+
+                elif selected_type is not '' and selected_org is not '':
+                    if selected_org == 'All':
+                        current_year_count = doctracking.objects.filter(filter_objects, receive_date__year=selected_year).count()
+                        doc_approved = doctracking.objects.filter(filter_objects, status='Approved',
+                                                                  receive_date__year=selected_year).count()
+                        doc_approvedList = doctracking.objects.filter(filter_objects, status='Approved',
+                                                                      receive_date__year=selected_year)
+                        am_observation_forwarded = doctracking.objects.filter(filter_objects, status='QM Observations Forwarded',
+                                                                              receive_date__year=selected_year).count()
+                        am_observation_repeated = doctracking.objects.filter(filter_objects, status='QM Observations Repeated',
+                                                                             receive_date__year=selected_year).count()
+                        audit_inProcess = doctracking.objects.filter(filter_objects, status='Audit in-process',
+                                                                     receive_date__year=selected_year).count()
+
+                        qm_certification_issued = doctracking.objects.filter(filter_objects, status='QM Certificate issued',
+                                                                             receive_date__year=selected_year).count()
+                    else:
+                        current_year_count = doctracking.objects.filter(filter_objects, receive_date__year=selected_year,
+                                                                        sender=selected_org).count()
+                        doc_approved = doctracking.objects.filter(filter_objects, status='Approved',
+                                                                  receive_date__year=selected_year,
+                                                                  sender=selected_org).count()
+                        doc_approvedList = doctracking.objects.filter(filter_objects, status='Approved',
+                                                                      receive_date__year=selected_year,
+                                                                      sender=selected_org)
+                        am_observation_forwarded = doctracking.objects.filter(filter_objects, status='QM Observations Forwarded',
+                                                                              receive_date__year=selected_year,
+                                                                              sender=selected_org).count()
+                        am_observation_repeated = doctracking.objects.filter(filter_objects, status='QM Observations Repeated',
+                                                                             receive_date__year=selected_year,
+                                                                             sender=selected_org).count()
+                        audit_inProcess = doctracking.objects.filter(filter_objects, status='Audit in-process',
+                                                                     receive_date__year=selected_year,
+                                                                     sender=selected_org).count()
+                        qm_certification_issued = doctracking.objects.filter(filter_objects, status='QM Certificate issued',
+                                                                             receive_date__year=selected_year,
+                                                                             sender=selected_org).count()
+
+            ET_count = doc_approvedList.filter(doc_type='Envirnomental Testing Criteria(ET)').count()
+            ATP_count = doc_approvedList.filter(doc_type='APT').count()
+            HC_count = doc_approvedList.filter(doc_type='Hydrostatic Criteria').count()
+            QC_count = doc_approvedList.filter(doc_type='Qualification Criteria').count()
+            QAC_count = doc_approvedList.filter(doc_type='Qualification & Acceptance Criteria').count()
+            SST_count = doc_approvedList.filter(doc_type='Structural Strength Testing(SST)').count()
+            TDP_count = doc_approvedList.filter(doc_type='Technical Data Pack (TDP)').count()
+            dist = {
+                'doc_count': doc_count,
+                'current_year_count': current_year_count,
+                'doc_approved': doc_approved,
+                'am_observation_forwarded': am_observation_forwarded,
+                'am_observation_repeated': am_observation_repeated,
+                'audit_inProcess': audit_inProcess,
+                'ET_count': ET_count,
+                'ATP_count': ATP_count,
+                'HC_count': HC_count,
+                'QC_count': QC_count,
+                'QAC_count': QAC_count,
+                'SST_count': SST_count,
+                'TDP_count': TDP_count,
+                'over_due_count': over_due_doc,
+                'qm_certification_issued': qm_certification_issued
+
+            }
+
+            # DataCount.append(dist)
+            return JsonResponse({'status': 'True', 'data': dist},
+                                status=200)
+
+        except Exception as e:
+            print(e)
+            return JsonResponse({'status': 'False', "message": "Internal Server Error"}, status=500)
+            pass
+
+    @staticmethod
+    def getTaskMonitoringDashboardCount(request):
+        try:
+            selected_year = request.query_params.get('selected_year')
+            selected_group = request.query_params.get('selected_group')
+            task_completed = 0
+            task_inprocess = 0
+            task_follow_up = 0
+            over_due = TaskSummary.objects.filter(task_date__gt=F('target_date')).count()
+            if selected_year is not '' and selected_group is '':
+                task_completed = TaskSummary.objects.filter(assigned_date__year=selected_year,
+                                                            status='Task Completed').count()
+                task_inprocess = TaskSummary.objects.filter(assigned_date__year=selected_year,
+                                                            status='Task in-process').count()
+                task_follow_up = TaskSummary.objects.filter(assigned_date__year=selected_year,
+                                                            status='Task follow-up').count()
+            elif selected_year is '' and selected_group is not '':
+                task_completed = TaskSummary.objects.filter(assigned_to=selected_group,
+                                                            status='Task Completed').count()
+                task_inprocess = TaskSummary.objects.filter(assigned_to=selected_group,
+                                                            status='Task in-process').count()
+                task_follow_up = TaskSummary.objects.filter(assigned_to=selected_group,
+                                                            status='Task follow-up').count()
+            elif selected_year is not '' and selected_group is not '':
+                task_completed = TaskSummary.objects.filter(assigned_to=selected_group,
+                                                            assigned_date__year=selected_year,
+                                                            status='Task Completed').count()
+                task_inprocess = TaskSummary.objects.filter(assigned_to=selected_group,
+                                                            assigned_date__year=selected_year,
+                                                            status='Task in-process').count()
+                task_follow_up = TaskSummary.objects.filter(assigned_to=selected_group,
+                                                            assigned_date__year=selected_year,
+                                                            status='Task follow-up').count()
+            dist = {
+                'task_completed': task_completed,
+                'task_inprocess': task_inprocess,
+                'task_follow_up': task_follow_up,
+                'over_due': over_due
+
+            }
+
+            # DataCount.append(dist)
+            return JsonResponse({'status': 'True', 'data': dist},
+                                status=200)
+
+        except Exception as e:
+            print(e)
+            return JsonResponse({'status': 'False', "message": "Internal Server Error"}, status=500)
+            pass

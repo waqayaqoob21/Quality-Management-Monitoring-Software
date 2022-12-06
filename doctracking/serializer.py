@@ -36,3 +36,4 @@ class DocListSerializer(Serializer):
     attachement = CharField()
     remarks = CharField()
     created_at = DateTimeField()
+    product_sr_no = CharField()

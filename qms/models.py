@@ -1,12 +1,13 @@
 from django.db import models
 
+
 # Create your models here.
 class QmsAudit(models.Model):
     id = models.AutoField(primary_key=True)
     audit_id = models.IntegerField()
     Organization = models.CharField(max_length=300)
     site = models.CharField(max_length=300)
-    certification_status= models.CharField(max_length=300)
+    certification_status = models.CharField(max_length=300)
     previous_standard = models.CharField(max_length=300)
     certification_validity = models.CharField(max_length=300)
     audit_type = models.CharField(max_length=300)
@@ -16,14 +17,16 @@ class QmsAudit(models.Model):
     audit_status = models.CharField(max_length=300)
     standard = models.CharField(max_length=300)
     remarks = models.TextField()
+    certification_setup = models.TextField(null=True)
     Created_at = models.DateTimeField(auto_now_add=True)
+
 
 class CespAudit(models.Model):
     id = models.AutoField(primary_key=True)
     audit_id = models.IntegerField()
     Organization = models.CharField(max_length=300)
     site = models.CharField(max_length=300)
-    certification_status= models.CharField(max_length=300)
+    certification_status = models.CharField(max_length=300)
     previous_standard = models.CharField(max_length=300)
     certification_validity = models.CharField(max_length=300)
     audit_type = models.CharField(max_length=300)

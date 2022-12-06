@@ -18,19 +18,21 @@ from django.contrib import admin
 from django.urls import path
 from django.urls import path, include
 
-from doctracking.views import *
+from doctracking.views import AddDocAPIVIEW, docTracingListAPIVIEW, docPendingListAPIVIEW, GetDocumentsPDFAPIVIEW, \
+    GetDocumentsExcelAPIVIEW, GetDashboardAPIVIEW, DeleteDocAPIVIEW, DeleteTaskAPIVIEW, docTracingHistoryAPIVIEW, \
+    GetDocTrackingDashboardCountAPIVIEW, getTaskMonitoringDashboardCountAPIVIEW
 from usermanagement.views import UserLoginApiView
 
 urlpatterns = [
     path('addDoc/', AddDocAPIVIEW.as_view(), name='addDoc'),
     path('docTracingList/', docTracingListAPIVIEW.as_view(), name='docTracingList'),
+    path('docTracingHistory/', docTracingHistoryAPIVIEW.as_view(), name='docTracingHistory'),
     path('docPendingList/', docPendingListAPIVIEW.as_view(), name='docPendingList'),
-    path('documentList/', GetDocumentListAPIVIEW.as_view(), name='documentList'),
     path('documentpdf/', GetDocumentsPDFAPIVIEW.as_view(), name='documentpdf'),
     path('documentexcel/', GetDocumentsExcelAPIVIEW.as_view(), name='documentexcel'),
-    path('documentemail/', GetDocumentsEmailAPIVIEW.as_view(), name='documentemail'),
-
-
-
-
+    path('GetDashboardCount/', GetDashboardAPIVIEW.as_view(), name='GetDashboardCount'),
+    path('GetDocTrackingDashboardCount/', GetDocTrackingDashboardCountAPIVIEW.as_view(), name='GetDocTrackingDashboardCount'),
+    path('getTaskMonitoringDashboardCount/', getTaskMonitoringDashboardCountAPIVIEW.as_view(), name='getTaskMonitoringDashboardCount'),
+    path('DeleteDoc/', DeleteDocAPIVIEW.as_view(), name='DeleteDoc'),
+    path('DeleteTask/', DeleteTaskAPIVIEW.as_view(), name='DeleteTask'),
 ]

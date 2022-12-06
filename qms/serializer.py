@@ -18,6 +18,7 @@ class QmsAuditSerializer(Serializer):
     standard = CharField()
     remarks = CharField()
     Created_at = DateTimeField()
+    certification_setup = CharField()
 
 class CespAuditSerializer(Serializer):
     id = IntegerField()

@@ -26,8 +26,4 @@ urlpatterns = [
     url(r'^sms/', include('sms.urls')),
     url(r'^mpm/', include('mpm.urls')),
     url(r'^qms/', include('qms.urls')),
-
-
-
-
 ]

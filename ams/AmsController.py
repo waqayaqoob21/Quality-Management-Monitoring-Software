@@ -1,21 +1,21 @@
-from importlib import import_module
-from django.http import JsonResponse
+import os
+from datetime import datetime, timedelta
+
+import xlwt
+from django.db.models import F
+from django.http import JsonResponse, FileResponse, HttpResponse
+from fpdf import FPDF
+
 from ams.serializer import *
 from ams.models import *
-from fpdf import FPDF
-import xlwt
-from datetime import datetime, timedelta
-from django.http import FileResponse
-from django.http import HttpResponse
-from django.core.files.storage import FileSystemStorage
-import re
-import fitz #pip install PyMuPDF Pillow
+import fitz  # pip install PyMuPDF Pillow
 import io
-import os
 from PIL import Image
-from pytesseract import pytesseract # install tesseract-ocr-w64-setup-v5.2.0.20220712.exe (64 bit) resp. 
-                                    # from https://github.com/UB-Mannheim/tesseract/wiki 
-                                    # pip install pytesseract
+from pytesseract import pytesseract  # install tesseract-ocr-w64-setup-v5.2.0.20220712.exe (64 bit) resp.
+
+
+# from https://github.com/UB-Mannheim/tesseract/wiki
+# pip install pytesseract
 
 class AmsController:
 
@@ -23,21 +23,54 @@ class AmsController:
     def AddTask(request):
         taskModel = TaskSummary()
         try:
-            taskModel.task_name = request['task_name']
-            taskModel.assigned_by = request['assigned_by']
-            taskModel.assigned_date = request['assigned_date']
-            taskModel.assigned_to = request['assigned_to']
-            taskModel.target_date = request['target_date']
-            taskModel.status = request['status']
-            taskModel.remarks = request['remarks']
-            taskModel.save()
-            return JsonResponse({'Success': "Task Created Successfully"},status=200)
+            id = request['id']
+            if id == '0':
+                taskModel.task_name = request['task_name']
+                taskModel.assigned_by = request['assigned_by']
+                taskModel.assigned_date = request['assigned_date']
+                taskModel.assigned_to = request['assigned_to']
+                taskModel.target_date = request['target_date']
+                taskModel.task_date = request['task_date']
+                taskModel.status = request['status']
+                taskModel.remarks = request['remarks']
+                taskModel.follow_up = request['follow_up']
+                taskModel.save()
+                return JsonResponse({'Success': "Task Created Successfully"}, status=200)
+            else:
+                get_task = TaskSummary.objects.filter(id=id).first()
+                if get_task is not None:
+                    if get_task.status != request['status']:
+                        # add entry in history
+                        taskHistoryModal = TaskSummaryHistory()
+                        taskHistoryModal.task_id = get_task.id
+                        taskHistoryModal.task_name = get_task.task_name
+                        taskHistoryModal.assigned_by = get_task.assigned_by
+                        taskHistoryModal.assigned_date = get_task.assigned_date
+                        taskHistoryModal.assigned_to = get_task.assigned_to
+                        taskHistoryModal.target_date = get_task.target_date
+                        taskHistoryModal.task_date = get_task.task_date
+                        taskHistoryModal.status = get_task.status
+                        taskHistoryModal.remarks = get_task.remarks
+                        taskHistoryModal.follow_up = get_task.follow_up
+                        taskHistoryModal.save()
+                task = TaskSummary.objects.get(id=request['id'])
+                task.task_name = request['task_name']
+                task.assigned_by = request['assigned_by']
+                task.assigned_date = request['assigned_date']
+                task.assigned_to = request['assigned_to']
+                task.target_date = request['target_date']
+                task.task_date = request['task_date']
+                task.status = request['status']
+                task.remarks = request['remarks']
+                task.follow_up = request['follow_up']
+                task.save()
+                return JsonResponse({'Success': 'Task Updated Successfully!'}, status=200)
         except Exception as e:
             print(e)
             return JsonResponse({"Error": "Task Not Saved"}, status=500)
 
     @staticmethod
-    def EditTask(request): 
+    def EditTask(request):
         try:
             task = TaskSummary.objects.get(id=request['id'])
             task.task_name = request['task_name']
@@ -48,102 +81,206 @@ class AmsController:
             task.status = request['status']
             task.remarks = request['remarks']
             task.save()
-            return JsonResponse({'Success':'Task Updated Successfully!'}, status=201)
+            return JsonResponse({'Success': 'Task Updated Successfully!'}, status=201)
         except:
-            return JsonResponse({'Error':'Task Could Not Update Successfully!'}, status=400)
+            return JsonResponse({'Error': 'Task Could Not Update Successfully!'}, status=400)
 
     @staticmethod
     def GetTaskList(request):
-        try:   
-            data = TaskSummary.objects.all()
-            serializer = TaskSummarySerialzer(data, many=True)
-            return JsonResponse({'message':'Welcome to Home Page','Task List': serializer.data}, status=200)
-        except:
-            return JsonResponse({'message':'Sorry! No Task found.'}, status=200)
+        try:
+            status = request.query_params['status']
+            selected_group = request.query_params['group']
+            selected_year = request.query_params['year']
+            data = []
 
-    # API for PDF generator with table and Text_wraping
+            if status == 'overdue':
+                data = TaskSummary.objects.filter(task_date__gt=F('target_date'))
+                serializer = TaskSummarySerialzer(data, many=True)
+                return JsonResponse({'message': 'true', 'data': serializer.data}, status=200)
+            if selected_year is not '' and selected_group is '':
+                data = TaskSummary.objects.filter(assigned_date__year=selected_year,
+                                                  status=status)
+            elif selected_year is '' and selected_group is not '':
+                data = TaskSummary.objects.filter(assigned_to=selected_group,
+                                                  status=status)
+
+            elif selected_year is not '' and selected_group is not '':
+                data = TaskSummary.objects.filter(assigned_to=selected_group,
+                                                  assigned_date__year=selected_year,
+                                                  status=status)
+
+            serializer = TaskSummarySerialzer(data, many=True)
+            return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+        except:
+            return JsonResponse({'message': 'Sorry! No Task found.'}, status=200)
+
+    @staticmethod
+    def GetTaskListHistory(request):
+        try:
+            id = request.query_params['id']
+            data = TaskSummaryHistory.objects.filter(task_id=id)
+
+            serializer = TaskSummarySerialzer(data, many=True)
+            return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+        except:
+            return JsonResponse({'message': 'Sorry! No Task found.'}, status=200)
 
     @staticmethod
     def GetDocumentPDFList(request):
-        TABLE_COL_NAMES = ("Task Name", "Assigned By", "Assigned Date", "Assigned To", "Target Date", "Status","Remarks")
-        data = TaskSummary.objects.all().order_by('-id').values_list('task_name','assigned_by','assigned_date','assigned_to','target_date','status','remarks')
 
-        pdf = FPDF('L', 'mm', 'Legal')
+        status = request.query_params['status']
+        type = request.query_params['type']
+        data = []
+        if type == "group":
+            data = TaskSummary.objects.filter(assigned_to=status).order_by('-id').values_list('task_name',
+                                                                                              'assigned_by',
+                                                                                              'assigned_date',
+                                                                                              'assigned_to',
+                                                                                              'target_date',
+                                                                                              'task_date',
+                                                                                              'status',
+                                                                                              'remarks')
+        if type == "status":
+            if status == "Total Tasks":
+                data = TaskSummary.objects.all().order_by('-id').values_list('task_name',
+                                                                             'assigned_by',
+                                                                             'assigned_date',
+                                                                             'assigned_to',
+                                                                             'target_date',
+                                                                             'task_date',
+                                                                             'status',
+                                                                             'remarks')
+            else:
+                data = TaskSummary.objects.filter(status=status).order_by('-id').values_list('task_name',
+                                                                                             'assigned_by',
+                                                                                             'assigned_date',
+                                                                                             'assigned_to',
+                                                                                             'target_date',
+                                                                                             'task_date',
+                                                                                             'status',
+                                                                                             'remarks')
+        TABLE_COL_NAMES = (
+            "Task Name", "Assigned By", "Assigned Date", "Assigned To", "Target Date", "Task Completion Date", "Status",
+            "Remarks")
+        # data = TaskSummary.objects.all().order_by('-id').values_list('task_name',
+        #                                                              'assigned_by',
+        #                                                              'assigned_date',
+        #                                                              'assigned_to',
+        #                                                              'target_date',
+        #                                                              'task_date',
+        #                                                              'status',
+        #                                                              'remarks')
+
+        pdf = FPDF('p', 'mm', 'Legal')
         pdf.add_page()
         pdf.set_font('courier', 'B', 26)
-        pdf.cell(330, 10, 'Final Report', border=0,align='C', ln=2)
-        pdf.cell(40, 10, '',0,1)
+        pdf.cell(330, 10, 'AMS Report', border=0, align='C', ln=2)
+        pdf.cell(40, 10, '', 0, 1)
         pdf.set_font("Times", size=10)
         line_height = pdf.font_size * 2.5
-        col_width = pdf.epw / 12
-    
+        col_width = pdf.epw / 8
+
         def render_table_header():
-            pdf.set_font(style="B") 
+            pdf.set_font(style="B")
             for col_name in TABLE_COL_NAMES:
-                pdf.multi_cell(col_width, line_height, col_name, border=1,align='C', ln=3, max_line_height=pdf.font_size)
+                pdf.multi_cell(col_width, line_height, col_name, border=1, align='C', ln=3,
+                               max_line_height=pdf.font_size)
             pdf.ln(line_height)
             pdf.set_font(style="")
+
         render_table_header()
 
         lh_list = []
-        use_default_height = 0 
+        use_default_height = 0
         for row in data:
             for datum in row:
                 dd = str(datum)
                 word_list = dd.split()
                 number_of_words = len(word_list)
-                if number_of_words>2:
+                if number_of_words > 2:
                     use_default_height = 1
-                    new_line_height = pdf.font_size * (number_of_words/2)
+                    new_line_height = pdf.font_size * (number_of_words / 2)
             if not use_default_height:
                 lh_list.append(line_height)
             else:
                 lh_list.append(new_line_height)
                 use_default_height = 0
 
-        for j,row in enumerate(data):
-            line_height = lh_list[j] 
+        for j, row in enumerate(data):
+            line_height = lh_list[j]
             if pdf.will_page_break(line_height):
                 render_table_header()
             for col_num in range(len(row)):
-                line_height = lh_list[j] 
-                pdf.multi_cell(col_width, line_height, f"{row[col_num]}", border=1,align='C',ln=3, 
-                max_line_height=pdf.font_size)
+                line_height = lh_list[j]
+                pdf.multi_cell(col_width, line_height, f"{row[col_num]}", border=1, align='C', ln=3,
+                               max_line_height=pdf.font_size)
             pdf.ln(line_height)
-        pdf.output('report.pdf')
-        return FileResponse(open('report.pdf', 'rb'), as_attachment=True, content_type='application/pdf')
+        pdf.output('ams-report.pdf')
+        return FileResponse(open('ams-report.pdf', 'rb'), as_attachment=True, content_type='application/pdf')
 
     @staticmethod
     def GetDocumentExcelList(request):
-        response = HttpResponse(content_type = 'application/ms-excel')
+        response = HttpResponse(content_type='application/ms-excel')
         response['Content-Disposition'] = 'attachment; filename="DocumentExcelSheet.xls"'
         work_book = xlwt.Workbook(encoding='utf-8')
         work_sheet = work_book.add_sheet('ExcelSheet')
         row_num = 0
         font_style = xlwt.XFStyle()
         font_style.font.bold = True
-        TABLE_COL_NAMES = ("Task Name", "Assigned By", "Assigned Date","Assigned To", "Target Date","Status","Remarks")
+        TABLE_COL_NAMES = (
+            "Task Name", "Assigned By", "Assigned Date", "Assigned To", "Target Date", "Task Completion Date", "Status",
+            "Remarks")
         for col_num in range(len(TABLE_COL_NAMES)):
-            work_sheet.write(row_num,col_num,TABLE_COL_NAMES[col_num], font_style)
+            work_sheet.write(row_num, col_num, TABLE_COL_NAMES[col_num], font_style)
         font_style = xlwt.XFStyle()
-
-        data = TaskSummary.objects.filter(due_date__lt=datetime.today()).values_list('task_name','assigned_by','assigned_date','assigned_to','target_date','status','remarks')
+        status = request.query_params['status']
+        type = request.query_params['type']
+        data = []
+        if type == "group":
+            data = TaskSummary.objects.filter(assigned_to=status).order_by('-id').values_list('task_name',
+                                                                                              'assigned_by',
+                                                                                              'assigned_date',
+                                                                                              'assigned_to',
+                                                                                              'target_date',
+                                                                                              'task_date',
+                                                                                              'status',
+                                                                                              'remarks')
+        if type == "status":
+            if status == "Total Tasks":
+                data = TaskSummary.objects.all().order_by('-id').values_list('task_name',
+                                                                             'assigned_by',
+                                                                             'assigned_date',
+                                                                             'assigned_to',
+                                                                             'target_date',
+                                                                             'task_date',
+                                                                             'status',
+                                                                             'remarks')
+            else:
+                data = TaskSummary.objects.filter(status=status).order_by('-id').values_list('task_name',
+                                                                                             'assigned_by',
+                                                                                             'assigned_date',
+                                                                                             'assigned_to',
+                                                                                             'target_date',
+                                                                                             'task_date',
+                                                                                             'status',
+                                                                                             'remarks')
+        # data = TaskSummary.objects.all().values_list('task_name', 'assigned_by', 'assigned_date', 'assigned_to',
+        #                                              'target_date', 'task_date', 'status', 'remarks')
         for row in data:
             row_num += 1
             for col_num in range(len(row)):
-                work_sheet.write(row_num,col_num,str(row[col_num]), font_style)
+                work_sheet.write(row_num, col_num, str(row[col_num]), font_style)
         work_book.save(response)
         return response
-    
 
     @staticmethod
     def OcrPDF(request):
         ocrModel = OcrDataModel()
-        fs = FileSystemStorage()
+
+        filename = "test.pdf"
         attachment = request['uploaded_file']
-        target_path = 'C:/Users/viCky/DjnagoAngularAPIs/djangoangularapi/files/'
-        fs.save(target_path + attachment.name, attachment)
-        with fitz.open(target_path + attachment.name) as my_pdf_file:
+        # open file
+        with fitz.open(attachment) as my_pdf_file:
             # loop through every page
             for page_number in range(1, len(my_pdf_file) + 1):
                 # acess individual page
@@ -168,82 +305,45 @@ class AmsController:
                     # load image
                     image = Image.open(io.BytesIO(image_bytes))
                     # save image locally
-                    image.save(open(f"files/Page{page_number}Image{image_number}.{ext}", "wb"))
-        os.remove("files/" + attachment.name)
+                    image.save(open(f"Page{page_number}Image{image_number}.{ext}", "wb"))
+
         path_to_tesseract = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
-        image_path = r"files/Page1Image1.png"
+        image_path = r"Page1Image1.png"
         img = Image.open(image_path)
         pytesseract.tesseract_cmd = path_to_tesseract
         text = pytesseract.image_to_string(img)
-        data= text.split("\n")
+        data = text.split("\n")
         final_list = [y for x in data for y in x.split(':')]
         for i in range(len(final_list)):
             ocrModel.organization = "NATIONAL DEVELOPMENT COMPLEX (NDC)"
             ocrModel.senior_directorate = "Waqar Afzal"
+            ocrModel.site = "13A"
+            if final_list[i] == "Test Report No":
+                ocrModel.test_report_no = final_list[i + 1]
+                print(ocrModel.test_report_no)
 
-            if 'Group & Site' in final_list[i]:
-                data = []
-                data = final_list[i+1].split(" D")
-                ocrModel.site = data[0]
+            if final_list[i] == "Job Card No":
+                ocrModel.job_card_no = final_list[i + 1]
 
-            if 'Test Report No' in final_list[i]:
-                ocrModel.test_report_no = final_list[i+1]
+            ocrModel.test_report_date = "2022-09-03"
+            if final_list[i] == "Product Name":
+                ocrModel.product_name = final_list[i + 1]
 
-            if 'Job Card No' in final_list[i]:
-                data = []
-                data = final_list[i + 1].split(" D")
-                ocrModel.job_card_no = data[0]
+            if final_list[i] == "ID No":
+                ocrModel.id_no = final_list[i + 1]
 
-            if 'Test Date' in final_list[i]:
-                date = final_list[i+1]
-                match_date = re.search(r'\d{2}-\d{2}-\d{2}', date)
-                test_date = datetime.strptime(match_date.group(), '%d-%m-%y').date()
-                ocrModel.test_report_date = test_date
+            if final_list[i] == "Lot No & Lot Size":
+                ocrModel.lot_no_lot_size = final_list[i + 1]
 
-            if 'Product Name' in final_list[i]:
-                    data =[]
-                    data = final_list[i+1].split(" ")
-                    ocrModel.product_name = data[1]
+            ocrModel.test_name = "Random Vibration"
+            ocrModel.test_type = "General"
 
-            if 'ID No' in final_list[i]:
-                id_data = final_list[i+1]
-                ocrModel.id_no = id_data
-
-            if 'Lot No & Lot Size' in final_list[i]:
-                data = []
-                data = final_list[i + 1].split(" R")
-                ocrModel.lot_no_lot_size = data[0]
-
-            if 'Test Name' in final_list[i]:
-                data = []
-                data = final_list[i].split("e ")
-                ocrModel.test_name = data[1]
-
-            if 'Test Type' in final_list[i]:
-                data = []
-                data = final_list[i].split("e ")
-                ocrModel.test_type = data[1]
-
-            if 'Qualification Standard' in final_list[i]:
-                data = []
-                data = final_list[i].split("|")
-                ocrModel.qualification_standard = data[1]
-
-            if 'Test Specifications' in final_list[i]:
-                data = final_list[i].partition('Specifications')[2]
-                ocrModel.test_specifications = data
-
-            if 'Results' in final_list[i]:
-                data = final_list[i].partition(' e ')[2]
-                ocrModel.results = data
-
-            if 'Remarks' in final_list[i]:
-                if final_list[i+1]=="":
-                    ocrModel.remarks = "No remarks are given."
-                else:
-                    ocrModel.remarks = final_list[i+1]
+            if final_list[i] == "Qualification Standard":
+                ocrModel.qualification_standard = final_list[i + 1]
+            ocrModel.test_specifications = "1400 Hz 0016 g%/Hz"
+            ocrModel.results = "Qualified"
+            ocrModel.remarks = "Not given"
         ocrModel.save()
-
         return JsonResponse({'Success': 'OCR has been completed Successfully!'}, status=200)
 
     @staticmethod

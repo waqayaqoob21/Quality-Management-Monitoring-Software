@@ -1,5 +1,6 @@
 from django.db import models
 
+
 # Create your models here.
 class TaskSummary(models.Model):
     task_name = models.TextField()
@@ -9,6 +10,23 @@ class TaskSummary(models.Model):
     target_date = models.DateField()
     status = models.CharField(max_length=355)
     remarks = models.TextField()
+    task_date = models.DateField(null=True)
+    follow_up = models.CharField(max_length=100, null=True)
+
+
+class TaskSummaryHistory(models.Model):
+    task_id = models.IntegerField(null=True)
+    task_name = models.TextField()
+    assigned_by = models.CharField(max_length=100)
+    assigned_date = models.DateField()
+    assigned_to = models.CharField(max_length=255)
+    target_date = models.DateField()
+    status = models.CharField(max_length=355)
+    remarks = models.TextField()
+    task_date = models.DateField(null=True)
+    follow_up = models.CharField(max_length=100, null=True)
+    created_at = models.DateField(auto_now_add=True)
+
 
 class OcrDataModel(models.Model):
     organization = models.CharField(max_length=300)
