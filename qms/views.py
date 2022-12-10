@@ -10,6 +10,7 @@ class AddQmsAuditAPIVIEW(APIView):
     permission_classes = [AllowAny]
 
     def post(self, request):
+        print("This is add qms")
         result = qms_obj.AddQmsAudit(request.data)
         return result
 class DeletetQmsAuditAPIVIEW(APIView):
@@ -20,9 +21,8 @@ class DeletetQmsAuditAPIVIEW(APIView):
         return result
 class GetQmsAuditListAPIVIEW(APIView):
     permission_classes = [AllowAny]
-
     def get(self, request):
-        result = qms_obj.GetQmsAuditList(request.data)
+        result = qms_obj.GetQmsAuditListCount(request)
         return result
 
 class GetQmsAuditPDFAPIVIEW(APIView):
@@ -37,6 +37,34 @@ class GetQmsAuditExcelAPIVIEW(APIView):
 
     def get(self, request):
         result = qms_obj.GetQmsAuditExcelList(request.data)
+        return result
+
+class GetQmsTrainingScheduleAPIVIEW(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        result = qms_obj.qmsTrainingSchedule(request.data)
+        return result
+
+class GetQmsTrainingScheduleListAPIVIEW(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        result = qms_obj.qmsTrainingScheduleList(request)
+        return result
+
+class GetQmsAuditScheduledAPIVIEW(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        result = qms_obj.qmsAuditScheduled(request.data)
+        return result
+
+class GetQmsAuditScheduledListAPIVIEW(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        result = qms_obj.qmsAuditScheduledList(request)
         return result
 # ======================CeSP Audit===============
 

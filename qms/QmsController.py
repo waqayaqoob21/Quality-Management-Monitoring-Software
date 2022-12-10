@@ -1,25 +1,22 @@
-from importlib import import_module
 from django.http import JsonResponse
-from ams.serializer import *
-from ams.models import *
 from fpdf import FPDF
 import xlwt
 from datetime import datetime, timedelta
 from django.http import FileResponse
 from django.http import HttpResponse
 from django.core.files.storage import FileSystemStorage
+from django.db.models import F, Q
 
-from mpm.models import ActiveMotors
-from mpm.serializer import ActiveMotorSerializer
-from qms.models import CespAudit, QmsAudit
-from qms.serializer import CespAuditSerializer, QmsAuditSerializer
+from qms.models import *
+from qms.serializer import *
 
 
 class QmsController:
     @staticmethod
     def AddQmsAudit(request):
-        qmsModel = QmsAudit()
-        try:
+            print("thi is add qms controller")
+            qmsModel = QmsAudit()
+        # try:
             id = request['id']
             if id == '0':
                 qmsModel.audit_id = 0 #request['audit_id']
@@ -59,17 +56,485 @@ class QmsController:
                     get_qms.save()
                     return JsonResponse({'status': 'True', 'message': "QMS Audit Updated Successfully!"},
                                 status=200)
-        except Exception as e:
-            return JsonResponse({'status': 'False', "message": "QMS Audit Not Saved"}, status=500)
-            
+        # except Exception as e:
+        #     return JsonResponse({'status': 'False', "message": "QMS Audit Not Saved"}, status=500)
+
     @staticmethod
-    def GetQmsAuditList(request):
+    def GetQmsAuditListCount(request, self=None):
         try:
-            data = QmsAudit.objects.all().order_by('id')
-            serializer = QmsAuditSerializer(data, many=True)
-            return JsonResponse({'data':serializer.data}, safe=False, status=200)
-        except:
-            return JsonResponse({'message': 'Sorry! No QMS Audit found.'}, status=500)
+
+            def get_filter(field_name, filter_condition, filter_value):
+                # thanks to the below post
+                # https://stackoverflow.com/questions/310732/in-django-how-does-one-filter-a-queryset-with-dynamic-field-lookups
+                # the idea to this below logic is very similar to that in the above mentioned post
+                if filter_condition.strip() == "contains":
+                    kwargs = {
+                        '{0}__icontains'.format(field_name): filter_value
+                    }
+                    return Q(**kwargs)
+
+                if filter_condition.strip() == "not_equal":
+                    kwargs = {
+                        '{0}__iexact'.format(field_name): filter_value
+                    }
+                    return ~Q(**kwargs)
+
+                if filter_condition.strip() == "starts_with":
+                    kwargs = {
+                        '{0}__istartswith'.format(field_name): filter_value
+                    }
+                    return Q(**kwargs)
+                if filter_condition.strip() == "equal":
+                    kwargs = {
+                        '{0}__iexact'.format(field_name): filter_value
+                    }
+                    return Q(**kwargs)
+
+                if filter_condition.strip() == "not_equal":
+                    kwargs = {
+                        '{0}__iexact'.format(field_name): filter_value
+                    }
+
+                    return ~Q(**kwargs)
+
+            selected_year = request.query_params.get('selected_year')
+            selected_org = request.query_params.get('selected_organization')
+            selected_setup = request.query_params.get('selected_setup')
+            selected_standard = request.query_params.get('selected_standard')
+
+            typeQuery = Q()
+            filter_objects = Q()
+            if selected_standard == 'PA':
+                filter_objects &= get_filter('standard', 'equal','PA')
+            elif selected_standard == 'IS O9001 : 2015':
+                filter_objects &= get_filter('standard', 'equal','IS O9001 : 2015')
+            elif selected_standard == 'AS9100 : Rev D':
+                filter_objects &= get_filter('standard', 'equal','AS9100 : Rev D')
+            elif selected_standard == 'ISO17025 : 2017':
+                filter_objects &= get_filter('standard', 'equal','ISO17025 : 2017')
+            else:
+                filter_objects &= get_filter('standard', 'equal','ISO17020 : 2012')
+
+            total_audits = 0
+            current_year_audits = 0
+            audit_in_process = 0
+            audit_completed = 0
+            inprocess_overdue = 0
+            total_audit_schedule = 0
+            audit_remaining = 0
+
+            inprocess_overdue = QmsAudit.objects.filter(audit_close_date__lt=F('planned_date')).count()
+            total_audits = QmsAudit.objects.count()
+
+            if selected_year is '':
+                current_year_audits = QmsAudit.objects.filter(filter_objects).count()
+                audit_in_process = QmsAudit.objects.filter(audit_status='In process').count()
+                audit_completed = QmsAudit.objects.filter(audit_status='Completed').count()
+                total_audit_schedule = QmsAudit.objects.filter(audit_status='Scheduled').count()
+                audit_remaining = QmsAudit.objects.filter(audit_status='Remaining').count()
+
+                if selected_standard is not '' and selected_org is '' and selected_setup is '':
+                    current_year_audits = QmsAudit.objects.filter(filter_objects).count()
+                    audit_in_process = QmsAudit.objects.filter(filter_objects, audit_status='In process').count()
+                    total_audit_schedule = QmsAudit.objects.filter(filter_objects, audit_status='Scheduled').count()
+                    audit_completed = QmsAudit.objects.filter(filter_objects, audit_status='Completed').count()
+                    audit_remaining = QmsAudit.objects.filter(filter_objects, audit_status='Remaining').count()
+
+                elif selected_standard is '' and selected_org is not '' and selected_setup is not '':
+                    current_year_audits = QmsAudit.objects.filter(Organization=selected_org, certification_setup = selected_setup).count()
+                    audit_in_process = QmsAudit.objects.filter(audit_status='In process',Organization=selected_org,certification_setup = selected_setup).count()
+                    total_audit_schedule = QmsAudit.objects.filter(audit_status='Scheduled',Organization=selected_org,certification_setup = selected_setup).count()
+                    audit_completed = QmsAudit.objects.filter(audit_status='Completed',Organization=selected_org,certification_setup = selected_setup).count()
+                    audit_remaining = QmsAudit.objects.filter(audit_status='Remaining',Organization=selected_org,certification_setup = selected_setup).count()
+
+                elif selected_standard is not '' and selected_org is not '' and selected_setup is '':
+                    current_year_audits = QmsAudit.objects.filter(filter_objects,Organization=selected_org).count()
+                    audit_in_process = QmsAudit.objects.filter(filter_objects,audit_status='In process',Organization=selected_org).count()
+                    total_audit_schedule = QmsAudit.objects.filter(filter_objects,Organization=selected_org, audit_status='Scheduled').count()
+                    audit_completed = QmsAudit.objects.filter(filter_objects,Organization=selected_org, audit_status='Completed').count()
+                    audit_remaining = QmsAudit.objects.filter(filter_objects,Organization=selected_org, audit_status='Remaining').count()
+
+                elif selected_standard is '' and selected_org is not '' and selected_setup is '':
+                    current_year_audits = QmsAudit.objects.filter(Organization=selected_org).count()
+                    audit_in_process = QmsAudit.objects.filter(audit_status='In process',Organization=selected_org).count()
+                    total_audit_schedule = QmsAudit.objects.filter(audit_status='Scheduled',Organization=selected_org).count()
+                    audit_completed = QmsAudit.objects.filter(audit_status='Completed',Organization=selected_org).count()
+                    audit_remaining = QmsAudit.objects.filter(audit_status='Remaining',Organization=selected_org).count()
+
+                elif selected_standard is not '' and selected_org is not ''and selected_setup is not '':
+                    current_year_audits = QmsAudit.objects.filter(filter_objects,Organization=selected_org,certification_setup = selected_setup).count()
+                    audit_in_process = QmsAudit.objects.filter(filter_objects, audit_status='In process',Organization=selected_org,certification_setup = selected_setup).count()
+                    total_audit_schedule = QmsAudit.objects.filter(filter_objects, audit_status='Scheduled',Organization=selected_org,certification_setup = selected_setup).count()
+                    audit_completed = QmsAudit.objects.filter(filter_objects, audit_status='Completed',Organization=selected_org,certification_setup = selected_setup).count()
+                    audit_remaining = QmsAudit.objects.filter(filter_objects, audit_status='Remaining',Organization=selected_org,certification_setup = selected_setup).count()
+            else:
+                if selected_standard is '' and selected_org is '' and selected_setup is '':
+                    current_year_audits = QmsAudit.objects.filter(audit_close_date__year=selected_year,Organization=selected_org).count()
+                    audit_in_process = QmsAudit.objects.filter(audit_status='In process',audit_close_date__year=selected_year,Organization=selected_org).count()
+                    total_audit_schedule = QmsAudit.objects.filter(audit_status='Scheduled',audit_close_date__year=selected_year,Organization=selected_org).count()
+                    audit_completed = QmsAudit.objects.filter(audit_status='Completed',audit_close_date__year=selected_year,Organization=selected_org).count()
+                    audit_remaining = QmsAudit.objects.filter(audit_status='Remaining',audit_close_date__year=selected_year,Organization=selected_org).count()
+                elif selected_standard is not '' and selected_org is '' and selected_setup is '':
+                    if selected_org == 'All Nocs':
+                        current_year_audits = QmsAudit.objects.filter(filter_objects,
+                                                                      audit_close_date__year=selected_year).count()
+                        audit_in_process = QmsAudit.objects.filter(filter_objects, audit_status='In process',
+                                                                   audit_close_date__year=selected_year).count()
+                        total_audit_schedule = QmsAudit.objects.filter(filter_objects, audit_status='Scheduled',
+                                                                       audit_close_date__year=selected_year).count()
+                        audit_completed = QmsAudit.objects.filter(filter_objects, audit_status='Completed',
+                                                                  audit_close_date__year=selected_year).count()
+                        audit_remaining = QmsAudit.objects.filter(filter_objects, audit_status='Remaining',
+                                                                  audit_close_date__year=selected_year).count()
+                    else:
+                        current_year_audits = QmsAudit.objects.filter(filter_objects,
+                                                                      audit_close_date__year=selected_year).count()
+                        audit_in_process = QmsAudit.objects.filter(filter_objects, audit_status='In process',
+                                                                   audit_close_date__year=selected_year).count()
+                        total_audit_schedule = QmsAudit.objects.filter(filter_objects, audit_status='Scheduled',
+                                                                       audit_close_date__year=selected_year).count()
+                        audit_completed = QmsAudit.objects.filter(filter_objects, audit_status='Completed',
+                                                                  audit_close_date__year=selected_year).count()
+                        audit_remaining = QmsAudit.objects.filter(filter_objects, audit_status='Remaining',
+                                                                  audit_close_date__year=selected_year).count()
+
+                elif selected_standard is '' and selected_org is not '' and selected_setup is '':
+                    if selected_org == 'All Nocs':
+                        current_year_audits = QmsAudit.objects.filter(audit_close_date__year=selected_year,Organization=selected_org).count()
+                        audit_in_process = QmsAudit.objects.filter(audit_status='In process',audit_close_date__year=selected_year,Organization=selected_org).count()
+                        total_audit_schedule = QmsAudit.objects.filter(audit_status='Scheduled',audit_close_date__year=selected_year,Organization=selected_org).count()
+                        audit_completed = QmsAudit.objects.filter(audit_status='Completed',audit_close_date__year=selected_year,Organization=selected_org).count()
+                        audit_remaining = QmsAudit.objects.filter(audit_status='Remaining',audit_close_date__year=selected_year,Organization=selected_org).count()
+
+                    else:
+                        current_year_audits = QmsAudit.objects.filter(audit_close_date__year=selected_year,Organization=selected_org).count()
+                        audit_in_process = QmsAudit.objects.filter(audit_status='Audit in-process',audit_close_date__year=selected_year,Organization=selected_org).count()
+                        total_audit_schedule = QmsAudit.objects.filter(audit_status='Scheduled',audit_close_date__year=selected_year,Organization=selected_org).count()
+                        audit_completed = QmsAudit.objects.filter(audit_status='Completed',audit_close_date__year=selected_year,Organization=selected_org).count()
+                        audit_remaining = QmsAudit.objects.filter(audit_status='Remaining',audit_close_date__year=selected_year,Organization=selected_org).count()
+
+                elif selected_standard is'' and selected_org is '' and selected_setup is not '':
+                    if selected_org == 'All Nocs':
+                        current_year_audits = QmsAudit.objects.filter(audit_close_date__year=selected_year,certification_setup = selected_setup).count()
+                        audit_in_process = QmsAudit.objects.filter( audit_status='In process',audit_close_date__year=selected_year,certification_setup = selected_setup).count()
+                        total_audit_schedule = QmsAudit.objects.filter(audit_status='Scheduled',audit_close_date__year=selected_year,certification_setup = selected_setup).count()
+                        audit_completed = QmsAudit.objects.filter(audit_status='Completed',audit_close_date__year=selected_year,certification_setup = selected_setup).count()
+                        audit_remaining = QmsAudit.objects.filter(audit_status='Remaining',audit_close_date__year=selected_year,certification_setup = selected_setup).count()
+
+                    else:
+                        current_year_audits = QmsAudit.objects.filter(filter_objects,audit_close_date__year=selected_year,Organization=selected_org,certification_setup = selected_setup).count()
+                        audit_in_process = QmsAudit.objects.filter(filter_objects, audit_status='In process',audit_close_date__year=selected_year,certification_setup = selected_setup).count()
+                        total_audit_schedule = QmsAudit.objects.filter(filter_objects,audit_status='Scheduled',audit_close_date__year=selected_year,certification_setup = selected_setup).count()
+                        audit_completed = QmsAudit.objects.filter(filter_objects, audit_status='Completed',audit_close_date__year=selected_year,certification_setup = selected_setup).count()
+                        audit_remaining = QmsAudit.objects.filter(filter_objects, audit_status='Remaining',audit_close_date__year=selected_year,certification_setup = selected_setup).count()
+
+                elif selected_standard is not '' and selected_org is not '' and selected_setup is not '':
+                    if selected_org == 'All Nocs':
+                        current_year_audits = QmsAudit.objects.filter(filter_objects,
+                                                                        audit_close_date__year=selected_year,certification_setup = selected_setup,Organization=selected_org).count()
+                        audit_in_process = QmsAudit.objects.filter(filter_objects, audit_status='In process',
+                                                                     audit_close_date__year=selected_year,certification_setup = selected_setup,Organization=selected_org).count()
+                        total_audit_schedule = QmsAudit.objects.filter(filter_objects,
+                                                                        audit_status='Scheduled',
+                                                                     audit_close_date__year=selected_year,certification_setup = selected_setup,Organization=selected_org).count()
+                        audit_completed = QmsAudit.objects.filter(filter_objects, audit_status='Completed',
+                                                                     audit_close_date__year=selected_year,certification_setup = selected_setup,Organization=selected_org).count()
+                        audit_remaining = QmsAudit.objects.filter(filter_objects, audit_status='Remaining',
+                                                                     audit_close_date__year=selected_year,certification_setup = selected_setup,Organization=selected_org).count()
+
+                    else:
+                        current_year_audits = QmsAudit.objects.filter(filter_objects,
+                                                                        audit_close_date__year=selected_year,
+                                                                        Organization=selected_org,certification_setup = selected_setup).count()
+                        audit_in_process = QmsAudit.objects.filter(filter_objects, audit_status='In process',
+                                                                     audit_close_date__year=selected_year,
+                                                                     Organization=selected_org,certification_setup = selected_setup).count()
+                        total_audit_schedule = QmsAudit.objects.filter(filter_objects,
+                                                                        audit_status='Scheduled',
+                                                                     Organization=selected_org,certification_setup = selected_setup).count()
+                        audit_completed = QmsAudit.objects.filter(filter_objects, audit_status='Completed',
+                                                                     Organization=selected_org,certification_setup = selected_setup).count()
+                        audit_remaining = QmsAudit.objects.filter(filter_objects, audit_status='Remaining',
+                                                                     Organization=selected_org,certification_setup = selected_setup).count()
+
+
+            dist = {
+                'total_audits': total_audits,
+                'current_year_audits': current_year_audits,
+                'audit_in_process': audit_in_process,
+                'audit_completed':audit_completed,
+                'audit_remaining':audit_remaining,
+                'total_audit_schedule': total_audit_schedule,
+                'inprocess_overdue':inprocess_overdue,
+
+            }
+
+            # DataCount.append(dist)
+            return JsonResponse({'status': 'True', 'data': dist},
+                                status=200)
+
+        except Exception as e:
+            print(e)
+            return JsonResponse({'status': 'False', "message": "Internal Server Error"}, status=500)
+            pass
+
+    @staticmethod
+    def qmsTrainingSchedule(request):
+        qms_obj = QmsTrainingSchedule()
+        id = request['id']
+        if id == '0':
+            qms_obj.sr_no = request['sr_no']
+            qms_obj.training_type = request['training_type']
+            qms_obj.training_start_date = request['training_start_date']
+            qms_obj.training_end_date = request['training_end_date']
+            qms_obj.trainer = request['trainer']
+            qms_obj.standards = request['standards']
+            qms_obj.organizations = request['organizations']
+            qms_obj.setups = request['setups']
+            qms_obj.save()
+            return JsonResponse({'Success': 'Training Schedule inserted Successfully!'})
+        else:
+            get_obj = QmsTrainingSchedule.objects.filter(id=id).first()
+            get_obj.sr_no = request['sr_no']
+            get_obj.training_type = request['training_type']
+            get_obj.training_start_date = request['training_start_date']
+            get_obj.training_end_date = request['training_end_date']
+            get_obj.trainer = request['trainer']
+            get_obj.standards = request['standards']
+            get_obj.organizations = request['organizations']
+            get_obj.setups = request['setups']
+            get_obj.save()
+            return JsonResponse({'Success': 'Training Schedule Updated Successfully!'})
+
+    @staticmethod
+    def qmsTrainingScheduleList(request):
+        selected_year = request.query_params.get('selected_year')
+        selected_org = request.query_params.get('selected_organization')
+        selected_setup = request.query_params.get('selected_setup')
+        selected_standard = request.query_params.get('selected_standard')
+
+        if selected_year is '':
+            if selected_org is   '' and selected_standard == '0'  and selected_setup == '0':
+                data = QmsTrainingSchedule.objects.all()
+                serializer = QmsTrainingScheduleSerializer(data, many=True)
+                return JsonResponse({'data': serializer.data}, safe=False, status=200)
+
+            elif selected_org is '' and selected_standard == '0' and selected_setup is not'':
+                data = QmsTrainingSchedule.objects.filter(setups=selected_setup)
+                serializer = QmsTrainingScheduleSerializer(data, many=True)
+                return JsonResponse({'data': serializer.data}, safe=False, status=200)
+
+            elif selected_org is '' and selected_standard is  not'' and selected_setup == '0':
+                data = QmsTrainingSchedule.objects.filter(standards=selected_standard)
+                serializer = QmsTrainingScheduleSerializer(data, many=True)
+                return JsonResponse({'data': serializer.data}, safe=False, status=200)
+
+            elif selected_org is '' and selected_standard  is not'' and selected_setup is not'':
+                data = QmsTrainingSchedule.objects.filter(standards=selected_standard,setups=selected_setup)
+                serializer = QmsTrainingScheduleSerializer(data, many=True)
+                return JsonResponse({'data': serializer.data}, safe=False, status=200)
+
+            elif selected_org is not '' and selected_standard == '0' and selected_setup == '0':
+                data = QmsTrainingSchedule.objects.filter(organizations=selected_org)
+                serializer = QmsTrainingScheduleSerializer(data, many=True)
+                return JsonResponse({'data': serializer.data}, safe=False, status=200)
+
+            elif selected_org is not '' and selected_standard == '0' and selected_setup is not'':
+                data = QmsTrainingSchedule.objects.filter(organizations=selected_org,setups=selected_setup)
+                serializer = QmsTrainingScheduleSerializer(data, many=True)
+                return JsonResponse({'data': serializer.data}, safe=False, status=200)
+
+            elif selected_org is not '' and selected_standard is not '' and selected_setup == '0':
+                data = QmsTrainingSchedule.objects.filter(organizations=selected_org,standards=selected_standard)
+                serializer = QmsTrainingScheduleSerializer(data, many=True)
+                return JsonResponse({'data': serializer.data}, safe=False, status=200)
+
+            else:
+                data = QmsTrainingSchedule.objects.filter(organizations=selected_org,standards=selected_standard,setups=selected_setup)
+                serializer = QmsTrainingScheduleSerializer(data, many=True)
+                return JsonResponse({'data': serializer.data}, safe=False, status=200)
+
+        else:
+                if selected_org is '' and selected_standard == '0' and selected_setup == '0':
+                    data = QmsTrainingSchedule.objects.filter(training_end_date__year=selected_year)
+                    serializer = QmsTrainingScheduleSerializer(data, many=True)
+                    return  JsonResponse({'data':serializer.data}, safe=False, status=200)
+
+                elif selected_org is '' and selected_standard == '0' and selected_setup is not'':
+                    data = QmsTrainingSchedule.objects.filter(training_end_date__year=selected_year,setups=selected_setup)
+                    serializer = QmsTrainingScheduleSerializer(data, many=True)
+                    return  JsonResponse({'data':serializer.data}, safe=False, status=200)
+
+                elif selected_org is '' and selected_standard is not '' and selected_setup == '0':
+                    data = QmsTrainingSchedule.objects.filter(training_end_date__year=selected_year,standards=selected_standard)
+                    serializer = QmsTrainingScheduleSerializer(data, many=True)
+                    return  JsonResponse({'data':serializer.data}, safe=False, status=200)
+
+                elif selected_org is '' and selected_standard is not '' and selected_setup is not'':
+                    data = QmsTrainingSchedule.objects.filter(training_end_date__year=selected_year,standards=selected_standard,setups=selected_setup)
+                    serializer = QmsTrainingScheduleSerializer(data, many=True)
+                    return  JsonResponse({'data':serializer.data}, safe=False, status=200)
+
+                elif selected_org is not '' and selected_standard =='0' and selected_setup == '0':
+                    data = QmsTrainingSchedule.objects.filter(training_end_date__year = selected_year,organizations=selected_org)
+                    serializer = QmsTrainingScheduleSerializer(data, many=True)
+                    return  JsonResponse({'data':serializer.data}, safe=False, status=200)
+
+                elif selected_org is not '' and selected_standard =='0' and selected_setup is not'':
+                    data = QmsTrainingSchedule.objects.filter(training_end_date__year = selected_year,organizations=selected_org,setups=selected_setup)
+                    serializer = QmsTrainingScheduleSerializer(data, many=True)
+                    return  JsonResponse({'data':serializer.data}, safe=False, status=200)
+
+                elif selected_org is not '' and selected_standard is not '' and selected_setup == '0':
+                    data = QmsTrainingSchedule.objects.filter(training_end_date__year = selected_year,organizations=selected_org,standards=selected_standard)
+                    serializer = QmsTrainingScheduleSerializer(data, many=True)
+                    return  JsonResponse({'data':serializer.data}, safe=False, status=200)
+
+                else:
+                    data = QmsTrainingSchedule.objects.filter(training_end_date__year = selected_year,organizations=selected_org,standards=selected_standard,setups=selected_setup)
+                    serializer = QmsTrainingScheduleSerializer(data, many=True)
+                    return  JsonResponse({'data':serializer.data}, safe=False, status=200)
+
+        return  JsonResponse({'sorry','Data not found'}, safe=False, status=200)
+
+
+    @staticmethod
+    def qmsAuditScheduled(request):
+        aud_obj = QmsAuditScheduled()
+        id = request['id']
+        if id == '0':
+            aud_obj.sr_no = request['sr_no']
+            aud_obj.organization = request['organization']
+            aud_obj.standard = request['standard']
+            aud_obj.audit_due_date = request['audit_due_date']
+            aud_obj.audit_done = request['audit_done']
+            aud_obj.followup_done = request['followup_done']
+            aud_obj.certifification_validity_date = request['certifification_validity_date']
+            aud_obj.certifification_validity_rescheduling_date = request['certifification_validity_rescheduling_date']
+            aud_obj.category = request['category']
+            aud_obj.status = request['status']
+            aud_obj.next_due_date = request['next_due_date']
+            aud_obj.remarks = request['remarks']
+            aud_obj.save()
+            return JsonResponse({'Success': 'Training Schedule inserted Successfully!'})
+        else:
+            get_obj = QmsTrainingSchedule.objects.filter(id=id).first()
+            get_obj.sr_no = request['sr_no']
+            get_obj.organization = request['organization']
+            get_obj.standard = request['standard']
+            get_obj.audit_due_date = request['audit_due_date']
+            get_obj.audit_done = request['audit_done']
+            get_obj.followup_done = request['followup_done']
+            get_obj.certifification_validity_date = request['certifification_validity_date']
+            get_obj.certifification_validity_rescheduling_date = request['certifification_validity_rescheduling_date']
+            get_obj.category = request['category']
+            get_obj.status = request['status']
+            get_obj.next_due_date = request['next_due_date']
+            get_obj.remarks = request['remarks']
+            get_obj.save()
+            return JsonResponse({'Success': 'Training Schedule Updated Successfully!'})
+
+    @staticmethod
+    def qmsAuditScheduledList(request):
+        selected_year = request.query_params.get('selected_year')
+        selected_org = request.query_params.get('selected_organization')
+        selected_setup = request.query_params.get('selected_setup')
+        selected_standard = request.query_params.get('selected_standard')
+
+        if selected_year is '':
+            if selected_org is '' and selected_standard == '0' and selected_setup == '0':
+                data = QmsAuditScheduled.objects.all()
+                serializer = QmsAuditScheduleSerializer(data, many=True)
+                return JsonResponse({'data': serializer.data}, safe=False, status=200)
+
+            elif selected_org is '' and selected_standard == '0' and selected_setup is not '':
+                data = QmsAuditScheduled.objects.filter(setups=selected_setup)
+                serializer = QmsAuditScheduleSerializer(data, many=True)
+                return JsonResponse({'data': serializer.data}, safe=False, status=200)
+
+            elif selected_org is '' and selected_standard is not '' and selected_setup == '0':
+                data = QmsAuditScheduled.objects.filter(standards=selected_standard)
+                serializer = QmsAuditScheduleSerializer(data, many=True)
+                return JsonResponse({'data': serializer.data}, safe=False, status=200)
+
+            elif selected_org is '' and selected_standard is not '' and selected_setup is not '':
+                data = QmsAuditScheduled.objects.filter(standards=selected_standard, setups=selected_setup)
+                serializer = QmsAuditScheduleSerializer(data, many=True)
+                return JsonResponse({'data': serializer.data}, safe=False, status=200)
+
+            elif selected_org is not '' and selected_standard == '0' and selected_setup == '0':
+                data = QmsAuditScheduled.objects.filter(organizations=selected_org)
+                serializer = QmsAuditScheduleSerializer(data, many=True)
+                return JsonResponse({'data': serializer.data}, safe=False, status=200)
+
+            elif selected_org is not '' and selected_standard == '0' and selected_setup is not '':
+                data = QmsAuditScheduled.objects.filter(organizations=selected_org, setups=selected_setup)
+                serializer = QmsAuditScheduleSerializer(data, many=True)
+                return JsonResponse({'data': serializer.data}, safe=False, status=200)
+
+            elif selected_org is not '' and selected_standard is not '' and selected_setup == '0':
+                data = QmsAuditScheduled.objects.filter(organizations=selected_org, standards=selected_standard)
+                serializer = QmsAuditScheduleSerializer(data, many=True)
+                return JsonResponse({'data': serializer.data}, safe=False, status=200)
+
+            else:
+                data = QmsAuditScheduled.objects.filter(organizations=selected_org, standards=selected_standard,
+                                                          setups=selected_setup)
+                serializer = QmsAuditScheduleSerializer(data, many=True)
+                return JsonResponse({'data': serializer.data}, safe=False, status=200)
+
+        else:
+            if selected_org is '' and selected_standard == '0' and selected_setup == '0':
+                data = QmsAuditScheduled.objects.filter(training_end_date__year=selected_year)
+                serializer = QmsAuditScheduleSerializer(data, many=True)
+                return JsonResponse({'data': serializer.data}, safe=False, status=200)
+
+            elif selected_org is '' and selected_standard == '0' and selected_setup is not '':
+                data = QmsAuditScheduled.objects.filter(training_end_date__year=selected_year, setups=selected_setup)
+                serializer = QmsAuditScheduleSerializer(data, many=True)
+                return JsonResponse({'data': serializer.data}, safe=False, status=200)
+
+            elif selected_org is '' and selected_standard is not '' and selected_setup == '0':
+                data = QmsAuditScheduled.objects.filter(training_end_date__year=selected_year,
+                                                          standards=selected_standard)
+                serializer = QmsAuditScheduleSerializer(data, many=True)
+                return JsonResponse({'data': serializer.data}, safe=False, status=200)
+
+            elif selected_org is '' and selected_standard is not '' and selected_setup is not '':
+                data = QmsAuditScheduled.objects.filter(training_end_date__year=selected_year,
+                                                          standards=selected_standard, setups=selected_setup)
+                serializer = QmsAuditScheduleSerializer(data, many=True)
+                return JsonResponse({'data': serializer.data}, safe=False, status=200)
+
+            elif selected_org is not '' and selected_standard == '0' and selected_setup == '0':
+                data = QmsAuditScheduled.objects.filter(training_end_date__year=selected_year,
+                                                          organizations=selected_org)
+                serializer = QmsAuditScheduleSerializer(data, many=True)
+                return JsonResponse({'data': serializer.data}, safe=False, status=200)
+
+            elif selected_org is not '' and selected_standard == '0' and selected_setup is not '':
+                data = QmsAuditScheduled.objects.filter(training_end_date__year=selected_year,
+                                                          organizations=selected_org, setups=selected_setup)
+                serializer = QmsAuditScheduleSerializer(data, many=True)
+                return JsonResponse({'data': serializer.data}, safe=False, status=200)
+
+            elif selected_org is not '' and selected_standard is not '' and selected_setup == '0':
+                data = QmsAuditScheduled.objects.filter(training_end_date__year=selected_year,
+                                                          organizations=selected_org, standards=selected_standard)
+                serializer = QmsAuditScheduleSerializer(data, many=True)
+                return JsonResponse({'data': serializer.data}, safe=False, status=200)
+
+            else:
+                data = QmsAuditScheduled.objects.filter(training_end_date__year=selected_year,
+                                                          organizations=selected_org, standards=selected_standard,
+                                                          setups=selected_setup)
+                serializer = QmsAuditScheduleSerializer(data, many=True)
+                return JsonResponse({'data': serializer.data}, safe=False, status=200)
+
+        return JsonResponse({'sorry', 'Data not found'}, safe=False, status=200)
+
+
+
 
     @staticmethod
     def DeleteQmsAudit(request, pk):
@@ -79,6 +544,7 @@ class QmsController:
             return JsonResponse({'message': 'QMS Audit has been deleted'}, status=200)
         except:
             return JsonResponse({'message': 'Sorry! No QMS Audit found.'}, status=500)
+
 
     @staticmethod
     def GetQmsAuditPDFList(request):
