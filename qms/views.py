@@ -19,7 +19,14 @@ class DeletetQmsAuditAPIVIEW(APIView):
         result = qms_obj.DeleteQmsAudit(request.data, pk)
         print(result)
         return result
+
 class GetQmsAuditListAPIVIEW(APIView):
+        permission_classes = [AllowAny]
+
+        def get(self, request):
+            result = qms_obj.GetQmsAuditList(request)
+            return result
+class GetQmsAuditListCountAPIVIEW(APIView):
     permission_classes = [AllowAny]
     def get(self, request):
         result = qms_obj.GetQmsAuditListCount(request)

@@ -4,7 +4,8 @@ from .views import *
 urlpatterns = [
         path('addqms/', AddQmsAuditAPIVIEW.as_view(), name='addqms'),
         path('editqms/', AddQmsAuditAPIVIEW.as_view(), name='editqms'),
-        path('qmslist/', GetQmsAuditListAPIVIEW.as_view(), name='qmslist'),
+        path('qmslist/', GetQmsAuditListCountAPIVIEW.as_view(), name='qmslist'),
+        path('qmsauditlist/',GetQmsAuditListAPIVIEW.as_view(), name='qmsauditlist'),
         # re_path(r'^deleteqms/(?P<pk>[0-9]+)$',DeletetQmsAuditAPIVIEW.as_view(), name='deleteqms'),
         path('qmspdf/', GetQmsAuditPDFAPIVIEW.as_view(), name='qmspdf'),
         path('qmsexcel/', GetQmsAuditExcelAPIVIEW.as_view(), name='qmsexcel'),

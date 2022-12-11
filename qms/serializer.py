@@ -6,6 +6,7 @@ class QmsAuditSerializer(Serializer):
     audit_id = IntegerField()
     Organization = CharField()
     site = CharField()
+    setup = CharField()
     certification_status= CharField()
     previous_standard = CharField()
     certification_validity_date = DateTimeField()

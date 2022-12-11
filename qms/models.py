@@ -7,6 +7,7 @@ class QmsAudit(models.Model):
     audit_id = models.IntegerField()
     Organization = models.CharField(max_length=300)
     site = models.CharField(max_length=300)
+    setup = models.CharField(max_length=300)
     certification_status = models.CharField(max_length=300)
     previous_standard = models.CharField(max_length=300)
     certification_validity_date = models.DateTimeField(auto_now_add=False, db_index=True, null=True)
