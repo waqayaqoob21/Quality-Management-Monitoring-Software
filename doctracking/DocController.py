@@ -9,7 +9,7 @@ from django.http import JsonResponse, FileResponse, HttpResponse
 from fpdf import FPDF
 import xlwt
 
-from passlib.utils.compat import izip
+
 
 from ams.models import TaskSummary
 from doctracking.models import doctrackingHistory
@@ -36,7 +36,8 @@ class DocController:
                 docModal.marked_to = request['marked_to']
                 docModal.marked_date = request['marked_date']
                 docModal.due_date = request['due_date']
-                docModal.task_date = request['task_date']
+                if request['task_date'] != "":
+                    docModal.task_date = request['task_date']
                 docModal.status = request['status']
                 docModal.sent_to = request['sent_to']
                 docModal.sent_date = request['sent_date']
@@ -53,8 +54,7 @@ class DocController:
                 get_doc = doctracking.objects.filter(id=id).first()
                 if get_doc is not None:
                     if str(get_doc.receive_date.date()) != request['receive_date'] or str(get_doc.marked_date.date()) != \
-                            request['marked_date'] or str(get_doc.due_date.date()) != request['due_date'] or \
-                            str(get_doc.task_date.date()) != request['task_date']:
+                            request['marked_date'] or str(get_doc.due_date.date()) != request['due_date']:
                         # add entry in history table
                         docHistoryModal = doctrackingHistory()
                         docHistoryModal.doc_name = get_doc.doc_name
@@ -81,7 +81,8 @@ class DocController:
                 get_doc.marked_to = request['marked_to']
                 get_doc.marked_date = request['marked_date']
                 get_doc.due_date = request['due_date']
-                get_doc.task_date = request['task_date']
+                if request['task_date'] != "":
+                    get_doc.task_date = request['task_date']
                 get_doc.status = request['status']
                 get_doc.sent_to = request['sent_to']
                 get_doc.sent_date = request['sent_date']
@@ -522,6 +523,8 @@ class DocController:
             doc_approvedList = doctracking.objects.filter(status='Approved')
             over_due_doc = doctracking.objects.filter(due_date__lt=F('task_date')).count()
             doc_count = doctracking.objects.count()
+            doc_approved = doctracking.objects.filter(status='Approved').count()
+            total_doc_approved = doctracking.objects.filter(status='Approved').count()
             if selected_year is '':
                 doc_approved = doctracking.objects.filter(status='Approved').count()
                 doc_approvedList = doctracking.objects.filter(status='Approved')
@@ -685,13 +688,14 @@ class DocController:
                                                                              receive_date__year=selected_year,
                                                                              sender=selected_org).count()
 
-            ET_count = doc_approvedList.filter(doc_type='Envirnomental Testing Criteria(ET)').count()
-            ATP_count = doc_approvedList.filter(doc_type='APT').count()
-            HC_count = doc_approvedList.filter(doc_type='Hydrostatic Criteria').count()
-            QC_count = doc_approvedList.filter(doc_type='Qualification Criteria').count()
             QAC_count = doc_approvedList.filter(doc_type='Qualification & Acceptance Criteria').count()
-            SST_count = doc_approvedList.filter(doc_type='Structural Strength Testing(SST)').count()
-            TDP_count = doc_approvedList.filter(doc_type='Technical Data Pack (TDP)').count()
+            QFTP_count = doc_approvedList.filter(doc_type='QFTP').count()
+            TDP_count = doc_approvedList.filter(doc_type='TDP').count()
+            SOP_count = doc_approvedList.filter(doc_type='SOP').count()
+            Guidelines_count = doc_approvedList.filter(doc_type='Guidelines').count()
+            others_count = doc_approvedList.filter(doc_type='Others/Misc').count()
+            # SST_count = doc_approvedList.filter(doc_type='Structural Strength Testing(SST)').count()
+            # TDP_count = doc_approvedList.filter(doc_type='Technical Data Pack (TDP)').count()
             dist = {
                 'doc_count': doc_count,
                 'current_year_count': current_year_count,
@@ -699,15 +703,19 @@ class DocController:
                 'am_observation_forwarded': am_observation_forwarded,
                 'am_observation_repeated': am_observation_repeated,
                 'audit_inProcess': audit_inProcess,
-                'ET_count': ET_count,
-                'ATP_count': ATP_count,
-                'HC_count': HC_count,
-                'QC_count': QC_count,
-                'QAC_count': QAC_count,
-                'SST_count': SST_count,
+                'QFTP_count': QFTP_count,
                 'TDP_count': TDP_count,
+                'SOP_count': SOP_count,
+                'Guidelines_count': Guidelines_count,
+                'others_count': others_count,
+                'QAC_count': QAC_count,
+                # 'SST_count': SST_count,
+                # 'TDP_count': TDP_count,
                 'over_due_count': over_due_doc,
-                'qm_certification_issued': qm_certification_issued
+                'qm_certification_issued': qm_certification_issued,
+                'total_doc': doc_count,
+                'doc_approved': doc_approved,
+                'total_doc_approved': total_doc_approved
 
             }
 
@@ -728,6 +736,10 @@ class DocController:
             task_completed = 0
             task_inprocess = 0
             task_follow_up = 0
+            total_tasks = 0
+            total_tasks = TaskSummary.objects.all().count()
+            current_year = datetime.today().year
+            current_year_task = TaskSummary.objects.filter(assigned_date__year=current_year).count()
             over_due = TaskSummary.objects.filter(task_date__gt=F('target_date')).count()
             if selected_year is not '' and selected_group is '':
                 task_completed = TaskSummary.objects.filter(assigned_date__year=selected_year,
@@ -757,7 +769,9 @@ class DocController:
                 'task_completed': task_completed,
                 'task_inprocess': task_inprocess,
                 'task_follow_up': task_follow_up,
-                'over_due': over_due
+                'over_due': over_due,
+                'total_tasks': total_tasks,
+                'total_current_year': current_year_task
 
             }
 

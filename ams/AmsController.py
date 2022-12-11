@@ -30,7 +30,8 @@ class AmsController:
                 taskModel.assigned_date = request['assigned_date']
                 taskModel.assigned_to = request['assigned_to']
                 taskModel.target_date = request['target_date']
-                taskModel.task_date = request['task_date']
+                if request['task_date'] != '':
+                    taskModel.task_date = request['task_date']
                 taskModel.status = request['status']
                 taskModel.remarks = request['remarks']
                 taskModel.follow_up = request['follow_up']
@@ -39,7 +40,10 @@ class AmsController:
             else:
                 get_task = TaskSummary.objects.filter(id=id).first()
                 if get_task is not None:
-                    if get_task.status != request['status']:
+                    if get_task.status != request['status'] or get_task.follow_up != request['follow_up'] or str(
+                            get_task.assigned_date) != request['assigned_date'] or str(
+                        get_task.target_date) != request['target_date'] or str(get_task.task_date) != \
+                            request['remarks'] or get_task.status != request['remarks']:
                         # add entry in history
                         taskHistoryModal = TaskSummaryHistory()
                         taskHistoryModal.task_id = get_task.id
@@ -48,7 +52,8 @@ class AmsController:
                         taskHistoryModal.assigned_date = get_task.assigned_date
                         taskHistoryModal.assigned_to = get_task.assigned_to
                         taskHistoryModal.target_date = get_task.target_date
-                        taskHistoryModal.task_date = get_task.task_date
+                        if request['task_date'] != '':
+                            taskHistoryModal.task_date = get_task.task_date
                         taskHistoryModal.status = get_task.status
                         taskHistoryModal.remarks = get_task.remarks
                         taskHistoryModal.follow_up = get_task.follow_up
@@ -59,7 +64,8 @@ class AmsController:
                 task.assigned_date = request['assigned_date']
                 task.assigned_to = request['assigned_to']
                 task.target_date = request['target_date']
-                task.task_date = request['task_date']
+                if request['task_date'] != '':
+                    task.task_date = request['task_date']
                 task.status = request['status']
                 task.remarks = request['remarks']
                 task.follow_up = request['follow_up']
@@ -95,6 +101,14 @@ class AmsController:
 
             if status == 'overdue':
                 data = TaskSummary.objects.filter(task_date__gt=F('target_date'))
+                serializer = TaskSummarySerialzer(data, many=True)
+                return JsonResponse({'message': 'true', 'data': serializer.data}, status=200)
+            if status == 'all':
+                data = TaskSummary.objects.all()
+                serializer = TaskSummarySerialzer(data, many=True)
+                return JsonResponse({'message': 'true', 'data': serializer.data}, status=200)
+            if status == 'all' and selected_year is not '':
+                data = TaskSummary.objects.filter(assigned_date__year=selected_year)
                 serializer = TaskSummarySerialzer(data, many=True)
                 return JsonResponse({'message': 'true', 'data': serializer.data}, status=200)
             if selected_year is not '' and selected_group is '':

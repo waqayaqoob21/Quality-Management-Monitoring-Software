@@ -30,8 +30,8 @@ class CespAudit(models.Model):
     site = models.CharField(max_length=300)
     certification_status = models.CharField(max_length=300)
     previous_standard = models.CharField(max_length=300)
-    certification_validity = models.CharField(max_length=300)
-    audit_type = models.CharField(max_length=300)
+    certification_validity = models.CharField(max_length=300, null=True)
+    audit_type = models.CharField(max_length=300, null=True)
     planned_date = models.DateTimeField(auto_now_add=False, db_index=True, null=True)
     audit_start_date = models.DateTimeField(auto_now_add=False, db_index=True, null=True)
     audit_close_date = models.DateTimeField(auto_now_add=False, db_index=True, null=True)
@@ -39,6 +39,7 @@ class CespAudit(models.Model):
     standard = models.CharField(max_length=300)
     remarks = models.TextField()
     Created_at = models.DateTimeField(auto_now_add=True)
+
 
 class QmsTrainingSchedule(models.Model):
     id = models.AutoField(primary_key=True)
@@ -48,9 +49,10 @@ class QmsTrainingSchedule(models.Model):
     training_end_date = models.DateTimeField(auto_now_add=False, db_index=True, null=True)
     trainer = models.CharField(max_length=300)
     standards = models.TextField()
-    organizations =  models.CharField(max_length=300)
-    setups =  models.CharField(max_length=300)
+    organizations = models.CharField(max_length=300)
+    setups = models.CharField(max_length=300)
     Created_at = models.DateTimeField(auto_now_add=True)
+
 
 class QmsAuditScheduled(models.Model):
     id = models.AutoField(primary_key=True)
@@ -62,8 +64,8 @@ class QmsAuditScheduled(models.Model):
     audit_done = models.CharField(max_length=100)
     followup_done = models.CharField(max_length=100)
     certifification_validity_date = models.DateTimeField(auto_now_add=False, db_index=True, null=True)
-    certifification_validity_rescheduling_date =models.DateTimeField(auto_now_add=False, db_index=True, null=True)
-    category =  models.CharField(max_length=300)
+    certifification_validity_rescheduling_date = models.DateTimeField(auto_now_add=False, db_index=True, null=True)
+    category = models.CharField(max_length=300)
     status = models.CharField(max_length=300)
     next_due_date = models.DateTimeField(auto_now_add=False, db_index=True, null=True)
     remarks = models.TextField()
