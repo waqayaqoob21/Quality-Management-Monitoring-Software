@@ -43,7 +43,7 @@ class CespAudit(models.Model):
 
 class QmsTrainingSchedule(models.Model):
     id = models.AutoField(primary_key=True)
-    sr_no = models.IntegerField()
+    sr_no = models.CharField(max_length=300)
     training_type = models.TextField()
     training_start_date = models.DateTimeField(auto_now_add=False, db_index=True, null=True)
     training_end_date = models.DateTimeField(auto_now_add=False, db_index=True, null=True)
@@ -56,7 +56,7 @@ class QmsTrainingSchedule(models.Model):
 
 class QmsAuditScheduled(models.Model):
     id = models.AutoField(primary_key=True)
-    sr_no = models.IntegerField()
+    sr_no = models.CharField(max_length=300)
     organization = models.CharField(max_length=300)
     standard = models.TextField()
     setup = models.CharField(max_length=300)
