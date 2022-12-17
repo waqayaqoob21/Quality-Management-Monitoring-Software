@@ -35,4 +35,5 @@ urlpatterns = [
     path('getTaskMonitoringDashboardCount/', getTaskMonitoringDashboardCountAPIVIEW.as_view(), name='getTaskMonitoringDashboardCount'),
     path('DeleteDoc/', DeleteDocAPIVIEW.as_view(), name='DeleteDoc'),
     path('DeleteTask/', DeleteTaskAPIVIEW.as_view(), name='DeleteTask'),
+
 ]

@@ -2,7 +2,7 @@ import os
 from datetime import datetime, timedelta
 
 import xlwt
-from django.db.models import F
+from django.db.models import F, Q
 from django.http import JsonResponse, FileResponse, HttpResponse
 from fpdf import FPDF
 
@@ -94,11 +94,57 @@ class AmsController:
     @staticmethod
     def GetTaskList(request):
         try:
+            def get_filter(field_name, filter_condition, filter_value):
+                # thanks to the below post
+                # https://stackoverflow.com/questions/310732/in-django-how-does-one-filter-a-queryset-with-dynamic-field-lookups
+                # the idea to this below logic is very similar to that in the above mentioned post
+                if filter_condition.strip() == "contains":
+                    kwargs = {
+                        '{0}__icontains'.format(field_name): filter_value
+                    }
+                    return Q(**kwargs)
+
+                if filter_condition.strip() == "not_equal":
+                    kwargs = {
+                        '{0}__iexact'.format(field_name): filter_value
+                    }
+                    return ~Q(**kwargs)
+
+                if filter_condition.strip() == "starts_with":
+                    kwargs = {
+                        '{0}__istartswith'.format(field_name): filter_value
+                    }
+                    return Q(**kwargs)
+                if filter_condition.strip() == "equal":
+                    kwargs = {
+                        '{0}__iexact'.format(field_name): filter_value
+                    }
+                    return Q(**kwargs)
+
+                if filter_condition.strip() == "not_equal":
+                    kwargs = {
+                        '{0}__iexact'.format(field_name): filter_value
+                    }
+
+                    return ~Q(**kwargs)
+
             status = request.query_params['status']
             selected_group = request.query_params['group']
             selected_year = request.query_params['year']
             data = []
+            total_filter_objects = Q()
+            if status == '!Completed':
 
+                total_filter_objects &= get_filter(
+                    'status', 'not_equal',
+                    'Task Completed')
+                data = TaskSummary.objects.filter(total_filter_objects);
+                serializer = TaskSummarySerialzer(data, many=True)
+                return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+            else:
+                total_filter_objects &= get_filter(
+                    'status', 'equal',
+                    status)
             if status == 'overdue':
                 data = TaskSummary.objects.filter(task_date__gt=F('target_date'))
                 serializer = TaskSummarySerialzer(data, many=True)

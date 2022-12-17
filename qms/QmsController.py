@@ -14,7 +14,7 @@ from datetime import date
 class QmsController:
     @staticmethod
     def AddQmsAudit(request):
-        print("thi is add qms controller")
+        #print("thi is add qms controller")
         qmsModel = QmsAudit()
         # try:
         id = request['id']
