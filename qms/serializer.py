@@ -3,7 +3,7 @@ from rest_framework.fields import CharField, IntegerField, DateTimeField
 from .models import *
 class QmsAuditSerializer(Serializer):
     id = IntegerField()
-    audit_id = IntegerField()
+    audit_id = CharField()
     Organization = CharField()
     site = CharField()
     setup = CharField()
@@ -48,7 +48,7 @@ class CespAuditSerializer(Serializer):
 
 class QmsTrainingScheduleSerializer(Serializer):
     id = IntegerField()
-    sr_no = IntegerField()
+    sr_no = CharField()
     training_type = CharField()
     training_start_date = DateTimeField()
     training_end_date = DateTimeField()
@@ -60,7 +60,7 @@ class QmsTrainingScheduleSerializer(Serializer):
 
 class QmsAuditScheduleSerializer(Serializer):
     id = IntegerField()
-    sr_no = IntegerField()
+    sr_no = CharField()
     organization = CharField()
     standard = CharField()
     setup = CharField()

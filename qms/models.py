@@ -22,6 +22,26 @@ class QmsAudit(models.Model):
     certification_setup = models.TextField(null=True)
     Created_at = models.DateTimeField(auto_now_add=True)
 
+class QmsAuditHistory(models.Model):
+    id = models.AutoField(primary_key=True)
+    audit_id = models.IntegerField()
+    Organization = models.CharField(max_length=300)
+    site = models.CharField(max_length=300)
+    setup = models.CharField(max_length=300)
+    certification_status = models.CharField(max_length=300)
+    previous_standard = models.CharField(max_length=300)
+    certification_validity_date = models.DateTimeField(auto_now_add=False, db_index=True, null=True)
+    certification_validity_rescheduling_date = models.DateTimeField(auto_now_add=False, db_index=True, null=True, blank=True)
+    audit_type = models.CharField(max_length=300)
+    planned_date = models.DateTimeField(auto_now_add=False, db_index=True, null=True)
+    audit_start_date = models.DateTimeField(auto_now_add=False, db_index=True, null=True)
+    audit_close_date = models.DateTimeField(auto_now_add=False, db_index=True, null=True)
+    audit_status = models.CharField(max_length=300)
+    standard = models.CharField(max_length=300)
+    remarks = models.TextField()
+    certification_setup = models.TextField(null=True)
+    Created_at = models.DateTimeField(auto_now_add=True)
+    qms_audit  = models.ForeignKey(QmsAudit, on_delete=models.CASCADE)
 
 class CespAudit(models.Model):
     id = models.AutoField(primary_key=True)

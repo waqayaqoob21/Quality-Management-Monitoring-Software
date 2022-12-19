@@ -7,6 +7,9 @@ urlpatterns = [
 
         path('qmslist/', GetQmsAuditListCountAPIVIEW.as_view(), name='qmslist'),
         path('qmsauditlist/',GetQmsAuditListAPIVIEW.as_view(), name='qmsauditlist'),
+        path('deleteqmsaudit/', DeletetQmsAuditAPIVIEW.as_view(), name='deleteqmsaudit'),
+        path('qmsauditistory/', GetQmsAuditHistoryAPIVIEW.as_view(), name='qmsauditistory'),
+
 
         # re_path(r'^deleteqms/(?P<pk>[0-9]+)$',DeletetQmsAuditAPIVIEW.as_view(), name='deleteqms'),
         path('qmspdf/', GetQmsAuditPDFAPIVIEW.as_view(), name='qmspdf'),

@@ -10,13 +10,13 @@ class AddQmsAuditAPIVIEW(APIView):
     permission_classes = [AllowAny]
 
     def post(self, request):
-        print("This is add qms")
+        print(request.data)
         result = qms_obj.AddQmsAudit(request.data)
         return result
 class DeletetQmsAuditAPIVIEW(APIView):
     permission_classes = [AllowAny]
-    def delete(self, request,pk):
-        result = qms_obj.DeleteQmsAudit(request.data, pk)
+    def get(self, request):
+        result = qms_obj.DeleteQmsAudit(request)
         print(result)
         return result
 
@@ -26,6 +26,15 @@ class GetQmsAuditListAPIVIEW(APIView):
         def get(self, request):
             result = qms_obj.GetQmsAuditList(request)
             return result
+
+
+class GetQmsAuditHistoryAPIVIEW(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        result = qms_obj.GetQmsAuditHistory(request)
+        return result
+
 class GetQmsAuditListCountAPIVIEW(APIView):
     permission_classes = [AllowAny]
     def get(self, request):
