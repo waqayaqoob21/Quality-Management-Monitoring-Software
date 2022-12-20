@@ -891,10 +891,10 @@ class QmsController:
     @staticmethod
     def GetQmsAuditPDFList(request):
         TABLE_COL_NAMES = (
-            "Audit ID", "Organization", "Site", "Certification Status", "Previous Standard", "Certification Validity",
-            "Audit Type", "Planned Date", "Audit Start Date", "Audit Close Date", "Audit Status", "Standard", "Remarks")
+            "Audit ID", "Organization", "Site", "Certification Status", "Certification Validity ",
+            "Certification Rescheduling", "Audit Type", "Planned Date", "Audit Start Date", "Audit Close Date", "Audit Status", "Standard", "Remarks")
         data = QmsAudit.objects.all().values_list('audit_id', 'Organization', 'site', 'certification_status',
-                                                  'previous_standard', 'certification_validity', 'audit_type',
+                                                  'certification_validity_date', 'certification_validity_rescheduling_date','audit_type',
                                                   'planned_date',
                                                   'audit_start_date', 'audit_close_date', 'audit_status', 'standard',
                                                   'remarks')
@@ -957,14 +957,15 @@ class QmsController:
         font_style.font.bold = True
         TABLE_COL_NAMES = (
             "Audit ID", "Organization", "Site", "Certification Status", "Previous Standard", "Certification Validity",
-            "Audit Type", "Planned Date",
+            "Certification Rescheduling","Audit Type", "Planned Date",
             "Audit Start Date", "Audit Close Date", "Audit Status", "Standard", "Remarks")
         for col_num in range(len(TABLE_COL_NAMES)):
             work_sheet.write(row_num, col_num, TABLE_COL_NAMES[col_num], font_style)
         font_style = xlwt.XFStyle()
 
         data = QmsAudit.objects.all().values_list('audit_id', 'Organization', 'site', 'certification_status',
-                                                  'previous_standard', 'certification_validity', 'audit_type',
+                                                  'previous_standard', 'certification_validity_date', 'certification_validity_rescheduling_date',
+                                                  'audit_type',
                                                   'planned_date',
                                                   'audit_start_date', 'audit_close_date', 'audit_status', 'standard',
                                                   'remarks')
