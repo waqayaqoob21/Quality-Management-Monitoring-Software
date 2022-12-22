@@ -30,25 +30,6 @@ class QmsAuditSerializer(Serializer):
     #       'certification_validity_rescheduling_date', 'audit_type', 'planned_date', 'audit_start_date', 'audit_close_date', 'audit_status',
     #       'standard', 'remarks','certification_setup','Created_at']
 
-
-class CespAuditSerializer(Serializer):
-    id = IntegerField()
-    audit_id = IntegerField()
-    Organization = CharField()
-    site = CharField()
-    certification_status = CharField()
-    previous_standard = CharField()
-    certification_validity = CharField()
-    audit_type = CharField()
-    planned_date = DateTimeField()
-    audit_start_date = DateTimeField()
-    audit_close_date = DateTimeField()
-    audit_status = CharField()
-    standard = CharField()
-    remarks = CharField()
-    Created_at = DateTimeField()
-
-
 class QmsTrainingScheduleSerializer(Serializer):
     id = IntegerField()
     sr_no = CharField()
@@ -76,5 +57,64 @@ class QmsAuditScheduleSerializer(Serializer):
     category = CharField()
     status = CharField()
     next_due_date = DateTimeField()
+    remarks = CharField()
+    Created_at = DateTimeField()
+
+
+# =======================CeSP Serializer======================
+
+class CespAuditSerializer(Serializer):
+    id = IntegerField()
+    audit_id = CharField()
+    Organization = CharField()
+    site = CharField()
+    certification_status = CharField()
+    certification_validity_date = DateTimeField()
+    certification_validity_rescheduling_date = DateTimeField()
+    audit_type = CharField()
+    planned_date = DateTimeField()
+    audit_start_date = DateTimeField()
+    audit_close_date = DateTimeField()
+    audit_status = CharField()
+    standard = CharField()
+    remarks = CharField()
+    Created_at = DateTimeField()
+
+class CespTrainingCalendarSerializer(Serializer):
+    id = IntegerField()
+    sr_no = CharField()
+    course_title = CharField()
+    course_duration = CharField()
+    registration_date = DateTimeField()
+    scheduled_date = DateTimeField()
+    venue = CharField()
+    course_fee = CharField()
+    Created_at = DateTimeField()
+
+class CespAuditScheduleSerializer(Serializer):
+    id = IntegerField()
+    sr_no = CharField()
+    client_name = CharField()
+    client_type = CharField()
+    standard = CharField()
+    audit_scheduled = DateTimeField()
+    status = CharField()
+    current_status = CharField()
+    Created_at = DateTimeField()
+
+class CespAuditHistorySerializer(Serializer):
+    id = IntegerField()
+    audit_id = CharField()
+    Organization = CharField()
+    site = CharField()
+    certification_status = CharField()
+    certifification_validity_date = DateTimeField()
+    certifification_validity_rescheduling_date = DateTimeField()
+    audit_type = CharField()
+    planned_date = DateTimeField()
+    audit_start_date = DateTimeField()
+    audit_close_date = DateTimeField()
+    audit_status = CharField()
+    standard = CharField()
     remarks = CharField()
     Created_at = DateTimeField()

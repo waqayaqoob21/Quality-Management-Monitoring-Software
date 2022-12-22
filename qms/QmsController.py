@@ -18,7 +18,7 @@ class QmsController:
         try:
             id = request['id']
             if id == '0':
-                qmsModel.audit_id = 0  # request['audit_id']
+                # qmsModel.audit_id = 0  # request['audit_id']
                 qmsModel.Organization = request['Organization']
                 qmsModel.site = request['site']
                 qmsModel.setup = request['setup']
@@ -68,7 +68,7 @@ class QmsController:
                         auditHistory.qms_audit_id = id
                         auditHistory.save()
 
-                get_qms.audit_id = 0  # request['audit_id']
+                # get_qms.audit_id = 0  # request['audit_id']
                 get_qms.Organization = request['Organization']
                 get_qms.site = request['site']
                 get_qms.setup = request['setup']
@@ -160,7 +160,7 @@ class QmsController:
                     'planned_date__year', 'equal',
                     current_year)
 
-            if current_status != ''and current_status != 'Overdue' and current_status != 'Under Process':
+            if current_status != ''and current_status != 'Overdue' and current_status != 'Under Process' and current_status != 'Current Year Audits':
                 filter_objects &= get_filter(
                     'audit_status', 'equal',
                     current_status)
@@ -194,7 +194,8 @@ class QmsController:
             dataList = QmsAudit.objects.filter(filter_objects)
             if current_status == 'Overdue':
                 dataList = dataList.filter(~Q(audit_status = 'Completed'), certification_validity_date__lt = today)
-
+            if current_status == 'Current Year Audits':
+                dataList = dataList.filter(planned_date__year=current_year)
             if current_status == 'Total Audits':
                 data = QmsAudit.objects.all().order_by('-id')
                 serializer = QmsAuditSerializer(data, many=True)
@@ -979,16 +980,18 @@ class QmsController:
     # =========================CeSP Audit====================================
     @staticmethod
     def AddCespAudit(request):
-        cespModel = CespAudit()
-        try:
+            cespModel = CespAudit()
+        # try:
             id = request['id']
             if id == '0':
                 cespModel.audit_id = request['audit_id']
                 cespModel.Organization = request['Organization']
                 cespModel.site = request['site']
+                cespModel.setup = request['setup']
                 cespModel.certification_status = request['certification_status']
-                cespModel.previous_standard = request['previous_standard']
-                cespModel.certification_validity = request['certification_validity']
+                cespModel.certification_validity_date = request['certification_validity_date']
+                if request['certification_validity_rescheduling_date'] != '':
+                    cespModel.certification_validity_rescheduling_date = request['certification_validity_rescheduling_date']
                 cespModel.audit_type = request['audit_type']
                 cespModel.planned_date = request['planned_date']
                 cespModel.audit_start_date = request['audit_start_date']
@@ -998,54 +1001,755 @@ class QmsController:
                 cespModel.remarks = request['remarks']
                 cespModel.save()
                 return JsonResponse({'status': 'True', 'message': "CeSP Audit Created Successfully!"},
-                                    status=200)
+                                status=200)
             else:
                 get_cesp = CespAudit.objects.filter(id=id).first()
                 if get_cesp is not None:
-                    get_cesp.audit_id = request['audit_id']
-                    get_cesp.Organization = request['Organization']
-                    get_cesp.site = request['site']
-                    get_cesp.certification_status = request['certification_status']
-                    get_cesp.previous_standard = request['previous_standard']
-                    get_cesp.certification_validity = request['certification_validity']
-                    get_cesp.audit_type = request['audit_type']
-                    get_cesp.planned_date = request['planned_date']
-                    get_cesp.audit_start_date = request['audit_start_date']
-                    get_cesp.audit_close_date = request['audit_close_date']
-                    get_cesp.audit_status = request['audit_status']
-                    get_cesp.standard = request['standard']
-                    get_cesp.remarks = request['remarks']
-                    get_cesp.save()
-                    return JsonResponse({'status': 'True', 'message': "CeSP Audit Updated Successfully!"},
-                                        status=200)
-        except Exception as e:
-            return JsonResponse({'status': 'False', "message": "CeSP Audit Not Saved"}, status=500)
+                    if get_cesp.audit_status != request['audit_status'] or str(get_cesp.certification_validity_date.date()) != \
+                            request['certification_validity_date'] or str(get_cesp.certification_validity_rescheduling_date.date()) != \
+                            request['certification_validity_rescheduling_date'] or str(get_cesp.planned_date.date()) != \
+                            request['planned_date'] or str(get_cesp.audit_start_date.date()) != \
+                            request['audit_start_date'] or str(get_cesp.audit_close_date.date()) != request['audit_close_date']:
+                        CespHistory = CespAuditHistory()
+                        CespHistory.audit_id = get_cesp.audit_id
+                        CespHistory.Organization = get_cesp.Organization
+                        CespHistory.setup = get_cesp.setup
+                        CespHistory.site = get_cesp.site
+                        CespHistory.certification_status = get_cesp.certification_status
+                        CespHistory.certification_validity_date = get_cesp.certification_validity_date
+                        if request['certification_validity_rescheduling_date'] != '':
+                            CespHistory.certification_validity_rescheduling_date = get_cesp.certification_validity_rescheduling_date
+                        CespHistory.audit_type = get_cesp.audit_type
+                        CespHistory.planned_date = get_cesp.planned_date
+                        CespHistory.audit_start_date = get_cesp.audit_start_date
+                        CespHistory.audit_close_date = get_cesp.audit_close_date
+                        CespHistory.audit_status = get_cesp.audit_status
+                        CespHistory.standard = get_cesp.standard
+                        CespHistory.remarks = get_cesp.remarks
+                        CespHistory.cesp_audit_id = id
+                        CespHistory.save()
+
+                get_cesp.audit_id = request['audit_id']
+                get_cesp.Organization = request['Organization']
+                get_cesp.setup = request['setup']
+                get_cesp.site = request['site']
+                get_cesp.certification_status = request['certification_status']
+                get_cesp.certification_validity_date = request['certification_validity_date']
+                if request['certification_validity_rescheduling_date'] != '':
+                    get_cesp.certification_validity_rescheduling_date = request['certification_validity_rescheduling_date']
+                get_cesp.audit_type = request['audit_type']
+                get_cesp.planned_date = request['planned_date']
+                get_cesp.audit_start_date = request['audit_start_date']
+                get_cesp.audit_close_date = request['audit_close_date']
+                get_cesp.audit_status = request['audit_status']
+                get_cesp.standard = request['standard']
+                get_cesp.remarks = request['remarks']
+                get_cesp.save()
+                return JsonResponse({'status': 'True', 'message': "CeSP Audit Updated Successfully!"},
+                                    status=200)
+        # except Exception as e:
+        #     return JsonResponse({'status': 'False', "message": "CeSP Audit Not Saved"}, status=500)
 
     @staticmethod
     def GetCespAuditList(request):
         try:
-            data = CespAudit.objects.all().order_by('id')
-            serializer = CespAuditSerializer(data, many=True)
-            return JsonResponse({'data': serializer.data}, safe=False, status=200)
-        except:
-            return JsonResponse({'message': 'Sorry! No Audit found.'}, status=500)
+            current_status = request.query_params.get('audit_status')
+            current_year = request.query_params.get('year')
+            current_org = request.query_params.get('organization')
+            current_stand = request.query_params.getlist('standard')
+            current_setup = request.query_params.getlist('setup')
+            today = date.today()
+            standItems = ""
+            setupItems = ""
+            noVal = ['']
+            undefined = ['undefined']
+
+            if current_stand != noVal and current_stand != undefined:
+                for item in current_stand:
+                    standItems = item.split(',')
+            if current_setup != noVal and current_setup != undefined:
+                for item in current_setup:
+                    setupItems = item.split(',')
+
+            dataList = []
+
+            def get_filter(field_name, filter_condition, filter_value):
+                if filter_condition.strip() == "contains":
+                    kwargs = {
+                        '{0}__icontains'.format(field_name): filter_value
+                    }
+                    return Q(**kwargs)
+
+                if filter_condition.strip() == "not_equal":
+                    kwargs = {
+                        '{0}__iexact'.format(field_name): filter_value
+                    }
+                    return ~Q(**kwargs)
+
+                if filter_condition.strip() == "starts_with":
+                    kwargs = {
+                        '{0}__istartswith'.format(field_name): filter_value
+                    }
+                    return Q(**kwargs)
+                if filter_condition.strip() == "equal":
+                    kwargs = {
+                        '{0}__iexact'.format(field_name): filter_value
+                    }
+                    return Q(**kwargs)
+
+                if filter_condition.strip() == "not_equal":
+                    kwargs = {
+                        '{0}__ne'.format(field_name): filter_value
+                    }
+                    return ~Q(**kwargs)
+                if filter_condition.strip() == "less_than":
+                    kwargs = {
+                        '{0}__lt'.format(field_name): filter_value
+                    }
+                    return ~Q(**kwargs)
+                if filter_condition.strip() == "greater_than":
+                    kwargs = {
+                        '{0}__gt'.format(field_name): filter_value
+                    }
+                    return ~Q(**kwargs)
+
+            typeQuery = Q()
+            filter_objects = Q()
+
+            if current_year != '':
+                filter_objects &= get_filter(
+                    'planned_date__year', 'equal',
+                    current_year)
+
+            if current_status != '' and current_status != 'Overdue' and current_status != 'Under Process' and current_status != 'Current Year Audits':
+                filter_objects &= get_filter(
+                    'audit_status', 'equal',
+                    current_status)
+
+            # if current_status == 'Overdue':
+            #     filter_objects &= get_filter(
+            #     'certification_validity_date', 'greater_than',today)
+
+            if current_status == 'Under Process':
+                filter_objects &= get_filter(
+                    'audit_status', 'not_equal', 'Completed')
+
+            if current_org != '':
+                filter_objects &= get_filter(
+                    'Organization', 'equal',
+                    current_org)
+
+            # if len(standItems) >0:
+            #     for item in standItems:
+            #         filter_objects &= get_filter(
+            #             'standard', 'contains',
+            #             item)
+
+            # if len(standItems) >0:
+            #     for item in standItems:
+            #         filter_objects &= get_filter(
+            #             'standard', 'greater_than',
+            #             item)
+
+            dataList = CespAudit.objects.filter(filter_objects)
+            if current_status == 'Overdue':
+                dataList = dataList.filter(~Q(audit_status='Completed'), certification_validity_date__lt=today)
+            if current_status == 'Current Year Audits':
+                dataList = dataList.filter(planned_date__year = current_year)
+            if current_status == 'Total Audits':
+                data = CespAudit.objects.all().order_by('-id')
+                serializer = CespAuditSerializer(data, many=True)
+                return JsonResponse({'status': 'True', 'data': serializer.data},
+                                    status=200)
+
+            elif len(standItems) > 0 and len(setupItems) > 0:
+                temp = []
+                for (set, stand) in itertools.zip_longest(setupItems, standItems):
+                    temp.extend(dataList.filter(standard=stand, setup=set))
+                dataList = temp
+            elif len(setupItems) > 0 and len(standItems) == 0:
+                temp = []
+                for set in setupItems:
+                    temp.extend(dataList.filter(setup=set))
+                dataList = temp
+            elif len(setupItems) == 0 and len(standItems) > 0:
+                temp = []
+                for stand in standItems:
+                    temp.extend(dataList.filter(standard=stand))
+                dataList = temp
+
+            serializer = CespAuditSerializer(dataList, many=True)
+            return JsonResponse({'status': 'True', 'data': serializer.data},
+                                status=200)
+        except Exception as e:
+            print(e)
+            return JsonResponse({'status': 'False', "message": "Internal Server Error"}, status=500)
+    @staticmethod
+    def GetCespAuditListCount(request, self=None):
+        try:
+            selected_year = request.query_params.get('selected_year')
+            selected_org = request.query_params.get('selected_organization')
+            selected_setup = request.query_params.getlist('selected_setup')
+            selected_standard = request.query_params.getlist('selected_standard')
+            today = date.today()
+            standItems = ""
+            setupItems = ""
+            noVal = ['']
+            if selected_standard != noVal:
+                for item in selected_standard:
+                    standItems = item.split(',')
+            if selected_setup != noVal:
+                for item in selected_setup:
+                    setupItems = item.split(',')
+            total_audits = 0
+            current_year_audits = 0
+            audit_in_process = 0
+            audit_completed = 0
+            inprocess_overdue = 0
+            total_audit_schedule = 0
+            audit_remaining = 0
+            audit_under_process = 0
+            currYearTotalAudits = 0
+            currYearAuditInprocess = 0
+            currYearAuditCompleted = 0
+            currYearOverdue = 0
+            currYearAuditScheduled = 0
+            currYearAuditRemaining = 0
+            total_audits = CespAudit.objects.count()
+
+            if selected_year == '':
+                if selected_org == '' and selected_standard == noVal and selected_setup == noVal:
+                    audit_completed = CespAudit.objects.filter(audit_status='Completed').count()
+                    audit_under_process = CespAudit.objects.filter(~Q(audit_status='Completed')).count()
+                    inprocess_overdue = CespAudit.objects.filter(~Q(audit_status='Completed'),
+                                                                certification_validity_date__lt=today).count()
+
+
+                elif selected_org == '' and selected_standard == noVal and selected_setup != noVal:
+                    for set in setupItems:
+                        tot_audit_under_process = CespAudit.objects.filter(~Q(audit_status='Completed'),
+                                                                          setup=set).count()
+                        tot_audit_completed = CespAudit.objects.filter(setup=set, audit_status='Completed').count()
+                        tot_inprocess_overdue = CespAudit.objects.filter(~Q(audit_status='Completed'), setup=set,
+                                                                        certification_validity_date__lt=today).count()
+                        audit_under_process += tot_audit_under_process
+                        audit_completed += tot_audit_completed
+                        inprocess_overdue += tot_inprocess_overdue
+
+                elif selected_org == '' and selected_standard != noVal and selected_setup == noVal:
+                    for stand in standItems:
+                        tot_audit_under_process = CespAudit.objects.filter(~Q(audit_status='Completed'),
+                                                                          standard=stand).count()
+                        tot_audit_completed = CespAudit.objects.filter(standard=stand,
+                                                                      audit_status='Completed').count()
+                        tot_inprocess_overdue = CespAudit.objects.filter(~Q(audit_status='Completed'), standard=stand,
+                                                                        certification_validity_date__lt=today).count()
+                        audit_under_process += tot_audit_under_process
+                        audit_completed += tot_audit_completed
+                        inprocess_overdue += tot_inprocess_overdue
+
+                elif selected_org == '' and selected_standard != noVal and selected_setup != noVal:
+                    for (stand, set) in itertools.zip_longest(standItems, setupItems):
+                        tot_audit_under_process = CespAudit.objects.filter(~Q(audit_status='Completed'),
+                                                                          standard=stand, setup=set).count()
+                        tot_audit_completed = CespAudit.objects.filter(standard=stand, setup=set,
+                                                                      audit_status='Completed').count()
+                        tot_inprocess_overdue = CespAudit.objects.filter(~Q(audit_status='Completed'), standard=stand,
+                                                                        setup=set,
+                                                                        certification_validity_date__lt=today).count()
+                        audit_under_process += tot_audit_under_process
+                        audit_completed += tot_audit_completed
+                        inprocess_overdue += tot_inprocess_overdue
+
+                elif selected_org != '' and selected_standard == noVal and selected_setup == noVal:
+                    audit_under_process = CespAudit.objects.filter(~Q(audit_status='Completed'),
+                                                                  Organization=selected_org).count()
+                    audit_completed = CespAudit.objects.filter(Organization=selected_org,
+                                                              audit_status='Completed').count()
+                    inprocess_overdue = CespAudit.objects.filter(~Q(audit_status='Completed'), Organization=selected_org,
+                                                                certification_validity_date__lt=today).count()
+
+                elif selected_org != '' and selected_standard == noVal and selected_setup != noVal:
+                    for set in setupItems:
+                        tot_audit_under_process = CespAudit.objects.filter(~Q(audit_status='Completed'),
+                                                                          Organization=selected_org,
+                                                                          setup=set).count()
+                        tot_audit_completed = CespAudit.objects.filter(Organization=selected_org, setup=set,
+                                                                      audit_status='Completed').count()
+                        tot_inprocess_overdue = CespAudit.objects.filter(~Q(audit_status='Completed'),
+                                                                        Organization=selected_org, setup=set,
+                                                                        certification_validity_date__lt=today).count()
+                        audit_under_process += tot_audit_under_process
+                        audit_completed += tot_audit_completed
+                        inprocess_overdue += tot_inprocess_overdue
+
+                elif selected_org != '' and selected_standard != noVal and selected_setup == noVal:
+                    for stand in standItems:
+                        tot_audit_under_process = CespAudit.objects.filter(~Q(audit_status='Completed'),
+                                                                          Organization=selected_org,
+                                                                          standard=stand).count()
+                        tot_audit_completed = CespAudit.objects.filter(Organization=selected_org, standard=stand,
+                                                                      audit_status='Completed').count()
+                        tot_inprocess_overdue = CespAudit.objects.filter(~Q(audit_status='Completed'),
+                                                                        Organization=selected_org, standard=stand,
+                                                                        certification_validity_date__lt=today).count()
+
+                        audit_under_process += tot_audit_under_process
+                        audit_completed += tot_audit_completed
+                        inprocess_overdue += tot_inprocess_overdue
+
+                else:
+                    for (stand, set) in itertools.zip_longest(standItems, setupItems):
+                        tot_audit_under_process = CespAudit.objects.filter(~Q(audit_status='Completed'),
+                                                                          Organization=selected_org,
+                                                                          standard=stand, setup=set).count()
+                        tot_audit_completed = CespAudit.objects.filter(Organization=selected_org, standard=stand,
+                                                                      setup=set, audit_status='Completed').count()
+                        tot_inprocess_overdue = CespAudit.objects.filter(~Q(audit_status='Completed'),
+                                                                        Organization=selected_org, standard=stand,
+                                                                        setup=set,
+                                                                        certification_validity_date__lt=today).count()
+                        audit_under_process += tot_audit_under_process
+                        audit_completed += tot_audit_completed
+                        inprocess_overdue += tot_inprocess_overdue
+
+            else:
+                if selected_org == '' and selected_standard == noVal and selected_setup == noVal:
+                    currYearTotalAudits = CespAudit.objects.filter(planned_date__year=selected_year).count()
+                    currYearAuditInprocess = CespAudit.objects.filter(planned_date__year=selected_year,
+                                                                     audit_status='In process').count()
+                    currYearAuditScheduled = CespAudit.objects.filter(planned_date__year=selected_year,
+                                                                     audit_status='Scheduled').count()
+                    currYearAuditCompleted = CespAudit.objects.filter(planned_date__year=selected_year,
+                                                                     audit_status='Completed').count()
+                    currYearAuditRemaining = CespAudit.objects.filter(planned_date__year=selected_year,
+                                                                     audit_status='Remaining').count()
+                    currYearOverdue = CespAudit.objects.filter(~Q(audit_status='Completed'),
+                                            planned_date__year=selected_year, certification_validity_date__lt=today).count()
+
+                elif selected_org == '' and selected_standard == noVal and selected_setup != noVal:
+                    for set in setupItems:
+                        tot_current_year_audits = CespAudit.objects.filter(planned_date__year=selected_year,
+                                                                          setup=set).count()
+                        tot_audit_in_process = CespAudit.objects.filter(planned_date__year=selected_year,
+                                                                       setup=set, audit_status='In process').count()
+                        tot_audit_schedule = CespAudit.objects.filter(planned_date__year=selected_year,
+                                                                     setup=set,
+                                                                     audit_status='Scheduled').count()
+                        tot_audit_completed = CespAudit.objects.filter(planned_date__year=selected_year,
+                                                                      setup=set, audit_status='Completed').count()
+                        tot_audit_remaining = CespAudit.objects.filter(planned_date__year=selected_year,
+                                                                      setup=set, audit_status='Remaining').count()
+                        tot_inprocess_overdue = CespAudit.objects.filter(~Q(audit_status='Completed'),
+                                                                        planned_date__year=selected_year,
+                                                                        setup=set,
+                                                                        certification_validity_date__lt=today).count()
+                        currYearTotalAudits += tot_current_year_audits
+                        currYearAuditInprocess += tot_audit_in_process
+                        currYearAuditScheduled += tot_audit_schedule
+                        currYearAuditCompleted += tot_audit_completed
+                        currYearAuditRemaining += tot_audit_remaining
+                        currYearOverdue += tot_inprocess_overdue
+
+                elif selected_org == '' and selected_standard != noVal and selected_setup == noVal:
+                    for stand in standItems:
+                        tot_current_year_audits = CespAudit.objects.filter(planned_date__year=selected_year,
+                                                                          standard=stand).count()
+                        tot_audit_in_process = CespAudit.objects.filter(planned_date__year=selected_year,
+                                                                       standard=stand,
+                                                                       audit_status='In process').count()
+                        tot_audit_schedule = CespAudit.objects.filter(planned_date__year=selected_year,
+                                                                     standard=stand,
+                                                                     audit_status='Scheduled').count()
+                        tot_audit_completed = CespAudit.objects.filter(planned_date__year=selected_year,
+                                                                      standard=stand,
+                                                                      audit_status='Completed').count()
+                        tot_audit_remaining = CespAudit.objects.filter(planned_date__year=selected_year,
+                                                                      standard=stand,
+                                                                      audit_status='Remaining').count()
+                        tot_inprocess_overdue = CespAudit.objects.filter(~Q(audit_status='Completed'),
+                                                                        planned_date__year=selected_year,
+                                                                        standard=stand,
+                                                                        certification_validity_date__lt=today).count()
+                        currYearTotalAudits += tot_current_year_audits
+                        currYearAuditInprocess += tot_audit_in_process
+                        currYearAuditScheduled += tot_audit_schedule
+                        currYearAuditCompleted += tot_audit_completed
+                        currYearAuditRemaining += tot_audit_remaining
+                        currYearOverdue += tot_inprocess_overdue
+
+                elif selected_org == '' and selected_standard != noVal and selected_setup != noVal:
+                    for (stand, set) in itertools.zip_longest(standItems, setupItems):
+                        tot_current_year_audits = CespAudit.objects.filter(planned_date__year=selected_year,
+                                                                          standard=stand,
+                                                                          setup=set).count()
+                        tot_audit_in_process = CespAudit.objects.filter(planned_date__year=selected_year,
+                                                                       standard=stand, setup=set,
+                                                                       audit_status='In process').count()
+                        tot_audit_schedule = CespAudit.objects.filter(planned_date__year=selected_year,
+                                                                     standard=stand, setup=set,
+                                                                     audit_status='Scheduled').count()
+                        tot_audit_completed = CespAudit.objects.filter(planned_date__year=selected_year,
+                                                                      standard=stand, setup=set,
+                                                                      audit_status='Completed').count()
+                        tot_audit_remaining = CespAudit.objects.filter(planned_date__year=selected_year,
+                                                                      standard=stand, setup=set,
+                                                                      audit_status='Remaining').count()
+                        tot_inprocess_overdue = CespAudit.objects.filter(~Q(audit_status='Completed'),
+                                                                        planned_date__year=selected_year,
+                                                                        standard=stand, setup=set,
+                                                                        certification_validity_date__lt=today).count()
+                        currYearTotalAudits += tot_current_year_audits
+                        currYearAuditInprocess += tot_audit_in_process
+                        currYearAuditScheduled += tot_audit_schedule
+                        currYearAuditCompleted += tot_audit_completed
+                        currYearAuditRemaining += tot_audit_remaining
+                        currYearOverdue += tot_inprocess_overdue
+
+                elif selected_org != '' and selected_standard == noVal and selected_setup == noVal:
+                    currYearTotalAudits = CespAudit.objects.filter(planned_date__year=selected_year,
+                                                                  Organization=selected_org, ).count()
+                    currYearAuditInprocess = CespAudit.objects.filter(planned_date__year=selected_year,
+                                                                     Organization=selected_org,
+                                                                     audit_status='In process').count()
+                    currYearAuditScheduled = CespAudit.objects.filter(planned_date__year=selected_year,
+                                                                     Organization=selected_org,
+                                                                     audit_status='Scheduled').count()
+                    currYearAuditCompleted = CespAudit.objects.filter(planned_date__year=selected_year,
+                                                                     Organization=selected_org,
+                                                                     audit_status='Completed').count()
+                    currYearAuditRemaining = CespAudit.objects.filter(planned_date__year=selected_year,
+                                                                     Organization=selected_org,
+                                                                     audit_status='Remaining').count()
+                    currYearOverdue = CespAudit.objects.filter(~Q(audit_status='Completed'),
+                                                              planned_date__year=selected_year,
+                                                              Organization=selected_org,
+                                                              certification_validity_date__lt=today).count()
+
+                elif selected_org != '' and selected_standard == noVal and selected_setup != noVal:
+                    for set in setupItems:
+                        tot_current_year_audits = CespAudit.objects.filter(planned_date__year=selected_year,
+                                                                          Organization=selected_org,
+                                                                          setup=set).count()
+                        tot_audit_in_process = CespAudit.objects.filter(planned_date__year=selected_year,
+                                                                       Organization=selected_org, setup=set,
+                                                                       audit_status='In process').count()
+                        tot_audit_schedule = CespAudit.objects.filter(planned_date__year=selected_year,
+                                                                     Organization=selected_org, setup=set,
+                                                                     audit_status='Scheduled').count()
+                        tot_audit_completed = CespAudit.objects.filter(planned_date__year=selected_year,
+                                                                      Organization=selected_org, setup=set,
+                                                                      audit_status='Completed').count()
+                        tot_audit_remaining = CespAudit.objects.filter(planned_date__year=selected_year,
+                                                                      Organization=selected_org, setup=set,
+                                                                      audit_status='Remaining').count()
+                        tot_inprocess_overdue = CespAudit.objects.filter(~Q(audit_status='Completed'),
+                                                                        planned_date__year=selected_year,
+                                                                        Organization=selected_org, setup=set,
+                                                                        certification_validity_date__lt=today).count()
+                        currYearTotalAudits += tot_current_year_audits
+                        currYearAuditInprocess += tot_audit_in_process
+                        currYearAuditScheduled += tot_audit_schedule
+                        currYearAuditCompleted += tot_audit_completed
+                        currYearAuditRemaining += tot_audit_remaining
+                        currYearOverdue += tot_inprocess_overdue
+
+                elif selected_org != '' and selected_standard != noVal and selected_setup == noVal:
+                    for stand in standItems:
+                        tot_current_year_audits = CespAudit.objects.filter(planned_date__year=selected_year,
+                                                                          Organization=selected_org,
+                                                                          standard=stand).count()
+                        tot_audit_in_process = CespAudit.objects.filter(planned_date__year=selected_year,
+                                                                       Organization=selected_org, standard=stand,
+                                                                       audit_status='In process').count()
+                        tot_audit_schedule = CespAudit.objects.filter(planned_date__year=selected_year,
+                                                                     Organization=selected_org,
+                                                                     standard=stand,
+                                                                     audit_status='Scheduled').count()
+                        tot_audit_completed = CespAudit.objects.filter(planned_date__year=selected_year,
+                                                                      Organization=selected_org, standard=stand,
+                                                                      audit_status='Completed').count()
+                        tot_audit_remaining = CespAudit.objects.filter(planned_date__year=selected_year,
+                                                                      Organization=selected_org, standard=stand,
+                                                                      audit_status='Remaining').count()
+                        tot_inprocess_overdue = CespAudit.objects.filter(~Q(audit_status='Completed'),
+                                                                        planned_date__year=selected_year,
+                                                                        Organization=selected_org, standard=stand,
+                                                                        certification_validity_date__lt=today).count()
+                        currYearTotalAudits += tot_current_year_audits
+                        currYearAuditInprocess += tot_audit_in_process
+                        currYearAuditScheduled += tot_audit_schedule
+                        currYearAuditCompleted += tot_audit_completed
+                        currYearAuditRemaining += tot_audit_remaining
+                        currYearOverdue += tot_inprocess_overdue
+
+                else:
+                    for (stand, set) in itertools.zip_longest(standItems, setupItems):
+                        tot_current_year_audits = CespAudit.objects.filter(planned_date__year=selected_year,
+                                                                          Organization=selected_org,
+                                                                          standard=stand,
+                                                                          setup=set).count()
+                        tot_audit_in_process = CespAudit.objects.filter(planned_date__year=selected_year,
+                                                                       Organization=selected_org, standard=stand,
+                                                                       setup=set, audit_status='In process').count()
+                        tot_audit_schedule = CespAudit.objects.filter(planned_date__year=selected_year,
+                                                                     Organization=selected_org,
+                                                                     standard=stand,
+                                                                     setup=set,
+                                                                     audit_status='Scheduled').count()
+                        tot_audit_completed = CespAudit.objects.filter(planned_date__year=selected_year,
+                                                                      Organization=selected_org, standard=stand,
+                                                                      setup=set, audit_status='Completed').count()
+                        tot_audit_remaining = CespAudit.objects.filter(planned_date__year=selected_year,
+                                                                      Organization=selected_org, standard=stand,
+                                                                      setup=set, audit_status='Remaining').count()
+                        tot_inprocess_overdue = CespAudit.objects.filter(~Q(audit_status='Completed'),
+                                                                        planned_date__year=selected_year,
+                                                                        Organization=selected_org, standard=stand,
+                                                                        setup=set,
+                                                                        certification_validity_date__lt=today).count()
+                        currYearTotalAudits += tot_current_year_audits
+                        currYearAuditInprocess += tot_audit_in_process
+                        currYearAuditScheduled += tot_audit_schedule
+                        currYearAuditCompleted += tot_audit_completed
+                        currYearAuditRemaining += tot_audit_remaining
+                        currYearOverdue += tot_inprocess_overdue
+                currYeardist = {
+                    'currYearTotalAudits': currYearTotalAudits,
+                    'currYearAuditInprocess': currYearAuditInprocess,
+                    'currYearAuditCompleted': currYearAuditCompleted,
+                    'currYearAuditRemaining': currYearAuditRemaining,
+                    'currYearAuditScheduled': currYearAuditScheduled,
+                    'currYearOverdue': currYearOverdue,
+                }
+                return JsonResponse({'status': 'True', 'data': currYeardist},
+                                    status=200)
+
+            dist = {
+                'total_audits': total_audits,
+                'audit_completed': audit_completed,
+                'audit_under_process': audit_under_process,
+                'inprocess_overdue': inprocess_overdue,
+            }
+            return JsonResponse({'status': 'True', 'data': dist},
+                                status=200)
+
+        except Exception as e:
+            print(e)
+            return JsonResponse({'status': 'False', "message": "Internal Server Error"}, status=500)
+            pass
 
     @staticmethod
-    def DeleteCespAudit(request, pk):
+    def AddCespTrainingCalendar(request):
+        cesp_obj = CespTrainingCalendar()
+        id = request['id']
+        if id == '0':
+            cesp_obj.sr_no = request['sr_no']
+            cesp_obj.course_title = request['course_title']
+            cesp_obj.course_duration = request['course_duration']
+            cesp_obj.registration_date = request['registration_date']
+            cesp_obj.scheduled_date = request['scheduled_date']
+            cesp_obj.venue = request['venue']
+            cesp_obj.course_fee = request['course_fee']
+            cesp_obj.save()
+            return JsonResponse({'Success': 'Training Schedule inserted Successfully!'})
+        else:
+            get_obj = CespTrainingCalendar.objects.filter(id=id).first()
+            get_obj.sr_no = request['sr_no']
+            get_obj.course_title = request['course_title']
+            get_obj.course_duration = request['course_duration']
+            get_obj.registration_date = request['registration_date']
+            get_obj.scheduled_date = request['scheduled_date']
+            get_obj.venue = request['venue']
+            get_obj.course_fee = request['course_fee']
+            get_obj.save()
+            return JsonResponse({'Success': 'Training Schedule Updated Successfully!'})
+    @staticmethod
+    def GetCespTrainingCalendarList(request):
         try:
-            cesp = CespAudit.objects.get(id=pk)
+            data = CespTrainingCalendar.objects.all().order_by('id')
+            serializer = CespTrainingCalendarSerializer(data, many=True)
+            return JsonResponse({'data': serializer.data}, safe=False, status=200)
+        except:
+            return JsonResponse({'message': 'Sorry! No Training found.'}, status=500)
+    @staticmethod
+    def AddCespAuditSchedule(request):
+        # try:
+            cesp_obj = CespAuditSchedule()
+            id = request['id']
+            if id == '0':
+                cesp_obj.sr_no = request['sr_no']
+                cesp_obj.client_name = request['client_name']
+                cesp_obj.client_type = request['client_type']
+                cesp_obj.standard = request['standard']
+                cesp_obj.audit_scheduled = request['audit_scheduled']
+                cesp_obj.status = request['status']
+                cesp_obj.current_status = request['current_status']
+                cesp_obj.save()
+                return JsonResponse({'Success': 'Audit Schedule inserted Successfully!'})
+            else:
+                get_obj = CespAuditSchedule.objects.filter(id=id).first()
+                get_obj.sr_no = request['sr_no']
+                get_obj.client_name = request['client_name']
+                get_obj.client_type = request['client_type']
+                get_obj.standard = request['standard']
+                get_obj.audit_scheduled = request['audit_scheduled']
+                get_obj.status = request['status']
+                get_obj.current_status = request['current_status']
+                get_obj.save()
+                return JsonResponse({'Success': 'Audit Schedule Updated Successfully!'})
+        # except:
+        #     return JsonResponse({'status': 'False', "message": "Internal Server Error"}, status=500)
+
+    @staticmethod
+    def GetCespAuditScheduledList(request, self=None):
+        selected_year = request.query_params.get('selected_year')
+        selected_org = request.query_params.get('selected_organization')
+        selected_standard = request.query_params.getlist('selected_standard')
+        selected_setup = request.query_params.getlist('selected_setup')
+        standItems = ""
+        setupItems = ""
+        noVal = ['']
+        if selected_standard != noVal:
+            for item in selected_standard:
+                standItems = item.split(',')
+        if selected_setup != noVal:
+            for item in selected_setup:
+                setupItems = item.split(',')
+        dataList = []
+        if selected_year == '':
+            if selected_org == '' and selected_standard == noVal and selected_setup == noVal:
+                data = CespAuditSchedule.objects.all()
+                serializer = CespAuditScheduleSerializer(data, many=True)
+                return JsonResponse({'data': serializer.data}, safe=False, status=200)
+
+            elif selected_org == '' and selected_standard == noVal and selected_setup != noVal:
+                for set in setupItems:
+                    trainingList = CespAuditSchedule.objects.filter(client_name=set).values()
+                    dataList.extend(list(trainingList))
+
+
+            elif selected_org == '' and selected_standard != noVal and selected_setup == noVal:
+                for stand in standItems:
+                    trainingList = CespAuditSchedule.objects.filter(standard=stand).values()
+                    dataList.extend(list(trainingList))
+
+
+            elif selected_org == '' and selected_standard != noVal and selected_setup != noVal:
+                for (stand, set) in itertools.zip_longest(standItems, setupItems):
+                    trainingList = CespAuditSchedule.objects.filter(standard=stand, client_name=set).values()
+                    dataList.extend(list(trainingList))
+
+            elif selected_org != '' and selected_standard == noVal and selected_setup == noVal:
+                dataList = CespAuditSchedule.objects.filter(client_type=selected_org).values()
+
+
+            elif selected_org != '' and selected_standard == noVal and selected_setup != noVal:
+                for set in setupItems:
+                    trainingList = CespAuditSchedule.objects.filter(client_type=selected_org, client_name=set).values()
+                    dataList.extend(list(trainingList))
+
+            elif selected_org != '' and selected_standard != noVal and selected_setup == noVal:
+                for stand in standItems:
+                    trainingList = CespAuditSchedule.objects.filter(client_type=selected_org,
+                                                                    standard=stand).values()
+                    dataList.extend(list(trainingList))
+
+            else:
+                for (stand, set) in itertools.zip_longest(standItems, setupItems):
+                    trainingList = CespAuditSchedule.objects.filter(client_type=selected_org, standard=stand,
+                                                                    client_name=set).values()
+                    dataList.extend(list(trainingList))
+
+
+        else:
+            if selected_org == '' and selected_standard == noVal and selected_setup == noVal:
+                data = CespAuditSchedule.objects.filter(audit_scheduled__year=selected_year).values()
+                serializer = CespAuditScheduleSerializer(data, many=True)
+                return JsonResponse({'data': serializer.data}, safe=False, status=200)
+
+            elif selected_org == '' and selected_standard == noVal and selected_setup != noVal:
+                for set in setupItems:
+                    trainingList = CespAuditSchedule.objects.filter(audit_scheduled__year=selected_year,
+                                                                    client_name=set).values()
+                    dataList.extend(list(trainingList))
+
+
+            elif selected_org == '' and selected_standard != noVal and selected_setup == noVal:
+                for stand in standItems:
+                    trainingList = CespAuditSchedule.objects.filter(audit_scheduled__year=selected_year,
+                                                                    standard=stand).values()
+                    dataList.extend(list(trainingList))
+
+
+            elif selected_org == '' and selected_standard != noVal and selected_setup != noVal:
+                for (stand, set) in itertools.zip_longest(standItems, setupItems):
+                    trainingList = CespAuditSchedule.objects.filter(audit_scheduled__year=selected_year,
+                                                                    standard=stand,
+                                                                    client_name=set).values()
+                    dataList.extend(list(trainingList))
+
+
+            elif selected_org != '' and selected_standard == noVal and selected_setup == noVal:
+                dataList = CespAuditSchedule.objects.filter(audit_scheduled__year=selected_year,
+                                                            client_type=selected_org).values()
+
+
+            elif selected_org != '' and selected_standard == noVal and selected_setup != noVal:
+                for set in setupItems:
+                    trainingList = CespAuditSchedule.objects.filter(audit_scheduled__year=selected_year,
+                                                                    client_type=selected_org,
+                                                                    client_name=set).values()
+                    dataList.extend(list(trainingList))
+
+            elif selected_org != '' and selected_standard != noVal and selected_setup == noVal:
+                for stand in standItems:
+                    trainingList = CespAuditSchedule.objects.filter(audit_scheduled__year=selected_year,
+                                                                    client_type=selected_org,
+                                                                    standard=stand).values()
+                    dataList.extend(list(trainingList))
+
+            else:
+                for (stand, set) in itertools.zip_longest(standItems, setupItems):
+                    trainingList = CespAuditSchedule.objects.filter(audit_scheduled__year=selected_year,
+                                                                    client_type=selected_org,
+                                                                    standard=stand,
+                                                                    client_name=set).values()
+                    dataList.extend(list(trainingList))
+
+        serializer = CespAuditScheduleSerializer(dataList, many=True)
+        return JsonResponse({'data': serializer.data}, safe=False, status=200)
+
+    @staticmethod
+    def DeleteCespAudit(request):
+        try:
+            auditId = request.query_params['id']
+            cesp = CespAudit.objects.get(id=auditId)
             cesp.delete()
             return JsonResponse({'message': 'CeSP Audit has been deleted'}, status=200)
         except:
             return JsonResponse({'message': 'Sorry! No Audit found.'}, status=500)
+    @staticmethod
+    def GetCespAuditHistory(request):
+
+        try:
+            audit_id = request.query_params.get('id')
+            docList = CespAuditHistory.objects.filter(cesp_audit_id=audit_id).order_by('-id')
+            serializer = CespAuditSerializer(docList, many=True)
+            return JsonResponse({'status': 'True', 'data': serializer.data},
+                                status=200)
+        except Exception as e:
+            print(e)
+            return JsonResponse({'status': 'False', "message": "Internal Server Error"}, status=500)
+            pass
 
     @staticmethod
     def GetCespAuditPDFList(request):
         TABLE_COL_NAMES = (
-            "Audit ID", "Organization", "Site", "Certification Status", "Previous Standard", "Certification Validity",
+            "Audit ID", "Organization", "Site", "Certification Status", "Certification Validity Date","Certification Rescheduling",
             "Audit Type", "Planned Date", "Audit Start Date", "Audit Close Date", "Audit Status", "Standard", "Remarks")
         data = CespAudit.objects.all().values_list('audit_id', 'Organization', 'site', 'certification_status',
-                                                   'previous_standard', 'certification_validity', 'audit_type',
+                                                    'certification_validity_date','certification_validity_rescheduling_date', 'audit_type',
                                                    'planned_date', 'audit_start_date', 'audit_close_date',
                                                    'audit_status',
                                                    'standard', 'remarks')
@@ -1107,14 +1811,14 @@ class QmsController:
         font_style = xlwt.XFStyle()
         font_style.font.bold = True
         TABLE_COL_NAMES = (
-            "Audit ID", "Organization", "Site", "Certification Status", "Previous Standard", "Certification Validity",
+            "Audit ID", "Organization", "Site", "Certification Status", "Certification Validity", "Certification Rescheduling"
             "Audit Type", "Planned Date", "Audit Start Date", "Audit Close Date", "Audit Status", "Standard", "Remarks")
         for col_num in range(len(TABLE_COL_NAMES)):
             work_sheet.write(row_num, col_num, TABLE_COL_NAMES[col_num], font_style)
         font_style = xlwt.XFStyle()
 
         data = CespAudit.objects.all().values_list('audit_id', 'Organization', 'site', 'certification_status',
-                                                   'previous_standard', 'certification_validity', 'audit_type',
+                                                   'certification_validity_date','certification_validity_rescheduling_date', 'audit_type',
                                                    'planned_date', 'audit_start_date', 'audit_close_date',
                                                    'audit_status',
                                                    'standard', 'remarks')

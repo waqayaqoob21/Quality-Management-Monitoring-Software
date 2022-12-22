@@ -43,24 +43,6 @@ class QmsAuditHistory(models.Model):
     Created_at = models.DateTimeField(auto_now_add=True)
     qms_audit  = models.ForeignKey(QmsAudit, on_delete=models.CASCADE)
 
-class CespAudit(models.Model):
-    id = models.AutoField(primary_key=True)
-    audit_id = models.IntegerField()
-    Organization = models.CharField(max_length=300)
-    site = models.CharField(max_length=300)
-    certification_status = models.CharField(max_length=300)
-    previous_standard = models.CharField(max_length=300)
-    certification_validity = models.CharField(max_length=300, null=True)
-    audit_type = models.CharField(max_length=300, null=True)
-    planned_date = models.DateTimeField(auto_now_add=False, db_index=True, null=True)
-    audit_start_date = models.DateTimeField(auto_now_add=False, db_index=True, null=True)
-    audit_close_date = models.DateTimeField(auto_now_add=False, db_index=True, null=True)
-    audit_status = models.CharField(max_length=300)
-    standard = models.CharField(max_length=300)
-    remarks = models.TextField()
-    Created_at = models.DateTimeField(auto_now_add=True)
-
-
 class QmsTrainingSchedule(models.Model):
     id = models.AutoField(primary_key=True)
     sr_no = models.CharField(max_length=300)
@@ -72,8 +54,6 @@ class QmsTrainingSchedule(models.Model):
     organizations = models.CharField(max_length=300)
     setups = models.CharField(max_length=300)
     Created_at = models.DateTimeField(auto_now_add=True)
-
-
 class QmsAuditScheduled(models.Model):
     id = models.AutoField(primary_key=True)
     sr_no = models.CharField(max_length=300)
@@ -89,4 +69,66 @@ class QmsAuditScheduled(models.Model):
     status = models.CharField(max_length=300)
     next_due_date = models.DateTimeField(auto_now_add=False, db_index=True, null=True)
     remarks = models.TextField()
+    Created_at = models.DateTimeField(auto_now_add=True)
+
+# ======================== CeSP Models====================
+class CespAudit(models.Model):
+    id = models.AutoField(primary_key=True)
+    audit_id = models.CharField(max_length=300)
+    Organization = models.CharField(max_length=300)
+    setup = models.CharField(max_length=300, null=True)
+    site = models.CharField(max_length=300)
+    certification_status = models.CharField(max_length=300)
+    certification_validity_date = models.DateTimeField(auto_now_add=False, db_index=True, null=True)
+    certification_validity_rescheduling_date = models.DateTimeField(auto_now_add=False, db_index=True, null=True)
+    audit_type = models.CharField(max_length=300, null=True)
+    planned_date = models.DateTimeField(auto_now_add=False, db_index=True, null=True)
+    audit_start_date = models.DateTimeField(auto_now_add=False, db_index=True, null=True)
+    audit_close_date = models.DateTimeField(auto_now_add=False, db_index=True, null=True)
+    audit_status = models.CharField(max_length=300)
+    standard = models.CharField(max_length=300)
+    remarks = models.TextField()
+    Created_at = models.DateTimeField(auto_now_add=True)
+
+class CespAuditHistory(models.Model):
+    id = models.AutoField(primary_key=True)
+    audit_id = models.CharField(max_length=300)
+    Organization = models.CharField(max_length=300)
+    setup = models.CharField(max_length=300, null=True)
+    site = models.CharField(max_length=300)
+    certification_status = models.CharField(max_length=300)
+    certification_validity_date = models.DateTimeField(auto_now_add=False, db_index=True, null=True)
+    certification_validity_rescheduling_date = models.DateTimeField(auto_now_add=False, db_index=True, null=True)
+    audit_type = models.CharField(max_length=300, null=True)
+    planned_date = models.DateTimeField(auto_now_add=False, db_index=True, null=True)
+    audit_start_date = models.DateTimeField(auto_now_add=False, db_index=True, null=True)
+    audit_close_date = models.DateTimeField(auto_now_add=False, db_index=True, null=True)
+    audit_status = models.CharField(max_length=300)
+    standard = models.CharField(max_length=300)
+    remarks = models.TextField()
+    Created_at = models.DateTimeField(auto_now_add=True)
+    cesp_audit  = models.ForeignKey(CespAudit, on_delete=models.CASCADE)
+
+
+class CespTrainingCalendar(models.Model):
+    id = models.AutoField(primary_key=True)
+    sr_no = models.CharField(max_length=300)
+    course_title = models.CharField(max_length=600)
+    course_duration = models.CharField(max_length=300)
+    registration_date = models.DateTimeField(auto_now_add=False, db_index=True, null=True)
+    scheduled_date = models.DateTimeField(auto_now_add=False, db_index=True, null=True)
+    venue = models.CharField(max_length=100)
+    course_fee = models.CharField(max_length=100)
+    Created_at = models.DateTimeField(auto_now_add=True)
+
+
+class CespAuditSchedule(models.Model):
+    id = models.AutoField(primary_key=True)
+    sr_no = models.CharField(max_length=300)
+    client_name = models.CharField(max_length=500)
+    client_type = models.CharField(max_length=500)
+    standard = models.CharField(max_length=500)
+    audit_scheduled = models.DateTimeField(auto_now_add=False, db_index=True, null=True)
+    status = models.CharField(max_length=500)
+    current_status = models.CharField(max_length=300)
     Created_at = models.DateTimeField(auto_now_add=True)
