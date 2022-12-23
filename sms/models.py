@@ -31,6 +31,11 @@ class ProductionSystemStatus(models.Model):
     remarks = models.TextField()
     isActive = models.IntegerField(default=0, null=False)
     Created_at = models.DateTimeField(auto_now_add=True)
+    cgbalancing_date = models.DateTimeField(auto_now_add=False, null=True)
+    cgbalancing_date_status = models.CharField(max_length=300, null=True)
+    enduser_date = models.DateTimeField(auto_now_add=False, null=True)
+    enduser_status = models.CharField(max_length=300, null=True)
+
 
 
 class ProductionSystemStatusHistory(models.Model):
@@ -62,6 +67,10 @@ class ProductionSystemStatusHistory(models.Model):
     remarks = models.TextField()
     isActive = models.IntegerField(default=0, null=False)
     Created_at = models.DateTimeField(auto_now_add=True)
+    cgbalancing_date = models.DateTimeField(auto_now_add=False, null=True)
+    cgbalancing_date_status = models.CharField(max_length=300, null=True)
+    enduser_date = models.DateTimeField(auto_now_add=False,  null=True)
+    enduser_status = models.CharField(max_length=300, null=True)
 
 
 class FlightSystemStatus(models.Model):
@@ -92,6 +101,10 @@ class FlightSystemStatus(models.Model):
     remarks = models.TextField()
     isActive = models.IntegerField(default=0, null=False)
     Created_at = models.DateTimeField(auto_now_add=True)
+    cgbalancing_date = models.DateTimeField(auto_now_add=False, null=True)
+    cgbalancing_date_status = models.CharField(max_length=300, null=True)
+    launchact_date = models.DateTimeField(auto_now_add=False, null=True)
+    launchact_status = models.CharField(max_length=300, null=True)
 
 
 class FlightSystemStatusHistory(models.Model):
@@ -123,6 +136,10 @@ class FlightSystemStatusHistory(models.Model):
     remarks = models.TextField()
     isActive = models.IntegerField(default=0, null=False)
     Created_at = models.DateTimeField(auto_now_add=True)
+    cgbalancing_date = models.DateTimeField(auto_now_add=False, null=True)
+    cgbalancing_date_status = models.CharField(max_length=300, null=True)
+    launchact_date = models.DateTimeField(auto_now_add=False, null=True)
+    launchact_status = models.CharField(max_length=300, null=True)
 
 
 class RelifingSystemStatus(models.Model):
@@ -153,6 +170,10 @@ class RelifingSystemStatus(models.Model):
     remarks = models.TextField()
     isActive = models.IntegerField(default=0, null=False)
     Created_at = models.DateTimeField(auto_now_add=True)
+    cgbalancing_date = models.DateTimeField(auto_now_add=False, null=True)
+    cgbalancing_date_status = models.CharField(max_length=300, null=True)
+    enduser_date = models.DateTimeField(auto_now_add=False, null=True)
+    enduser_status = models.CharField(max_length=300, null=True)
 
 
 class RelifingSystemStatusHistory(models.Model):
@@ -184,3 +205,7 @@ class RelifingSystemStatusHistory(models.Model):
     remarks = models.TextField()
     isActive = models.IntegerField(default=0, null=False)
     Created_at = models.DateTimeField(auto_now_add=True)
+    cgbalancing_date = models.DateTimeField(auto_now_add=False, null=True)
+    cgbalancing_date_status = models.CharField(max_length=300, null=True)
+    enduser_date = models.DateTimeField(auto_now_add=False, null=True)
+    enduser_status = models.CharField(max_length=300, null=True)

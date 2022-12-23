@@ -32,6 +32,10 @@ class ProductionSystemSerialzer(Serializer):
     attachment = CharField()
     remarks = CharField()
     Created_at = DateTimeField()
+    cgbalancing_date = CharField()
+    cgbalancing_date_status = CharField()
+    enduser_date = CharField()
+    enduser_status = CharField()
 
 
 class FlightSystemSerialzer(Serializer):
@@ -62,6 +66,10 @@ class FlightSystemSerialzer(Serializer):
     attachment = CharField()
     remarks = CharField()
     Created_at = DateTimeField()
+    cgbalancing_date = CharField()
+    cgbalancing_date_status = CharField()
+    launchact_date = CharField()
+    launchact_status = CharField()
 
 
 class RelifingSystemSerialzer(Serializer):
@@ -92,3 +100,7 @@ class RelifingSystemSerialzer(Serializer):
     attachment = CharField()
     remarks = CharField()
     Created_at = DateTimeField()
+    cgbalancing_date = CharField()
+    cgbalancing_date_status = CharField()
+    enduser_date = CharField()
+    enduser_status = CharField()

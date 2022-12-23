@@ -1,4 +1,6 @@
 from importlib import import_module
+
+from django.db.models import Q
 from django.http import JsonResponse
 from ams.serializer import *
 from ams.models import *
@@ -60,6 +62,10 @@ class SmsController:
                 prodModel.qm_certification_status = request['qm_certification_status']
                 prodModel.attachment = request['attachment']
                 prodModel.remarks = request['remarks']
+                prodModel.cgbalancing_date = request['cgbalancing_date']
+                prodModel.cgbalancing_date_status = request['cgbalancing_date_status']
+                prodModel.enduser_date = request['enduser_date']
+                prodModel.enduser_status = request['enduser_status']
                 prodModel.isActive = is_active
                 prodModel.save()
                 return JsonResponse({'status': 'True', 'message': "Production Status Added Successfully!"},
@@ -104,6 +110,10 @@ class SmsController:
                         ProdHistoryModal.attachment = get_prod.attachment
                         ProdHistoryModal.remarks = get_prod.remarks
                         ProdHistoryModal.isActive = get_prod.isActive
+                        ProdHistoryModal.cgbalancing_date = get_prod.cgbalancing_date
+                        ProdHistoryModal.cgbalancing_date_status = get_prod.cgbalancing_date_status
+                        ProdHistoryModal.enduser_date = get_prod.enduser_date
+                        ProdHistoryModal.enduser_status = get_prod.enduser_status
                         ProdHistoryModal.save()
 
                         # history saved
@@ -134,6 +144,10 @@ class SmsController:
                         get_prod.attachment = request['attachment']
                     get_prod.remarks = request['remarks']
                     get_prod.isActive = is_active
+                    get_prod.cgbalancing_date = request['cgbalancing_date']
+                    get_prod.cgbalancing_date_status = request['cgbalancing_date_status']
+                    get_prod.enduser_date = request['enduser_date']
+                    get_prod.enduser_status = request['enduser_status']
                     get_prod.save()
             return JsonResponse({'status': 'True', 'message': "Production Status Updated Successfully!"},
                                 status=200)
@@ -373,6 +387,10 @@ class SmsController:
                 flightModel.isActive = is_active
                 flightModel.testing_date = request['testing_date']
                 flightModel.sys_type = request['sys_type']
+                flightModel.cgbalancing_date = request['cgbalancing_date']
+                flightModel.cgbalancing_date_status = request['cgbalancing_date_status']
+                flightModel.launchact_date = request['launchact_date']
+                flightModel.launchact_status = request['launchact_status']
                 flightModel.save()
                 return JsonResponse({'status': 'True', 'message': "Production Status Added Successfully!"},
                                     status=200)
@@ -417,6 +435,10 @@ class SmsController:
                         FlightHistoryModal.isActive = get_prod.isActive
                         FlightHistoryModal.testing_date = get_prod.testing_date
                         FlightHistoryModal.sys_type = get_prod.sys_type
+                        FlightHistoryModal.cgbalancing_date = get_prod.cgbalancing_date
+                        FlightHistoryModal.cgbalancing_date_status = get_prod.cgbalancing_date_status
+                        FlightHistoryModal.launchact_date = get_prod.launchact_date
+                        FlightHistoryModal.launchact_status = get_prod.launchact_status
                         FlightHistoryModal.save()
 
                         # history saved
@@ -446,6 +468,10 @@ class SmsController:
                     if request['attachment'] != '':
                         get_prod.attachment = request['attachment']
                     get_prod.remarks = request['remarks']
+                    get_prod.cgbalancing_date = request['cgbalancing_date']
+                    get_prod.cgbalancing_date_status = request['cgbalancing_date_status']
+                    get_prod.launchact_date = request['launchact_date']
+                    get_prod.launchact_status = request['launchact_status']
                     get_prod.isActive = is_active
                     get_prod.save()
             return JsonResponse({'status': 'True', 'message': "Production Status Updated Successfully!"},
@@ -636,6 +662,10 @@ class SmsController:
                 refilModel.isActive = is_active
                 refilModel.testing_date = request['testing_date']
                 refilModel.sys_type = request['sys_type']
+                refilModel.cgbalancing_date = request['cgbalancing_date']
+                refilModel.cgbalancing_date_status = request['cgbalancing_date_status']
+                refilModel.enduser_date = request['enduser_date']
+                refilModel.enduser_status = request['enduser_status']
                 refilModel.save()
                 return JsonResponse({'status': 'True', 'message': "Production Status Added Successfully!"},
                                     status=200)
@@ -677,6 +707,10 @@ class SmsController:
                         RelifingHistoryModal.attachment = get_prod.attachment
                         RelifingHistoryModal.remarks = get_prod.remarks
                         RelifingHistoryModal.isActive = get_prod.isActive
+                        RelifingHistoryModal.cgbalancing_date = get_prod.cgbalancing_date
+                        RelifingHistoryModal.cgbalancing_date_status = get_prod.cgbalancing_date_status
+                        RelifingHistoryModal.enduser_date = get_prod.enduser_date
+                        RelifingHistoryModal.enduser_status = get_prod.enduser_status
                         RelifingHistoryModal.save()
 
                         # history saved
@@ -704,6 +738,10 @@ class SmsController:
                     if request['attachment'] != '':
                         get_prod.attachment = request['attachment']
                     get_prod.remarks = request['remarks']
+                    get_prod.cgbalancing_date = request['cgbalancing_date']
+                    get_prod.cgbalancing_date_status = request['cgbalancing_date_status']
+                    get_prod.enduser_date = request['enduser_date']
+                    get_prod.enduser_status = request['enduser_status']
                     get_prod.isActive = is_active
                     get_prod.save()
             return JsonResponse({'status': 'True', 'message': "Production Status Updated Successfully!"},
@@ -866,6 +904,43 @@ class SmsController:
     @staticmethod
     def getSystemMonitoringDashboardCount(request):
         try:
+
+            def get_filter(field_name, filter_condition, filter_value):
+                # thanks to the below post
+                # https://stackoverflow.com/questions/310732/in-django-how-does-one-filter-a-queryset-with-dynamic-field-lookups
+                # the idea to this below logic is very similar to that in the above mentioned post
+                if filter_condition.strip() == "contains":
+                    kwargs = {
+                        '{0}__icontains'.format(field_name): filter_value
+                    }
+                    return Q(**kwargs)
+
+                if filter_condition.strip() == "not_equal":
+                    kwargs = {
+                        '{0}__iexact'.format(field_name): filter_value
+                    }
+                    return ~Q(**kwargs)
+
+                if filter_condition.strip() == "starts_with":
+                    kwargs = {
+                        '{0}__istartswith'.format(field_name): filter_value
+                    }
+                    return Q(**kwargs)
+                if filter_condition.strip() == "equal":
+                    kwargs = {
+                        '{0}__iexact'.format(field_name): filter_value
+                    }
+                    return Q(**kwargs)
+
+                if filter_condition.strip() == "not_equal":
+                    kwargs = {
+                        '{0}__iexact'.format(field_name): filter_value
+                    }
+
+                    return ~Q(**kwargs)
+
+            filter_objects = Q()
+
             data = []
             prod_blt_ok = 0
             prod_blt_observation = 0
@@ -876,368 +951,427 @@ class SmsController:
             type = request.query_params['selected_type']
             system = request.query_params['selected_system']
 
+            # create dynamic filter
+            if year != '':
+                filter_objects &= get_filter(
+                    'testing_date__year', 'equal',
+                    year)
+            if org != '':
+                filter_objects &= get_filter(
+                    'organization', 'equal',
+                    org)
+            if type != '':
+                filter_objects &= get_filter(
+                    'sys_type', 'equal',
+                    type)
+            if system != '':
+                filter_objects &= get_filter(
+                    'system', 'equal',
+                    system)
+
             # production system count
-            prod_blt_oklist = ProductionSystemStatus.objects.filter(blt_status='OK')
-            prod_blt_observationlist = ProductionSystemStatus.objects.filter(blt_status='Observation')
-            prod_blt_uplist = ProductionSystemStatus.objects.filter(blt_status='Under process')
-            prod_blt_haultlist = ProductionSystemStatus.objects.filter(blt_status='Halt')
+            prod_blt_oklist = ProductionSystemStatus.objects.filter(filter_objects, blt_status='OK')
+            prod_blt_observationlist = ProductionSystemStatus.objects.filter(filter_objects, blt_status='Observation')
+            prod_blt_uplist = ProductionSystemStatus.objects.filter(filter_objects, blt_status='Under process')
+            prod_blt_haultlist = ProductionSystemStatus.objects.filter(filter_objects, blt_status='Halt')
 
-            prod_prehil_oklist = ProductionSystemStatus.objects.filter(pre_hil_status='OK')
-            prod_prehil_observationlist = ProductionSystemStatus.objects.filter(pre_hil_status='Observation')
-            prod_prehil_uplist = ProductionSystemStatus.objects.filter(pre_hil_status='Under process')
-            prod_prehil_haultlist = ProductionSystemStatus.objects.filter(pre_hil_status='Halt')
+            prod_prehil_oklist = ProductionSystemStatus.objects.filter(filter_objects, pre_hil_status='OK')
+            prod_prehil_observationlist = ProductionSystemStatus.objects.filter(filter_objects,
+                                                                                pre_hil_status='Observation')
+            prod_prehil_uplist = ProductionSystemStatus.objects.filter(filter_objects, pre_hil_status='Under process')
+            prod_prehil_haultlist = ProductionSystemStatus.objects.filter(filter_objects, pre_hil_status='Halt')
 
-            prod_posthil_oklist = ProductionSystemStatus.objects.filter(post_hil_status='OK')
-            prod_posthil_observationlist = ProductionSystemStatus.objects.filter(post_hil_status='Observation')
-            prod_posthil_uplist = ProductionSystemStatus.objects.filter(post_hil_status='Under process')
-            prod_posthil_haultlist = ProductionSystemStatus.objects.filter(post_hil_status='Halt')
+            prod_posthil_oklist = ProductionSystemStatus.objects.filter(filter_objects, post_hil_status='OK')
+            prod_posthil_observationlist = ProductionSystemStatus.objects.filter(filter_objects,
+                                                                                 post_hil_status='Observation')
+            prod_posthil_uplist = ProductionSystemStatus.objects.filter(filter_objects, post_hil_status='Under process')
+            prod_posthil_haultlist = ProductionSystemStatus.objects.filter(filter_objects, post_hil_status='Halt')
 
-            prod_finalintegration_oklist = ProductionSystemStatus.objects.filter(final_integration_status='OK')
-            prod_finalintegration_observationlist = ProductionSystemStatus.objects.filter(final_integration_status='Observation')
-            prod_finalintegration_completelist = ProductionSystemStatus.objects.filter(final_integration_status='Completed')
-            prod_finalintegration_haultlist = ProductionSystemStatus.objects.filter(final_integration_status='Halt')
+            prod_finalintegration_oklist = ProductionSystemStatus.objects.filter(filter_objects,
+                                                                                 final_integration_status='OK')
+            prod_finalintegration_observationlist = ProductionSystemStatus.objects.filter(filter_objects,
+                                                                                          final_integration_status='Observation')
+            prod_finalintegration_completelist = ProductionSystemStatus.objects.filter(filter_objects,
+                                                                                       final_integration_status='Completed')
+            prod_finalintegration_haultlist = ProductionSystemStatus.objects.filter(filter_objects,
+                                                                                    final_integration_status='Halt')
+
+            prod_vibration_oklist = ProductionSystemStatus.objects.filter(filter_objects, vibaration_status='OK')
+            prod_vibration_observationlist = ProductionSystemStatus.objects.filter(filter_objects,
+                                                                                   vibaration_status='Observation')
+            prod_vibration_uplist = ProductionSystemStatus.objects.filter(filter_objects,
+                                                                          vibaration_status='Under process')
+            prod_vibration_haultlist = ProductionSystemStatus.objects.filter(filter_objects, vibaration_status='Halt')
 
             # flight system count
-            flight_blt_oklist = FlightSystemStatus.objects.filter(blt_status='OK')
-            flight_blt_observationlist = FlightSystemStatus.objects.filter(blt_status='Observation')
-            flight_blt_uplist = FlightSystemStatus.objects.filter(blt_status='Under process')
-            flight_blt_haultlist = FlightSystemStatus.objects.filter(blt_status='Halt')
+            flight_blt_oklist = FlightSystemStatus.objects.filter(filter_objects, blt_status='OK')
+            flight_blt_observationlist = FlightSystemStatus.objects.filter(filter_objects, blt_status='Observation')
+            flight_blt_uplist = FlightSystemStatus.objects.filter(filter_objects, blt_status='Under process')
+            flight_blt_haultlist = FlightSystemStatus.objects.filter(filter_objects, blt_status='Halt')
 
-            flight_prehil_oklist = FlightSystemStatus.objects.filter(pre_hil_status='OK')
-            flight_prehil_observationlist = FlightSystemStatus.objects.filter(pre_hil_status='Observation')
-            flight_prehil_uplist = FlightSystemStatus.objects.filter(pre_hil_status='Under process')
-            flight_prehil_haultlist = FlightSystemStatus.objects.filter(pre_hil_status='Halt')
+            flight_prehil_oklist = FlightSystemStatus.objects.filter(filter_objects, pre_hil_status='OK')
+            flight_prehil_observationlist = FlightSystemStatus.objects.filter(filter_objects,
+                                                                              pre_hil_status='Observation')
+            flight_prehil_uplist = FlightSystemStatus.objects.filter(filter_objects, pre_hil_status='Under process')
+            flight_prehil_haultlist = FlightSystemStatus.objects.filter(filter_objects, pre_hil_status='Halt')
 
-            flight_posthil_oklist = FlightSystemStatus.objects.filter(post_hil_status='OK')
-            flight_posthil_observationlist = FlightSystemStatus.objects.filter(post_hil_status='Observation')
-            flight_posthil_uplist = FlightSystemStatus.objects.filter(post_hil_status='Under process')
-            flight_posthil_haultlist = FlightSystemStatus.objects.filter(post_hil_status='Halt')
+            flight_posthil_oklist = FlightSystemStatus.objects.filter(filter_objects, post_hil_status='OK')
+            flight_posthil_observationlist = FlightSystemStatus.objects.filter(filter_objects,
+                                                                               post_hil_status='Observation')
+            flight_posthil_uplist = FlightSystemStatus.objects.filter(filter_objects, post_hil_status='Under process')
+            flight_posthil_haultlist = FlightSystemStatus.objects.filter(filter_objects, post_hil_status='Halt')
 
-            flight_finalintegration_oklist = FlightSystemStatus.objects.filter(final_integration_status='OK')
-            flight_finalintegration_observationlist = FlightSystemStatus.objects.filter(final_integration_status='Observation')
-            flight_finalintegration_completelist = FlightSystemStatus.objects.filter(final_integration_status='Completed')
-            flight_finalintegration_haultlist = FlightSystemStatus.objects.filter(final_integration_status='Halt')
+            flight_finalintegration_oklist = FlightSystemStatus.objects.filter(filter_objects,
+                                                                               final_integration_status='OK')
+            flight_finalintegration_observationlist = FlightSystemStatus.objects.filter(filter_objects,
+                                                                                        final_integration_status='Observation')
+            flight_finalintegration_completelist = FlightSystemStatus.objects.filter(filter_objects,
+                                                                                     final_integration_status='Completed')
+            flight_finalintegration_haultlist = FlightSystemStatus.objects.filter(filter_objects,
+                                                                                  final_integration_status='Halt')
+
+            flight_vibration_oklist = FlightSystemStatus.objects.filter(filter_objects, vibaration_status='OK')
+            flight_vibration_observationlist = FlightSystemStatus.objects.filter(filter_objects,
+                                                                                 vibaration_status='Observation')
+            flight_vibration_uplist = FlightSystemStatus.objects.filter(filter_objects,
+                                                                        vibaration_status='Under process')
+            flight_vibration_haultlist = FlightSystemStatus.objects.filter(filter_objects, vibaration_status='Halt')
 
             # relifing system count
-            relifing_blt_oklist = RelifingSystemStatus.objects.filter(blt_status='OK')
-            relifing_blt_observationlist = RelifingSystemStatus.objects.filter(blt_status='Observation')
-            relifing_blt_uplist = RelifingSystemStatus.objects.filter(blt_status='Under process')
-            relifing_blt_haultlist = RelifingSystemStatus.objects.filter(blt_status='Halt')
+            relifing_blt_oklist = RelifingSystemStatus.objects.filter(filter_objects, blt_status='OK')
+            relifing_blt_observationlist = RelifingSystemStatus.objects.filter(filter_objects, blt_status='Observation')
+            relifing_blt_uplist = RelifingSystemStatus.objects.filter(filter_objects, blt_status='Under process')
+            relifing_blt_haultlist = RelifingSystemStatus.objects.filter(filter_objects, blt_status='Halt')
 
-            relifing_prehil_oklist = RelifingSystemStatus.objects.filter(pre_hil_status='OK')
-            relifing_prehil_observationlist = RelifingSystemStatus.objects.filter(pre_hil_status='Observation')
-            relifing_prehil_uplist = RelifingSystemStatus.objects.filter(pre_hil_status='Under process')
-            relifing_prehil_haultlist = RelifingSystemStatus.objects.filter(pre_hil_status='Halt')
+            relifing_prehil_oklist = RelifingSystemStatus.objects.filter(filter_objects, pre_hil_status='OK')
+            relifing_prehil_observationlist = RelifingSystemStatus.objects.filter(filter_objects,
+                                                                                  pre_hil_status='Observation')
+            relifing_prehil_uplist = RelifingSystemStatus.objects.filter(filter_objects, pre_hil_status='Under process')
+            relifing_prehil_haultlist = RelifingSystemStatus.objects.filter(filter_objects, pre_hil_status='Halt')
 
-            relifing_posthil_oklist = RelifingSystemStatus.objects.filter(post_hil_status='OK')
-            relifing_posthil_observationlist = RelifingSystemStatus.objects.filter(post_hil_status='Observation')
-            relifing_posthil_uplist = RelifingSystemStatus.objects.filter(post_hil_status='Under process')
-            relifing_posthil_haultlist = RelifingSystemStatus.objects.filter(post_hil_status='Halt')
+            relifing_posthil_oklist = RelifingSystemStatus.objects.filter(filter_objects, post_hil_status='OK')
+            relifing_posthil_observationlist = RelifingSystemStatus.objects.filter(filter_objects,
+                                                                                   post_hil_status='Observation')
+            relifing_posthil_uplist = RelifingSystemStatus.objects.filter(filter_objects,
+                                                                          post_hil_status='Under process')
+            relifing_posthil_haultlist = RelifingSystemStatus.objects.filter(filter_objects, post_hil_status='Halt')
 
-            relifing_finalintegration_oklist = RelifingSystemStatus.objects.filter(final_integration_status='OK')
-            relifing_finalintegration_observationlist = RelifingSystemStatus.objects.filter(final_integration_status='Observation')
-            relifing_finalintegration_completelist = RelifingSystemStatus.objects.filter(final_integration_status='Completed')
-            relifing_finalintegration_haultlist = RelifingSystemStatus.objects.filter(final_integration_status='Halt')
+            relifing_finalintegration_oklist = RelifingSystemStatus.objects.filter(filter_objects,
+                                                                                   final_integration_status='OK')
+            relifing_finalintegration_observationlist = RelifingSystemStatus.objects.filter(filter_objects,
+                                                                                            final_integration_status='Observation')
+            relifing_finalintegration_completelist = RelifingSystemStatus.objects.filter(filter_objects,
+                                                                                         final_integration_status='Completed')
+            relifing_finalintegration_haultlist = RelifingSystemStatus.objects.filter(filter_objects,
+                                                                                      final_integration_status='Halt')
 
-            if year is not '':
-                prod_blt_oklist = prod_blt_oklist.filter(testing_date__year=year)
-                prod_blt_observationlist = prod_blt_observationlist.filter(testing_date__year=year)
-                prod_blt_uplist = prod_blt_uplist.filter(testing_date__year=year)
-                prod_blt_haultlist = prod_blt_haultlist.filter(testing_date__year=year)
+            relifing_vibration_oklist = RelifingSystemStatus.objects.filter(filter_objects, vibaration_status='OK')
+            relifing_vibration_observationlist = RelifingSystemStatus.objects.filter(filter_objects,
+                                                                                     vibaration_status='Observation')
+            relifing_vibration_uplist = RelifingSystemStatus.objects.filter(filter_objects,
+                                                                            vibaration_status='Under process')
+            relifing_vibration_haultlist = RelifingSystemStatus.objects.filter(filter_objects, vibaration_status='Halt')
 
-                prod_prehil_oklist = prod_prehil_oklist.filter(testing_date__year=year)
-                prod_prehil_observationlist = prod_prehil_observationlist.filter(testing_date__year=year)
-                prod_prehil_uplist = prod_prehil_uplist.filter(testing_date__year=year)
-                prod_prehil_haultlist = prod_prehil_haultlist.filter(testing_date__year=year)
-
-                prod_posthil_oklist = prod_posthil_oklist.filter(testing_date__year=year)
-                prod_posthil_observationlist = prod_posthil_observationlist.filter(testing_date__year=year)
-                prod_posthil_uplist = prod_posthil_uplist.filter(testing_date__year=year)
-                prod_posthil_haultlist = prod_posthil_haultlist.filter(testing_date__year=year)
-
-                prod_finalintegration_oklist = prod_finalintegration_oklist.filter(testing_date__year=year)
-                prod_finalintegration_observationlist = prod_finalintegration_observationlist.filter(testing_date__year=year)
-                prod_finalintegration_completelist = prod_finalintegration_completelist.filter(testing_date__year=year)
-                prod_finalintegration_haultlist = prod_finalintegration_haultlist.filter(testing_date__year=year)
-
-                # flight system
-                flight_blt_oklist = flight_blt_oklist.filter(testing_date__year=year)
-                flight_blt_observationlist = flight_blt_observationlist.filter(testing_date__year=year)
-                flight_blt_uplist = flight_blt_uplist.filter(testing_date__year=year)
-                flight_blt_haultlist = flight_blt_haultlist.filter(testing_date__year=year)
-
-                flight_prehil_oklist = flight_prehil_oklist.filter(testing_date__year=year)
-                flight_prehil_observationlist = flight_prehil_observationlist.filter(
-                    testing_date__year=year)
-                flight_prehil_uplist = flight_prehil_uplist.filter(testing_date__year=year)
-                flight_prehil_haultlist = flight_prehil_haultlist.filter(testing_date__year=year)
-
-                flight_posthil_oklist = flight_posthil_oklist.filter(testing_date__year=year)
-                flight_posthil_observationlist = flight_posthil_observationlist.filter(testing_date__year=year)
-                flight_posthil_uplist = flight_posthil_uplist.filter(testing_date__year=year)
-                flight_posthil_haultlist = flight_posthil_haultlist.filter(testing_date__year=year)
-
-                flight_finalintegration_oklist = flight_finalintegration_oklist.filter(testing_date__year=year)
-                flight_finalintegration_observationlist = flight_finalintegration_observationlist.filter(
-                    testing_date__year=year)
-                flight_finalintegration_completelist = flight_finalintegration_completelist.filter(
-                    testing_date__year=year)
-                flight_finalintegration_haultlist = flight_finalintegration_haultlist.filter(
-                    testing_date__year=year)
-
-                # relifing system
-                relifing_blt_oklist = relifing_blt_oklist.filter(testing_date__year=year)
-                relifing_blt_observationlist = relifing_blt_observationlist.filter(testing_date__year=year)
-                relifing_blt_uplist = relifing_blt_uplist.filter(testing_date__year=year)
-                relifing_blt_haultlist = relifing_blt_haultlist.filter(testing_date__year=year)
-
-                relifing_prehil_oklist = relifing_prehil_oklist.filter(testing_date__year=year)
-                relifing_prehil_observationlist = relifing_prehil_observationlist.filter(
-                    testing_date__year=year)
-                relifing_prehil_uplist = relifing_prehil_uplist.filter(testing_date__year=year)
-                relifing_prehil_haultlist = relifing_prehil_haultlist.filter(testing_date__year=year)
-
-                relifing_posthil_oklist = relifing_posthil_oklist.filter(testing_date__year=year)
-                relifing_posthil_observationlist = relifing_posthil_observationlist.filter(
-                    testing_date__year=year)
-                relifing_posthil_uplist = relifing_posthil_uplist.filter(testing_date__year=year)
-                relifing_posthil_haultlist = relifing_posthil_haultlist.filter(testing_date__year=year)
-
-                relifing_finalintegration_oklist = relifing_finalintegration_oklist.filter(testing_date__year=year)
-                relifing_finalintegration_observationlist = relifing_finalintegration_observationlist.filter(
-                    testing_date__year=year)
-                relifing_finalintegration_completelist = relifing_finalintegration_completelist.filter(testing_date__year=year)
-                relifing_finalintegration_haultlist = relifing_finalintegration_haultlist.filter(testing_date__year=year)
-
-            if org is not '':
-                prod_blt_oklist = prod_blt_oklist.filter(organization=org)
-                prod_blt_observationlist = prod_blt_observationlist.filter(organization=org)
-                prod_blt_uplist = prod_blt_uplist.filter(organization=org)
-                prod_blt_haultlist = prod_blt_haultlist.filter(organization=org)
-
-                prod_prehil_oklist = prod_prehil_oklist.filter(organization=org)
-                prod_prehil_observationlist = prod_prehil_observationlist.filter(organization=org)
-                prod_prehil_uplist = prod_prehil_uplist.filter(organization=org)
-                prod_prehil_haultlist = prod_prehil_haultlist.filter(organization=org)
-
-                prod_posthil_oklist = prod_posthil_oklist.filter(organization=org)
-                prod_posthil_observationlist = prod_posthil_observationlist.filter(organization=org)
-                prod_posthil_uplist = prod_posthil_uplist.filter(organization=org)
-                prod_posthil_haultlist = prod_posthil_haultlist.filter(organization=org)
-
-                prod_finalintegration_oklist = prod_finalintegration_oklist.filter(organization=org)
-                prod_finalintegration_observationlist = prod_finalintegration_observationlist.filter(
-                    organization=org)
-                prod_finalintegration_completelist = prod_finalintegration_completelist.filter(
-                    organization=org)
-                prod_finalintegration_haultlist = prod_finalintegration_haultlist.filter(
-                    organization=org)
-
-                # flight system
-                flight_blt_oklist = flight_blt_oklist.filter(organization=org)
-                flight_blt_observationlist = flight_blt_observationlist.filter(organization=org)
-                flight_blt_uplist = flight_blt_uplist.filter(organization=org)
-                flight_blt_haultlist = flight_blt_haultlist.filter(organization=org)
-
-                flight_prehil_oklist = flight_prehil_oklist.filter(organization=org)
-                flight_prehil_observationlist = flight_prehil_observationlist.filter(
-                    organization=org)
-                flight_prehil_uplist = flight_prehil_uplist.filter(organization=org)
-                flight_prehil_haultlist = flight_prehil_haultlist.filter(organization=org)
-
-                flight_posthil_oklist = flight_posthil_oklist.filter(organization=org)
-                flight_posthil_observationlist = flight_posthil_observationlist.filter(organization=org)
-                flight_posthil_uplist = flight_posthil_uplist.filter(organization=org)
-                flight_posthil_haultlist = flight_posthil_haultlist.filter(organization=org)
-
-                flight_finalintegration_oklist = flight_finalintegration_oklist.filter(organization=org)
-                flight_finalintegration_observationlist = flight_finalintegration_observationlist.filter(
-                    organization=org)
-                flight_finalintegration_completelist = flight_finalintegration_completelist.filter(
-                    organization=org)
-                flight_finalintegration_haultlist = flight_finalintegration_haultlist.filter(
-                    organization=org)
-
-                # relifing system
-                relifing_blt_oklist = relifing_blt_oklist.filter(organization=org)
-                relifing_blt_observationlist = relifing_blt_observationlist.filter(organization=org)
-                relifing_blt_uplist = relifing_blt_uplist.filter(organization=org)
-                relifing_blt_haultlist = relifing_blt_haultlist.filter(organization=org)
-
-                relifing_prehil_oklist = relifing_prehil_oklist.filter(organization=org)
-                relifing_prehil_observationlist = relifing_prehil_observationlist.filter(
-                    organization=org)
-                relifing_prehil_uplist = relifing_prehil_uplist.filter(organization=org)
-                relifing_prehil_haultlist = relifing_prehil_haultlist.filter(organization=org)
-
-                relifing_posthil_oklist = relifing_posthil_oklist.filter(organization=org)
-                relifing_posthil_observationlist = relifing_posthil_observationlist.filter(
-                    organization=org)
-                relifing_posthil_uplist = relifing_posthil_uplist.filter(organization=org)
-                relifing_posthil_haultlist = relifing_posthil_haultlist.filter(organization=org)
-
-                relifing_finalintegration_oklist = relifing_finalintegration_oklist.filter(
-                    organization=org)
-                relifing_finalintegration_observationlist = relifing_finalintegration_observationlist.filter(
-                    organization=org)
-                relifing_finalintegration_completelist = relifing_finalintegration_completelist.filter(
-                    organization=org)
-                relifing_finalintegration_haultlist = relifing_finalintegration_haultlist.filter(
-                    organization=org)
-
-            if type is not '':
-                prod_blt_oklist = prod_blt_oklist.filter(sys_type=type)
-                prod_blt_observationlist = prod_blt_observationlist.filter(sys_type=type)
-                prod_blt_uplist = prod_blt_uplist.filter(sys_type=type)
-                prod_blt_haultlist = prod_blt_haultlist.filter(sys_type=type)
-
-                prod_prehil_oklist = prod_prehil_oklist.filter(sys_type=type)
-                prod_prehil_observationlist = prod_prehil_observationlist.filter(sys_type=type)
-                prod_prehil_uplist = prod_prehil_uplist.filter(sys_type=type)
-                prod_prehil_haultlist = prod_prehil_haultlist.filter(sys_type=type)
-
-                prod_posthil_oklist = prod_posthil_oklist.filter(sys_type=type)
-                prod_posthil_observationlist = prod_posthil_observationlist.filter(sys_type=type)
-                prod_posthil_uplist = prod_posthil_uplist.filter(sys_type=type)
-                prod_posthil_haultlist = prod_posthil_haultlist.filter(sys_type=type)
-
-                prod_finalintegration_oklist = prod_finalintegration_oklist.filter(sys_type=type)
-                prod_finalintegration_observationlist = prod_finalintegration_observationlist.filter(
-                    sys_type=type)
-                prod_finalintegration_completelist = prod_finalintegration_completelist.filter(
-                    sys_type=type)
-                prod_finalintegration_haultlist = prod_finalintegration_haultlist.filter(
-                    sys_type=type)
-
-                # flight system
-                flight_blt_oklist = flight_blt_oklist.filter(sys_type=type)
-                flight_blt_observationlist = flight_blt_observationlist.filter(sys_type=type)
-                flight_blt_uplist = flight_blt_uplist.filter(sys_type=type)
-                flight_blt_haultlist = flight_blt_haultlist.filter(sys_type=type)
-
-                flight_prehil_oklist = flight_prehil_oklist.filter(sys_type=type)
-                flight_prehil_observationlist = flight_prehil_observationlist.filter(
-                    sys_type=type)
-                flight_prehil_uplist = flight_prehil_uplist.filter(sys_type=type)
-                flight_prehil_haultlist = flight_prehil_haultlist.filter(sys_type=type)
-
-                flight_posthil_oklist = flight_posthil_oklist.filter(sys_type=type)
-                flight_posthil_observationlist = flight_posthil_observationlist.filter(sys_type=type)
-                flight_posthil_uplist = flight_posthil_uplist.filter(sys_type=type)
-                flight_posthil_haultlist = flight_posthil_haultlist.filter(sys_type=type)
-
-                flight_finalintegration_oklist = flight_finalintegration_oklist.filter(sys_type=type)
-                flight_finalintegration_observationlist = flight_finalintegration_observationlist.filter(
-                    sys_type=type)
-                flight_finalintegration_completelist = flight_finalintegration_completelist.filter(
-                    sys_type=type)
-                flight_finalintegration_haultlist = flight_finalintegration_haultlist.filter(
-                    sys_type=type)
-
-                # relifing system
-                relifing_blt_oklist = relifing_blt_oklist.filter(sys_type=type)
-                relifing_blt_observationlist = relifing_blt_observationlist.filter(sys_type=type)
-                relifing_blt_uplist = relifing_blt_uplist.filter(sys_type=type)
-                relifing_blt_haultlist = relifing_blt_haultlist.filter(sys_type=type)
-
-                relifing_prehil_oklist = relifing_prehil_oklist.filter(sys_type=type)
-                relifing_prehil_observationlist = relifing_prehil_observationlist.filter(
-                    sys_type=type)
-                relifing_prehil_uplist = relifing_prehil_uplist.filter(sys_type=type)
-                relifing_prehil_haultlist = relifing_prehil_haultlist.filter(sys_type=type)
-
-                relifing_posthil_oklist = relifing_posthil_oklist.filter(sys_type=type)
-                relifing_posthil_observationlist = relifing_posthil_observationlist.filter(
-                    sys_type=type)
-                relifing_posthil_uplist = relifing_posthil_uplist.filter(sys_type=type)
-                relifing_posthil_haultlist = relifing_posthil_haultlist.filter(sys_type=type)
-
-                relifing_finalintegration_oklist = relifing_finalintegration_oklist.filter(
-                    sys_type=type)
-                relifing_finalintegration_observationlist = relifing_finalintegration_observationlist.filter(
-                    sys_type=type)
-                relifing_finalintegration_completelist = relifing_finalintegration_completelist.filter(
-                    sys_type=type)
-                relifing_finalintegration_haultlist = relifing_finalintegration_haultlist.filter(
-                    sys_type=type)
-
-
-            if system is not '':
-                prod_blt_oklist = prod_blt_oklist.filter(system=system)
-                prod_blt_observationlist = prod_blt_observationlist.filter(system=system)
-                prod_blt_uplist = prod_blt_uplist.filter(system=system)
-                prod_blt_haultlist = prod_blt_haultlist.filter(system=system)
-
-                prod_prehil_oklist = prod_prehil_oklist.filter(system=system)
-                prod_prehil_observationlist = prod_prehil_observationlist.filter(system=system)
-                prod_prehil_uplist = prod_prehil_uplist.filter(system=system)
-                prod_prehil_haultlist = prod_prehil_haultlist.filter(system=system)
-
-                prod_posthil_oklist = prod_posthil_oklist.filter(system=system)
-                prod_posthil_observationlist = prod_posthil_observationlist.filter(system=system)
-                prod_posthil_uplist = prod_posthil_uplist.filter(system=system)
-                prod_posthil_haultlist = prod_posthil_haultlist.filter(system=system)
-
-                prod_finalintegration_oklist = prod_finalintegration_oklist.filter(system=system)
-                prod_finalintegration_observationlist = prod_finalintegration_observationlist.filter(
-                    system=system)
-                prod_finalintegration_completelist = prod_finalintegration_completelist.filter(
-                    system=system)
-                prod_finalintegration_haultlist = prod_finalintegration_haultlist.filter(
-                    system=system)
-
-                # flight system
-                flight_blt_oklist = flight_blt_oklist.filter(system=system)
-                flight_blt_observationlist = flight_blt_observationlist.filter(system=system)
-                flight_blt_uplist = flight_blt_uplist.filter(system=system)
-                flight_blt_haultlist = flight_blt_haultlist.filter(system=system)
-
-                flight_prehil_oklist = flight_prehil_oklist.filter(system=system)
-                flight_prehil_observationlist = flight_prehil_observationlist.filter(
-                    system=system)
-                flight_prehil_uplist = flight_prehil_uplist.filter(system=system)
-                flight_prehil_haultlist = flight_prehil_haultlist.filter(system=system)
-
-                flight_posthil_oklist = flight_posthil_oklist.filter(system=system)
-                flight_posthil_observationlist = flight_posthil_observationlist.filter(system=system)
-                flight_posthil_uplist = flight_posthil_uplist.filter(system=system)
-                flight_posthil_haultlist = flight_posthil_haultlist.filter(system=system)
-
-                flight_finalintegration_oklist = flight_finalintegration_oklist.filter(system=system)
-                flight_finalintegration_observationlist = flight_finalintegration_observationlist.filter(
-                    system=system)
-                flight_finalintegration_completelist = flight_finalintegration_completelist.filter(
-                    system=system)
-                flight_finalintegration_haultlist = flight_finalintegration_haultlist.filter(
-                    system=system)
-
-                # relifing system
-                relifing_blt_oklist = relifing_blt_oklist.filter(system=system)
-                relifing_blt_observationlist = relifing_blt_observationlist.filter(system=system)
-                relifing_blt_uplist = relifing_blt_uplist.filter(system=system)
-                relifing_blt_haultlist = relifing_blt_haultlist.filter(system=system)
-
-                relifing_prehil_oklist = relifing_prehil_oklist.filter(system=system)
-                relifing_prehil_observationlist = relifing_prehil_observationlist.filter(
-                    system=system)
-                relifing_prehil_uplist = relifing_prehil_uplist.filter(system=system)
-                relifing_prehil_haultlist = relifing_prehil_haultlist.filter(system=system)
-
-                relifing_posthil_oklist = relifing_posthil_oklist.filter(system=system)
-                relifing_posthil_observationlist = relifing_posthil_observationlist.filter(
-                    system=system)
-                relifing_posthil_uplist = relifing_posthil_uplist.filter(system=system)
-                relifing_posthil_haultlist = relifing_posthil_haultlist.filter(system=system)
-
-                relifing_finalintegration_oklist = relifing_finalintegration_oklist.filter(
-                    system=system)
-                relifing_finalintegration_observationlist = relifing_finalintegration_observationlist.filter(
-                    system=system)
-                relifing_finalintegration_completelist = relifing_finalintegration_completelist.filter(
-                    system=system)
-                relifing_finalintegration_haultlist = relifing_finalintegration_haultlist.filter(
-                    system=system)
-
+            # if year is not '':
+            #     prod_blt_oklist = prod_blt_oklist.filter(testing_date__year=year)
+            #     prod_blt_observationlist = prod_blt_observationlist.filter(testing_date__year=year)
+            #     prod_blt_uplist = prod_blt_uplist.filter(testing_date__year=year)
+            #     prod_blt_haultlist = prod_blt_haultlist.filter(testing_date__year=year)
+            #
+            #     prod_prehil_oklist = prod_prehil_oklist.filter(testing_date__year=year)
+            #     prod_prehil_observationlist = prod_prehil_observationlist.filter(testing_date__year=year)
+            #     prod_prehil_uplist = prod_prehil_uplist.filter(testing_date__year=year)
+            #     prod_prehil_haultlist = prod_prehil_haultlist.filter(testing_date__year=year)
+            #
+            #     prod_posthil_oklist = prod_posthil_oklist.filter(testing_date__year=year)
+            #     prod_posthil_observationlist = prod_posthil_observationlist.filter(testing_date__year=year)
+            #     prod_posthil_uplist = prod_posthil_uplist.filter(testing_date__year=year)
+            #     prod_posthil_haultlist = prod_posthil_haultlist.filter(testing_date__year=year)
+            #
+            #     prod_finalintegration_oklist = prod_finalintegration_oklist.filter(testing_date__year=year)
+            #     prod_finalintegration_observationlist = prod_finalintegration_observationlist.filter(
+            #         testing_date__year=year)
+            #     prod_finalintegration_completelist = prod_finalintegration_completelist.filter(testing_date__year=year)
+            #     prod_finalintegration_haultlist = prod_finalintegration_haultlist.filter(testing_date__year=year)
+            #
+            #     # flight system
+            #     flight_blt_oklist = flight_blt_oklist.filter(testing_date__year=year)
+            #     flight_blt_observationlist = flight_blt_observationlist.filter(testing_date__year=year)
+            #     flight_blt_uplist = flight_blt_uplist.filter(testing_date__year=year)
+            #     flight_blt_haultlist = flight_blt_haultlist.filter(testing_date__year=year)
+            #
+            #     flight_prehil_oklist = flight_prehil_oklist.filter(testing_date__year=year)
+            #     flight_prehil_observationlist = flight_prehil_observationlist.filter(
+            #         testing_date__year=year)
+            #     flight_prehil_uplist = flight_prehil_uplist.filter(testing_date__year=year)
+            #     flight_prehil_haultlist = flight_prehil_haultlist.filter(testing_date__year=year)
+            #
+            #     flight_posthil_oklist = flight_posthil_oklist.filter(testing_date__year=year)
+            #     flight_posthil_observationlist = flight_posthil_observationlist.filter(testing_date__year=year)
+            #     flight_posthil_uplist = flight_posthil_uplist.filter(testing_date__year=year)
+            #     flight_posthil_haultlist = flight_posthil_haultlist.filter(testing_date__year=year)
+            #
+            #     flight_finalintegration_oklist = flight_finalintegration_oklist.filter(testing_date__year=year)
+            #     flight_finalintegration_observationlist = flight_finalintegration_observationlist.filter(
+            #         testing_date__year=year)
+            #     flight_finalintegration_completelist = flight_finalintegration_completelist.filter(
+            #         testing_date__year=year)
+            #     flight_finalintegration_haultlist = flight_finalintegration_haultlist.filter(
+            #         testing_date__year=year)
+            #
+            #     # relifing system
+            #     relifing_blt_oklist = relifing_blt_oklist.filter(testing_date__year=year)
+            #     relifing_blt_observationlist = relifing_blt_observationlist.filter(testing_date__year=year)
+            #     relifing_blt_uplist = relifing_blt_uplist.filter(testing_date__year=year)
+            #     relifing_blt_haultlist = relifing_blt_haultlist.filter(testing_date__year=year)
+            #
+            #     relifing_prehil_oklist = relifing_prehil_oklist.filter(testing_date__year=year)
+            #     relifing_prehil_observationlist = relifing_prehil_observationlist.filter(
+            #         testing_date__year=year)
+            #     relifing_prehil_uplist = relifing_prehil_uplist.filter(testing_date__year=year)
+            #     relifing_prehil_haultlist = relifing_prehil_haultlist.filter(testing_date__year=year)
+            #
+            #     relifing_posthil_oklist = relifing_posthil_oklist.filter(testing_date__year=year)
+            #     relifing_posthil_observationlist = relifing_posthil_observationlist.filter(
+            #         testing_date__year=year)
+            #     relifing_posthil_uplist = relifing_posthil_uplist.filter(testing_date__year=year)
+            #     relifing_posthil_haultlist = relifing_posthil_haultlist.filter(testing_date__year=year)
+            #
+            #     relifing_finalintegration_oklist = relifing_finalintegration_oklist.filter(testing_date__year=year)
+            #     relifing_finalintegration_observationlist = relifing_finalintegration_observationlist.filter(
+            #         testing_date__year=year)
+            #     relifing_finalintegration_completelist = relifing_finalintegration_completelist.filter(
+            #         testing_date__year=year)
+            #     relifing_finalintegration_haultlist = relifing_finalintegration_haultlist.filter(
+            #         testing_date__year=year)
+            #
+            # if org is not '':
+            #     prod_blt_oklist = prod_blt_oklist.filter(organization=org)
+            #     prod_blt_observationlist = prod_blt_observationlist.filter(organization=org)
+            #     prod_blt_uplist = prod_blt_uplist.filter(organization=org)
+            #     prod_blt_haultlist = prod_blt_haultlist.filter(organization=org)
+            #
+            #     prod_prehil_oklist = prod_prehil_oklist.filter(organization=org)
+            #     prod_prehil_observationlist = prod_prehil_observationlist.filter(organization=org)
+            #     prod_prehil_uplist = prod_prehil_uplist.filter(organization=org)
+            #     prod_prehil_haultlist = prod_prehil_haultlist.filter(organization=org)
+            #
+            #     prod_posthil_oklist = prod_posthil_oklist.filter(organization=org)
+            #     prod_posthil_observationlist = prod_posthil_observationlist.filter(organization=org)
+            #     prod_posthil_uplist = prod_posthil_uplist.filter(organization=org)
+            #     prod_posthil_haultlist = prod_posthil_haultlist.filter(organization=org)
+            #
+            #     prod_finalintegration_oklist = prod_finalintegration_oklist.filter(organization=org)
+            #     prod_finalintegration_observationlist = prod_finalintegration_observationlist.filter(
+            #         organization=org)
+            #     prod_finalintegration_completelist = prod_finalintegration_completelist.filter(
+            #         organization=org)
+            #     prod_finalintegration_haultlist = prod_finalintegration_haultlist.filter(
+            #         organization=org)
+            #
+            #     # flight system
+            #     flight_blt_oklist = flight_blt_oklist.filter(organization=org)
+            #     flight_blt_observationlist = flight_blt_observationlist.filter(organization=org)
+            #     flight_blt_uplist = flight_blt_uplist.filter(organization=org)
+            #     flight_blt_haultlist = flight_blt_haultlist.filter(organization=org)
+            #
+            #     flight_prehil_oklist = flight_prehil_oklist.filter(organization=org)
+            #     flight_prehil_observationlist = flight_prehil_observationlist.filter(
+            #         organization=org)
+            #     flight_prehil_uplist = flight_prehil_uplist.filter(organization=org)
+            #     flight_prehil_haultlist = flight_prehil_haultlist.filter(organization=org)
+            #
+            #     flight_posthil_oklist = flight_posthil_oklist.filter(organization=org)
+            #     flight_posthil_observationlist = flight_posthil_observationlist.filter(organization=org)
+            #     flight_posthil_uplist = flight_posthil_uplist.filter(organization=org)
+            #     flight_posthil_haultlist = flight_posthil_haultlist.filter(organization=org)
+            #
+            #     flight_finalintegration_oklist = flight_finalintegration_oklist.filter(organization=org)
+            #     flight_finalintegration_observationlist = flight_finalintegration_observationlist.filter(
+            #         organization=org)
+            #     flight_finalintegration_completelist = flight_finalintegration_completelist.filter(
+            #         organization=org)
+            #     flight_finalintegration_haultlist = flight_finalintegration_haultlist.filter(
+            #         organization=org)
+            #
+            #     # relifing system
+            #     relifing_blt_oklist = relifing_blt_oklist.filter(organization=org)
+            #     relifing_blt_observationlist = relifing_blt_observationlist.filter(organization=org)
+            #     relifing_blt_uplist = relifing_blt_uplist.filter(organization=org)
+            #     relifing_blt_haultlist = relifing_blt_haultlist.filter(organization=org)
+            #
+            #     relifing_prehil_oklist = relifing_prehil_oklist.filter(organization=org)
+            #     relifing_prehil_observationlist = relifing_prehil_observationlist.filter(
+            #         organization=org)
+            #     relifing_prehil_uplist = relifing_prehil_uplist.filter(organization=org)
+            #     relifing_prehil_haultlist = relifing_prehil_haultlist.filter(organization=org)
+            #
+            #     relifing_posthil_oklist = relifing_posthil_oklist.filter(organization=org)
+            #     relifing_posthil_observationlist = relifing_posthil_observationlist.filter(
+            #         organization=org)
+            #     relifing_posthil_uplist = relifing_posthil_uplist.filter(organization=org)
+            #     relifing_posthil_haultlist = relifing_posthil_haultlist.filter(organization=org)
+            #
+            #     relifing_finalintegration_oklist = relifing_finalintegration_oklist.filter(
+            #         organization=org)
+            #     relifing_finalintegration_observationlist = relifing_finalintegration_observationlist.filter(
+            #         organization=org)
+            #     relifing_finalintegration_completelist = relifing_finalintegration_completelist.filter(
+            #         organization=org)
+            #     relifing_finalintegration_haultlist = relifing_finalintegration_haultlist.filter(
+            #         organization=org)
+            #
+            # if type is not '':
+            #     prod_blt_oklist = prod_blt_oklist.filter(sys_type=type)
+            #     prod_blt_observationlist = prod_blt_observationlist.filter(sys_type=type)
+            #     prod_blt_uplist = prod_blt_uplist.filter(sys_type=type)
+            #     prod_blt_haultlist = prod_blt_haultlist.filter(sys_type=type)
+            #
+            #     prod_prehil_oklist = prod_prehil_oklist.filter(sys_type=type)
+            #     prod_prehil_observationlist = prod_prehil_observationlist.filter(sys_type=type)
+            #     prod_prehil_uplist = prod_prehil_uplist.filter(sys_type=type)
+            #     prod_prehil_haultlist = prod_prehil_haultlist.filter(sys_type=type)
+            #
+            #     prod_posthil_oklist = prod_posthil_oklist.filter(sys_type=type)
+            #     prod_posthil_observationlist = prod_posthil_observationlist.filter(sys_type=type)
+            #     prod_posthil_uplist = prod_posthil_uplist.filter(sys_type=type)
+            #     prod_posthil_haultlist = prod_posthil_haultlist.filter(sys_type=type)
+            #
+            #     prod_finalintegration_oklist = prod_finalintegration_oklist.filter(sys_type=type)
+            #     prod_finalintegration_observationlist = prod_finalintegration_observationlist.filter(
+            #         sys_type=type)
+            #     prod_finalintegration_completelist = prod_finalintegration_completelist.filter(
+            #         sys_type=type)
+            #     prod_finalintegration_haultlist = prod_finalintegration_haultlist.filter(
+            #         sys_type=type)
+            #
+            #     # flight system
+            #     flight_blt_oklist = flight_blt_oklist.filter(sys_type=type)
+            #     flight_blt_observationlist = flight_blt_observationlist.filter(sys_type=type)
+            #     flight_blt_uplist = flight_blt_uplist.filter(sys_type=type)
+            #     flight_blt_haultlist = flight_blt_haultlist.filter(sys_type=type)
+            #
+            #     flight_prehil_oklist = flight_prehil_oklist.filter(sys_type=type)
+            #     flight_prehil_observationlist = flight_prehil_observationlist.filter(
+            #         sys_type=type)
+            #     flight_prehil_uplist = flight_prehil_uplist.filter(sys_type=type)
+            #     flight_prehil_haultlist = flight_prehil_haultlist.filter(sys_type=type)
+            #
+            #     flight_posthil_oklist = flight_posthil_oklist.filter(sys_type=type)
+            #     flight_posthil_observationlist = flight_posthil_observationlist.filter(sys_type=type)
+            #     flight_posthil_uplist = flight_posthil_uplist.filter(sys_type=type)
+            #     flight_posthil_haultlist = flight_posthil_haultlist.filter(sys_type=type)
+            #
+            #     flight_finalintegration_oklist = flight_finalintegration_oklist.filter(sys_type=type)
+            #     flight_finalintegration_observationlist = flight_finalintegration_observationlist.filter(
+            #         sys_type=type)
+            #     flight_finalintegration_completelist = flight_finalintegration_completelist.filter(
+            #         sys_type=type)
+            #     flight_finalintegration_haultlist = flight_finalintegration_haultlist.filter(
+            #         sys_type=type)
+            #
+            #     # relifing system
+            #     relifing_blt_oklist = relifing_blt_oklist.filter(sys_type=type)
+            #     relifing_blt_observationlist = relifing_blt_observationlist.filter(sys_type=type)
+            #     relifing_blt_uplist = relifing_blt_uplist.filter(sys_type=type)
+            #     relifing_blt_haultlist = relifing_blt_haultlist.filter(sys_type=type)
+            #
+            #     relifing_prehil_oklist = relifing_prehil_oklist.filter(sys_type=type)
+            #     relifing_prehil_observationlist = relifing_prehil_observationlist.filter(
+            #         sys_type=type)
+            #     relifing_prehil_uplist = relifing_prehil_uplist.filter(sys_type=type)
+            #     relifing_prehil_haultlist = relifing_prehil_haultlist.filter(sys_type=type)
+            #
+            #     relifing_posthil_oklist = relifing_posthil_oklist.filter(sys_type=type)
+            #     relifing_posthil_observationlist = relifing_posthil_observationlist.filter(
+            #         sys_type=type)
+            #     relifing_posthil_uplist = relifing_posthil_uplist.filter(sys_type=type)
+            #     relifing_posthil_haultlist = relifing_posthil_haultlist.filter(sys_type=type)
+            #
+            #     relifing_finalintegration_oklist = relifing_finalintegration_oklist.filter(
+            #         sys_type=type)
+            #     relifing_finalintegration_observationlist = relifing_finalintegration_observationlist.filter(
+            #         sys_type=type)
+            #     relifing_finalintegration_completelist = relifing_finalintegration_completelist.filter(
+            #         sys_type=type)
+            #     relifing_finalintegration_haultlist = relifing_finalintegration_haultlist.filter(
+            #         sys_type=type)
+            #
+            # if system is not '':
+            #     prod_blt_oklist = prod_blt_oklist.filter(system=system)
+            #     prod_blt_observationlist = prod_blt_observationlist.filter(system=system)
+            #     prod_blt_uplist = prod_blt_uplist.filter(system=system)
+            #     prod_blt_haultlist = prod_blt_haultlist.filter(system=system)
+            #
+            #     prod_prehil_oklist = prod_prehil_oklist.filter(system=system)
+            #     prod_prehil_observationlist = prod_prehil_observationlist.filter(system=system)
+            #     prod_prehil_uplist = prod_prehil_uplist.filter(system=system)
+            #     prod_prehil_haultlist = prod_prehil_haultlist.filter(system=system)
+            #
+            #     prod_posthil_oklist = prod_posthil_oklist.filter(system=system)
+            #     prod_posthil_observationlist = prod_posthil_observationlist.filter(system=system)
+            #     prod_posthil_uplist = prod_posthil_uplist.filter(system=system)
+            #     prod_posthil_haultlist = prod_posthil_haultlist.filter(system=system)
+            #
+            #     prod_finalintegration_oklist = prod_finalintegration_oklist.filter(system=system)
+            #     prod_finalintegration_observationlist = prod_finalintegration_observationlist.filter(
+            #         system=system)
+            #     prod_finalintegration_completelist = prod_finalintegration_completelist.filter(
+            #         system=system)
+            #     prod_finalintegration_haultlist = prod_finalintegration_haultlist.filter(
+            #         system=system)
+            #
+            #     # flight system
+            #     flight_blt_oklist = flight_blt_oklist.filter(system=system)
+            #     flight_blt_observationlist = flight_blt_observationlist.filter(system=system)
+            #     flight_blt_uplist = flight_blt_uplist.filter(system=system)
+            #     flight_blt_haultlist = flight_blt_haultlist.filter(system=system)
+            #
+            #     flight_prehil_oklist = flight_prehil_oklist.filter(system=system)
+            #     flight_prehil_observationlist = flight_prehil_observationlist.filter(
+            #         system=system)
+            #     flight_prehil_uplist = flight_prehil_uplist.filter(system=system)
+            #     flight_prehil_haultlist = flight_prehil_haultlist.filter(system=system)
+            #
+            #     flight_posthil_oklist = flight_posthil_oklist.filter(system=system)
+            #     flight_posthil_observationlist = flight_posthil_observationlist.filter(system=system)
+            #     flight_posthil_uplist = flight_posthil_uplist.filter(system=system)
+            #     flight_posthil_haultlist = flight_posthil_haultlist.filter(system=system)
+            #
+            #     flight_finalintegration_oklist = flight_finalintegration_oklist.filter(system=system)
+            #     flight_finalintegration_observationlist = flight_finalintegration_observationlist.filter(
+            #         system=system)
+            #     flight_finalintegration_completelist = flight_finalintegration_completelist.filter(
+            #         system=system)
+            #     flight_finalintegration_haultlist = flight_finalintegration_haultlist.filter(
+            #         system=system)
+            #
+            #     # relifing system
+            #     relifing_blt_oklist = relifing_blt_oklist.filter(system=system)
+            #     relifing_blt_observationlist = relifing_blt_observationlist.filter(system=system)
+            #     relifing_blt_uplist = relifing_blt_uplist.filter(system=system)
+            #     relifing_blt_haultlist = relifing_blt_haultlist.filter(system=system)
+            #
+            #     relifing_prehil_oklist = relifing_prehil_oklist.filter(system=system)
+            #     relifing_prehil_observationlist = relifing_prehil_observationlist.filter(
+            #         system=system)
+            #     relifing_prehil_uplist = relifing_prehil_uplist.filter(system=system)
+            #     relifing_prehil_haultlist = relifing_prehil_haultlist.filter(system=system)
+            #
+            #     relifing_posthil_oklist = relifing_posthil_oklist.filter(system=system)
+            #     relifing_posthil_observationlist = relifing_posthil_observationlist.filter(
+            #         system=system)
+            #     relifing_posthil_uplist = relifing_posthil_uplist.filter(system=system)
+            #     relifing_posthil_haultlist = relifing_posthil_haultlist.filter(system=system)
+            #
+            #     relifing_finalintegration_oklist = relifing_finalintegration_oklist.filter(
+            #         system=system)
+            #     relifing_finalintegration_observationlist = relifing_finalintegration_observationlist.filter(
+            #         system=system)
+            #     relifing_finalintegration_completelist = relifing_finalintegration_completelist.filter(
+            #         system=system)
+            #     relifing_finalintegration_haultlist = relifing_finalintegration_haultlist.filter(
+            #         system=system)
 
             dist = {
                 'prod_blt_ok': prod_blt_oklist.count(),
@@ -1287,8 +1421,19 @@ class SmsController:
                 'relifing_finalintegration_oklist': relifing_finalintegration_oklist.count(),
                 'relifing_finalintegration_observationlist': relifing_finalintegration_observationlist.count(),
                 'relifing_finalintegration_completelist': relifing_finalintegration_completelist.count(),
-                'relifing_finalintegration_haultlist': relifing_finalintegration_haultlist.count()
-
+                'relifing_finalintegration_haultlist': relifing_finalintegration_haultlist.count(),
+                'relifing_vibration_oklist': relifing_vibration_oklist.count(),
+                'relifing_vibration_observationlist': relifing_vibration_observationlist.count(),
+                'relifing_vibration_uplist': relifing_vibration_uplist.count(),
+                'relifing_vibration_haultlist': relifing_vibration_haultlist.count(),
+                'flight_vibration_oklist': flight_vibration_oklist.count(),
+                'flight_vibration_observationlist': flight_vibration_observationlist.count(),
+                'flight_vibration_uplist': flight_vibration_uplist.count(),
+                'flight_vibration_haultlist': flight_vibration_haultlist.count(),
+                'prod_vibration_oklist': prod_vibration_oklist.count(),
+                'prod_vibration_observationlist': prod_vibration_observationlist.count(),
+                'prod_vibration_uplist': prod_vibration_uplist.count(),
+                'prod_vibration_haultlist': prod_vibration_haultlist.count()
             }
             return JsonResponse({'message': 'true', 'data': dist}, status=200)
         except Exception as e:
