@@ -14,11 +14,11 @@ from datetime import date
 class QmsController:
     @staticmethod
     def AddQmsAudit(request):
-        qmsModel = QmsAudit()
-        try:
+            qmsModel = QmsAudit()
+        # try:
             id = request['id']
             if id == '0':
-                # qmsModel.audit_id = 0  # request['audit_id']
+                qmsModel.audit_id =  request['audit_id']
                 qmsModel.Organization = request['Organization']
                 qmsModel.site = request['site']
                 qmsModel.setup = request['setup']
@@ -88,8 +88,8 @@ class QmsController:
                 get_qms.save()
                 return JsonResponse({'status': 'True', 'message': "QMS Audit Updated Successfully!"},
                                     status=200)
-        except Exception as e:
-            return JsonResponse({'status': 'False', "message": "QMS Audit Not Saved"}, status=500)
+        # except Exception as e:
+        #     return JsonResponse({'status': 'False', "message": "QMS Audit Not Saved"}, status=500)
 
     @staticmethod
     def GetQmsAuditList(request, self=None):

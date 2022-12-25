@@ -4,7 +4,7 @@ from django.db import models
 # Create your models here.
 class QmsAudit(models.Model):
     id = models.AutoField(primary_key=True)
-    audit_id = models.IntegerField()
+    audit_id = models.CharField(max_length=300)
     Organization = models.CharField(max_length=300)
     site = models.CharField(max_length=300)
     setup = models.CharField(max_length=300)
