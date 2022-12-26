@@ -10,6 +10,8 @@ class AddActiveMotorAPIVIEW(APIView):
     permission_classes = [AllowAny]
 
     def post(self, request):
+        print(request.data)
+
         result = motor_obj.AddActiveMotor(request.data)
         return result
 
@@ -21,15 +23,20 @@ class AddActiveMotorAPIVIEW(APIView):
 #         return result
 class DeletetActiveMotorAPIVIEW(APIView):
     permission_classes = [AllowAny]
-    def delete(self, request,pk):
-        result = motor_obj.DeleteActiveMotor(request.data, pk)
-        print(result)
+    def get(self, request):
+        result = motor_obj.DeleteActiveMotor(request)
         return result
 class GetActiveMotorListAPIVIEW(APIView):
     permission_classes = [AllowAny]
 
     def get(self, request):
-        result = motor_obj.GetActiveMotorList(request.data)
+        result = motor_obj.GetActiveMotorList(request)
+        return result
+class GetActiveMotorListCountAPIVIEW(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        result = motor_obj.GetActiveMotorListCount(request)
         return result
 class GetActiveMotorPDFAPIVIEW(APIView):
     permission_classes = [AllowAny]

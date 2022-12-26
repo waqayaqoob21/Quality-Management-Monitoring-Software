@@ -67,6 +67,7 @@ class CespAuditSerializer(Serializer):
     id = IntegerField()
     audit_id = CharField()
     Organization = CharField()
+    setup = CharField()
     site = CharField()
     certification_status = CharField()
     certification_validity_date = DateTimeField()
