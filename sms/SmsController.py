@@ -157,15 +157,71 @@ class SmsController:
     @staticmethod
     def GetProductionList(request):
         try:
-            status = request.query_params['status']
-            if status == 'Total':
-                data = ProductionSystemStatus.objects.all()
-                serializer = ProductionSystemSerialzer(data, many=True)
-                return JsonResponse({'status': 'true', 'data': serializer.data}, status=200)
-            else:
-                data = ProductionSystemStatus.objects.filter(qm_certification_status=status)
-                serializer = ProductionSystemSerialzer(data, many=True)
-                return JsonResponse({'status': 'true', 'data': serializer.data}, status=200)
+            org = request.query_params['selected_org']
+            year = request.query_params['selected_year']
+            type = request.query_params['selected_type']
+            system = request.query_params['selected_system']
+            filter_objects = Q()
+            def get_filter(field_name, filter_condition, filter_value):
+                # thanks to the below post
+                # https://stackoverflow.com/questions/310732/in-django-how-does-one-filter-a-queryset-with-dynamic-field-lookups
+                # the idea to this below logic is very similar to that in the above mentioned post
+                if filter_condition.strip() == "contains":
+                    kwargs = {
+                        '{0}__icontains'.format(field_name): filter_value
+                    }
+                    return Q(**kwargs)
+
+                if filter_condition.strip() == "not_equal":
+                    kwargs = {
+                        '{0}__iexact'.format(field_name): filter_value
+                    }
+                    return ~Q(**kwargs)
+
+                if filter_condition.strip() == "starts_with":
+                    kwargs = {
+                        '{0}__istartswith'.format(field_name): filter_value
+                    }
+                    return Q(**kwargs)
+                if filter_condition.strip() == "equal":
+                    kwargs = {
+                        '{0}__iexact'.format(field_name): filter_value
+                    }
+                    return Q(**kwargs)
+
+                if filter_condition.strip() == "not_equal":
+                    kwargs = {
+                        '{0}__iexact'.format(field_name): filter_value
+                    }
+
+                    return ~Q(**kwargs)
+
+            # create dynamic filter
+            if year != '':
+                filter_objects &= get_filter(
+                    'testing_date__year', 'equal',
+                    year)
+            if org != '':
+                filter_objects &= get_filter(
+                    'organization', 'equal',
+                    org)
+            if type != '':
+                filter_objects &= get_filter(
+                    'sys_type', 'equal',
+                    type)
+            if system != '':
+                filter_objects &= get_filter(
+                    'system', 'equal',
+                    system)
+
+            # if status == 'Total':
+            #     data = ProductionSystemStatus.objects.all()
+            #     serializer = ProductionSystemSerialzer(data, many=True)
+            #     return JsonResponse({'status': 'true', 'data': serializer.data}, status=200)
+            # else:
+            data = ProductionSystemStatus.objects.filter(filter_objects)
+            serializer = ProductionSystemSerialzer(data, many=True)
+            return JsonResponse({'status': 'true', 'data': serializer.data}, status=200)
         except Exception as e:
             print(e)
             return JsonResponse({'status': 'false'}, status=200)
@@ -482,13 +538,65 @@ class SmsController:
     @staticmethod
     def GetFlightList(request):
         try:
-            status = request.query_params['status']
-            if status == 'Total':
-                data = FlightSystemStatus.objects.all()
-                serializer = FlightSystemSerialzer(data, many=True)
-            else:
-                data = FlightSystemStatus.objects.filter(qm_certification_status=status)
-                serializer = FlightSystemSerialzer(data, many=True)
+            org = request.query_params['selected_org']
+            year = request.query_params['selected_year']
+            type = request.query_params['selected_type']
+            system = request.query_params['selected_system']
+            filter_objects = Q()
+
+            def get_filter(field_name, filter_condition, filter_value):
+                # thanks to the below post
+                # https://stackoverflow.com/questions/310732/in-django-how-does-one-filter-a-queryset-with-dynamic-field-lookups
+                # the idea to this below logic is very similar to that in the above mentioned post
+                if filter_condition.strip() == "contains":
+                    kwargs = {
+                        '{0}__icontains'.format(field_name): filter_value
+                    }
+                    return Q(**kwargs)
+
+                if filter_condition.strip() == "not_equal":
+                    kwargs = {
+                        '{0}__iexact'.format(field_name): filter_value
+                    }
+                    return ~Q(**kwargs)
+
+                if filter_condition.strip() == "starts_with":
+                    kwargs = {
+                        '{0}__istartswith'.format(field_name): filter_value
+                    }
+                    return Q(**kwargs)
+                if filter_condition.strip() == "equal":
+                    kwargs = {
+                        '{0}__iexact'.format(field_name): filter_value
+                    }
+                    return Q(**kwargs)
+
+                if filter_condition.strip() == "not_equal":
+                    kwargs = {
+                        '{0}__iexact'.format(field_name): filter_value
+                    }
+
+                    return ~Q(**kwargs)
+
+            # create dynamic filter
+            if year != '':
+                filter_objects &= get_filter(
+                    'testing_date__year', 'equal',
+                    year)
+            if org != '':
+                filter_objects &= get_filter(
+                    'organization', 'equal',
+                    org)
+            if type != '':
+                filter_objects &= get_filter(
+                    'sys_type', 'equal',
+                    type)
+            if system != '':
+                filter_objects &= get_filter(
+                    'system', 'equal',
+                    system)
+            data = FlightSystemStatus.objects.filter(filter_objects)
+            serializer = FlightSystemSerialzer(data, many=True)
             return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
         except:
             return JsonResponse({'message': 'Sorry! No Task found.'}, status=500)
@@ -752,15 +860,71 @@ class SmsController:
     @staticmethod
     def GetRelifingList(request):
         try:
-            status = request.query_params['status']
-            if status == 'Total':
-                data = RelifingSystemStatus.objects.all()
-                serializer = RelifingSystemSerialzer(data, many=True)
-                return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
-            else:
-                data = RelifingSystemStatus.objects.filter(qm_certification_status=status)
-                serializer = RelifingSystemSerialzer(data, many=True)
-                return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+            org = request.query_params['selected_org']
+            year = request.query_params['selected_year']
+            type = request.query_params['selected_type']
+            system = request.query_params['selected_system']
+            filter_objects = Q()
+
+            def get_filter(field_name, filter_condition, filter_value):
+                # thanks to the below post
+                # https://stackoverflow.com/questions/310732/in-django-how-does-one-filter-a-queryset-with-dynamic-field-lookups
+                # the idea to this below logic is very similar to that in the above mentioned post
+                if filter_condition.strip() == "contains":
+                    kwargs = {
+                        '{0}__icontains'.format(field_name): filter_value
+                    }
+                    return Q(**kwargs)
+
+                if filter_condition.strip() == "not_equal":
+                    kwargs = {
+                        '{0}__iexact'.format(field_name): filter_value
+                    }
+                    return ~Q(**kwargs)
+
+                if filter_condition.strip() == "starts_with":
+                    kwargs = {
+                        '{0}__istartswith'.format(field_name): filter_value
+                    }
+                    return Q(**kwargs)
+                if filter_condition.strip() == "equal":
+                    kwargs = {
+                        '{0}__iexact'.format(field_name): filter_value
+                    }
+                    return Q(**kwargs)
+
+                if filter_condition.strip() == "not_equal":
+                    kwargs = {
+                        '{0}__iexact'.format(field_name): filter_value
+                    }
+
+                    return ~Q(**kwargs)
+
+            # create dynamic filter
+            if year != '':
+                filter_objects &= get_filter(
+                    'testing_date__year', 'equal',
+                    year)
+            if org != '':
+                filter_objects &= get_filter(
+                    'organization', 'equal',
+                    org)
+            if type != '':
+                filter_objects &= get_filter(
+                    'sys_type', 'equal',
+                    type)
+            if system != '':
+                filter_objects &= get_filter(
+                    'system', 'equal',
+                    system)
+            # if status == 'Total':
+            #     data = RelifingSystemStatus.objects.all()
+            #     serializer = RelifingSystemSerialzer(data, many=True)
+            #     return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+            # else:
+            data = RelifingSystemStatus.objects.filter(filter_objects)
+            serializer = RelifingSystemSerialzer(data, many=True)
+            return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
         except:
             return JsonResponse({'message': 'Sorry! No Task found.'}, status=200)
 
@@ -1003,6 +1167,46 @@ class SmsController:
                                                                           vibaration_status='Under process')
             prod_vibration_haultlist = ProductionSystemStatus.objects.filter(filter_objects, vibaration_status='Halt')
 
+            prod_cg_oklist = ProductionSystemStatus.objects.filter(filter_objects, cgbalancing_date_status='OK')
+            prod_cg_observationlist = ProductionSystemStatus.objects.filter(filter_objects,
+                                                                            cgbalancing_date_status='Observation')
+            prod_cg_uplist = ProductionSystemStatus.objects.filter(filter_objects,
+                                                                   cgbalancing_date_status='Under process')
+            prod_cg_haultlist = ProductionSystemStatus.objects.filter(filter_objects, cgbalancing_date_status='Halt')
+
+            prod_fgt_oklist = ProductionSystemStatus.objects.filter(filter_objects, fgt_status='OK')
+            prod_fgt_observationlist = ProductionSystemStatus.objects.filter(filter_objects,
+                                                                             fgt_status='Observation')
+            prod_fgt_uplist = ProductionSystemStatus.objects.filter(filter_objects,
+                                                                    fgt_status='Under process')
+            prod_fgt_haultlist = ProductionSystemStatus.objects.filter(filter_objects, fgt_status='Halt')
+
+            prod_bhd_notsubmit = ProductionSystemStatus.objects.filter(filter_objects,
+                                                                       bhd_status='BHD not submitted for QM audit')
+            prod_bhd_inprocess = ProductionSystemStatus.objects.filter(filter_objects,
+                                                                       bhd_status='Audit in-process')
+            prod_bhd_qmforwarded = ProductionSystemStatus.objects.filter(filter_objects,
+                                                                         bhd_status='QM observations forwarded')
+
+            prod_fqm_planned = ProductionSystemStatus.objects.filter(filter_objects,
+                                                                     fqm_status='Planned')
+
+            prod_fqm_conducted = ProductionSystemStatus.objects.filter(filter_objects,
+                                                                       fqm_status='Conducted')
+
+            prod_qmc_issued = ProductionSystemStatus.objects.filter(filter_objects,
+                                                                    qm_certification_status='QM certification issued')
+
+            prod_qmc_in_process = ProductionSystemStatus.objects.filter(filter_objects,
+                                                                        qm_certification_status='QM certification in-process')
+
+            prod_enduser_oklist = ProductionSystemStatus.objects.filter(filter_objects, enduser_status='OK')
+            prod_enduser_observationlist = ProductionSystemStatus.objects.filter(filter_objects,
+                                                                                 enduser_status='Observation')
+            prod_enduser_uplist = ProductionSystemStatus.objects.filter(filter_objects,
+                                                                        enduser_status='Completed')
+            prod_enduser_haultlist = ProductionSystemStatus.objects.filter(filter_objects, enduser_status='Halt')
+
             # flight system count
             flight_blt_oklist = FlightSystemStatus.objects.filter(filter_objects, blt_status='OK')
             flight_blt_observationlist = FlightSystemStatus.objects.filter(filter_objects, blt_status='Observation')
@@ -1036,6 +1240,46 @@ class SmsController:
             flight_vibration_uplist = FlightSystemStatus.objects.filter(filter_objects,
                                                                         vibaration_status='Under process')
             flight_vibration_haultlist = FlightSystemStatus.objects.filter(filter_objects, vibaration_status='Halt')
+
+            flight_cg_oklist = FlightSystemStatus.objects.filter(filter_objects, cgbalancing_date_status='OK')
+            flight_cg_observationlist = FlightSystemStatus.objects.filter(filter_objects,
+                                                                          cgbalancing_date_status='Observation')
+            flight_cg_uplist = FlightSystemStatus.objects.filter(filter_objects,
+                                                                 cgbalancing_date_status='Under process')
+            flight_cg_haultlist = FlightSystemStatus.objects.filter(filter_objects, cgbalancing_date_status='Halt')
+
+            flight_fgt_oklist = FlightSystemStatus.objects.filter(filter_objects, fgt_status='OK')
+            flight_fgt_observationlist = FlightSystemStatus.objects.filter(filter_objects,
+                                                                           fgt_status='Observation')
+            flight_fgt_uplist = FlightSystemStatus.objects.filter(filter_objects,
+                                                                  fgt_status='Under process')
+            flight_fgt_haultlist = FlightSystemStatus.objects.filter(filter_objects, fgt_status='Halt')
+
+            flight_bhd_notsubmit = FlightSystemStatus.objects.filter(filter_objects,
+                                                                     bhd_status='BHD not submitted for QM audit')
+            flight_bhd_inprocess = FlightSystemStatus.objects.filter(filter_objects,
+                                                                     bhd_status='Audit in-process')
+            flight_bhd_qmforwarded = FlightSystemStatus.objects.filter(filter_objects,
+                                                                       bhd_status='QM observations forwarded')
+
+            flight_fqm_planned = FlightSystemStatus.objects.filter(filter_objects,
+                                                                   fqm_status='Planned')
+
+            flight_fqm_conducted = FlightSystemStatus.objects.filter(filter_objects,
+                                                                     fqm_status='Conducted')
+
+            flight_qmc_issued = FlightSystemStatus.objects.filter(filter_objects,
+                                                                  qm_certification_status='QM certification issued')
+
+            flight_qmc_in_process = FlightSystemStatus.objects.filter(filter_objects,
+                                                                      qm_certification_status='QM certification in-process')
+
+            flight_launch_oklist = RelifingSystemStatus.objects.filter(filter_objects, enduser_status='OK')
+            flight_launch_observationlist = RelifingSystemStatus.objects.filter(filter_objects,
+                                                                                enduser_status='Observation')
+            flight_launch_uplist = RelifingSystemStatus.objects.filter(filter_objects,
+                                                                       enduser_status='Completed')
+            flight_launch_haultlist = RelifingSystemStatus.objects.filter(filter_objects, enduser_status='Halt')
 
             # relifing system count
             relifing_blt_oklist = RelifingSystemStatus.objects.filter(filter_objects, blt_status='OK')
@@ -1071,6 +1315,46 @@ class SmsController:
             relifing_vibration_uplist = RelifingSystemStatus.objects.filter(filter_objects,
                                                                             vibaration_status='Under process')
             relifing_vibration_haultlist = RelifingSystemStatus.objects.filter(filter_objects, vibaration_status='Halt')
+
+            relifing_cg_oklist = RelifingSystemStatus.objects.filter(filter_objects, cgbalancing_date_status='OK')
+            relifing_cg_observationlist = RelifingSystemStatus.objects.filter(filter_objects,
+                                                                              cgbalancing_date_status='Observation')
+            relifing_cg_uplist = RelifingSystemStatus.objects.filter(filter_objects,
+                                                                     cgbalancing_date_status='Under process')
+            relifing_cg_haultlist = RelifingSystemStatus.objects.filter(filter_objects, cgbalancing_date_status='Halt')
+
+            relifing_fgt_oklist = RelifingSystemStatus.objects.filter(filter_objects, fgt_status='OK')
+            relifing_fgt_observationlist = RelifingSystemStatus.objects.filter(filter_objects,
+                                                                               fgt_status='Observation')
+            relifing_fgt_uplist = RelifingSystemStatus.objects.filter(filter_objects,
+                                                                      fgt_status='Under process')
+            relifing_fgt_haultlist = RelifingSystemStatus.objects.filter(filter_objects, fgt_status='Halt')
+
+            relifing_bhd_notsubmit = RelifingSystemStatus.objects.filter(filter_objects,
+                                                                         bhd_status='BHD not submitted for QM audit')
+            relifing_bhd_inprocess = RelifingSystemStatus.objects.filter(filter_objects,
+                                                                         bhd_status='Audit in-process')
+            relifing_bhd_qmforwarded = RelifingSystemStatus.objects.filter(filter_objects,
+                                                                           bhd_status='QM observations forwarded')
+
+            relifing_fqm_planned = RelifingSystemStatus.objects.filter(filter_objects,
+                                                                       fqm_status='Planned')
+
+            relifing_fqm_conducted = RelifingSystemStatus.objects.filter(filter_objects,
+                                                                         fqm_status='Conducted')
+
+            relifing_qmc_issued = RelifingSystemStatus.objects.filter(filter_objects,
+                                                                      qm_certification_status='QM certification issued')
+
+            relifing_qmc_in_process = RelifingSystemStatus.objects.filter(filter_objects,
+                                                                          qm_certification_status='QM certification in-process')
+
+            relifing_enduser_oklist = RelifingSystemStatus.objects.filter(filter_objects, enduser_status='OK')
+            relifing_enduser_observationlist = RelifingSystemStatus.objects.filter(filter_objects,
+                                                                                   enduser_status='Observation')
+            relifing_enduser_uplist = RelifingSystemStatus.objects.filter(filter_objects,
+                                                                          enduser_status='Completed')
+            relifing_enduser_haultlist = RelifingSystemStatus.objects.filter(filter_objects, enduser_status='Halt')
 
             # if year is not '':
             #     prod_blt_oklist = prod_blt_oklist.filter(testing_date__year=year)
@@ -1433,8 +1717,68 @@ class SmsController:
                 'prod_vibration_oklist': prod_vibration_oklist.count(),
                 'prod_vibration_observationlist': prod_vibration_observationlist.count(),
                 'prod_vibration_uplist': prod_vibration_uplist.count(),
-                'prod_vibration_haultlist': prod_vibration_haultlist.count()
+                'prod_vibration_haultlist': prod_vibration_haultlist.count(),
+                'prod_cg_oklist': prod_cg_oklist.count(),
+                'prod_cg_observationlist': prod_cg_observationlist.count(),
+                'prod_cg_uplist': prod_cg_uplist.count(),
+                'prod_cg_haultlist': prod_cg_haultlist.count(),
+                'flight_cg_oklist': flight_cg_oklist.count(),
+                'flight_cg_observationlist': flight_cg_observationlist.count(),
+                'flight_cg_uplist': flight_cg_uplist.count(),
+                'flight_cg_haultlist': flight_cg_haultlist.count(),
+                'relifing_cg_oklist': relifing_cg_oklist.count(),
+                'relifing_cg_observationlist': relifing_cg_observationlist.count(),
+                'relifing_cg_uplist': relifing_cg_uplist.count(),
+                'relifing_cg_haultlist': relifing_cg_haultlist.count(),
+                'prod_fgt_oklist': prod_fgt_oklist.count(),
+                'prod_fgt_observationlist': prod_fgt_observationlist.count(),
+                'prod_fgt_uplist': prod_fgt_uplist.count(),
+                'prod_fgt_haultlist': prod_fgt_haultlist.count(),
+                'flight_fgt_oklist': flight_fgt_oklist.count(),
+                'flight_fgt_observationlist': flight_fgt_observationlist.count(),
+                'flight_fgt_uplist': flight_fgt_uplist.count(),
+                'flight_fgt_haultlist': flight_fgt_haultlist.count(),
+                'relifing_fgt_oklist': relifing_fgt_oklist.count(),
+                'relifing_fgt_observationlist': relifing_fgt_observationlist.count(),
+                'relifing_fgt_uplist': relifing_fgt_uplist.count(),
+                'relifing_fgt_haultlist': relifing_fgt_haultlist.count(),
+                'prod_bhd_notsubmit': prod_bhd_notsubmit.count(),
+                'prod_bhd_inprocess': prod_bhd_inprocess.count(),
+                'prod_bhd_qmforwarded': prod_bhd_qmforwarded.count(),
+                'flight_bhd_notsubmit': flight_bhd_notsubmit.count(),
+                'flight_bhd_inprocess': flight_bhd_inprocess.count(),
+                'flight_bhd_qmforwarded': flight_bhd_qmforwarded.count(),
+                'relifing_bhd_notsubmit': relifing_bhd_notsubmit.count(),
+                'relifing_bhd_inprocess': relifing_bhd_inprocess.count(),
+                'relifing_bhd_qmforwarded': relifing_bhd_qmforwarded.count(),
+                'prod_fqm_planned': prod_fqm_planned.count(),
+                'prod_fqm_conducted': prod_fqm_conducted.count(),
+                'flight_fqm_planned': flight_fqm_planned.count(),
+                'flight_fqm_conducted': flight_fqm_conducted.count(),
+                'relifing_fqm_planned': relifing_fqm_planned.count(),
+                'relifing_fqm_conducted': relifing_fqm_conducted.count(),
+                'prod_qmc_issued': prod_qmc_issued.count(),
+                'prod_qmc_in_process': prod_qmc_in_process.count(),
+                'flight_qmc_issued': flight_qmc_issued.count(),
+                'flight_qmc_in_process': flight_qmc_in_process.count(),
+                'relifing_qmc_issued': relifing_qmc_issued.count(),
+                'relifing_qmc_in_process': relifing_qmc_in_process.count(),
+                'prod_enduser_oklist': prod_enduser_oklist.count(),
+                'prod_enduser_observationlist': prod_enduser_observationlist.count(),
+                'prod_enduser_uplist': prod_enduser_uplist.count(),
+                'prod_enduser_haultlist': prod_enduser_haultlist.count(),
+                'flight_launch_oklist': flight_launch_oklist.count(),
+                'flight_launch_observationlist': flight_launch_observationlist.count(),
+                'flight_launch_uplist': flight_launch_uplist.count(),
+                'flight_launch_haultlist': flight_launch_haultlist.count(),
+                'relifing_enduser_oklist': relifing_enduser_oklist.count(),
+                'relifing_enduser_observationlist': relifing_enduser_observationlist.count(),
+                'relifing_enduser_uplist': relifing_enduser_uplist.count(),
+                'relifing_enduser_haultlist': relifing_enduser_haultlist.count()
+
+
             }
+
             return JsonResponse({'message': 'true', 'data': dist}, status=200)
         except Exception as e:
             print(e)

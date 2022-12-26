@@ -22,6 +22,7 @@ class QmsAudit(models.Model):
     certification_setup = models.TextField(null=True)
     Created_at = models.DateTimeField(auto_now_add=True)
 
+
 class QmsAuditHistory(models.Model):
     id = models.AutoField(primary_key=True)
     audit_id = models.IntegerField()
@@ -31,7 +32,8 @@ class QmsAuditHistory(models.Model):
     certification_status = models.CharField(max_length=300)
     previous_standard = models.CharField(max_length=300)
     certification_validity_date = models.DateTimeField(auto_now_add=False, db_index=True, null=True)
-    certification_validity_rescheduling_date = models.DateTimeField(auto_now_add=False, db_index=True, null=True, blank=True)
+    certification_validity_rescheduling_date = models.DateTimeField(auto_now_add=False, db_index=True, null=True,
+                                                                    blank=True)
     audit_type = models.CharField(max_length=300)
     planned_date = models.DateTimeField(auto_now_add=False, db_index=True, null=True)
     audit_start_date = models.DateTimeField(auto_now_add=False, db_index=True, null=True)
@@ -41,7 +43,8 @@ class QmsAuditHistory(models.Model):
     remarks = models.TextField()
     certification_setup = models.TextField(null=True)
     Created_at = models.DateTimeField(auto_now_add=True)
-    qms_audit  = models.ForeignKey(QmsAudit, on_delete=models.CASCADE)
+    qms_audit = models.ForeignKey(QmsAudit, on_delete=models.CASCADE)
+
 
 class QmsTrainingSchedule(models.Model):
     id = models.AutoField(primary_key=True)
@@ -54,6 +57,8 @@ class QmsTrainingSchedule(models.Model):
     organizations = models.CharField(max_length=300)
     setups = models.CharField(max_length=300)
     Created_at = models.DateTimeField(auto_now_add=True)
+
+
 class QmsAuditScheduled(models.Model):
     id = models.AutoField(primary_key=True)
     sr_no = models.CharField(max_length=300)
@@ -70,6 +75,7 @@ class QmsAuditScheduled(models.Model):
     next_due_date = models.DateTimeField(auto_now_add=False, db_index=True, null=True)
     remarks = models.TextField()
     Created_at = models.DateTimeField(auto_now_add=True)
+
 
 # ======================== CeSP Models====================
 class CespAudit(models.Model):
@@ -90,6 +96,7 @@ class CespAudit(models.Model):
     remarks = models.TextField()
     Created_at = models.DateTimeField(auto_now_add=True)
 
+
 class CespAuditHistory(models.Model):
     id = models.AutoField(primary_key=True)
     audit_id = models.CharField(max_length=300)
@@ -107,7 +114,7 @@ class CespAuditHistory(models.Model):
     standard = models.CharField(max_length=300)
     remarks = models.TextField()
     Created_at = models.DateTimeField(auto_now_add=True)
-    cesp_audit  = models.ForeignKey(CespAudit, on_delete=models.CASCADE)
+    cesp_audit = models.ForeignKey(CespAudit, on_delete=models.CASCADE)
 
 
 class CespTrainingCalendar(models.Model):

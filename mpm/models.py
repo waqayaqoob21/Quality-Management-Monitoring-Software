@@ -4,11 +4,11 @@ from django.db import models
 # Create your models here.
 class ActiveMotors(models.Model):
     id = models.AutoField(primary_key=True)
-    types = models.CharField(max_length=300)
+    types = models.CharField(max_length=300, null=True)
     system = models.CharField(max_length=300)
     motor_id = models.CharField(max_length=300)
     year = models.DateTimeField(auto_now_add=False, db_index=True, null=True)
-    component_type = models.CharField(max_length=300)
+    component_type = models.CharField(max_length=300, null=True)
 
     qualification_insulation_lining_propellant_rm = models.CharField(max_length=300)
     qualification_insulation_lining_propellant_rm_date = models.DateTimeField(auto_now_add=False, db_index=True, null=True)

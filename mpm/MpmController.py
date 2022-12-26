@@ -8,7 +8,6 @@ from datetime import datetime, timedelta, date
 from django.http import FileResponse
 from django.http import HttpResponse
 from django.core.files.storage import FileSystemStorage
-from fontTools.ttLib import TTFont
 from mpm.models import ActiveMotors
 from mpm.serializer import ActiveMotorSerializer
 import itertools
