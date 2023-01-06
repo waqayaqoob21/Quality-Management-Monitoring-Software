@@ -40,6 +40,7 @@ class QmsTrainingScheduleSerializer(Serializer):
     standards = CharField()
     organizations = CharField()
     setups = CharField()
+    training_status = CharField()
     Created_at = DateTimeField()
 
 
@@ -66,6 +67,7 @@ class QmsAuditScheduleSerializer(Serializer):
 class CespAuditSerializer(Serializer):
     id = IntegerField()
     audit_id = CharField()
+    commission = CharField()
     Organization = CharField()
     setup = CharField()
     site = CharField()
@@ -75,6 +77,7 @@ class CespAuditSerializer(Serializer):
     audit_type = CharField()
     planned_date = DateTimeField()
     audit_start_date = DateTimeField()
+    audit_revise_date = DateTimeField()
     audit_close_date = DateTimeField()
     audit_status = CharField()
     standard = CharField()
@@ -87,7 +90,7 @@ class CespTrainingCalendarSerializer(Serializer):
     course_title = CharField()
     course_duration = CharField()
     registration_date = DateTimeField()
-    scheduled_date = DateTimeField()
+    scheduled_date = CharField()
     venue = CharField()
     course_fee = CharField()
     Created_at = DateTimeField()

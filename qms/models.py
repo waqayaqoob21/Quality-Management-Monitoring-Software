@@ -56,6 +56,7 @@ class QmsTrainingSchedule(models.Model):
     standards = models.TextField()
     organizations = models.CharField(max_length=300)
     setups = models.CharField(max_length=300)
+    training_status = models.CharField(max_length=300, null=True)
     Created_at = models.DateTimeField(auto_now_add=True)
 
 
@@ -81,6 +82,7 @@ class QmsAuditScheduled(models.Model):
 class CespAudit(models.Model):
     id = models.AutoField(primary_key=True)
     audit_id = models.CharField(max_length=300)
+    commission = models.CharField(max_length=300, null=True)
     Organization = models.CharField(max_length=300)
     setup = models.CharField(max_length=300, null=True)
     site = models.CharField(max_length=300)
@@ -90,6 +92,7 @@ class CespAudit(models.Model):
     audit_type = models.CharField(max_length=300, null=True)
     planned_date = models.DateTimeField(auto_now_add=False, db_index=True, null=True)
     audit_start_date = models.DateTimeField(auto_now_add=False, db_index=True, null=True)
+    audit_revise_date= models.DateTimeField(auto_now_add=False, db_index=True, null=True)
     audit_close_date = models.DateTimeField(auto_now_add=False, db_index=True, null=True)
     audit_status = models.CharField(max_length=300)
     standard = models.CharField(max_length=300)
@@ -100,6 +103,7 @@ class CespAudit(models.Model):
 class CespAuditHistory(models.Model):
     id = models.AutoField(primary_key=True)
     audit_id = models.CharField(max_length=300)
+    commission = models.CharField(max_length=300, null=True)
     Organization = models.CharField(max_length=300)
     setup = models.CharField(max_length=300, null=True)
     site = models.CharField(max_length=300)
@@ -109,6 +113,7 @@ class CespAuditHistory(models.Model):
     audit_type = models.CharField(max_length=300, null=True)
     planned_date = models.DateTimeField(auto_now_add=False, db_index=True, null=True)
     audit_start_date = models.DateTimeField(auto_now_add=False, db_index=True, null=True)
+    audit_revise_date= models.DateTimeField(auto_now_add=False, db_index=True, null=True)
     audit_close_date = models.DateTimeField(auto_now_add=False, db_index=True, null=True)
     audit_status = models.CharField(max_length=300)
     standard = models.CharField(max_length=300)
@@ -123,7 +128,7 @@ class CespTrainingCalendar(models.Model):
     course_title = models.CharField(max_length=600)
     course_duration = models.CharField(max_length=300)
     registration_date = models.DateTimeField(auto_now_add=False, db_index=True, null=True)
-    scheduled_date = models.DateTimeField(auto_now_add=False, db_index=True, null=True)
+    scheduled_date = models.CharField(max_length=600, null=True)
     venue = models.CharField(max_length=100)
     course_fee = models.CharField(max_length=100)
     Created_at = models.DateTimeField(auto_now_add=True)
