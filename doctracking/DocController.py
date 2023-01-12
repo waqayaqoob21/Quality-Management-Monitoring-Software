@@ -40,6 +40,7 @@ class DocController:
                 docModal.sent_to = request['sent_to']
                 docModal.sent_date = request['sent_date']
                 docModal.product_sr_no = request['product_sr_no']
+                docModal.tracking_id = request['tracking_id']
 
                 if request['isActive'] == 'true':
                     docModal.isActive = 1
@@ -67,6 +68,7 @@ class DocController:
                         docHistoryModal.sent_to = get_doc.sent_to
                         docHistoryModal.sent_date = get_doc.sent_date
                         docHistoryModal.product_sr_no = get_doc.product_sr_no
+                        docHistoryModal.tracking_id = get_doc.tracking_id
                         docHistoryModal.remarks = get_doc.remarks
                         docHistoryModal.doc_id = id
                         docHistoryModal.save()
@@ -85,6 +87,7 @@ class DocController:
                 get_doc.sent_to = request['sent_to']
                 get_doc.sent_date = request['sent_date']
                 get_doc.product_sr_no = request['product_sr_no']
+                get_doc.tracking_id = request['tracking_id']
                 if request['isActive'] == 'true':
                     get_doc.isActive = 1
                 else:
@@ -175,22 +178,248 @@ class DocController:
             current_year = request.query_params.get('year')
             current_org = request.query_params.get('org')
             current_type = request.query_params.get('type')
+            total_filter_objects = Q()
+            current_filter_objects = Q()
             if current_status == 'Total Documents':
                 docList = doctracking.objects.all().order_by('-id')
                 if current_year != '':
                     docList = docList.filter(receive_date__year=current_year)
                 if current_org != '':
                     docList = docList.filter(sender=current_org)
-                if current_type != '':
-                    docList = docList.filter(doc_type=current_type)
+                # if current_type != '':
+                current_filter_objects = Q()
+                if current_type == 'document' or current_type == '':
+                    current_filter_objects &= get_filter(
+                        'doc_type', 'not_equal',
+                        'BHD')
+                else:
+                    current_filter_objects &= get_filter(
+                        'doc_type', 'equal',
+                        'BHD')
+                docList = docList.filter(current_filter_objects)
                 # docList = docList.filter(sender=current_org)
                 serializer = DocListSerializer(docList, many=True)
                 # print(serializer)
                 return JsonResponse({'status': 'True', 'data': serializer.data},
                                     status=200)
+            if current_status == 'total':
+
+                if current_type == 'document' or current_type == '':
+                    total_filter_objects &= get_filter(
+                        'doc_type', 'not_equal',
+                        'BHD')
+                    total_filter_objects &= get_filter(
+                        'status', 'not_equal',
+                        'QM Certificate issued')
+                    docList = doctracking.objects.filter(total_filter_objects).order_by('-id')
+                    serializer = DocListSerializer(docList, many=True)
+                    return JsonResponse({'status': 'True', 'data': serializer.data},
+                                        status=200)
+                else:
+                    total_filter_objects &= get_filter(
+                        'doc_type', 'equal',
+                        'BHD')
+                    docList = doctracking.objects.filter(total_filter_objects).order_by('-id')
+                    serializer = DocListSerializer(docList, many=True)
+                    return JsonResponse({'status': 'True', 'data': serializer.data},
+                                        status=200)
+            if current_status == 'totalApproved':
+                total_filter_objects &= get_filter(
+                    'status', 'equal',
+                    'Approved')
+                if current_type == 'document' or current_type == '':
+                    total_filter_objects &= get_filter(
+                        'doc_type', 'not_equal',
+                        'BHD')
+                else:
+                    total_filter_objects &= get_filter(
+                        'doc_type', 'equal',
+                        'BHD')
+                docList = doctracking.objects.filter(total_filter_objects).order_by('-id')
+                serializer = DocListSerializer(docList, many=True)
+                return JsonResponse({'status': 'True', 'data': serializer.data},
+                                    status=200)
+            if current_status == 'totalQMIssued':
+                docList = doctracking.objects.filter(doc_type='BHD', status='QM Certificate issued').order_by('-id')
+                serializer = DocListSerializer(docList, many=True)
+                return JsonResponse({'status': 'True', 'data': serializer.data},
+                                    status=200)
+            if current_status == 'totaloverdue':
+                if current_type == 'document' or current_type == '':
+                    total_filter_objects &= get_filter(
+                        'doc_type', 'not_equal',
+                        'BHD')
+                    total_filter_objects &= get_filter(
+                        'status', 'not_equal',
+                        'Approved')
+                else:
+                    total_filter_objects &= get_filter(
+                        'doc_type', 'equal',
+                        'BHD')
+                docList = doctracking.objects.filter(total_filter_objects, due_date__lt=F('task_date')).order_by('-id')
+                serializer = DocListSerializer(docList, many=True)
+                return JsonResponse({'status': 'True', 'data': serializer.data},
+                                    status=200)
+            if current_status == 'totalnotApproved':
+                total_filter_objects &= get_filter(
+                    'status', 'not_equal',
+                    'Approved')
+
+                if current_type == 'document' or current_type == '':
+                    total_filter_objects &= get_filter(
+                        'doc_type', 'not_equal',
+                        'BHD')
+                    total_filter_objects &= get_filter(
+                        'status', 'not_equal',
+                        'QM Certificate issued')
+                else:
+                    total_filter_objects &= get_filter(
+                        'doc_type', 'equal',
+                        'BHD')
+                docList = doctracking.objects.filter(total_filter_objects).order_by('-id')
+                serializer = DocListSerializer(docList, many=True)
+                return JsonResponse({'status': 'True', 'data': serializer.data},
+                                    status=200)
+            if current_status == 'current_doc_approved':
+
+                if current_type == 'document' or current_type == '':
+                    current_filter_objects &= get_filter(
+                        'doc_type', 'not_equal',
+                        'BHD')
+                    current_filter_objects &= get_filter(
+                        'status', 'not_equal',
+                        'QM Certificate issued')
+                    current_filter_objects &= get_filter(
+                        'status', 'equal',
+                        'Approved')
+
+                else:
+                    current_filter_objects &= get_filter(
+                        'doc_type', 'equal',
+                        'BHD')
+                    current_filter_objects &= get_filter(
+                        'status', 'not_equal',
+                        'Approved')
+                docList = doctracking.objects.filter(current_filter_objects,receive_date__year=current_year).order_by('-id')
+                serializer = DocListSerializer(docList, many=True)
+                return JsonResponse({'status': 'True', 'data': serializer.data},
+                                    status=200)
+            if current_status == 'current_doc_total':
+                if current_type == 'document' or current_type == '':
+                    current_filter_objects &= get_filter(
+                        'doc_type', 'not_equal',
+                        'BHD')
+                    current_filter_objects &= get_filter(
+                        'status', 'not_equal',
+                        'QM Certificate issued')
+
+                else:
+                    current_filter_objects &= get_filter(
+                        'doc_type', 'equal',
+                        'BHD')
+                    current_filter_objects &= get_filter(
+                        'status', 'not_equal',
+                        'Approved')
+                docList = doctracking.objects.filter(current_filter_objects,receive_date__year=current_year).order_by('-id')
+                serializer = DocListSerializer(docList, many=True)
+                return JsonResponse({'status': 'True', 'data': serializer.data},
+                                    status=200)
+            if current_status == 'current_cer_issued':
+                current_filter_objects &= get_filter(
+                    'doc_type', 'equal',
+                    'BHD')
+                current_filter_objects &= get_filter(
+                    'status', 'equal',
+                    'QM Certificate issued')
+                docList = doctracking.objects.filter(current_filter_objects, receive_date__year=current_year).order_by(
+                    '-id')
+                serializer = DocListSerializer(docList, many=True)
+                return JsonResponse({'status': 'True', 'data': serializer.data},
+                                    status=200)
+            if current_status == 'current_QM_Observations_Forwarded':
+                if current_type == 'document' or current_type == '':
+                    current_filter_objects &= get_filter(
+                        'doc_type', 'not_equal',
+                        'BHD')
+                    current_filter_objects &= get_filter(
+                        'status', 'equal',
+                        'QM Observations Forwarded')
+
+                else:
+                    current_filter_objects &= get_filter(
+                        'doc_type', 'equal',
+                        'BHD')
+                    current_filter_objects &= get_filter(
+                        'status', 'equal',
+                        'QM Observations Forwarded')
+                docList = doctracking.objects.filter(current_filter_objects, receive_date__year=current_year).order_by(
+                    '-id')
+                serializer = DocListSerializer(docList, many=True)
+                return JsonResponse({'status': 'True', 'data': serializer.data},
+                                    status=200)
+            if current_status == 'current_QM_Observations_Repeated':
+                if current_type == 'document' or current_type == '':
+                    current_filter_objects &= get_filter(
+                        'doc_type', 'not_equal',
+                        'BHD')
+                    current_filter_objects &= get_filter(
+                        'status', 'equal',
+                        'QM Observations Repeated')
+
+                else:
+                    current_filter_objects &= get_filter(
+                        'doc_type', 'equal',
+                        'BHD')
+                    current_filter_objects &= get_filter(
+                        'status', 'equal',
+                        'QM Observations Repeated')
+                docList = doctracking.objects.filter(current_filter_objects, receive_date__year=current_year).order_by(
+                    '-id')
+                serializer = DocListSerializer(docList, many=True)
+                return JsonResponse({'status': 'True', 'data': serializer.data},
+                                    status=200)
+            if current_status == 'current_Audit_in_process':
+                if current_type == 'document' or current_type == '':
+                    current_filter_objects &= get_filter(
+                        'doc_type', 'not_equal',
+                        'BHD')
+                    current_filter_objects &= get_filter(
+                        'status', 'equal',
+                        'Audit in-process')
+
+                else:
+                    current_filter_objects &= get_filter(
+                        'doc_type', 'equal',
+                        'BHD')
+                    current_filter_objects &= get_filter(
+                        'status', 'equal',
+                        'Audit in-process')
+                docList = doctracking.objects.filter(current_filter_objects, receive_date__year=current_year).order_by(
+                    '-id')
+                serializer = DocListSerializer(docList, many=True)
+                return JsonResponse({'status': 'True', 'data': serializer.data},
+                                    status=200)
             else:
                 if current_status == 'overdue':
-                    docList = doctracking.objects.filter(due_date__lt=F('task_date')).order_by('-id')
+                    if current_type == 'document' or current_type == '':
+                        total_filter_objects &= get_filter(
+                            'doc_type', 'not_equal',
+                            'BHD')
+                        total_filter_objects &= get_filter(
+                            'status', 'not_equal',
+                            'Approved')
+                    else:
+                        total_filter_objects &= get_filter(
+                            'doc_type', 'equal',
+                            'BHD')
+                        total_filter_objects &= get_filter(
+                            'status', 'not_equal',
+                            'QM Certificate issued')
+                        total_filter_objects &= get_filter(
+                            'status', 'not_equal',
+                            'Approved')
+                    docList = doctracking.objects.filter(total_filter_objects, receive_date__year=current_year,
+                                                         due_date__lt=F('task_date')).order_by('-id')
 
                     serializer = DocListSerializer(docList, many=True)
                     return JsonResponse({'status': 'True', 'data': serializer.data},
@@ -212,8 +441,12 @@ class DocController:
                         docList = docList.filter(receive_date__year=current_year)
                     if current_org != '':
                         docList = docList.filter(sender=current_org)
-                    if current_type != '':
-                        docList = docList.filter(doc_type=current_type)
+                    current_filter_objects = Q()
+                    total_filter_objects &= get_filter(
+                            'doc_type', 'equal',
+                            current_type)
+
+                    docList = docList.filter(current_filter_objects)
                     serializer = DocListSerializer(docList, many=True)
                     return JsonResponse({'status': 'True', 'data': serializer.data},
                                         status=200)
@@ -544,12 +777,39 @@ class DocController:
             selected_year = request.query_params.get('selected_year')
             selected_org = request.query_params.get('selected_org')
             selected_type = request.query_params.get('selected_type')
+            if selected_type == '':
+                selected_type = 'document'
             typeQuery = Q()
             filter_objects = Q()
             total_filter_objects = Q()
             total_filter_objects &= get_filter(
                 'status', 'not_equal',
                 'Approved')
+            total_filter_objects &= get_filter(
+                'status', 'not_equal',
+                'QM Certificate issued')
+            if selected_type == 'document' or selected_type == '':
+                total_filter_objects &= get_filter(
+                    'doc_type', 'not_equal',
+                    'BHD')
+            else:
+                total_filter_objects &= get_filter(
+                    'doc_type', 'equal',
+                    'BHD')
+
+            overdueDoc_filter_objects = Q()
+            overdueDoc_filter_objects &= get_filter(
+                'status', 'not_equal',
+                'Approved')
+
+            overdueBHd_filter_objects = Q()
+            overdueBHd_filter_objects &= get_filter(
+                'status', 'not_equal',
+                'Approved')
+            overdueBHd_filter_objects &= get_filter(
+                'status', 'not_equal',
+                'QM Certificate issued')
+
             if selected_type == 'BHD':
                 filter_objects &= get_filter(
                     'doc_type', 'equal',
@@ -559,7 +819,58 @@ class DocController:
                     'doc_type', 'not_equal',
                     'BHD')
 
+            total_filter_bhd = Q()
+            total_filter_bhd &= get_filter(
+                'status', 'not_equal',
+                'Approved')
+            total_filter_bhd &= get_filter(
+                'status', 'not_equal',
+                'QM Certificate issued')
 
+            total_filter_document = Q()
+            total_filter_document &= get_filter(
+                'doc_type', 'not_equal',
+                'BHD')
+            total_filter_document &= get_filter(
+                'status', 'not_equal',
+                'Approved')
+
+            total_type_bhd = Q()
+            total_type_bhd &= get_filter(
+                'doc_type', 'equal',
+                'BHD')
+            total_type_bhd &= get_filter(
+                'status', 'not_equal',
+                'QM Certificate issued')
+            total_type_bhd &= get_filter(
+                'status', 'not_equal',
+                'Approved')
+
+            total_doc_documents = Q()
+            total_doc_documents &= get_filter(
+                'status', 'not_equal',
+                'QM Certificate issued')
+            if selected_type == 'document' or selected_type == '':
+                total_doc_documents &= get_filter(
+                    'doc_type', 'not_equal',
+                    'BHD')
+            else:
+                total_doc_documents &= get_filter(
+                    'doc_type', 'equal',
+                    'BHD')
+
+            total_approved_doc_documents = Q()
+            total_approved_doc_documents &= get_filter(
+                'status', 'not_equal',
+                'QM Certificate issued')
+            if selected_type == 'document' or selected_type == '':
+                total_approved_doc_documents &= get_filter(
+                    'doc_type', 'not_equal',
+                    'BHD')
+            else:
+                total_approved_doc_documents &= get_filter(
+                    'doc_type', 'equal',
+                    'BHD')
             doc_count = 0
             current_year_count = 0
             doc_approved = 0
@@ -574,25 +885,66 @@ class DocController:
             total_qm_issued = 0
             total_auditinprocess = 0
             doc_not_approvedList = 0
+            total_bhd_count = 0
+            total_bhd_approved = 0
+            total_bhd_qm_issued = 0
+            over_due_bhd_total = 0
+            over_due_bhd = 0
+            ATP_count =0
             total_doc_approvedList = doctracking.objects.filter(status='Approved')
-            over_due_doc = doctracking.objects.filter(due_date__lt=F('task_date')).count()
-            doc_count = doctracking.objects.count()
-            #doc_approved = doctracking.objects.filter(status='Approved').count()
-            total_doc_approved = doctracking.objects.filter(status='Approved').count()
+            over_due_doc_total = doctracking.objects.filter(total_filter_document, due_date__lt=F('task_date')).count()
+            over_due_bhd_total = doctracking.objects.filter(total_type_bhd, due_date__lt=F('task_date')).count()
+            total_bhd_count = doctracking.objects.filter(doc_type='BHD').count()
+            total_bhd_approved = doctracking.objects.filter(doc_type='BHD', status='Approved').count()
+            total_bhd_qm_issued = doctracking.objects.filter(doc_type='BHD', status='QM Certificate issued').count()
+            total_bhd_underprocess = doctracking.objects.filter(total_filter_bhd, doc_type='BHD').count()
+            doc_count = doctracking.objects.filter(total_doc_documents).count()
+            # doc_approved = doctracking.objects.filter(status='Approved').count()
+            total_doc_approved = doctracking.objects.filter(total_approved_doc_documents, status='Approved').count()
             total_qm_repeated = doctracking.objects.filter(status='QM Observations Repeated').count()
             total_qm_forwarded = doctracking.objects.filter(status='QM Observations Forwarded').count()
             total_qm_issued = doctracking.objects.filter(status='QM Certificate issued').count()
             total_auditinprocess = doctracking.objects.filter(status='Audit in-process').count()
             doc_approvedList = doctracking.objects.filter(filter_objects, status='Approved')
             doc_not_approvedList = doctracking.objects.filter(total_filter_objects).count()
-            if selected_year is '':
-                #doc_approved = doctracking.objects.filter(status='Approved').count()
-                #doc_approvedList = doctracking.objects.filter(status='Approved')
-                #am_observation_repeated = doctracking.objects.filter(status='QM Observations Repeated').count()
-                #am_observation_forwarded = doctracking.objects.filter(status='QM Observations Forwarded').count()
+            over_due = doctracking.objects.filter(overdueDoc_filter_objects)
+            current_over_document_filter = Q()
+            current_over_document_filter &= get_filter(
+                'status', 'not_equal',
+                'Approved')
+            current_over_document_filter &= get_filter(
+                'doc_type', 'not_equal',
+                'BHD')
+            over_due_document = over_due.filter(current_over_document_filter, receive_date__year=selected_year, due_date__lt=F('task_date')).count()
+            over_due_bhd = over_due.filter(overdueBHd_filter_objects, receive_date__year=selected_year,
+                                           due_date__lt=F('task_date'),
+                                           doc_type='BHD').count()
 
-                #audit_inProcess = doctracking.objects.filter(status='Audit in-process').count()
-                #qm_certification_issued = doctracking.objects.filter(status='QM Certificate issued').count()
+            current_filter_objects = Q()
+            if selected_type == 'document' or selected_type == '':
+                current_filter_objects &= get_filter(
+                    'doc_type', 'not_equal',
+                    'BHD')
+                current_filter_objects &= get_filter(
+                    'status', 'not_equal',
+                    'QM Certificate issued')
+
+
+            else:
+                current_filter_objects &= get_filter(
+                    'doc_type', 'equal',
+                    'BHD')
+                current_filter_objects &= get_filter(
+                    'status', 'not_equal',
+                    'Approved')
+            if selected_year is '':
+                # doc_approved = doctracking.objects.filter(status='Approved').count()
+                # doc_approvedList = doctracking.objects.filter(status='Approved')
+                # am_observation_repeated = doctracking.objects.filter(status='QM Observations Repeated').count()
+                # am_observation_forwarded = doctracking.objects.filter(status='QM Observations Forwarded').count()
+
+                # audit_inProcess = doctracking.objects.filter(status='Audit in-process').count()
+                # qm_certification_issued = doctracking.objects.filter(status='QM Certificate issued').count()
 
                 if selected_type is not '' and selected_org is '':
                     current_year_count = doctracking.objects.filter(filter_objects).count()
@@ -636,151 +988,170 @@ class DocController:
             else:
 
                 if selected_type is '' and selected_org is '':
-                    current_year_count = doctracking.objects.filter(receive_date__year=selected_year).count()
+                    current_year_count = doctracking.objects.filter(current_filter_objects,
+                                                                    receive_date__year=selected_year).count()
                     doc_approved = doctracking.objects.filter(status='Approved',
                                                               receive_date__year=selected_year).count()
-                    doc_approvedList = doctracking.objects.filter(status='Approved',
+                    doc_approvedList = doctracking.objects.filter(current_filter_objects, status='Approved',
                                                                   receive_date__year=selected_year)
-                    am_observation_forwarded = doctracking.objects.filter(status='QM Observations Forwarded',
+                    am_observation_forwarded = doctracking.objects.filter(current_filter_objects,
+                                                                          status='QM Observations Forwarded',
                                                                           receive_date__year=selected_year).count()
-                    am_observation_repeated = doctracking.objects.filter(status='QM Observations Repeated',
+                    am_observation_repeated = doctracking.objects.filter(current_filter_objects,
+                                                                         status='QM Observations Repeated',
                                                                          receive_date__year=selected_year).count()
-                    audit_inProcess = doctracking.objects.filter(status='Audit in-process',
+                    audit_inProcess = doctracking.objects.filter(current_filter_objects, status='Audit in-process',
                                                                  receive_date__year=selected_year).count()
-                    qm_certification_issued = doctracking.objects.filter(status='QM Certificate issued',
+                    qm_certification_issued = doctracking.objects.filter(current_filter_objects,
+                                                                         status='QM Certificate issued',
                                                                          receive_date__year=selected_year).count()
 
                 elif selected_org is not '' and selected_type is '':
                     if selected_org == 'All':
-                        current_year_count = doctracking.objects.filter(receive_date__year=selected_year).count()
-                        doc_approved = doctracking.objects.filter(status='Approved',
+                        current_year_count = doctracking.objects.filter(current_filter_objects,
+                                                                        receive_date__year=selected_year).count()
+                        doc_approved = doctracking.objects.filter(current_filter_objects, status='Approved',
                                                                   receive_date__year=selected_year).count()
                         doc_approvedList = doctracking.objects.filter(status='Approved',
                                                                       receive_date__year=selected_year)
-                        am_observation_forwarded = doctracking.objects.filter(status='QM Observation Forwarded',
+                        am_observation_forwarded = doctracking.objects.filter(current_filter_objects,
+                                                                              status='QM Observation Forwarded',
                                                                               receive_date__year=selected_year).count()
-                        am_observation_repeated = doctracking.objects.filter(status='QM Observations Repeated',
+                        am_observation_repeated = doctracking.objects.filter(current_filter_objects,
+                                                                             status='QM Observations Repeated',
                                                                              receive_date__year=selected_year).count()
-                        audit_inProcess = doctracking.objects.filter(status='Audit in-process',
+                        audit_inProcess = doctracking.objects.filter(current_filter_objects, status='Audit in-process',
                                                                      receive_date__year=selected_year).count()
-                        qm_certification_issued = doctracking.objects.filter(status='QM Certificate issued',
+                        qm_certification_issued = doctracking.objects.filter(current_filter_objects,
+                                                                             status='QM Certificate issued',
                                                                              receive_date__year=selected_type).count()
 
                     else:
-                        current_year_count = doctracking.objects.filter(receive_date__year=selected_year,
+                        current_year_count = doctracking.objects.filter(current_filter_objects,
+                                                                        receive_date__year=selected_year,
                                                                         sender=selected_org).count()
                         doc_approved = doctracking.objects.filter(status='Approved',
                                                                   receive_date__year=selected_year,
                                                                   sender=selected_org).count()
-                        doc_approvedList = doctracking.objects.filter(status='Approved',
+                        doc_approvedList = doctracking.objects.filter(current_filter_objects, status='Approved',
                                                                       receive_date__year=selected_year,
                                                                       sender=selected_org)
-                        am_observation_forwarded = doctracking.objects.filter(status='QM Observations Forwarded',
+                        am_observation_forwarded = doctracking.objects.filter(current_filter_objects,
+                                                                              status='QM Observations Forwarded',
                                                                               receive_date__year=selected_year,
                                                                               sender=selected_org).count()
-                        am_observation_repeated = doctracking.objects.filter(status='QM Observations Repeated',
+                        am_observation_repeated = doctracking.objects.filter(current_filter_objects,
+                                                                             status='QM Observations Repeated',
                                                                              receive_date__year=selected_year,
                                                                              sender=selected_org).count()
-                        audit_inProcess = doctracking.objects.filter(status='Audit in-process',
+                        audit_inProcess = doctracking.objects.filter(current_filter_objects, status='Audit in-process',
                                                                      receive_date__year=selected_year,
                                                                      sender=selected_org).count()
-                        qm_certification_issued = doctracking.objects.filter(status='QM Certificate issued',
+                        qm_certification_issued = doctracking.objects.filter(current_filter_objects,
+                                                                             status='QM Certificate issued',
                                                                              receive_date__year=selected_year,
                                                                              sender=selected_org).count()
 
                 elif selected_org is '' and selected_type is not '':
                     if selected_org == 'All':
-                        current_year_count = doctracking.objects.filter(filter_objects,
+                        current_year_count = doctracking.objects.filter(current_filter_objects, filter_objects,
                                                                         receive_date__year=selected_year).count()
-                        doc_approved = doctracking.objects.filter(filter_objects, status='Approved',
+                        doc_approved = doctracking.objects.filter(filter_objects,
+                                                                  status='Approved',
                                                                   receive_date__year=selected_year).count()
-                        doc_approvedList = doctracking.objects.filter(filter_objects, status='Approved',
+                        doc_approvedList = doctracking.objects.filter(current_filter_objects, filter_objects,
+                                                                      status='Approved',
                                                                       receive_date__year=selected_year)
-                        am_observation_forwarded = doctracking.objects.filter(filter_objects,
+                        am_observation_forwarded = doctracking.objects.filter(current_filter_objects, filter_objects,
                                                                               status='QM Observations Forwarded',
                                                                               receive_date__year=selected_year).count()
                         am_observation_repeated = doctracking.objects.filter(filter_objects,
                                                                              status='QM Observations Repeated',
                                                                              receive_date__year=selected_year).count()
-                        audit_inProcess = doctracking.objects.filter(filter_objects, status='Audit in-process',
+                        audit_inProcess = doctracking.objects.filter(current_filter_objects, filter_objects,
+                                                                     status='Audit in-process',
                                                                      receive_date__year=selected_year).count()
-                        qm_certification_issued = doctracking.objects.filter(filter_objects,
+                        qm_certification_issued = doctracking.objects.filter(current_filter_objects, filter_objects,
                                                                              status='QM Certificate issued',
                                                                              receive_date__year=selected_year).count()
 
                     else:
-                        current_year_count = doctracking.objects.filter(filter_objects,
+                        current_year_count = doctracking.objects.filter(current_filter_objects, filter_objects,
                                                                         receive_date__year=selected_year).count()
-                        doc_approved = doctracking.objects.filter(filter_objects, status='Approved',
+                        doc_approved = doctracking.objects.filter(filter_objects,
+                                                                  status='Approved',
                                                                   receive_date__year=selected_year).count()
-                        doc_approvedList = doctracking.objects.filter(filter_objects, status='Approved',
+                        doc_approvedList = doctracking.objects.filter(current_filter_objects, filter_objects,
+                                                                      status='Approved',
                                                                       receive_date__year=selected_year)
-                        am_observation_forwarded = doctracking.objects.filter(filter_objects,
+                        am_observation_forwarded = doctracking.objects.filter(current_filter_objects, filter_objects,
                                                                               status='QM Observations Forwarded',
                                                                               receive_date__year=selected_year).count()
-                        am_observation_repeated = doctracking.objects.filter(filter_objects,
+                        am_observation_repeated = doctracking.objects.filter(current_filter_objects, filter_objects,
                                                                              status='QM Observations Repeated',
                                                                              receive_date__year=selected_year).count()
-                        audit_inProcess = doctracking.objects.filter(filter_objects, status='Audit in-process',
+                        audit_inProcess = doctracking.objects.filter(current_filter_objects, filter_objects,
+                                                                     status='Audit in-process',
                                                                      receive_date__year=selected_year).count()
-                        qm_certification_issued = doctracking.objects.filter(filter_objects,
+                        qm_certification_issued = doctracking.objects.filter(current_filter_objects, filter_objects,
                                                                              status='QM Certificate issued',
                                                                              receive_date__year=selected_year).count()
 
 
                 elif selected_type is not '' and selected_org is not '':
                     if selected_org == 'All':
-                        current_year_count = doctracking.objects.filter(filter_objects,
+                        current_year_count = doctracking.objects.filter(current_filter_objects, filter_objects,
                                                                         receive_date__year=selected_year).count()
                         doc_approved = doctracking.objects.filter(filter_objects, status='Approved',
                                                                   receive_date__year=selected_year).count()
-                        doc_approvedList = doctracking.objects.filter(filter_objects, status='Approved',
+                        doc_approvedList = doctracking.objects.filter(current_filter_objects, filter_objects, status='Approved',
                                                                       receive_date__year=selected_year)
-                        am_observation_forwarded = doctracking.objects.filter(filter_objects,
+                        am_observation_forwarded = doctracking.objects.filter(current_filter_objects, filter_objects,
                                                                               status='QM Observations Forwarded',
                                                                               receive_date__year=selected_year).count()
-                        am_observation_repeated = doctracking.objects.filter(filter_objects,
+                        am_observation_repeated = doctracking.objects.filter(current_filter_objects, filter_objects,
                                                                              status='QM Observations Repeated',
                                                                              receive_date__year=selected_year).count()
-                        audit_inProcess = doctracking.objects.filter(filter_objects, status='Audit in-process',
+                        audit_inProcess = doctracking.objects.filter(current_filter_objects, filter_objects, status='Audit in-process',
                                                                      receive_date__year=selected_year).count()
 
-                        qm_certification_issued = doctracking.objects.filter(filter_objects,
+                        qm_certification_issued = doctracking.objects.filter(current_filter_objects, filter_objects,
                                                                              status='QM Certificate issued',
                                                                              receive_date__year=selected_year).count()
                     else:
-                        current_year_count = doctracking.objects.filter(filter_objects,
+                        current_year_count = doctracking.objects.filter(current_filter_objects, filter_objects,
                                                                         receive_date__year=selected_year,
                                                                         sender=selected_org).count()
                         doc_approved = doctracking.objects.filter(filter_objects, status='Approved',
                                                                   receive_date__year=selected_year,
                                                                   sender=selected_org).count()
-                        doc_approvedList = doctracking.objects.filter(filter_objects, status='Approved',
+                        doc_approvedList = doctracking.objects.filter(current_filter_objects, filter_objects, status='Approved',
                                                                       receive_date__year=selected_year,
                                                                       sender=selected_org)
-                        am_observation_forwarded = doctracking.objects.filter(filter_objects,
+                        am_observation_forwarded = doctracking.objects.filter(current_filter_objects, filter_objects,
                                                                               status='QM Observations Forwarded',
                                                                               receive_date__year=selected_year,
                                                                               sender=selected_org).count()
-                        am_observation_repeated = doctracking.objects.filter(filter_objects,
+                        am_observation_repeated = doctracking.objects.filter(current_filter_objects, filter_objects,
                                                                              status='QM Observations Repeated',
                                                                              receive_date__year=selected_year,
                                                                              sender=selected_org).count()
-                        audit_inProcess = doctracking.objects.filter(filter_objects, status='Audit in-process',
+                        audit_inProcess = doctracking.objects.filter(current_filter_objects, filter_objects, status='Audit in-process',
                                                                      receive_date__year=selected_year,
                                                                      sender=selected_org).count()
-                        qm_certification_issued = doctracking.objects.filter(filter_objects,
+                        qm_certification_issued = doctracking.objects.filter(current_filter_objects, filter_objects,
                                                                              status='QM Certificate issued',
                                                                              receive_date__year=selected_year,
                                                                              sender=selected_org).count()
 
+            doc_approved = doc_approvedList.filter(current_filter_objects).count()
             QAC_count = doc_approvedList.filter(doc_type='Qualification & Acceptance Criteria').count()
             QFTP_count = doc_approvedList.filter(doc_type='QFTP').count()
             TDP_count = doc_approvedList.filter(doc_type='TDP').count()
             SOP_count = doc_approvedList.filter(doc_type='SOP').count()
             Guidelines_count = doc_approvedList.filter(doc_type='Guidelines').count()
             others_count = doc_approvedList.filter(doc_type='Others/Misc').count()
-
+            ATP_count = doc_approvedList.filter(doc_type='ATP').count()
             # Total document
             total_QAC_count = total_doc_approvedList.filter(doc_type='Qualification & Acceptance Criteria').count()
             total_QFTP_count = total_doc_approvedList.filter(doc_type='QFTP').count()
@@ -792,9 +1163,12 @@ class DocController:
             # SST_count = doc_approvedList.filter(doc_type='Structural Strength Testing(SST)').count()
             # TDP_count = doc_approvedList.filter(doc_type='Technical Data Pack (TDP)').count()
             dist = {
+                'total_bhd_underprocess': total_bhd_underprocess,
+                'total_bhd_approved': total_bhd_approved,
+                'total_bhd_qm_issued': total_bhd_qm_issued,
                 'doc_count': doc_count,
                 'current_year_count': current_year_count,
-                'doc_approved': doc_approved,
+                'current_doc_approved': doc_approved,
                 'am_observation_forwarded': am_observation_forwarded,
                 'am_observation_repeated': am_observation_repeated,
                 'audit_inProcess': audit_inProcess,
@@ -803,13 +1177,13 @@ class DocController:
                 'SOP_count': SOP_count,
                 'Guidelines_count': Guidelines_count,
                 'others_count': others_count,
+                'ATP_count': ATP_count,
                 'QAC_count': QAC_count,
                 # 'SST_count': SST_count,
                 # 'TDP_count': TDP_count,
-                'over_due_count': over_due_doc,
+                'over_due_count': over_due_doc_total,
                 'qm_certification_issued': qm_certification_issued,
                 'total_doc': doc_count,
-                'doc_approved': doc_approved,
                 'total_doc_approved': total_doc_approved,
                 'total_QAC_count': total_QAC_count,
                 'total_QFTP_count': total_QFTP_count,
@@ -821,7 +1195,11 @@ class DocController:
                 'total_qm_forwarded': total_qm_forwarded,
                 'total_qm_issued': total_qm_issued,
                 'total_auditinprocess': total_auditinprocess,
-                'doc_not_approvedList': doc_not_approvedList
+                'doc_not_approvedList': doc_not_approvedList,
+                'over_due_document': over_due_document,
+                'total_bhd_count': total_bhd_count,
+                'over_due_bhd_total': over_due_bhd_total,
+                'over_due_bhd': over_due_bhd
 
             }
 
@@ -880,7 +1258,7 @@ class DocController:
             total_task_inprocess = 0
             total_task_follow_up = 0
             total_tasks = 0
-            doc_not_completedList =0
+            doc_not_completedList = 0
             total_tasks = TaskSummary.objects.all().count()
             current_year = datetime.today().year
             current_year_task = TaskSummary.objects.filter(assigned_date__year=current_year).count()
@@ -929,7 +1307,6 @@ class DocController:
                 'total_task_inprocess': total_task_inprocess,
                 'total_task_follow_up': total_task_follow_up,
                 'doc_not_completedList': doc_not_completedList
-
 
             }
 

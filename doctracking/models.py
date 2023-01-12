@@ -22,3 +22,4 @@ class doctrackingHistory(models.Model):
     remarks = models.CharField(max_length=100, null=False)
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     product_sr_no = models.CharField(max_length=100, null=True)
+    tracking_id = models.CharField(max_length=500, null=True)
