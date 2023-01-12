@@ -989,7 +989,10 @@ class QmsController:
                 cespModel.audit_start_date = request['audit_start_date']
                 if request['audit_revise_date'] != '':
                     cespModel.audit_revise_date = request['audit_revise_date']
-                cespModel.audit_close_date = request['audit_close_date']
+                if request['audit_close_date'] != '':
+                    cespModel.audit_close_date = request['audit_close_date']
+                if request['audit_due_date'] != '':
+                    cespModel.audit_due_date = request['audit_due_date']
                 cespModel.audit_status = request['audit_status']
                 cespModel.standard = request['standard']
                 cespModel.remarks = request['remarks']
@@ -1004,7 +1007,7 @@ class QmsController:
                             request['certification_validity_rescheduling_date'] or str(get_cesp.planned_date.date()) != \
                             request['planned_date'] or str(get_cesp.audit_start_date.date()) != \
                             request['audit_start_date'] or str(get_cesp.audit_close_date.date()) != request['audit_close_date']\
-                            or str(get_cesp.audit_revise_date.date()) != request['audit_revise_date']:
+                            or str(get_cesp.audit_revise_date.date()) != request['audit_revise_date'] or str(get_cesp.audit_due_date.date()) != request['audit_due_date']:
                         CespHistory = CespAuditHistory()
                         CespHistory.audit_id = get_cesp.audit_id
                         cespModel.commission = get_cesp.commission
@@ -1020,7 +1023,10 @@ class QmsController:
                         CespHistory.audit_start_date = get_cesp.audit_start_date
                         if request['audit_revise_date'] != '':
                             cespModel.audit_revise_date = get_cesp.audit_revise_date
-                        CespHistory.audit_close_date = get_cesp.audit_close_date
+                        if request['audit_close_date'] != '':
+                            CespHistory.audit_close_date = get_cesp.audit_close_date
+                        if request['audit_due_date'] != '':
+                            CespHistory.audit_due_date = get_cesp.audit_due_date
                         CespHistory.audit_status = get_cesp.audit_status
                         CespHistory.standard = get_cesp.standard
                         CespHistory.remarks = get_cesp.remarks
@@ -1041,7 +1047,10 @@ class QmsController:
                 get_cesp.audit_start_date = request['audit_start_date']
                 if request['audit_revise_date'] != '':
                     get_cesp.audit_revise_date = request['audit_revise_date']
-                get_cesp.audit_close_date = request['audit_close_date']
+                if request['audit_close_date'] != '':
+                    get_cesp.audit_close_date = request['audit_close_date']
+                if request['audit_due_date'] != '':
+                    get_cesp.audit_due_date = request['audit_due_date']
                 get_cesp.audit_status = request['audit_status']
                 get_cesp.standard = request['standard']
                 get_cesp.remarks = request['remarks']
@@ -1053,8 +1062,9 @@ class QmsController:
 
     @staticmethod
     def GetCespAuditList(request):
-        try:
+        # try:
             current_status = request.query_params.get('audit_status')
+            current_comm = request.query_params.get('commission')
             current_year = request.query_params.get('year')
             current_org = request.query_params.get('organization')
             current_stand = request.query_params.getlist('standard')
@@ -1128,14 +1138,30 @@ class QmsController:
                 return JsonResponse({'status': 'True', 'data': serializer.data},
                                     status=200)
             if current_status == 'Total CeSP Overdue':
-                data = CespAudit.objects.filter(~Q(audit_status='Completed'), ~Q(audit_status = 'Extended'),audit_close_date__lt = today)
-                serializer = CespAuditSerializer(data, many=True)
+                entry_list = CespAudit.objects.filter()
+
+                OverdueList =[]
+                for data in entry_list:
+                    if data.audit_status == 'Completed':
+                        if data.audit_due_date.date() < today and (data.audit_close_date.date() =='' or  data.audit_close_date.date() > today):
+                            OverdueList.append(data)
+                    if data.audit_status == 'In-Process':
+                        if data.audit_due_date.date() < today:
+                            OverdueList.append(data)
+
+                    if data.audit_status == 'Extended':
+                        if data.audit_revise_date.date() < today:
+                            OverdueList.append(data)
+
+                serializer = CespAuditSerializer(OverdueList, many=True)
                 return JsonResponse({'status': 'True', 'data': serializer.data},
                                     status=200)
             typeQuery = Q()
             filter_objects = Q()
             if current_year != '':
                 filter_objects &= get_filter('planned_date__year', 'equal',current_year)
+            if current_comm != '':
+                filter_objects &= get_filter('commission', 'equal',current_comm)
             if current_org != '':
                 filter_objects &= get_filter('Organization', 'equal',current_org)
             if current_status == 'Completed':
@@ -1152,10 +1178,75 @@ class QmsController:
                 filter_objects &= get_filter('certification_status', 'equal',current_status)
 
             dataList = CespAudit.objects.filter(filter_objects)
+
             if current_status == 'Overdue':
-                dataList = dataList.filter(~Q(audit_status='Completed'),audit_close_date__lt = today)
+                if current_comm == '' and current_org == '' and setupItems == '' and standItems == '':
+                    OverdueList = []
+                    for data in dataList:
+                        if data.audit_status == 'Completed':
+                            if data.audit_due_date.date() < today and (data.audit_close_date.date() =='' or  data.audit_close_date.date() > today):
+                                OverdueList.append(data)
+                        if data.audit_status == 'In-Process':
+                            if data.audit_due_date.date() < today:
+                                OverdueList.append(data)
+                        if data.audit_status == 'Extended':
+                            if data.audit_revise_date.date() < today:
+                                OverdueList.append(data)
+                    serializer = CespAuditSerializer(OverdueList, many=True)
+                    return JsonResponse({'status': 'True', 'data': serializer.data},
+                                        status=200)
+                elif current_comm == '' and current_org == '' and setupItems == '' and standItems != '':
+                    for stand in standItems:
+                        OverdueList = []
+                        for data in dataList:
+                            if data.audit_status == 'Completed' and data.standard == stand:
+                                if data.audit_due_date.date() < today and (data.audit_close_date.date() =='' or  data.audit_close_date.date() > today):
+                                    OverdueList.append(data)
+                            if data.audit_status == 'In-Process' and data.standard == stand:
+                                if data.audit_due_date.date() < today:
+                                    OverdueList.append(data)
+                            if data.audit_status == 'Extended' and data.standard == stand:
+                                if data.audit_revise_date.date() < today:
+                                    OverdueList.append(data)
+                        serializer = CespAuditSerializer(OverdueList, many=True)
+                        return JsonResponse({'status': 'True', 'data': serializer.data},
+                                            status=200)
+                elif current_comm != '' and current_org != '' and setupItems != '' and standItems == '':
+                    for set in setupItems:
+                        OverdueList = []
+                        for data in dataList:
+                            if data.audit_status == 'Completed' :
+                                if data.audit_due_date.date() < today and (data.audit_close_date.date() =='' or  data.audit_close_date.date() > today)  and  data.setup == set:
+                                    OverdueList.append(data)
+                            if data.audit_status == 'In-Process' :
+                                if data.audit_due_date.date() < today and data.setup == set:
+                                    OverdueList.append(data)
+                            if data.audit_status == 'Extended' :
+                                if data.audit_revise_date.date() < today and data.setup == set:
+                                    OverdueList.append(data)
+                        serializer = CespAuditSerializer(OverdueList, many=True)
+                        return JsonResponse({'status': 'True', 'data': serializer.data},
+                                            status=200)
+                else:
+                    for (stand, set) in itertools.zip_longest(standItems, setupItems):
+                        OverdueList = []
+                        for data in dataList:
+                            if data.audit_status == 'Completed' and data.setup == set and data.standard == stand:
+                                if data.audit_due_date.date() < today and (data.audit_close_date.date() =='' or  data.audit_close_date.date() > today):
+                                    OverdueList.append(data)
+                            if data.audit_status == 'In-Process'  and data.setup == set and data.standard == stand:
+                                if data.audit_due_date.date() < today:
+                                    OverdueList.append(data)
+                            if data.audit_status == 'Extended' and data.setup == set and data.standard == stand:
+                                if data.audit_revise_date.date() < today:
+                                    OverdueList.append(data)
+                        serializer = CespAuditSerializer(OverdueList, many=True)
+                        return JsonResponse({'status': 'True', 'data': serializer.data},
+                                            status=200)
+
             if current_status == 'Current Year Audits':
                 dataList = dataList.filter(planned_date__year = current_year)
+
             elif len(standItems) > 0 and len(setupItems) > 0:
                 temp = []
                 for (set, stand) in itertools.zip_longest(setupItems, standItems):
@@ -1171,10 +1262,12 @@ class QmsController:
                 for stand in standItems:
                     temp.extend(dataList.filter(standard=stand))
                 dataList = temp
+
+
             serializer = CespAuditSerializer(dataList, many=True)
             return JsonResponse({'status': 'True', 'data': serializer.data},status=200)
-        except Exception as e:
-            return JsonResponse({'status': 'False', "message": "Internal Server Error"}, status=500)
+        # except Exception as e:
+        #     return JsonResponse({'status': 'False', "message": "Internal Server Error"}, status=500)
     @staticmethod
     def GetCespAuditListCount(request, self=None):
         try:
@@ -1204,10 +1297,22 @@ class QmsController:
             currYearNewClient = 0
             currYearSuspended = 0
             currYearWidthdrawl = 0
-
+            inprocess_overdue = 0
             total_audits = CespAudit.objects.count()
             audit_completed = CespAudit.objects.filter(audit_status='Completed').count()
-            inprocess_overdue = CespAudit.objects.filter(~Q(audit_status='Completed'),audit_close_date__lt = today).count()
+            TotalRecrod = CespAudit.objects.filter()
+            for record in TotalRecrod:
+                if record.audit_status == 'Completed':
+                    if record.audit_due_date.date() < today and (record.audit_close_date.date() =='' or  record.audit_close_date.date() > today):
+                        inprocess_overdue += 1
+
+                if record.audit_status == 'In-Process':
+                    if record.audit_due_date.date() < today:
+                        inprocess_overdue += 1
+
+                if record.audit_status == 'Extended':
+                    if record.audit_revise_date.date() < today:
+                        inprocess_overdue += 1
             audit_under_process = CespAudit.objects.filter(~Q(audit_status='Completed')).count()
             if selected_year != '':
                 if selected_comm ==''  and selected_org == '' and selected_setup == noVal and selected_standard == noVal:
@@ -1220,8 +1325,23 @@ class QmsController:
                                                                      audit_status='Completed').count()
                     currYearAuditRemaining = CespAudit.objects.filter(planned_date__year=selected_year,
                                                                      audit_status='Remaining').count()
-                    currYearOverdue = CespAudit.objects.filter(~Q(audit_status='Completed'),
-                                audit_close_date__lt = today, planned_date__year=selected_year).count()
+                    totalRecord = CespAudit.objects.filter(planned_date__year = selected_year)
+                    countOverdue = 0
+                    for record in totalRecord:
+                        if record.audit_status == 'Completed':
+                            if record.audit_due_date.date() < today and (record.audit_close_date.date() =='' or  record.audit_close_date.date() > today):
+                                countOverdue += 1
+
+                        if record.audit_status == 'In-Process':
+                            if record.audit_due_date.date() < today:
+                                countOverdue += 1
+
+                        if record.audit_status == 'Extended':
+                            if record.audit_revise_date.date() < today:
+                                countOverdue += 1
+
+                    currYearOverdue = countOverdue
+
                     currYearCertified = CespAudit.objects.filter(planned_date__year=selected_year,
                                                                       certification_status='Certified').count()
                     currYearNewClient = CespAudit.objects.filter(planned_date__year=selected_year,
@@ -1242,8 +1362,22 @@ class QmsController:
                                                                       standard=stand, audit_status='Completed').count()
                         tot_audit_remaining = CespAudit.objects.filter(planned_date__year=selected_year,
                                                                       standard=stand, audit_status='Remaining').count()
-                        tot_inprocess_overdue = CespAudit.objects.filter(~Q(audit_status='Completed'),
-                                                    audit_close_date__lt = today,planned_date__year=selected_year, standard=stand).count()
+
+                        totalRecord = CespAudit.objects.filter(planned_date__year=selected_year, standard=stand)
+                        countOverdue = 0
+                        for record in totalRecord:
+                            if record.audit_status == 'Completed':
+                                if record.audit_due_date.date() < today and (record.audit_close_date.date() =='' or  record.audit_close_date.date() > today):
+                                    countOverdue += 1
+
+                            if record.audit_status == 'In-Process':
+                                if record.audit_due_date.date() < today:
+                                    countOverdue += 1
+
+                            if record.audit_status == 'Extended':
+                                if record.audit_revise_date.date() < today:
+                                    countOverdue += 1
+
                         tot_currYearCertified = CespAudit.objects.filter(planned_date__year=selected_year,
                                                                      standard=stand, certification_status='Certified').count()
                         tot_currYearNewClient = CespAudit.objects.filter(planned_date__year=selected_year,
@@ -1257,7 +1391,7 @@ class QmsController:
                         currYearAuditScheduled += tot_audit_schedule
                         currYearAuditCompleted += tot_audit_completed
                         currYearAuditRemaining += tot_audit_remaining
-                        currYearOverdue += tot_inprocess_overdue
+                        currYearOverdue += countOverdue
                         currYearCertified += tot_currYearCertified
                         currYearNewClient += tot_currYearNewClient
                         currYearSuspended += tot_currYearSuspended
@@ -1278,8 +1412,22 @@ class QmsController:
                         tot_audit_remaining = CespAudit.objects.filter(planned_date__year=selected_year,
                                                                       Organization=selected_org, setup=set,
                                                                       audit_status='Remaining').count()
-                        tot_inprocess_overdue = CespAudit.objects.filter(~Q(audit_status='Completed'),audit_close_date__lt = today,
-                                                                         planned_date__year=selected_year,commission = selected_comm,Organization=selected_org, setup=set).count()
+
+                        totalRecord = CespAudit.objects.filter(planned_date__year=selected_year,commission = selected_comm,Organization=selected_org, setup=set)
+                        countOverdue = 0
+                        for record in totalRecord:
+                            if record.audit_status == 'Completed':
+                                if record.audit_due_date.date() < today and (record.audit_close_date.date() =='' or  record.audit_close_date.date() > today):
+                                    countOverdue += 1
+
+                            if record.audit_status == 'In-Process':
+                                if record.audit_due_date.date() < today:
+                                    countOverdue += 1
+
+                            if record.audit_status == 'Extended':
+                                if record.audit_revise_date.date() < today:
+                                    countOverdue += 1
+
                         tot_currYearCertified = CespAudit.objects.filter(planned_date__year=selected_year,commission = selected_comm,
                                                                       Organization=selected_org, setup=set,
                                                                          certification_status='Certified').count()
@@ -1297,7 +1445,7 @@ class QmsController:
                         currYearAuditScheduled += tot_audit_schedule
                         currYearAuditCompleted += tot_audit_completed
                         currYearAuditRemaining += tot_audit_remaining
-                        currYearOverdue += tot_inprocess_overdue
+                        currYearOverdue += countOverdue
                         currYearCertified += tot_currYearCertified
                         currYearNewClient += tot_currYearNewClient
                         currYearSuspended += tot_currYearSuspended
@@ -1319,9 +1467,22 @@ class QmsController:
                         tot_audit_remaining = CespAudit.objects.filter(planned_date__year=selected_year,commission = selected_comm,
                                                                       Organization=selected_org, standard=stand,
                                                                       setup=set, audit_status='Remaining').count()
-                        tot_inprocess_overdue = CespAudit.objects.filter(~Q(audit_status='Completed'),audit_close_date__lt = today,
-                                                                        planned_date__year=selected_year,commission = selected_comm,
-                                                                        Organization=selected_org, standard=stand,setup=set).count()
+                        totalRecord = CespAudit.objects.filter(planned_date__year=selected_year,commission = selected_comm,
+                                                                        Organization=selected_org, standard=stand,setup=set)
+                        countOverdue = 0
+                        for record in totalRecord:
+                            if record.audit_status == 'Completed':
+                                if record.audit_due_date.date() < today and (record.audit_close_date.date() =='' or  record.audit_close_date.date() > today):
+                                    countOverdue += 1
+
+                            if record.audit_status == 'In-Process':
+                                if record.audit_due_date.date() < today:
+                                    countOverdue += 1
+
+                            if record.audit_status == 'Extended':
+                                if record.audit_revise_date.date() < today:
+                                    countOverdue += 1
+
                         tot_currYearCertified = CespAudit.objects.filter(planned_date__year=selected_year,commission = selected_comm,
                                                                      Organization=selected_org,
                                                                      standard=stand,
@@ -1345,7 +1506,7 @@ class QmsController:
                         currYearAuditScheduled += tot_audit_schedule
                         currYearAuditCompleted += tot_audit_completed
                         currYearAuditRemaining += tot_audit_remaining
-                        currYearOverdue += tot_inprocess_overdue
+                        currYearOverdue += countOverdue
                         currYearCertified += tot_currYearCertified
                         currYearNewClient += tot_currYearNewClient
                         currYearSuspended += tot_currYearSuspended
