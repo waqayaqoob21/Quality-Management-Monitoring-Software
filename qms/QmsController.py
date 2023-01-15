@@ -53,9 +53,8 @@ class QmsController:
                 get_qms = QmsAudit.objects.filter(id=id).first()
                 if get_qms is not None:
                     if get_qms.audit_status != request['audit_status'] or str(get_qms.certification_validity_date.date()) != request['certification_validity_date'] \
-                            or str(get_qms.planned_date.date()) != request['planned_date'] or  str(get_qms.audit_start_date.date()) !=  request['audit_start_date']:
-                            # or str(get_qms.audit_close_date.date()) != request['audit_close_date']  :
-                        # or str(get_qms.audit_due_date.date()) != request['audit_due_date']
+                            or str(get_qms.planned_date.date()) != request['planned_date'] or  str(get_qms.audit_start_date.date()) !=  request['audit_start_date']\
+                            or str(get_qms.audit_close_date.date()) != request['audit_close_date'] or str(get_qms.audit_due_date.date()) != request['audit_due_date']:
                         auditHistory = QmsAuditHistory()
                         auditHistory.audit_id = get_qms.audit_id
                         auditHistory.Organization = get_qms.Organization
@@ -940,9 +939,8 @@ class QmsController:
                 if get_cesp is not None:
                     if get_cesp.audit_status != request['audit_status'] or str(get_cesp.certification_validity_date.date()) != \
                             request['certification_validity_date'] or str(get_cesp.planned_date.date()) != request['planned_date'] or str(get_cesp.audit_start_date.date()) != \
-                            request['audit_start_date'] :
-                            # or str(get_cesp.audit_close_date.date()) != request['audit_close_date']\
-                            # or str(get_cesp.audit_due_date.date()) != request['audit_due_date']:
+                            request['audit_start_date'] or str(get_cesp.audit_close_date.date()) != request['audit_close_date']\
+                            or str(get_cesp.audit_due_date.date()) != request['audit_due_date']:
                         CespHistory = CespAuditHistory()
                         CespHistory.audit_id = get_cesp.audit_id
                         cespModel.commission = get_cesp.commission
