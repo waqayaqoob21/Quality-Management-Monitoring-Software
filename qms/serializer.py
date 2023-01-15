@@ -18,6 +18,7 @@ class QmsAuditSerializer(Serializer):
     audit_start_date = DateTimeField()
     audit_close_date = DateTimeField()
     audit_due_date = DateTimeField()
+    audit_revise_date = DateTimeField()
     audit_status = CharField()
     standard = CharField()
     new_date = DateTimeField()
@@ -27,12 +28,6 @@ class QmsAuditSerializer(Serializer):
     certification_setup = CharField()
     Created_at = DateTimeField()
 
-    #  class Meta:
-    #     model = QmsAudit
-    #     fields = '__a__'
-    # ['id', 'audit_id', 'Organization', 'site', 'setup', 'certification_status', 'previous_standard', 'certification_validity_date',
-    #       'certification_validity_rescheduling_date', 'audit_type', 'planned_date', 'audit_start_date', 'audit_close_date', 'audit_status',
-    #       'standard', 'remarks','certification_setup','Created_at']
 
 class QmsTrainingScheduleSerializer(Serializer):
     id = IntegerField()
