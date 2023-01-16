@@ -7,7 +7,7 @@ class TaskSummarySerialzer(serializers.ModelSerializer):
     class Meta:
         model = TaskSummary
         fields = ['id', 'task_name', 'assigned_by', 'assigned_date',
-                  'assigned_to', 'target_date', 'task_date', 'status', 'remarks', 'follow_up']
+                  'assigned_to', 'target_date', 'task_date', 'status', 'remarks', 'follow_up', 'tracking_id']
 
 
 class OcrDataSerializer(serializers.ModelSerializer):

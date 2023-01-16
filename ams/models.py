@@ -12,6 +12,7 @@ class TaskSummary(models.Model):
     remarks = models.TextField()
     task_date = models.DateField(null=True)
     follow_up = models.CharField(max_length=100, null=True)
+    tracking_id = models.CharField(max_length=500, null=True)
 
 
 class TaskSummaryHistory(models.Model):
@@ -26,6 +27,7 @@ class TaskSummaryHistory(models.Model):
     task_date = models.DateField(null=True)
     follow_up = models.CharField(max_length=100, null=True)
     created_at = models.DateField(auto_now_add=True)
+    tracking_id = models.CharField(max_length=500, null=True)
 
 
 class OcrDataModel(models.Model):

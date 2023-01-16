@@ -35,6 +35,7 @@ class AmsController:
                 taskModel.status = request['status']
                 taskModel.remarks = request['remarks']
                 taskModel.follow_up = request['follow_up']
+                taskModel.tracking_id = request['tracking_id']
                 taskModel.save()
                 return JsonResponse({'Success': "Task Created Successfully"}, status=200)
             else:
@@ -57,6 +58,7 @@ class AmsController:
                         taskHistoryModal.status = get_task.status
                         taskHistoryModal.remarks = get_task.remarks
                         taskHistoryModal.follow_up = get_task.follow_up
+                        taskHistoryModal.tracking_id = get_task.tracking_id
                         taskHistoryModal.save()
                 task = TaskSummary.objects.get(id=request['id'])
                 task.task_name = request['task_name']
@@ -69,6 +71,7 @@ class AmsController:
                 task.status = request['status']
                 task.remarks = request['remarks']
                 task.follow_up = request['follow_up']
+                task.tracking_id = request['tracking_id']
                 task.save()
                 return JsonResponse({'Success': 'Task Updated Successfully!'}, status=200)
         except Exception as e:
@@ -133,6 +136,12 @@ class AmsController:
             selected_year = request.query_params['year']
             data = []
             total_filter_objects = Q()
+            all_filter_objects = Q()
+            if selected_group != '':
+
+                all_filter_objects &= get_filter(
+                    'assigned_to', 'equal',
+                    selected_group)
             if status == '!Completed':
 
                 total_filter_objects &= get_filter(
@@ -145,14 +154,35 @@ class AmsController:
                 total_filter_objects &= get_filter(
                     'status', 'equal',
                     status)
-            if status == 'overdue':
+            if status == 'current_overdue':
+                data = TaskSummary.objects.filter(task_date__gt=F('target_date'),assigned_date__year=selected_year)
+                serializer = TaskSummarySerialzer(data, many=True)
+                return JsonResponse({'message': 'true', 'data': serializer.data}, status=200)
+            if status == 'total_overdue':
                 data = TaskSummary.objects.filter(task_date__gt=F('target_date'))
                 serializer = TaskSummarySerialzer(data, many=True)
                 return JsonResponse({'message': 'true', 'data': serializer.data}, status=200)
-            if status == 'all':
-                data = TaskSummary.objects.all()
+            if status == 'all_tasks':
+
+                data = TaskSummary.objects.filter(all_filter_objects)
                 serializer = TaskSummarySerialzer(data, many=True)
                 return JsonResponse({'message': 'true', 'data': serializer.data}, status=200)
+            if status == 'total_TaskCompleted':
+                all_filter_objects &= get_filter(
+                    'status', 'equal',
+                    'Task Completed')
+                data = TaskSummary.objects.filter(all_filter_objects)
+                serializer = TaskSummarySerialzer(data, many=True)
+                return JsonResponse({'message': 'true', 'data': serializer.data}, status=200)
+
+            if status == 'total_TaskNotCompleted':
+                all_filter_objects &= get_filter(
+                    'status', 'not_equal',
+                    'Task Completed')
+                data = TaskSummary.objects.filter(all_filter_objects)
+                serializer = TaskSummarySerialzer(data, many=True)
+                return JsonResponse({'message': 'true', 'data': serializer.data}, status=200)
+
             if status == 'all' and selected_year is not '':
                 data = TaskSummary.objects.filter(assigned_date__year=selected_year)
                 serializer = TaskSummarySerialzer(data, many=True)
@@ -171,8 +201,8 @@ class AmsController:
 
             serializer = TaskSummarySerialzer(data, many=True)
             return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
-        except:
-            return JsonResponse({'message': 'Sorry! No Task found.'}, status=200)
+        except Exception as e:
+            return JsonResponse({'message': 'Sorry! No Task found.'}, status=500)
 
     @staticmethod
     def GetTaskListHistory(request):
