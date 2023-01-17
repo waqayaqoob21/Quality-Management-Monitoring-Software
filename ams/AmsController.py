@@ -155,11 +155,19 @@ class AmsController:
                     'status', 'equal',
                     status)
             if status == 'current_overdue':
-                data = TaskSummary.objects.filter(task_date__gt=F('target_date'),assigned_date__year=selected_year)
+                current_over_due_filter = Q()
+                current_over_due_filter &= get_filter(
+                    'status', 'equal',
+                    'Task in-process')
+                data = TaskSummary.objects.filter(current_over_due_filter, task_date__gt=F('target_date'),assigned_date__year=selected_year)
                 serializer = TaskSummarySerialzer(data, many=True)
                 return JsonResponse({'message': 'true', 'data': serializer.data}, status=200)
             if status == 'total_overdue':
-                data = TaskSummary.objects.filter(task_date__gt=F('target_date'))
+                current_over_due_filter = Q()
+                current_over_due_filter &= get_filter(
+                    'status', 'equal',
+                    'Task in-process')
+                data = TaskSummary.objects.filter(current_over_due_filter, task_date__gt=F('target_date'))
                 serializer = TaskSummarySerialzer(data, many=True)
                 return JsonResponse({'message': 'true', 'data': serializer.data}, status=200)
             if status == 'all_tasks':
