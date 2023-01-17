@@ -480,6 +480,13 @@ class QmsController:
             qms_obj.organizations = request['organizations']
             qms_obj.setups = request['setups']
             qms_obj.training_status = request['training_status']
+            qms_obj.venue = request['venue']
+            if request['registration_date'] !='':
+                qms_obj.registration_date = request['registration_date']
+            if request['reschedule_training_date'] !='':
+                qms_obj.reschedule_training_date = request['reschedule_training_date']
+            qms_obj.remarks = request['remarks']
+            qms_obj.no_of_participants = request['no_of_participants']
             qms_obj.save()
             return JsonResponse({'Success': 'Training Schedule inserted Successfully!'})
         else:
@@ -493,6 +500,13 @@ class QmsController:
             get_obj.organizations = request['organizations']
             get_obj.setups = request['setups']
             get_obj.training_status = request['training_status']
+            get_obj.venue = request['venue']
+            if request['registration_date'] !='':
+                get_obj.registration_date = request['registration_date']
+            if request['reschedule_training_date'] !='':
+                get_obj.reschedule_training_date = request['reschedule_training_date']
+            get_obj.remarks = request['remarks']
+            get_obj.no_of_participants = request['no_of_participants']
             get_obj.save()
             return JsonResponse({'Success': 'Training Schedule Updated Successfully!'})
 
@@ -1372,34 +1386,66 @@ class QmsController:
 
     @staticmethod
     def AddCespTrainingCalendar(request):
-        cesp_obj = CespTrainingCalendar()
+        cesp_obj = CespTrainingScheduleModel()
         id = request['id']
         if id == '0':
+            # cesp_obj.sr_no = request['sr_no']
+            # cesp_obj.course_title = request['course_title']
+            # cesp_obj.course_duration = request['course_duration']
+            # cesp_obj.registration_date = request['registration_date']
+            # cesp_obj.scheduled_date = request['expected_scheduled']
+            # cesp_obj.venue = request['venue']
+            # cesp_obj.course_fee = request['course_fee']
             cesp_obj.sr_no = request['sr_no']
-            cesp_obj.course_title = request['course_title']
-            cesp_obj.course_duration = request['course_duration']
-            cesp_obj.registration_date = request['registration_date']
-            cesp_obj.scheduled_date = request['expected_scheduled']
+            cesp_obj.training_type = request['training_type']
+            cesp_obj.training_start_date = request['training_start_date']
+            cesp_obj.training_end_date = request['training_end_date']
+            cesp_obj.trainer = request['trainer']
+            cesp_obj.commission = request['commission']
+            cesp_obj.standards = request['standards']
+            cesp_obj.organizations = request['organizations']
+            cesp_obj.setups = request['setups']
+            cesp_obj.training_status = request['training_status']
             cesp_obj.venue = request['venue']
-            cesp_obj.course_fee = request['course_fee']
+            cesp_obj.registration_date = request['registration_date']
+            if request['reschedule_training_date']:
+                cesp_obj.reschedule_training_date = request['reschedule_training_date']
+            cesp_obj.remarks = request['remarks']
+            cesp_obj.no_of_participants = request['no_of_participants']
             cesp_obj.save()
             return JsonResponse({'Success': 'Training Schedule inserted Successfully!'})
         else:
-            get_obj = CespTrainingCalendar.objects.filter(id=id).first()
+            get_obj = CespTrainingScheduleModel.objects.filter(id=id).first()
+            # get_obj.sr_no = request['sr_no']
+            # get_obj.course_title = request['course_title']
+            # get_obj.course_duration = request['course_duration']
+            # get_obj.registration_date = request['registration_date']
+            # get_obj.scheduled_date = request['expected_scheduled']
+            # get_obj.venue = request['venue']
+            # get_obj.course_fee = request['course_fee']
             get_obj.sr_no = request['sr_no']
-            get_obj.course_title = request['course_title']
-            get_obj.course_duration = request['course_duration']
-            get_obj.registration_date = request['registration_date']
-            get_obj.scheduled_date = request['expected_scheduled']
+            get_obj.training_type = request['training_type']
+            get_obj.training_start_date = request['training_start_date']
+            get_obj.training_end_date = request['training_end_date']
+            get_obj.trainer = request['trainer']
+            get_obj.commission = request['commission']
+            get_obj.standards = request['standards']
+            get_obj.organizations = request['organizations']
+            get_obj.setups = request['setups']
+            get_obj.training_status = request['training_status']
             get_obj.venue = request['venue']
-            get_obj.course_fee = request['course_fee']
+            get_obj.registration_date = request['registration_date']
+            if request['reschedule_training_date']:
+                get_obj.reschedule_training_date = request['reschedule_training_date']
+            get_obj.remarks = request['remarks']
+            get_obj.no_of_participants = request['no_of_participants']
             get_obj.save()
             return JsonResponse({'Success': 'Training Schedule Updated Successfully!'})
     @staticmethod
     def GetCespTrainingCalendarList(request):
         try:
-            data = CespTrainingCalendar.objects.all().order_by('id')
-            serializer = CespTrainingCalendarSerializer(data, many=True)
+            data = CespTrainingScheduleModel.objects.all().order_by('id')
+            serializer = CespTrainingScheduleSerializer(data, many=True)
             return JsonResponse({'data': serializer.data}, safe=False, status=200)
         except:
             return JsonResponse({'message': 'Sorry! No Training found.'}, status=500)
@@ -1408,7 +1454,7 @@ class QmsController:
     def DeleteCespTrainingCalendar(request):
         try:
             auditId = request.query_params['id']
-            cesp = CespTrainingCalendar.objects.get(id=auditId)
+            cesp = CespTrainingScheduleModel.objects.get(id=auditId)
             cesp.delete()
             return JsonResponse({'message': 'CeSP Audit has been deleted'}, status=200)
         except:
@@ -1416,35 +1462,77 @@ class QmsController:
     @staticmethod
     def AddCespAuditSchedule(request):
         try:
-            cesp_obj = CespAuditSchedule()
+            aud_obj = CeSPAuditScheduleModel()
             id = request['id']
             if id == '0':
-                cesp_obj.sr_no = request['sr_no']
-                cesp_obj.client_name = request['client_name']
-                cesp_obj.client_type = request['client_type']
-                cesp_obj.standard = request['standard']
-                cesp_obj.audit_scheduled = request['audit_scheduled']
-                cesp_obj.status = request['status']
-                cesp_obj.current_status = request['current_status']
-                cesp_obj.save()
+                aud_obj.sr_no = request['sr_no']
+                aud_obj.commission = request['organization']
+                aud_obj.organization = request['organization']
+                aud_obj.standard = request['standard']
+                aud_obj.setup = request['setup']
+                aud_obj.audit_due_date = request['audit_due_date']
+                aud_obj.audit_done = request['audit_done']
+                aud_obj.followup_done = request['followup_done']
+                aud_obj.certifification_validity_date = request['certifification_validity_date']
+                if request['certifification_validity_rescheduling_date'] != '':
+                    aud_obj.certifification_validity_rescheduling_date = request[
+                        'certifification_validity_rescheduling_date']
+                aud_obj.category = request['category']
+                aud_obj.status = request['status']
+                aud_obj.next_due_date = request['next_due_date']
+                aud_obj.remarks = request['remarks']
+                aud_obj.save()
                 return JsonResponse({'Success': 'Audit Schedule inserted Successfully!'})
             else:
-                get_obj = CespAuditSchedule.objects.filter(id=id).first()
+                get_obj = CeSPAuditScheduleModel.objects.filter(id=id).first()
                 get_obj.sr_no = request['sr_no']
-                get_obj.client_name = request['client_name']
-                get_obj.client_type = request['client_type']
+                get_obj.commission = request['commission']
+                get_obj.organization = request['organization']
                 get_obj.standard = request['standard']
-                get_obj.audit_scheduled = request['audit_scheduled']
+                get_obj.setup = request['setup']
+                get_obj.audit_due_date = request['audit_due_date']
+                get_obj.audit_done = request['audit_done']
+                get_obj.followup_done = request['followup_done']
+                get_obj.certifification_validity_date = request['certifification_validity_date']
+                if request['certifification_validity_rescheduling_date'] != '':
+                    get_obj.certifification_validity_rescheduling_date = request[
+                        'certifification_validity_rescheduling_date']
+                get_obj.category = request['category']
                 get_obj.status = request['status']
-                get_obj.current_status = request['current_status']
+                get_obj.next_due_date = request['next_due_date']
+                get_obj.remarks = request['remarks']
                 get_obj.save()
                 return JsonResponse({'Success': 'Audit Schedule Updated Successfully!'})
+            # cesp_obj = CespAuditSchedule()
+            # id = request['id']
+            # if id == '0':
+            #     cesp_obj.sr_no = request['sr_no']
+            #     cesp_obj.client_name = request['client_name']
+            #     cesp_obj.client_type = request['client_type']
+            #     cesp_obj.standard = request['standard']
+            #     cesp_obj.audit_scheduled = request['audit_scheduled']
+            #     cesp_obj.status = request['status']
+            #     cesp_obj.current_status = request['current_status']
+            #     cesp_obj.save()
+            #     return JsonResponse({'Success': 'Audit Schedule inserted Successfully!'})
+            # else:
+            #     get_obj = CespAuditSchedule.objects.filter(id=id).first()
+            #     get_obj.sr_no = request['sr_no']
+            #     get_obj.client_name = request['client_name']
+            #     get_obj.client_type = request['client_type']
+            #     get_obj.standard = request['standard']
+            #     get_obj.audit_scheduled = request['audit_scheduled']
+            #     get_obj.status = request['status']
+            #     get_obj.current_status = request['current_status']
+            #     get_obj.save()
+            #     return JsonResponse({'Success': 'Audit Schedule Updated Successfully!'})
         except:
             return JsonResponse({'status': 'False', "message": "Internal Server Error"}, status=500)
 
     @staticmethod
     def GetCespAuditScheduledList(request, self=None):
         selected_year = request.query_params.get('selected_year')
+        selected_comm = request.query_params.get('selected_commission')
         selected_org = request.query_params.get('selected_organization')
         selected_standard = request.query_params.getlist('selected_standard')
         selected_setup = request.query_params.getlist('selected_setup')
@@ -1459,103 +1547,47 @@ class QmsController:
                 setupItems = item.split(',')
         dataList = []
         if selected_year == '':
-            if selected_org == '' and selected_standard == noVal and selected_setup == noVal:
-                data = CespAuditSchedule.objects.all()
+            if selected_comm == '' and selected_org == '' and selected_standard == noVal and selected_setup == noVal:
+                data = CeSPAuditScheduleModel.objects.all()
                 serializer = CespAuditScheduleSerializer(data, many=True)
                 return JsonResponse({'data': serializer.data}, safe=False, status=200)
 
-            elif selected_org == '' and selected_standard == noVal and selected_setup != noVal:
-                for set in setupItems:
-                    trainingList = CespAuditSchedule.objects.filter(client_name=set).values()
-                    dataList.extend(list(trainingList))
-
-
-            elif selected_org == '' and selected_standard != noVal and selected_setup == noVal:
+            elif selected_comm == '' and selected_org == '' and selected_standard != noVal and selected_setup == noVal:
                 for stand in standItems:
-                    trainingList = CespAuditSchedule.objects.filter(standard=stand).values()
+                    trainingList = CeSPAuditScheduleModel.objects.filter(standard=stand).values()
                     dataList.extend(list(trainingList))
 
-
-            elif selected_org == '' and selected_standard != noVal and selected_setup != noVal:
-                for (stand, set) in itertools.zip_longest(standItems, setupItems):
-                    trainingList = CespAuditSchedule.objects.filter(standard=stand, client_name=set).values()
-                    dataList.extend(list(trainingList))
-
-            elif selected_org != '' and selected_standard == noVal and selected_setup == noVal:
-                dataList = CespAuditSchedule.objects.filter(client_type=selected_org).values()
-
-
-            elif selected_org != '' and selected_standard == noVal and selected_setup != noVal:
+            elif selected_comm !='' and  selected_org != '' and selected_standard == noVal and selected_setup != noVal:
                 for set in setupItems:
-                    trainingList = CespAuditSchedule.objects.filter(client_type=selected_org, client_name=set).values()
-                    dataList.extend(list(trainingList))
-
-            elif selected_org != '' and selected_standard != noVal and selected_setup == noVal:
-                for stand in standItems:
-                    trainingList = CespAuditSchedule.objects.filter(client_type=selected_org,
-                                                                    standard=stand).values()
+                    trainingList = CeSPAuditScheduleModel.objects.filter(commission = selected_comm, organization =selected_org, setup=set).values()
                     dataList.extend(list(trainingList))
 
             else:
                 for (stand, set) in itertools.zip_longest(standItems, setupItems):
-                    trainingList = CespAuditSchedule.objects.filter(client_type=selected_org, standard=stand,
-                                                                    client_name=set).values()
+                    trainingList = CeSPAuditScheduleModel.objects.filter(commission = selected_comm, organization =selected_org, setup=set, standard=stand).values()
                     dataList.extend(list(trainingList))
-
-
         else:
-            if selected_org == '' and selected_standard == noVal and selected_setup == noVal:
-                data = CespAuditSchedule.objects.filter(audit_scheduled__year=selected_year).values()
+            if selected_comm == '' and selected_org == '' and selected_standard == noVal and selected_setup == noVal:
+                data = CeSPAuditScheduleModel.objects.filter(Created_at__year = selected_year,)
                 serializer = CespAuditScheduleSerializer(data, many=True)
                 return JsonResponse({'data': serializer.data}, safe=False, status=200)
 
-            elif selected_org == '' and selected_standard == noVal and selected_setup != noVal:
-                for set in setupItems:
-                    trainingList = CespAuditSchedule.objects.filter(audit_scheduled__year=selected_year,
-                                                                    client_name=set).values()
-                    dataList.extend(list(trainingList))
-
-
-            elif selected_org == '' and selected_standard != noVal and selected_setup == noVal:
+            elif selected_comm == '' and selected_org == '' and selected_standard != noVal and selected_setup == noVal:
                 for stand in standItems:
-                    trainingList = CespAuditSchedule.objects.filter(audit_scheduled__year=selected_year,
-                                                                    standard=stand).values()
+                    trainingList = CeSPAuditScheduleModel.objects.filter(Created_at__year = selected_year,standard=stand).values()
                     dataList.extend(list(trainingList))
 
-
-            elif selected_org == '' and selected_standard != noVal and selected_setup != noVal:
-                for (stand, set) in itertools.zip_longest(standItems, setupItems):
-                    trainingList = CespAuditSchedule.objects.filter(audit_scheduled__year=selected_year,
-                                                                    standard=stand,
-                                                                    client_name=set).values()
-                    dataList.extend(list(trainingList))
-
-
-            elif selected_org != '' and selected_standard == noVal and selected_setup == noVal:
-                dataList = CespAuditSchedule.objects.filter(audit_scheduled__year=selected_year,
-                                                            client_type=selected_org).values()
-
-
-            elif selected_org != '' and selected_standard == noVal and selected_setup != noVal:
+            elif selected_comm != '' and selected_org != '' and selected_standard == noVal and selected_setup != noVal:
                 for set in setupItems:
-                    trainingList = CespAuditSchedule.objects.filter(audit_scheduled__year=selected_year,
-                                                                    client_type=selected_org,
-                                                                    client_name=set).values()
-                    dataList.extend(list(trainingList))
-
-            elif selected_org != '' and selected_standard != noVal and selected_setup == noVal:
-                for stand in standItems:
-                    trainingList = CespAuditSchedule.objects.filter(audit_scheduled__year=selected_year,
-                                                                    client_type=selected_org,
-                                                                    standard=stand).values()
+                    trainingList = CeSPAuditScheduleModel.objects.filter(Created_at__year = selected_year,commission=selected_comm,
+                                                                         organization=selected_org, setup=set).values()
                     dataList.extend(list(trainingList))
 
             else:
                 for (stand, set) in itertools.zip_longest(standItems, setupItems):
-                    trainingList = CespAuditSchedule.objects.filter(audit_scheduled__year=selected_year,
-                                                                    client_type=selected_org,
-                                                                    standard=stand,
-                                                                    client_name=set).values()
+                    trainingList = CeSPAuditScheduleModel.objects.filter(Created_at__year = selected_year,commission=selected_comm,
+                                                                         organization=selected_org, setup=set,
+                                                                         standard=stand).values()
                     dataList.extend(list(trainingList))
 
         serializer = CespAuditScheduleSerializer(dataList, many=True)
@@ -1564,7 +1596,7 @@ class QmsController:
     def DeleteCespAuditScheduled(request):
         try:
             auditId = request.query_params['id']
-            cesp = CespAuditSchedule.objects.get(id=auditId)
+            cesp = CeSPAuditScheduleModel.objects.get(id=auditId)
             cesp.delete()
             return JsonResponse({'message': 'CeSP Audit Scheduled has been deleted'}, status=200)
         except:
