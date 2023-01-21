@@ -44,28 +44,57 @@ class SmsController:
                 prodModel.testing_date = request['testing_date']
                 prodModel.sys_type = request['sys_type']
                 prodModel.blt_status = request['blt_status']
+                prodModel.blt_remarks = request['blt_remarks']
                 prodModel.pre_hil_date = request['pre_hil_date']
                 prodModel.pre_hil_status = request['pre_hil_status']
+                prodModel.pre_hil_remarks = request['pre_hil_remarks']
                 prodModel.vibaration_date = request['vibaration_date']
                 prodModel.vibaration_status = request['vibaration_status']
+                prodModel.vibaration_remarks = request['vibaration_remarks']
                 prodModel.post_hil_date = request['post_hil_date']
                 prodModel.post_hil_status = request['post_hil_status']
+                prodModel.post_hil_remarks = request['post_hil_remarks']
                 prodModel.fgt_date = request['fgt_date']
                 prodModel.fgt_status = request['fgt_status']
+                prodModel.fgt_remarks = request['fgt_remarks']
                 prodModel.final_integration_date = request['final_integration_date']
                 prodModel.final_integration_status = request['final_integration_status']
+                prodModel.final_integration_remarks = request['final_integration_remarks']
                 prodModel.bhd_date = request['bhd_date']
                 prodModel.bhd_status = request['bhd_status']
+                prodModel.bhd_remarks = request['bhd_remarks']
                 prodModel.fqm_date = request['fqm_date']
                 prodModel.fqm_status = request['fqm_status']
+                prodModel.fqm_remarks = request['fqm_remarks']
                 prodModel.qm_certification_date = request['qm_certification_date']
                 prodModel.qm_certification_status = request['qm_certification_status']
+                prodModel.qm_certification_remarks = request['qm_certification_remarks']
                 prodModel.attachment = request['attachment']
                 prodModel.remarks = request['remarks']
                 prodModel.cgbalancing_date = request['cgbalancing_date']
                 prodModel.cgbalancing_date_status = request['cgbalancing_date_status']
+                prodModel.cgbalancing_date_remarks = request['cgbalancing_date_remarks']
                 prodModel.enduser_date = request['enduser_date']
                 prodModel.enduser_status = request['enduser_status']
+                prodModel.enduser_remarks = request['enduser_remarks']
+                prodModel.incapsulation_date = request['incapsulation_date']
+                prodModel.incapsulation_status = request['incapsulation_status']
+                prodModel.incapsulation_remarks = request['incapsulation_remarks']
+                prodModel.sys_align_Date = request['sys_align_Date']
+                prodModel.sys_align_status = request['sys_align_status']
+                prodModel.sys_align_remarks = request['sys_align_remarks']
+                prodModel.testing_type = request['testing_type']
+                prodModel.emp_proofing = request['emp_proofing']
+                prodModel.func_tst = request['func_tst']
+                prodModel.func_tst_dummy_bird = request['func_tst_dummy_bird']
+                prodModel.road_test = request['road_test']
+                prodModel.post_road_test = request['post_road_test']
+                prodModel.integrated_operation = request['integrated_operation']
+                prodModel.rain_test = request['rain_test']
+                prodModel.pre_user_inspection = request['pre_user_inspection']
+                prodModel.final_integrated_testing = request['final_integrated_testing']
+                prodModel.load_unload_on_mlv_hlf = request['load_unload_on_mlv_hlf']
+
                 prodModel.isActive = is_active
                 prodModel.save()
                 return JsonResponse({'status': 'True', 'message': "Production Status Added Successfully!"},
@@ -80,7 +109,9 @@ class SmsController:
                         'fgt_status'] != get_prod.fgt_status or request[
                         'final_integration_status'] != get_prod.final_integration_status or request[
                         'bhd_status'] != get_prod.bhd_status or request['fqm_status'] != get_prod.fqm_status or request[
-                        'qm_certification_status'] != get_prod.qm_certification_status:
+                        'qm_certification_status'] != get_prod.qm_certification_status or\
+                        request['incapsulation_status'] != get_prod.incapsulation_status or \
+                        request['sys_align_status'] != get_prod.sys_align_status:
                         print("add data in production history")
                         ProdHistoryModal = ProductionSystemStatusHistory()
                         ProdHistoryModal.prod_id = get_prod.id
@@ -89,31 +120,60 @@ class SmsController:
                         ProdHistoryModal.set_id = get_prod.set_id
                         ProdHistoryModal.blt_date = get_prod.blt_date
                         ProdHistoryModal.blt_status = get_prod.blt_status
+                        ProdHistoryModal.blt_remarks = get_prod.blt_remarks
                         ProdHistoryModal.testing_date = get_prod.testing_date
                         ProdHistoryModal.sys_type = get_prod.sys_type
                         ProdHistoryModal.pre_hil_date = get_prod.pre_hil_date
                         ProdHistoryModal.pre_hil_status = get_prod.pre_hil_status
+                        ProdHistoryModal.pre_hil_remarks = get_prod.pre_hil_remarks
                         ProdHistoryModal.vibaration_date = get_prod.vibaration_date
                         ProdHistoryModal.vibaration_status = get_prod.vibaration_status
+                        ProdHistoryModal.vibaration_remarks = get_prod.vibaration_remarks
                         ProdHistoryModal.post_hil_date = get_prod.post_hil_date
                         ProdHistoryModal.post_hil_status = get_prod.post_hil_status
+                        ProdHistoryModal.post_hil_remarks = get_prod.post_hil_remarks
                         ProdHistoryModal.fgt_date = get_prod.fgt_date
                         ProdHistoryModal.fgt_status = get_prod.fgt_status
+                        ProdHistoryModal.fgt_remarks = get_prod.fgt_remarks
                         ProdHistoryModal.final_integration_date = get_prod.final_integration_date
                         ProdHistoryModal.final_integration_status = get_prod.final_integration_status
+                        ProdHistoryModal.final_integration_remarks = get_prod.final_integration_remarks
                         ProdHistoryModal.bhd_date = get_prod.bhd_date
                         ProdHistoryModal.bhd_status = get_prod.bhd_status
+                        ProdHistoryModal.bhd_remarks = get_prod.bhd_remarks
                         ProdHistoryModal.fqm_date = get_prod.fqm_date
                         ProdHistoryModal.fqm_status = get_prod.fqm_status
+                        ProdHistoryModal.fqm_remarks = get_prod.fqm_remarks
                         ProdHistoryModal.qm_certification_date = get_prod.qm_certification_date
                         ProdHistoryModal.qm_certification_status = get_prod.qm_certification_status
+                        ProdHistoryModal.qm_certification_remarks = get_prod.qm_certification_remarks
                         ProdHistoryModal.attachment = get_prod.attachment
                         ProdHistoryModal.remarks = get_prod.remarks
                         ProdHistoryModal.isActive = get_prod.isActive
                         ProdHistoryModal.cgbalancing_date = get_prod.cgbalancing_date
                         ProdHistoryModal.cgbalancing_date_status = get_prod.cgbalancing_date_status
+                        ProdHistoryModal.cgbalancing_date_remarks = get_prod.cgbalancing_date_remarks
                         ProdHistoryModal.enduser_date = get_prod.enduser_date
                         ProdHistoryModal.enduser_status = get_prod.enduser_status
+                        ProdHistoryModal.enduser_remarks = get_prod.enduser_remarks
+                        ProdHistoryModal.incapsulation_date = get_prod.incapsulation_date
+                        ProdHistoryModal.incapsulation_status = get_prod.incapsulation_status
+                        ProdHistoryModal.incapsulation_remarks = get_prod.incapsulation_remarks
+                        ProdHistoryModal.sys_align_Date = get_prod.sys_align_Date
+                        ProdHistoryModal.sys_align_status = get_prod.sys_align_status
+                        ProdHistoryModal.sys_align_remarks = get_prod.sys_align_remarks
+                        ProdHistoryModal.testing_type = get_prod.testing_type
+                        ProdHistoryModal.emp_proofing = get_prod.emp_proofing
+                        ProdHistoryModal.func_tst =get_prod.func_tst
+                        ProdHistoryModal.func_tst_dummy_bird = get_prod.func_tst_dummy_bird
+                        ProdHistoryModal.road_test =get_prod.road_test
+                        ProdHistoryModal.post_road_test = get_prod.post_road_test
+                        ProdHistoryModal.integrated_operation = get_prod.integrated_operation
+                        ProdHistoryModal.rain_test = get_prod.rain_test
+                        ProdHistoryModal.pre_user_inspection = get_prod.pre_user_inspection
+                        ProdHistoryModal.final_integrated_testing = get_prod.final_integrated_testing
+                        ProdHistoryModal.load_unload_on_mlv_hlf = get_prod.load_unload_on_mlv_hlf
+
                         ProdHistoryModal.save()
 
                         # history saved
@@ -122,32 +182,61 @@ class SmsController:
                     get_prod.set_id = request['set_id']
                     get_prod.blt_date = request['blt_date']
                     get_prod.blt_status = request['blt_status']
+                    get_prod.blt_remarks = request['blt_remarks']
                     get_prod.testing_date = request['testing_date']
                     get_prod.sys_type = request['sys_type']
                     get_prod.pre_hil_date = request['pre_hil_date']
                     get_prod.pre_hil_status = request['pre_hil_status']
+                    get_prod.pre_hil_remarks = request['pre_hil_remarks']
                     get_prod.vibaration_date = request['vibaration_date']
                     get_prod.vibaration_status = request['vibaration_status']
+                    get_prod.vibaration_remarks = request['vibaration_remarks']
                     get_prod.post_hil_date = request['post_hil_date']
                     get_prod.post_hil_status = request['post_hil_status']
+                    get_prod.post_hil_remarks = request['post_hil_remarks']
                     get_prod.fgt_date = request['fgt_date']
                     get_prod.fgt_status = request['fgt_status']
+                    get_prod.fgt_remarks = request['fgt_remarks']
                     get_prod.final_integration_date = request['final_integration_date']
                     get_prod.final_integration_status = request['final_integration_status']
+                    get_prod.final_integration_remarks = request['final_integration_remarks']
                     get_prod.bhd_date = request['bhd_date']
                     get_prod.bhd_status = request['bhd_status']
+                    get_prod.bhd_remarks = request['bhd_remarks']
                     get_prod.fqm_date = request['fqm_date']
                     get_prod.fqm_status = request['fqm_status']
+                    get_prod.fqm_remarks = request['fqm_remarks']
                     get_prod.qm_certification_date = request['qm_certification_date']
                     get_prod.qm_certification_status = request['qm_certification_status']
+                    get_prod.qm_certification_remarks = request['qm_certification_remarks']
                     if request['attachment'] != '':
                         get_prod.attachment = request['attachment']
                     get_prod.remarks = request['remarks']
                     get_prod.isActive = is_active
                     get_prod.cgbalancing_date = request['cgbalancing_date']
                     get_prod.cgbalancing_date_status = request['cgbalancing_date_status']
+                    get_prod.cgbalancing_date_remarks = request['cgbalancing_date_remarks']
                     get_prod.enduser_date = request['enduser_date']
                     get_prod.enduser_status = request['enduser_status']
+                    get_prod.enduser_remarks = request['enduser_remarks']
+                    get_prod.incapsulation_date = request['incapsulation_date']
+                    get_prod.incapsulation_status = request['incapsulation_status']
+                    get_prod.incapsulation_remarks = request['incapsulation_remarks']
+                    get_prod.sys_align_Date = request['sys_align_Date']
+                    get_prod.sys_align_status = request['sys_align_status']
+                    get_prod.sys_align_remarks = request['sys_align_remarks']
+                    get_prod.testing_type = request['testing_type']
+                    get_prod.emp_proofing = request['emp_proofing']
+                    get_prod.func_tst = request['func_tst']
+                    get_prod.func_tst_dummy_bird = request['func_tst_dummy_bird']
+                    get_prod.road_test = request['road_test']
+                    get_prod.post_road_test = request['post_road_test']
+                    get_prod.integrated_operation = request['integrated_operation']
+                    get_prod.rain_test = request['rain_test']
+                    get_prod.pre_user_inspection = request['pre_user_inspection']
+                    get_prod.final_integrated_testing = request['final_integrated_testing']
+                    get_prod.load_unload_on_mlv_hlf = request['load_unload_on_mlv_hlf']
+
                     get_prod.save()
             return JsonResponse({'status': 'True', 'message': "Production Status Updated Successfully!"},
                                 status=200)
@@ -221,6 +310,7 @@ class SmsController:
             # else:
             data = ProductionSystemStatus.objects.filter(filter_objects)
             serializer = ProductionSystemSerialzer(data, many=True)
+            print(serializer.data)
             return JsonResponse({'status': 'true', 'data': serializer.data}, status=200)
         except Exception as e:
             print(e)
@@ -409,44 +499,73 @@ class SmsController:
 
     @staticmethod
     def AddFlightStatus(request):
-        is_active = 0
-        if request['is_active'] == 'true':
-            is_active = 1
-        flightModel = FlightSystemStatus()
+            is_active = 0
+            if request['is_active'] == 'true':
+                is_active = 1
+            flightModel = FlightSystemStatus()
 
-        try:
+        # try:
             id = request['id']
             if id == '0':
                 flightModel.system = request['system']
                 flightModel.organization = request['organization']
                 flightModel.set_id = request['set_id']
                 flightModel.blt_date = request['blt_date']
-                flightModel.blt_status = request['blt_status']
-                flightModel.pre_hil_date = request['pre_hil_date']
-                flightModel.pre_hil_status = request['pre_hil_status']
-                flightModel.vibaration_date = request['vibaration_date']
-                flightModel.vibaration_status = request['vibaration_status']
-                flightModel.post_hil_date = request['post_hil_date']
-                flightModel.post_hil_status = request['post_hil_status']
-                flightModel.fgt_date = request['fgt_date']
-                flightModel.fgt_status = request['fgt_status']
-                flightModel.final_integration_date = request['final_integration_date']
-                flightModel.final_integration_status = request['final_integration_status']
-                flightModel.bhd_date = request['bhd_date']
-                flightModel.bhd_status = request['bhd_status']
-                flightModel.fqm_date = request['fqm_date']
-                flightModel.fqm_status = request['fqm_status']
-                flightModel.qm_certification_date = request['qm_certification_date']
-                flightModel.qm_certification_status = request['qm_certification_status']
-                flightModel.attachment = request['attachment']
-                flightModel.remarks = request['remarks']
-                flightModel.isActive = is_active
                 flightModel.testing_date = request['testing_date']
                 flightModel.sys_type = request['sys_type']
+                flightModel.blt_status = request['blt_status']
+                flightModel.blt_remarks = request['blt_remarks']
+                flightModel.pre_hil_date = request['pre_hil_date']
+                flightModel.pre_hil_status = request['pre_hil_status']
+                flightModel.pre_hil_remarks = request['pre_hil_remarks']
+                flightModel.vibaration_date = request['vibaration_date']
+                flightModel.vibaration_status = request['vibaration_status']
+                flightModel.vibaration_remarks = request['vibaration_remarks']
+                flightModel.post_hil_date = request['post_hil_date']
+                flightModel.post_hil_status = request['post_hil_status']
+                flightModel.post_hil_remarks = request['post_hil_remarks']
+                flightModel.fgt_date = request['fgt_date']
+                flightModel.fgt_status = request['fgt_status']
+                flightModel.fgt_remarks = request['fgt_remarks']
+                flightModel.final_integration_date = request['final_integration_date']
+                flightModel.final_integration_status = request['final_integration_status']
+                flightModel.final_integration_remarks = request['final_integration_remarks']
+                flightModel.bhd_date = request['bhd_date']
+                flightModel.bhd_status = request['bhd_status']
+                flightModel.bhd_remarks = request['bhd_remarks']
+                flightModel.fqm_date = request['fqm_date']
+                flightModel.fqm_status = request['fqm_status']
+                flightModel.fqm_remarks = request['fqm_remarks']
+                flightModel.qm_certification_date = request['qm_certification_date']
+                flightModel.qm_certification_status = request['qm_certification_status']
+                flightModel.qm_certification_remarks = request['qm_certification_remarks']
+                flightModel.attachment = request['attachment']
+                flightModel.remarks = request['remarks']
                 flightModel.cgbalancing_date = request['cgbalancing_date']
                 flightModel.cgbalancing_date_status = request['cgbalancing_date_status']
+                flightModel.cgbalancing_date_remarks = request['cgbalancing_date_remarks']
                 flightModel.launchact_date = request['launchact_date']
                 flightModel.launchact_status = request['launchact_status']
+                flightModel.launchact_remarks = request['launchact_remarks']
+                flightModel.incapsulation_date = request['incapsulation_date']
+                flightModel.incapsulation_status = request['incapsulation_status']
+                flightModel.incapsulation_remarks = request['incapsulation_remarks']
+                flightModel.sys_align_Date = request['sys_align_Date']
+                flightModel.sys_align_status = request['sys_align_status']
+                flightModel.sys_align_remarks = request['sys_align_remarks']
+                flightModel.testing_type = request['testing_type']
+                flightModel.emp_proofing = request['emp_proofing']
+                flightModel.func_tst = request['func_tst']
+                flightModel.func_tst_dummy_bird = request['func_tst_dummy_bird']
+                flightModel.road_test = request['road_test']
+                flightModel.post_road_test = request['post_road_test']
+                flightModel.integrated_operation = request['integrated_operation']
+                flightModel.rain_test = request['rain_test']
+                flightModel.pre_user_inspection = request['pre_user_inspection']
+                flightModel.final_integrated_testing = request['final_integrated_testing']
+                flightModel.load_unload_on_mlv_hlf = request['load_unload_on_mlv_hlf']
+
+                flightModel.isActive = is_active
                 flightModel.save()
                 return JsonResponse({'status': 'True', 'message': "Production Status Added Successfully!"},
                                     status=200)
@@ -461,7 +580,9 @@ class SmsController:
                         'fgt_status'] != get_prod.fgt_status or request[
                         'final_integration_status'] != get_prod.final_integration_status or request[
                         'bhd_status'] != get_prod.bhd_status or request['fqm_status'] != get_prod.fqm_status or request[
-                        'qm_certification_status'] != get_prod.qm_certification_status:
+                        'qm_certification_status'] != get_prod.qm_certification_status or\
+                        request['incapsulation_status'] != get_prod.incapsulation_status or \
+                        request['sys_align_status'] != get_prod.sys_align_status:
                         print("add data in flight history")
                         FlightHistoryModal = FlightSystemStatusHistory()
                         FlightHistoryModal.f_id = get_prod.id
@@ -470,31 +591,60 @@ class SmsController:
                         FlightHistoryModal.set_id = get_prod.set_id
                         FlightHistoryModal.blt_date = get_prod.blt_date
                         FlightHistoryModal.blt_status = get_prod.blt_status
+                        FlightHistoryModal.blt_remarks = get_prod.blt_remarks
+                        FlightHistoryModal.testing_date = get_prod.testing_date
+                        FlightHistoryModal.sys_type = get_prod.sys_type
                         FlightHistoryModal.pre_hil_date = get_prod.pre_hil_date
                         FlightHistoryModal.pre_hil_status = get_prod.pre_hil_status
+                        FlightHistoryModal.pre_hil_remarks = get_prod.pre_hil_remarks
                         FlightHistoryModal.vibaration_date = get_prod.vibaration_date
                         FlightHistoryModal.vibaration_status = get_prod.vibaration_status
+                        FlightHistoryModal.vibaration_remarks = get_prod.vibaration_remarks
                         FlightHistoryModal.post_hil_date = get_prod.post_hil_date
                         FlightHistoryModal.post_hil_status = get_prod.post_hil_status
+                        FlightHistoryModal.post_hil_remarks = get_prod.post_hil_remarks
                         FlightHistoryModal.fgt_date = get_prod.fgt_date
                         FlightHistoryModal.fgt_status = get_prod.fgt_status
+                        FlightHistoryModal.fgt_remarks = get_prod.fgt_remarks
                         FlightHistoryModal.final_integration_date = get_prod.final_integration_date
                         FlightHistoryModal.final_integration_status = get_prod.final_integration_status
+                        FlightHistoryModal.final_integration_remarks = get_prod.final_integration_remarks
                         FlightHistoryModal.bhd_date = get_prod.bhd_date
                         FlightHistoryModal.bhd_status = get_prod.bhd_status
+                        FlightHistoryModal.bhd_remarks = get_prod.bhd_remarks
                         FlightHistoryModal.fqm_date = get_prod.fqm_date
                         FlightHistoryModal.fqm_status = get_prod.fqm_status
+                        FlightHistoryModal.fqm_remarks = get_prod.fqm_remarks
                         FlightHistoryModal.qm_certification_date = get_prod.qm_certification_date
                         FlightHistoryModal.qm_certification_status = get_prod.qm_certification_status
+                        FlightHistoryModal.qm_certification_remarks = get_prod.qm_certification_remarks
                         FlightHistoryModal.attachment = get_prod.attachment
                         FlightHistoryModal.remarks = get_prod.remarks
                         FlightHistoryModal.isActive = get_prod.isActive
-                        FlightHistoryModal.testing_date = get_prod.testing_date
-                        FlightHistoryModal.sys_type = get_prod.sys_type
                         FlightHistoryModal.cgbalancing_date = get_prod.cgbalancing_date
                         FlightHistoryModal.cgbalancing_date_status = get_prod.cgbalancing_date_status
+                        FlightHistoryModal.cgbalancing_date_remarks = get_prod.cgbalancing_date_remarks
                         FlightHistoryModal.launchact_date = get_prod.launchact_date
                         FlightHistoryModal.launchact_status = get_prod.launchact_status
+                        FlightHistoryModal.launchact_remarks = get_prod.launchact_remarks
+                        FlightHistoryModal.incapsulation_date = get_prod.incapsulation_date
+                        FlightHistoryModal.incapsulation_status = get_prod.incapsulation_status
+                        FlightHistoryModal.incapsulation_remarks = get_prod.incapsulation_remarks
+                        FlightHistoryModal.sys_align_Date = get_prod.sys_align_Date
+                        FlightHistoryModal.sys_align_status = get_prod.sys_align_status
+                        FlightHistoryModal.sys_align_remarks = get_prod.sys_align_remarks
+                        FlightHistoryModal.testing_type = get_prod.testing_type
+                        FlightHistoryModal.emp_proofing = get_prod.emp_proofing
+                        FlightHistoryModal.func_tst =get_prod.func_tst
+                        FlightHistoryModal.func_tst_dummy_bird = get_prod.func_tst_dummy_bird
+                        FlightHistoryModal.road_test =get_prod.road_test
+                        FlightHistoryModal.post_road_test = get_prod.post_road_test
+                        FlightHistoryModal.integrated_operation = get_prod.integrated_operation
+                        FlightHistoryModal.rain_test = get_prod.rain_test
+                        FlightHistoryModal.pre_user_inspection = get_prod.pre_user_inspection
+                        FlightHistoryModal.final_integrated_testing = get_prod.final_integrated_testing
+                        FlightHistoryModal.load_unload_on_mlv_hlf = get_prod.load_unload_on_mlv_hlf
+
                         FlightHistoryModal.save()
 
                         # history saved
@@ -503,41 +653,70 @@ class SmsController:
                     get_prod.set_id = request['set_id']
                     get_prod.blt_date = request['blt_date']
                     get_prod.blt_status = request['blt_status']
-                    get_prod.pre_hil_date = request['pre_hil_date']
-                    get_prod.pre_hil_status = request['pre_hil_status']
-                    get_prod.vibaration_date = request['vibaration_date']
-                    get_prod.vibaration_status = request['vibaration_status']
-                    get_prod.post_hil_date = request['post_hil_date']
-                    get_prod.post_hil_status = request['post_hil_status']
-                    get_prod.fgt_date = request['fgt_date']
-                    get_prod.fgt_status = request['fgt_status']
-                    get_prod.final_integration_date = request['final_integration_date']
-                    get_prod.final_integration_status = request['final_integration_status']
-                    get_prod.bhd_date = request['bhd_date']
-                    get_prod.bhd_status = request['bhd_status']
-                    get_prod.fqm_date = request['fqm_date']
-                    get_prod.fqm_status = request['fqm_status']
-                    get_prod.qm_certification_date = request['qm_certification_date']
-                    get_prod.qm_certification_status = request['qm_certification_status']
+                    get_prod.blt_remarks = request['blt_remarks']
                     get_prod.testing_date = request['testing_date']
                     get_prod.sys_type = request['sys_type']
+                    get_prod.pre_hil_date = request['pre_hil_date']
+                    get_prod.pre_hil_status = request['pre_hil_status']
+                    get_prod.pre_hil_remarks = request['pre_hil_remarks']
+                    get_prod.vibaration_date = request['vibaration_date']
+                    get_prod.vibaration_status = request['vibaration_status']
+                    get_prod.vibaration_remarks = request['vibaration_remarks']
+                    get_prod.post_hil_date = request['post_hil_date']
+                    get_prod.post_hil_status = request['post_hil_status']
+                    get_prod.post_hil_remarks = request['post_hil_remarks']
+                    get_prod.fgt_date = request['fgt_date']
+                    get_prod.fgt_status = request['fgt_status']
+                    get_prod.fgt_remarks = request['fgt_remarks']
+                    get_prod.final_integration_date = request['final_integration_date']
+                    get_prod.final_integration_status = request['final_integration_status']
+                    get_prod.final_integration_remarks = request['final_integration_remarks']
+                    get_prod.bhd_date = request['bhd_date']
+                    get_prod.bhd_status = request['bhd_status']
+                    get_prod.bhd_remarks = request['bhd_remarks']
+                    get_prod.fqm_date = request['fqm_date']
+                    get_prod.fqm_status = request['fqm_status']
+                    get_prod.fqm_remarks = request['fqm_remarks']
+                    get_prod.qm_certification_date = request['qm_certification_date']
+                    get_prod.qm_certification_status = request['qm_certification_status']
+                    get_prod.qm_certification_remarks = request['qm_certification_remarks']
                     if request['attachment'] != '':
                         get_prod.attachment = request['attachment']
                     get_prod.remarks = request['remarks']
+                    get_prod.isActive = is_active
                     get_prod.cgbalancing_date = request['cgbalancing_date']
                     get_prod.cgbalancing_date_status = request['cgbalancing_date_status']
+                    get_prod.cgbalancing_date_remarks = request['cgbalancing_date_remarks']
                     get_prod.launchact_date = request['launchact_date']
                     get_prod.launchact_status = request['launchact_status']
+                    get_prod.launchact_remarks = request['launchact_remarks']
+                    get_prod.incapsulation_date = request['incapsulation_date']
+                    get_prod.incapsulation_status = request['incapsulation_status']
+                    get_prod.incapsulation_remarks = request['incapsulation_remarks']
+                    get_prod.sys_align_Date = request['sys_align_Date']
+                    get_prod.sys_align_status = request['sys_align_status']
+                    get_prod.sys_align_remarks = request['sys_align_remarks']
+                    get_prod.testing_type = request['testing_type']
+                    get_prod.emp_proofing = request['emp_proofing']
+                    get_prod.func_tst = request['func_tst']
+                    get_prod.func_tst_dummy_bird = request['func_tst_dummy_bird']
+                    get_prod.road_test = request['road_test']
+                    get_prod.post_road_test = request['post_road_test']
+                    get_prod.integrated_operation = request['integrated_operation']
+                    get_prod.rain_test = request['rain_test']
+                    get_prod.pre_user_inspection = request['pre_user_inspection']
+                    get_prod.final_integrated_testing = request['final_integrated_testing']
+                    get_prod.load_unload_on_mlv_hlf = request['load_unload_on_mlv_hlf']
                     get_prod.isActive = is_active
                     get_prod.save()
             return JsonResponse({'status': 'True', 'message': "Production Status Updated Successfully!"},
                                 status=200)
-        except Exception as e:
-            return JsonResponse({'status': 'False', "message": "Status Not Saved"}, status=500)
+        # except Exception as e:
+        #     return JsonResponse({'status': 'False', "message": "Status Not Saved"}, status=500)
 
     @staticmethod
     def GetFlightList(request):
-        try:
+        # try:
             org = request.query_params['selected_org']
             year = request.query_params['selected_year']
             type = request.query_params['selected_type']
@@ -598,8 +777,8 @@ class SmsController:
             data = FlightSystemStatus.objects.filter(filter_objects)
             serializer = FlightSystemSerialzer(data, many=True)
             return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
-        except:
-            return JsonResponse({'message': 'Sorry! No Task found.'}, status=500)
+        # except:
+        #     return JsonResponse({'message': 'Sorry! No Task found.'}, status=500)
 
     # API for PDF generator with table and Text_wraping
 
@@ -748,32 +927,61 @@ class SmsController:
                 refilModel.organization = request['organization']
                 refilModel.set_id = request['set_id']
                 refilModel.blt_date = request['blt_date']
-                refilModel.blt_status = request['blt_status']
-                refilModel.pre_hil_date = request['pre_hil_date']
-                refilModel.pre_hil_status = request['pre_hil_status']
-                refilModel.vibaration_date = request['vibaration_date']
-                refilModel.vibaration_status = request['vibaration_status']
-                refilModel.post_hil_date = request['post_hil_date']
-                refilModel.post_hil_status = request['post_hil_status']
-                refilModel.fgt_date = request['fgt_date']
-                refilModel.fgt_status = request['fgt_status']
-                refilModel.final_integration_date = request['final_integration_date']
-                refilModel.final_integration_status = request['final_integration_status']
-                refilModel.bhd_date = request['bhd_date']
-                refilModel.bhd_status = request['bhd_status']
-                refilModel.fqm_date = request['fqm_date']
-                refilModel.fqm_status = request['fqm_status']
-                refilModel.qm_certification_date = request['qm_certification_date']
-                refilModel.qm_certification_status = request['qm_certification_status']
-                refilModel.attachment = request['attachment']
-                refilModel.remarks = request['remarks']
-                refilModel.isActive = is_active
                 refilModel.testing_date = request['testing_date']
                 refilModel.sys_type = request['sys_type']
+                refilModel.blt_status = request['blt_status']
+                refilModel.blt_remarks = request['blt_remarks']
+                refilModel.pre_hil_date = request['pre_hil_date']
+                refilModel.pre_hil_status = request['pre_hil_status']
+                refilModel.pre_hil_remarks = request['pre_hil_remarks']
+                refilModel.vibaration_date = request['vibaration_date']
+                refilModel.vibaration_status = request['vibaration_status']
+                refilModel.vibaration_remarks = request['vibaration_remarks']
+                refilModel.post_hil_date = request['post_hil_date']
+                refilModel.post_hil_status = request['post_hil_status']
+                refilModel.post_hil_remarks = request['post_hil_remarks']
+                refilModel.fgt_date = request['fgt_date']
+                refilModel.fgt_status = request['fgt_status']
+                refilModel.fgt_remarks = request['fgt_remarks']
+                refilModel.final_integration_date = request['final_integration_date']
+                refilModel.final_integration_status = request['final_integration_status']
+                refilModel.final_integration_remarks = request['final_integration_remarks']
+                refilModel.bhd_date = request['bhd_date']
+                refilModel.bhd_status = request['bhd_status']
+                refilModel.bhd_remarks = request['bhd_remarks']
+                refilModel.fqm_date = request['fqm_date']
+                refilModel.fqm_status = request['fqm_status']
+                refilModel.fqm_remarks = request['fqm_remarks']
+                refilModel.qm_certification_date = request['qm_certification_date']
+                refilModel.qm_certification_status = request['qm_certification_status']
+                refilModel.qm_certification_remarks = request['qm_certification_remarks']
+                refilModel.attachment = request['attachment']
+                refilModel.remarks = request['remarks']
                 refilModel.cgbalancing_date = request['cgbalancing_date']
                 refilModel.cgbalancing_date_status = request['cgbalancing_date_status']
+                refilModel.cgbalancing_date_remarks = request['cgbalancing_date_remarks']
                 refilModel.enduser_date = request['enduser_date']
                 refilModel.enduser_status = request['enduser_status']
+                refilModel.enduser_remarks = request['enduser_remarks']
+                refilModel.incapsulation_date = request['incapsulation_date']
+                refilModel.incapsulation_status = request['incapsulation_status']
+                refilModel.incapsulation_remarks = request['incapsulation_remarks']
+                refilModel.sys_align_Date = request['sys_align_Date']
+                refilModel.sys_align_status = request['sys_align_status']
+                refilModel.sys_align_remarks = request['sys_align_remarks']
+                refilModel.testing_type =  request['testing_type']
+                refilModel.emp_proofing =  request['emp_proofing']
+                refilModel.func_tst =  request['func_tst']
+                refilModel.func_tst_dummy_bird = request['func_tst_dummy_bird']
+                refilModel.road_test =  request['road_test']
+                refilModel.post_road_test =  request['post_road_test']
+                refilModel.integrated_operation =  request['integrated_operation']
+                refilModel.rain_test =  request['rain_test']
+                refilModel.pre_user_inspection =  request['pre_user_inspection']
+                refilModel.final_integrated_testing =  request['final_integrated_testing']
+                refilModel.load_unload_on_mlv_hlf = request['load_unload_on_mlv_hlf']
+
+                refilModel.isActive = is_active
                 refilModel.save()
                 return JsonResponse({'status': 'True', 'message': "Production Status Added Successfully!"},
                                     status=200)
@@ -787,7 +995,9 @@ class SmsController:
                         'fgt_status'] != get_prod.fgt_status or request[
                         'final_integration_status'] != get_prod.final_integration_status or request[
                         'bhd_status'] != get_prod.bhd_status or request['fqm_status'] != get_prod.fqm_status or request[
-                        'qm_certification_status'] != get_prod.qm_certification_status:
+                        'qm_certification_status'] != get_prod.qm_certification_status or \
+                        request['incapsulation_status'] != get_prod.incapsulation_status or \
+                        request['sys_align_status'] != get_prod.sys_align_status:
                         print("add data in flight history")
                         RelifingHistoryModal = RelifingSystemStatusHistory()
                         RelifingHistoryModal.r_id = get_prod.id
@@ -796,29 +1006,60 @@ class SmsController:
                         RelifingHistoryModal.set_id = get_prod.set_id
                         RelifingHistoryModal.blt_date = get_prod.blt_date
                         RelifingHistoryModal.blt_status = get_prod.blt_status
+                        RelifingHistoryModal.blt_remarks = get_prod.blt_remarks
+                        RelifingHistoryModal.testing_date = get_prod.testing_date
+                        RelifingHistoryModal.sys_type = get_prod.sys_type
                         RelifingHistoryModal.pre_hil_date = get_prod.pre_hil_date
                         RelifingHistoryModal.pre_hil_status = get_prod.pre_hil_status
+                        RelifingHistoryModal.pre_hil_remarks = get_prod.pre_hil_remarks
                         RelifingHistoryModal.vibaration_date = get_prod.vibaration_date
                         RelifingHistoryModal.vibaration_status = get_prod.vibaration_status
+                        RelifingHistoryModal.vibaration_remarks = get_prod.vibaration_remarks
                         RelifingHistoryModal.post_hil_date = get_prod.post_hil_date
                         RelifingHistoryModal.post_hil_status = get_prod.post_hil_status
+                        RelifingHistoryModal.post_hil_remarks = get_prod.post_hil_remarks
                         RelifingHistoryModal.fgt_date = get_prod.fgt_date
                         RelifingHistoryModal.fgt_status = get_prod.fgt_status
+                        RelifingHistoryModal.fgt_remarks = get_prod.fgt_remarks
                         RelifingHistoryModal.final_integration_date = get_prod.final_integration_date
                         RelifingHistoryModal.final_integration_status = get_prod.final_integration_status
+                        RelifingHistoryModal.final_integration_remarks = get_prod.final_integration_remarks
                         RelifingHistoryModal.bhd_date = get_prod.bhd_date
                         RelifingHistoryModal.bhd_status = get_prod.bhd_status
+                        RelifingHistoryModal.bhd_remarks = get_prod.bhd_remarks
                         RelifingHistoryModal.fqm_date = get_prod.fqm_date
                         RelifingHistoryModal.fqm_status = get_prod.fqm_status
+                        RelifingHistoryModal.fqm_remarks = get_prod.fqm_remarks
                         RelifingHistoryModal.qm_certification_date = get_prod.qm_certification_date
                         RelifingHistoryModal.qm_certification_status = get_prod.qm_certification_status
+                        RelifingHistoryModal.qm_certification_remarks = get_prod.qm_certification_remarks
                         RelifingHistoryModal.attachment = get_prod.attachment
                         RelifingHistoryModal.remarks = get_prod.remarks
                         RelifingHistoryModal.isActive = get_prod.isActive
                         RelifingHistoryModal.cgbalancing_date = get_prod.cgbalancing_date
                         RelifingHistoryModal.cgbalancing_date_status = get_prod.cgbalancing_date_status
+                        RelifingHistoryModal.cgbalancing_date_remarks = get_prod.cgbalancing_date_remarks
                         RelifingHistoryModal.enduser_date = get_prod.enduser_date
                         RelifingHistoryModal.enduser_status = get_prod.enduser_status
+                        RelifingHistoryModal.enduser_remarks = get_prod.enduser_remarks
+                        RelifingHistoryModal.incapsulation_date = get_prod.incapsulation_date
+                        RelifingHistoryModal.incapsulation_status = get_prod.incapsulation_status
+                        RelifingHistoryModal.incapsulation_remarks = get_prod.incapsulation_remarks
+                        RelifingHistoryModal.sys_align_Date = get_prod.sys_align_Date
+                        RelifingHistoryModal.sys_align_status = get_prod.sys_align_status
+                        RelifingHistoryModal.sys_align_remarks = get_prod.sys_align_remarks
+                        RelifingHistoryModal.testing_type = get_prod.testing_type
+                        RelifingHistoryModal.emp_proofing = get_prod.emp_proofing
+                        RelifingHistoryModal.func_tst =get_prod.func_tst
+                        RelifingHistoryModal.func_tst_dummy_bird = get_prod.func_tst_dummy_bird
+                        RelifingHistoryModal.road_test =get_prod.road_test
+                        RelifingHistoryModal.post_road_test = get_prod.post_road_test
+                        RelifingHistoryModal.integrated_operation = get_prod.integrated_operation
+                        RelifingHistoryModal.rain_test = get_prod.rain_test
+                        RelifingHistoryModal.pre_user_inspection = get_prod.pre_user_inspection
+                        RelifingHistoryModal.final_integrated_testing = get_prod.final_integrated_testing
+                        RelifingHistoryModal.load_unload_on_mlv_hlf = get_prod.load_unload_on_mlv_hlf
+
                         RelifingHistoryModal.save()
 
                         # history saved
@@ -827,30 +1068,61 @@ class SmsController:
                     get_prod.set_id = request['set_id']
                     get_prod.blt_date = request['blt_date']
                     get_prod.blt_status = request['blt_status']
+                    get_prod.blt_remarks = request['blt_remarks']
+                    get_prod.testing_date = request['testing_date']
+                    get_prod.sys_type = request['sys_type']
                     get_prod.pre_hil_date = request['pre_hil_date']
                     get_prod.pre_hil_status = request['pre_hil_status']
+                    get_prod.pre_hil_remarks = request['pre_hil_remarks']
                     get_prod.vibaration_date = request['vibaration_date']
                     get_prod.vibaration_status = request['vibaration_status']
+                    get_prod.vibaration_remarks = request['vibaration_remarks']
                     get_prod.post_hil_date = request['post_hil_date']
                     get_prod.post_hil_status = request['post_hil_status']
+                    get_prod.post_hil_remarks = request['post_hil_remarks']
                     get_prod.fgt_date = request['fgt_date']
                     get_prod.fgt_status = request['fgt_status']
+                    get_prod.fgt_remarks = request['fgt_remarks']
                     get_prod.final_integration_date = request['final_integration_date']
                     get_prod.final_integration_status = request['final_integration_status']
+                    get_prod.final_integration_remarks = request['final_integration_remarks']
                     get_prod.bhd_date = request['bhd_date']
                     get_prod.bhd_status = request['bhd_status']
+                    get_prod.bhd_remarks = request['bhd_remarks']
                     get_prod.fqm_date = request['fqm_date']
                     get_prod.fqm_status = request['fqm_status']
+                    get_prod.fqm_remarks = request['fqm_remarks']
                     get_prod.qm_certification_date = request['qm_certification_date']
                     get_prod.qm_certification_status = request['qm_certification_status']
+                    get_prod.qm_certification_remarks = request['qm_certification_remarks']
                     if request['attachment'] != '':
                         get_prod.attachment = request['attachment']
                     get_prod.remarks = request['remarks']
+                    get_prod.isActive = is_active
                     get_prod.cgbalancing_date = request['cgbalancing_date']
                     get_prod.cgbalancing_date_status = request['cgbalancing_date_status']
+                    get_prod.cgbalancing_date_remarks = request['cgbalancing_date_remarks']
                     get_prod.enduser_date = request['enduser_date']
                     get_prod.enduser_status = request['enduser_status']
-                    get_prod.isActive = is_active
+                    get_prod.enduser_remarks = request['enduser_remarks']
+                    get_prod.incapsulation_date = request['incapsulation_date']
+                    get_prod.incapsulation_status = request['incapsulation_status']
+                    get_prod.incapsulation_remarks = request['incapsulation_remarks']
+                    get_prod.sys_align_Date = request['sys_align_Date']
+                    get_prod.sys_align_status = request['sys_align_status']
+                    get_prod.sys_align_remarks = request['sys_align_remarks']
+                    get_prod.testing_type = request['testing_type']
+                    get_prod.emp_proofing = request['emp_proofing']
+                    get_prod.func_tst = request['func_tst']
+                    get_prod.func_tst_dummy_bird = request['func_tst_dummy_bird']
+                    get_prod.road_test = request['road_test']
+                    get_prod.post_road_test = request['post_road_test']
+                    get_prod.integrated_operation = request['integrated_operation']
+                    get_prod.rain_test = request['rain_test']
+                    get_prod.pre_user_inspection = request['pre_user_inspection']
+                    get_prod.final_integrated_testing = request['final_integrated_testing']
+                    get_prod.load_unload_on_mlv_hlf = request['load_unload_on_mlv_hlf']
+
                     get_prod.save()
             return JsonResponse({'status': 'True', 'message': "Production Status Updated Successfully!"},
                                 status=200)
