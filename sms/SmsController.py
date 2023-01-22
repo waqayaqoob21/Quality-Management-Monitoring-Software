@@ -1524,6 +1524,29 @@ class SmsController:
             prod_enduser_haultlist = ProductionSystemStatus.objects.filter(filter_objects, enduser_status='Halt')
 
 
+            prod_sys_align_oklist = ProductionSystemStatus.objects.filter(filter_objects, sys_align_status='OK(same stage)')
+            prod_sys_align_oklistNext = ProductionSystemStatus.objects.filter(filter_objects,
+                                                                            sys_align_status='OK(next stage)')
+            prod_sys_align_observationlist = ProductionSystemStatus.objects.filter(filter_objects,
+                                                                                 sys_align_status='Observation(same stage)')
+            prod_sys_align_observationlistNext = ProductionSystemStatus.objects.filter(filter_objects,
+                                                                                     sys_align_status='Observation(next stage)')
+            prod_sys_align_uplist = ProductionSystemStatus.objects.filter(filter_objects,
+                                                                        sys_align_status='Completed')
+            prod_sys_align_haultlist = ProductionSystemStatus.objects.filter(filter_objects, sys_align_status='Halt')
+
+
+            prod_incapsulation_oklist = ProductionSystemStatus.objects.filter(filter_objects, incapsulation_status='OK(same stage)')
+            prod_incapsulation_oklistNext = ProductionSystemStatus.objects.filter(filter_objects,
+                                                                            incapsulation_status='OK(next stage)')
+            prod_incapsulation_observationlist = ProductionSystemStatus.objects.filter(filter_objects,
+                                                                                 incapsulation_status='Observation(same stage)')
+            prod_incapsulation_observationlistNext = ProductionSystemStatus.objects.filter(filter_objects,
+                                                                                     incapsulation_status='Observation(next stage)')
+            prod_incapsulation_uplist = ProductionSystemStatus.objects.filter(filter_objects,
+                                                                        incapsulation_status='Completed')
+            prod_incapsulation_haultlist = ProductionSystemStatus.objects.filter(filter_objects, incapsulation_status='Halt')
+
 
 
             # flight system count
@@ -1633,6 +1656,34 @@ class SmsController:
             flight_launch_uplist = FlightSystemStatus.objects.filter(filter_objects,
                                                                      launchact_status='Completed')
             flight_launch_haultlist = FlightSystemStatus.objects.filter(filter_objects, launchact_status='Halt')
+
+
+
+            flight_sys_align_oklist = FlightSystemStatus.objects.filter(filter_objects, sys_align_status='OK(same stage)')
+            flight_sys_align_oklistNext = FlightSystemStatus.objects.filter(filter_objects,
+                                                                         sys_align_status='OK(next stage)')
+            flight_sys_align_observationlist = FlightSystemStatus.objects.filter(filter_objects,
+                                                                              sys_align_status='Observation(same stage)')
+            flight_sys_align_observationlistNext = FlightSystemStatus.objects.filter(filter_objects,
+                                                                                  sys_align_status='Observation(next stage)')
+            flight_sys_align_uplist = FlightSystemStatus.objects.filter(filter_objects,
+                                                                     sys_align_status='Completed')
+            flight_sys_align_haultlist = FlightSystemStatus.objects.filter(filter_objects, sys_align_status='Halt')
+
+
+
+            flight_incapsulation_oklist = FlightSystemStatus.objects.filter(filter_objects, incapsulation_status='OK(same stage)')
+            flight_incapsulation_oklistNext = FlightSystemStatus.objects.filter(filter_objects,
+                                                                         incapsulation_status='OK(next stage)')
+            flight_incapsulation_observationlist = FlightSystemStatus.objects.filter(filter_objects,
+                                                                              incapsulation_status='Observation(same stage)')
+            flight_incapsulation_observationlistNext = FlightSystemStatus.objects.filter(filter_objects,
+                                                                                  incapsulation_status='Observation(next stage)')
+            flight_incapsulation_uplist = FlightSystemStatus.objects.filter(filter_objects,
+                                                                     incapsulation_status='Completed')
+            flight_incapsulation_haultlist = FlightSystemStatus.objects.filter(filter_objects, incapsulation_status='Halt')
+
+
 
 
             # relifing system count
@@ -1745,6 +1796,32 @@ class SmsController:
             relifing_enduser_uplist = RelifingSystemStatus.objects.filter(filter_objects,
                                                                           enduser_status='Completed')
             relifing_enduser_haultlist = RelifingSystemStatus.objects.filter(filter_objects, enduser_status='Halt')
+
+
+            relifing_sys_align_oklist = RelifingSystemStatus.objects.filter(filter_objects,
+                                                                          sys_align_status='OK(same stage)')
+            relifing_sys_align_oklistNext = RelifingSystemStatus.objects.filter(filter_objects,
+                                                                              sys_align_status='OK(next stage)')
+            relifing_sys_align_observationlist = RelifingSystemStatus.objects.filter(filter_objects,
+                                                                                   sys_align_status='Observation(same stage)')
+            relifing_sys_align_observationlistNext = RelifingSystemStatus.objects.filter(filter_objects,
+                                                                                       sys_align_status='Observation(next stage)')
+            relifing_sys_align_uplist = RelifingSystemStatus.objects.filter(filter_objects,
+                                                                          sys_align_status='Completed')
+            relifing_sys_align_haultlist = RelifingSystemStatus.objects.filter(filter_objects, sys_align_status='Halt')
+
+
+            relifing_incapsulation_oklist = RelifingSystemStatus.objects.filter(filter_objects,
+                                                                          incapsulation_status='OK(same stage)')
+            relifing_incapsulation_oklistNext = RelifingSystemStatus.objects.filter(filter_objects,
+                                                                              incapsulation_status='OK(next stage)')
+            relifing_incapsulation_observationlist = RelifingSystemStatus.objects.filter(filter_objects,
+                                                                                   incapsulation_status='Observation(same stage)')
+            relifing_incapsulation_observationlistNext = RelifingSystemStatus.objects.filter(filter_objects,
+                                                                                       incapsulation_status='Observation(next stage)')
+            relifing_incapsulation_uplist = RelifingSystemStatus.objects.filter(filter_objects,
+                                                                          incapsulation_status='Completed')
+            relifing_incapsulation_haultlist = RelifingSystemStatus.objects.filter(filter_objects, incapsulation_status='Halt')
 
             dist = {
                 'prod_blt_ok': prod_blt_oklist.count(),
@@ -1911,8 +1988,50 @@ class SmsController:
                 'relifing_enduser_observationlist': relifing_enduser_observationlist.count(),
                 'relifing_enduser_observationlist_next': relifing_enduser_observationlistNext.count(),
                 'relifing_enduser_uplist': relifing_enduser_uplist.count(),
-                'relifing_enduser_haultlist': relifing_enduser_haultlist.count()
+                'relifing_enduser_haultlist': relifing_enduser_haultlist.count(),
 
+
+                'prod_sys_align_oklist' : prod_sys_align_oklist.count(),
+                'prod_sys_align_oklistNext' : prod_sys_align_oklistNext.count(),
+                'prod_sys_align_observationlist' : prod_sys_align_observationlist.count(),
+                'prod_sys_align_observationlistNext' : prod_sys_align_observationlistNext.count(),
+                'prod_sys_align_uplist' : prod_sys_align_uplist.count(),
+                'prod_sys_align_haultlist' : prod_sys_align_haultlist.count(),
+
+                'prod_incapsulation_oklist' : prod_incapsulation_oklist.count(),
+                'prod_incapsulation_oklistNext' : prod_incapsulation_oklistNext.count(),
+                'prod_incapsulation_observationlist' : prod_incapsulation_observationlist.count(),
+                'prod_incapsulation_observationlistNext' : prod_incapsulation_observationlistNext.count(),
+                'prod_incapsulation_uplist' : prod_incapsulation_uplist.count(),
+                'prod_incapsulation_haultlist' : prod_incapsulation_haultlist.count(),
+
+                'flight_sys_align_oklist' : flight_sys_align_oklist.count(),
+                'flight_sys_align_oklistNext' : flight_sys_align_oklistNext.count(),
+                'flight_sys_align_observationlist' : flight_sys_align_observationlist.count(),
+                'flight_sys_align_observationlistNext' : flight_sys_align_observationlistNext.count(),
+                'flight_sys_align_uplist' : flight_sys_align_uplist.count(),
+                'flight_sys_align_haultlist' : flight_sys_align_haultlist.count(),
+
+                'flight_incapsulation_oklist' : flight_incapsulation_oklist.count(),
+                'flight_incapsulation_oklistNext' : flight_incapsulation_oklistNext.count(),
+                'flight_incapsulation_observationlist' : flight_incapsulation_observationlist.count(),
+                'flight_incapsulation_observationlistNext' : flight_incapsulation_observationlistNext.count(),
+                'flight_incapsulation_uplist' : flight_incapsulation_uplist.count(),
+                'flight_incapsulation_haultlist' : flight_incapsulation_haultlist.count(),
+
+                'relifing_sys_align_oklist' : relifing_sys_align_oklist.count(),
+                'relifing_sys_align_oklistNext' : relifing_sys_align_oklistNext.count(),
+                'relifing_sys_align_observationlist' : relifing_sys_align_observationlist.count(),
+                'relifing_sys_align_observationlistNext' : relifing_sys_align_observationlistNext.count(),
+                'relifing_sys_align_uplist' : relifing_sys_align_uplist.count(),
+                'relifing_sys_align_haultlist' : relifing_sys_align_haultlist.count(),
+
+                'relifing_incapsulation_oklist' : relifing_incapsulation_oklist.count(),
+                'relifing_incapsulation_oklistNext' : relifing_incapsulation_oklistNext.count(),
+                'relifing_incapsulation_observationlist' : relifing_incapsulation_observationlist.count(),
+                'relifing_incapsulation_observationlistNext' : relifing_incapsulation_observationlistNext.count(),
+                'relifing_incapsulation_uplist' : relifing_incapsulation_uplist.count(),
+                'relifing_incapsulation_haultlist' : relifing_incapsulation_haultlist.count()
             }
 
             return JsonResponse({'message': 'true', 'data': dist}, status=200)
