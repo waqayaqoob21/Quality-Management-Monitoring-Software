@@ -1493,12 +1493,12 @@ class SmsController:
                                                                     fgt_status='Under process')
             prod_fgt_haultlist = ProductionSystemStatus.objects.filter(filter_objects, fgt_status='Halt')
 
-            prod_bhd_notsubmit = ProductionSystemStatus.objects.filter(filter_objects,
-                                                                       bhd_status='BHD not submitted for QM audit')
-            prod_bhd_inprocess = ProductionSystemStatus.objects.filter(filter_objects,
-                                                                       bhd_status='Audit in-process')
-            prod_bhd_qmforwarded = ProductionSystemStatus.objects.filter(filter_objects,
-                                                                         bhd_status='QM observations forwarded')
+            prod_bhd_ok = ProductionSystemStatus.objects.filter(filter_objects,
+                                                                       bhd_status='Ok')
+            prod_bhd_submitted = ProductionSystemStatus.objects.filter(filter_objects,
+                                                                       bhd_status='BHD Submitted')
+            # prod_bhd_qmforwarded = ProductionSystemStatus.objects.filter(filter_objects,
+            #                                                              bhd_status='QM observations forwarded')
 
             prod_fqm_planned = ProductionSystemStatus.objects.filter(filter_objects,
                                                                      fqm_status='Planned')
@@ -1507,10 +1507,12 @@ class SmsController:
                                                                        fqm_status='Conducted')
 
             prod_qmc_issued = ProductionSystemStatus.objects.filter(filter_objects,
-                                                                    qm_certification_status='QM certification issued')
+                                                                    qm_certification_status='QM certificate issued')
 
             prod_qmc_in_process = ProductionSystemStatus.objects.filter(filter_objects,
-                                                                        qm_certification_status='QM certification in-process')
+                                                                        qm_certification_status='Audit in-process')
+            prod_qmc_obs_forwarded = ProductionSystemStatus.objects.filter(filter_objects,
+                                                                        qm_certification_status='QM Observations Forwarded')
 
             prod_enduser_oklist = ProductionSystemStatus.objects.filter(filter_objects, enduser_status='OK(same stage)')
             prod_enduser_oklistNext = ProductionSystemStatus.objects.filter(filter_objects,
@@ -1627,12 +1629,16 @@ class SmsController:
                                                                   fgt_status='Under process')
             flight_fgt_haultlist = FlightSystemStatus.objects.filter(filter_objects, fgt_status='Halt')
 
-            flight_bhd_notsubmit = FlightSystemStatus.objects.filter(filter_objects,
-                                                                     bhd_status='BHD not submitted for QM audit')
-            flight_bhd_inprocess = FlightSystemStatus.objects.filter(filter_objects,
-                                                                     bhd_status='Audit in-process')
-            flight_bhd_qmforwarded = FlightSystemStatus.objects.filter(filter_objects,
-                                                                       bhd_status='QM observations forwarded')
+            # flight_bhd_notsubmit = FlightSystemStatus.objects.filter(filter_objects,
+            #                                                          bhd_status='BHD not submitted for QM audit')
+            # flight_bhd_inprocess = FlightSystemStatus.objects.filter(filter_objects,
+            #                                                          bhd_status='Audit in-process')
+            # flight_bhd_qmforwarded = FlightSystemStatus.objects.filter(filter_objects,
+            #                                                            bhd_status='QM observations forwarded')
+            flight_bhd_ok = ProductionSystemStatus.objects.filter(filter_objects,
+                                                                       bhd_status='Ok')
+            flight_bhd_submitted = ProductionSystemStatus.objects.filter(filter_objects,
+                                                                       bhd_status='BHD Submitted')
 
             flight_fqm_planned = FlightSystemStatus.objects.filter(filter_objects,
                                                                    fqm_status='Planned')
@@ -1641,10 +1647,12 @@ class SmsController:
                                                                      fqm_status='Conducted')
 
             flight_qmc_issued = FlightSystemStatus.objects.filter(filter_objects,
-                                                                  qm_certification_status='QM certification issued')
+                                                                  qm_certification_status='QM certificate issued')
 
             flight_qmc_in_process = FlightSystemStatus.objects.filter(filter_objects,
-                                                                      qm_certification_status='QM certification in-process')
+                                                                      qm_certification_status='Audit in-process')
+            flight_qmc_obs_forwarded = ProductionSystemStatus.objects.filter(filter_objects,
+                                                                        qm_certification_status='QM Observations Forwarded')
 
             flight_launch_oklist = FlightSystemStatus.objects.filter(filter_objects, launchact_status='OK(same stage)')
             flight_launch_oklistNext = FlightSystemStatus.objects.filter(filter_objects,
@@ -1766,12 +1774,16 @@ class SmsController:
                                                                       fgt_status='Under process')
             relifing_fgt_haultlist = RelifingSystemStatus.objects.filter(filter_objects, fgt_status='Halt')
 
-            relifing_bhd_notsubmit = RelifingSystemStatus.objects.filter(filter_objects,
-                                                                         bhd_status='BHD not submitted for QM audit')
-            relifing_bhd_inprocess = RelifingSystemStatus.objects.filter(filter_objects,
-                                                                         bhd_status='Audit in-process')
-            relifing_bhd_qmforwarded = RelifingSystemStatus.objects.filter(filter_objects,
-                                                                           bhd_status='QM observations forwarded')
+            # relifing_bhd_notsubmit = RelifingSystemStatus.objects.filter(filter_objects,
+            #                                                              bhd_status='BHD not submitted for QM audit')
+            # relifing_bhd_inprocess = RelifingSystemStatus.objects.filter(filter_objects,
+            #                                                              bhd_status='Audit in-process')
+            # relifing_bhd_qmforwarded = RelifingSystemStatus.objects.filter(filter_objects,
+            #                                                                bhd_status='QM observations forwarded')
+            relifing_bhd_ok = ProductionSystemStatus.objects.filter(filter_objects,
+                                                                       bhd_status='Ok')
+            relifing_bhd_submitted = ProductionSystemStatus.objects.filter(filter_objects,
+                                                                       bhd_status='BHD Submitted')
 
             relifing_fqm_planned = RelifingSystemStatus.objects.filter(filter_objects,
                                                                        fqm_status='Planned')
@@ -1779,12 +1791,14 @@ class SmsController:
             relifing_fqm_conducted = RelifingSystemStatus.objects.filter(filter_objects,
                                                                          fqm_status='Conducted')
 
-            relifing_qmc_issued = RelifingSystemStatus.objects.filter(filter_objects,
-                                                                      qm_certification_status='QM certification issued')
 
-            relifing_qmc_in_process = RelifingSystemStatus.objects.filter(filter_objects,
-                                                                          qm_certification_status='QM certification in-process')
+            relifing_qmc_issued = FlightSystemStatus.objects.filter(filter_objects,
+                                                                  qm_certification_status='QM certificate issued')
 
+            relifing_qmc_in_process = FlightSystemStatus.objects.filter(filter_objects,
+                                                                      qm_certification_status='Audit in-process')
+            relifing_qmc_obs_forwarded = ProductionSystemStatus.objects.filter(filter_objects,
+                                                                        qm_certification_status='QM Observations Forwarded')
             relifing_enduser_oklist = RelifingSystemStatus.objects.filter(filter_objects,
                                                                           enduser_status='OK(same stage)')
             relifing_enduser_oklistNext = RelifingSystemStatus.objects.filter(filter_objects,
@@ -1950,15 +1964,12 @@ class SmsController:
                 'relifing_fgt_observationlist_next': relifing_fgt_observationlistNext.count(),
                 'relifing_fgt_uplist': relifing_fgt_uplist.count(),
                 'relifing_fgt_haultlist': relifing_fgt_haultlist.count(),
-                'prod_bhd_notsubmit': prod_bhd_notsubmit.count(),
-                'prod_bhd_inprocess': prod_bhd_inprocess.count(),
-                'prod_bhd_qmforwarded': prod_bhd_qmforwarded.count(),
-                'flight_bhd_notsubmit': flight_bhd_notsubmit.count(),
-                'flight_bhd_inprocess': flight_bhd_inprocess.count(),
-                'flight_bhd_qmforwarded': flight_bhd_qmforwarded.count(),
-                'relifing_bhd_notsubmit': relifing_bhd_notsubmit.count(),
-                'relifing_bhd_inprocess': relifing_bhd_inprocess.count(),
-                'relifing_bhd_qmforwarded': relifing_bhd_qmforwarded.count(),
+                'prod_bhd_ok': prod_bhd_ok.count(),
+                'prod_bhd_submitted': prod_bhd_submitted.count(),
+                'flight_bhd_ok': flight_bhd_ok.count(),
+                'flight_bhd_submitted': flight_bhd_submitted.count(),
+                'relifing_bhd_ok': relifing_bhd_ok.count(),
+                'relifing_bhd_submitted': relifing_bhd_submitted.count(),
                 'prod_fqm_planned': prod_fqm_planned.count(),
                 'prod_fqm_conducted': prod_fqm_conducted.count(),
                 'flight_fqm_planned': flight_fqm_planned.count(),
@@ -1967,10 +1978,13 @@ class SmsController:
                 'relifing_fqm_conducted': relifing_fqm_conducted.count(),
                 'prod_qmc_issued': prod_qmc_issued.count(),
                 'prod_qmc_in_process': prod_qmc_in_process.count(),
+                'prod_qmc_obs_forwarded': prod_qmc_obs_forwarded.count(),
                 'flight_qmc_issued': flight_qmc_issued.count(),
                 'flight_qmc_in_process': flight_qmc_in_process.count(),
+                'flight_qmc_obs_forwarded': flight_qmc_obs_forwarded.count(),
                 'relifing_qmc_issued': relifing_qmc_issued.count(),
                 'relifing_qmc_in_process': relifing_qmc_in_process.count(),
+                'relifing_qmc_obs_forwarded': relifing_qmc_obs_forwarded.count(),
                 'prod_enduser_oklist': prod_enduser_oklist.count(),
                 'prod_enduser_oklist_next': prod_enduser_oklistNext.count(),
                 'prod_enduser_observationlist': prod_enduser_observationlist.count(),
