@@ -95,6 +95,26 @@ class SmsController:
                 prodModel.final_integrated_testing = request['final_integrated_testing']
                 prodModel.load_unload_on_mlv_hlf = request['load_unload_on_mlv_hlf']
 
+                prodModel.emp_proofing_date = request['emp_proofing_date']
+                prodModel.emp_proofing_remarks = request['emp_proofing_remarks']
+                prodModel.func_tst_date = request['func_tst_date']
+                prodModel.func_tst_remarks = request['func_tst_remarks']
+                prodModel.func_tst_dummy_bird_date = request['func_tst_dummy_bird_date']
+                prodModel.func_tst_dummy_bird_remarks = request['func_tst_dummy_bird_remarks']
+                prodModel.road_test_date = request['road_test_date']
+                prodModel.road_test_remarks = request['road_test_remarks']
+                prodModel.post_road_test_date = request['post_road_test_date']
+                prodModel.post_road_test_remarks = request['post_road_test_remarks']
+                prodModel.integrated_operation_date = request['integrated_operation_date']
+                prodModel.integrated_operation_remarks = request['integrated_operation_remarks']
+                prodModel.rain_test_date = request['rain_test_date']
+                prodModel.rain_test_remarks = request['rain_test_remarks']
+                prodModel.pre_user_inspection_date = request['pre_user_inspection_date']
+                prodModel.pre_user_inspection_remarks = request['pre_user_inspection_remarks']
+                prodModel.final_integrated_testing_date = request['final_integrated_testing_date']
+                prodModel.final_integrated_testing_remarks = request['final_integrated_testing_remarks']
+                prodModel.load_unload_on_mlv_hlf_date = request['load_unload_on_mlv_hlf_date']
+                prodModel.load_unload_on_mlv_hlf_remarks = request['load_unload_on_mlv_hlf_remarks']
                 prodModel.isActive = is_active
                 prodModel.save()
                 return JsonResponse({'status': 'True', 'message': "Production Status Added Successfully!"},
@@ -174,6 +194,27 @@ class SmsController:
                         ProdHistoryModal.final_integrated_testing = get_prod.final_integrated_testing
                         ProdHistoryModal.load_unload_on_mlv_hlf = get_prod.load_unload_on_mlv_hlf
 
+                        ProdHistoryModal.emp_proofing_date = get_prod.emp_proofing_date
+                        ProdHistoryModal.emp_proofing_remarks = get_prod.emp_proofing_remarks
+                        ProdHistoryModal.func_tst_date = get_prod.func_tst_date
+                        ProdHistoryModal.func_tst_remarks = get_prod.func_tst_remarks
+                        ProdHistoryModal.func_tst_dummy_bird_date = get_prod.func_tst_dummy_bird_date
+                        ProdHistoryModal.func_tst_dummy_bird_remarks = get_prod.func_tst_dummy_bird_remarks
+                        ProdHistoryModal.road_test_date = get_prod.road_test_date
+                        ProdHistoryModal.road_test_remarks = get_prod.road_test_remarks
+                        ProdHistoryModal.post_road_test_date = get_prod.post_road_test_date
+                        ProdHistoryModal.post_road_test_remarks = get_prod.post_road_test_remarks
+                        ProdHistoryModal.integrated_operation_date = get_prod.integrated_operation_date
+                        ProdHistoryModal.integrated_operation_remarks = get_prod.integrated_operation_remarks
+                        ProdHistoryModal.rain_test_date = get_prod.rain_test_date
+                        ProdHistoryModal.rain_test_remarks = get_prod.rain_test_remarks
+                        ProdHistoryModal.pre_user_inspection_date = get_prod.pre_user_inspection_date
+                        ProdHistoryModal.pre_user_inspection_remarks = get_prod.pre_user_inspection_remarks
+                        ProdHistoryModal.final_integrated_testing_date = get_prod.final_integrated_testing_date
+                        ProdHistoryModal.final_integrated_testing_remarks = get_prod.final_integrated_testing_remarks
+                        ProdHistoryModal.load_unload_on_mlv_hlf_date = get_prod.load_unload_on_mlv_hlf_date
+                        ProdHistoryModal.load_unload_on_mlv_hlf_remarks = get_prod.load_unload_on_mlv_hlf_remarks
+
                         ProdHistoryModal.save()
 
                         # history saved
@@ -236,6 +277,27 @@ class SmsController:
                     get_prod.pre_user_inspection = request['pre_user_inspection']
                     get_prod.final_integrated_testing = request['final_integrated_testing']
                     get_prod.load_unload_on_mlv_hlf = request['load_unload_on_mlv_hlf']
+
+                    get_prod.emp_proofing_date = request['emp_proofing_date']
+                    get_prod.emp_proofing_remarks = request['emp_proofing_remarks']
+                    get_prod.func_tst_date = request['func_tst_date']
+                    get_prod.func_tst_remarks = request['func_tst_remarks']
+                    get_prod.func_tst_dummy_bird_date = request['func_tst_dummy_bird_date']
+                    get_prod.func_tst_dummy_bird_remarks = request['func_tst_dummy_bird_remarks']
+                    get_prod.road_test_date = request['road_test_date']
+                    get_prod.road_test_remarks = request['road_test_remarks']
+                    get_prod.post_road_test_date = request['post_road_test_date']
+                    get_prod.post_road_test_remarks = request['post_road_test_remarks']
+                    get_prod.integrated_operation_date = request['integrated_operation_date']
+                    get_prod.integrated_operation_remarks = request['integrated_operation_remarks']
+                    get_prod.rain_test_date = request['rain_test_date']
+                    get_prod.rain_test_remarks = request['rain_test_remarks']
+                    get_prod.pre_user_inspection_date = request['pre_user_inspection_date']
+                    get_prod.pre_user_inspection_remarks = request['pre_user_inspection_remarks']
+                    get_prod.final_integrated_testing_date = request['final_integrated_testing_date']
+                    get_prod.final_integrated_testing_remarks = request['final_integrated_testing_remarks']
+                    get_prod.load_unload_on_mlv_hlf_date = request['load_unload_on_mlv_hlf_date']
+                    get_prod.load_unload_on_mlv_hlf_remarks = request['load_unload_on_mlv_hlf_remarks']
 
                     get_prod.save()
             return JsonResponse({'status': 'True', 'message': "Production Status Updated Successfully!"},
@@ -567,6 +629,27 @@ class SmsController:
             flightModel.final_integrated_testing = request['final_integrated_testing']
             flightModel.load_unload_on_mlv_hlf = request['load_unload_on_mlv_hlf']
 
+            flightModel.emp_proofing_date = request['emp_proofing_date']
+            flightModel.emp_proofing_remarks = request['emp_proofing_remarks']
+            flightModel.func_tst_date = request['func_tst_date']
+            flightModel.func_tst_remarks = request['func_tst_remarks']
+            flightModel.func_tst_dummy_bird_date = request['func_tst_dummy_bird_date']
+            flightModel.func_tst_dummy_bird_remarks = request['func_tst_dummy_bird_remarks']
+            flightModel.road_test_date = request['road_test_date']
+            flightModel.road_test_remarks = request['road_test_remarks']
+            flightModel.post_road_test_date = request['post_road_test_date']
+            flightModel.post_road_test_remarks = request['post_road_test_remarks']
+            flightModel.integrated_operation_date = request['integrated_operation_date']
+            flightModel.integrated_operation_remarks = request['integrated_operation_remarks']
+            flightModel.rain_test_date = request['rain_test_date']
+            flightModel.rain_test_remarks = request['rain_test_remarks']
+            flightModel.pre_user_inspection_date = request['pre_user_inspection_date']
+            flightModel.pre_user_inspection_remarks = request['pre_user_inspection_remarks']
+            flightModel.final_integrated_testing_date = request['final_integrated_testing_date']
+            flightModel.final_integrated_testing_remarks = request['final_integrated_testing_remarks']
+            flightModel.load_unload_on_mlv_hlf_date = request['load_unload_on_mlv_hlf_date']
+            flightModel.load_unload_on_mlv_hlf_remarks = request['load_unload_on_mlv_hlf_remarks']
+
             flightModel.isActive = is_active
             flightModel.save()
             return JsonResponse({'status': 'True', 'message': "Production Status Added Successfully!"},
@@ -647,6 +730,26 @@ class SmsController:
                     FlightHistoryModal.final_integrated_testing = get_prod.final_integrated_testing
                     FlightHistoryModal.load_unload_on_mlv_hlf = get_prod.load_unload_on_mlv_hlf
 
+                    FlightHistoryModal.emp_proofing_date = get_prod.emp_proofing_date
+                    FlightHistoryModal.emp_proofing_remarks = get_prod.emp_proofing_remarks
+                    FlightHistoryModal.func_tst_date = get_prod.func_tst_date
+                    FlightHistoryModal.func_tst_remarks = get_prod.func_tst_remarks
+                    FlightHistoryModal.func_tst_dummy_bird_date = get_prod.func_tst_dummy_bird_date
+                    FlightHistoryModal.func_tst_dummy_bird_remarks = get_prod.func_tst_dummy_bird_remarks
+                    FlightHistoryModal.road_test_date = get_prod.road_test_date
+                    FlightHistoryModal.road_test_remarks = get_prod.road_test_remarks
+                    FlightHistoryModal.post_road_test_date = get_prod.post_road_test_date
+                    FlightHistoryModal.post_road_test_remarks = get_prod.post_road_test_remarks
+                    FlightHistoryModal.integrated_operation_date = get_prod.integrated_operation_date
+                    FlightHistoryModal.integrated_operation_remarks = get_prod.integrated_operation_remarks
+                    FlightHistoryModal.rain_test_date = get_prod.rain_test_date
+                    FlightHistoryModal.rain_test_remarks = get_prod.rain_test_remarks
+                    FlightHistoryModal.pre_user_inspection_date = get_prod.pre_user_inspection_date
+                    FlightHistoryModal.pre_user_inspection_remarks = get_prod.pre_user_inspection_remarks
+                    FlightHistoryModal.final_integrated_testing_date = get_prod.final_integrated_testing_date
+                    FlightHistoryModal.final_integrated_testing_remarks = get_prod.final_integrated_testing_remarks
+                    FlightHistoryModal.load_unload_on_mlv_hlf_date = get_prod.load_unload_on_mlv_hlf_date
+                    FlightHistoryModal.load_unload_on_mlv_hlf_remarks = get_prod.load_unload_on_mlv_hlf_remarks
                     FlightHistoryModal.save()
 
                     # history saved
@@ -709,6 +812,27 @@ class SmsController:
                 get_prod.pre_user_inspection = request['pre_user_inspection']
                 get_prod.final_integrated_testing = request['final_integrated_testing']
                 get_prod.load_unload_on_mlv_hlf = request['load_unload_on_mlv_hlf']
+
+                get_prod.emp_proofing_date = request['emp_proofing_date']
+                get_prod.emp_proofing_remarks = request['emp_proofing_remarks']
+                get_prod.func_tst_date = request['func_tst_date']
+                get_prod.func_tst_remarks = request['func_tst_remarks']
+                get_prod.func_tst_dummy_bird_date = request['func_tst_dummy_bird_date']
+                get_prod.func_tst_dummy_bird_remarks = request['func_tst_dummy_bird_remarks']
+                get_prod.road_test_date = request['road_test_date']
+                get_prod.road_test_remarks = request['road_test_remarks']
+                get_prod.post_road_test_date = request['post_road_test_date']
+                get_prod.post_road_test_remarks = request['post_road_test_remarks']
+                get_prod.integrated_operation_date = request['integrated_operation_date']
+                get_prod.integrated_operation_remarks = request['integrated_operation_remarks']
+                get_prod.rain_test_date = request['rain_test_date']
+                get_prod.rain_test_remarks = request['rain_test_remarks']
+                get_prod.pre_user_inspection_date = request['pre_user_inspection_date']
+                get_prod.pre_user_inspection_remarks = request['pre_user_inspection_remarks']
+                get_prod.final_integrated_testing_date = request['final_integrated_testing_date']
+                get_prod.final_integrated_testing_remarks = request['final_integrated_testing_remarks']
+                get_prod.load_unload_on_mlv_hlf_date = request['load_unload_on_mlv_hlf_date']
+                get_prod.load_unload_on_mlv_hlf_remarks = request['load_unload_on_mlv_hlf_remarks']
                 get_prod.isActive = is_active
                 get_prod.save()
         return JsonResponse({'status': 'True', 'message': "Production Status Updated Successfully!"},
@@ -985,6 +1109,27 @@ class SmsController:
                 refilModel.final_integrated_testing = request['final_integrated_testing']
                 refilModel.load_unload_on_mlv_hlf = request['load_unload_on_mlv_hlf']
 
+                refilModel.emp_proofing_date = request['emp_proofing_date']
+                refilModel.emp_proofing_remarks = request['emp_proofing_remarks']
+                refilModel.func_tst_date = request['func_tst_date']
+                refilModel.func_tst_remarks = request['func_tst_remarks']
+                refilModel.func_tst_dummy_bird_date = request['func_tst_dummy_bird_date']
+                refilModel.func_tst_dummy_bird_remarks = request['func_tst_dummy_bird_remarks']
+                refilModel.road_test_date = request['road_test_date']
+                refilModel.road_test_remarks = request['road_test_remarks']
+                refilModel.post_road_test_date = request['post_road_test_date']
+                refilModel.post_road_test_remarks = request['post_road_test_remarks']
+                refilModel.integrated_operation_date = request['integrated_operation_date']
+                refilModel.integrated_operation_remarks = request['integrated_operation_remarks']
+                refilModel.rain_test_date = request['rain_test_date']
+                refilModel.rain_test_remarks = request['rain_test_remarks']
+                refilModel.pre_user_inspection_date = request['pre_user_inspection_date']
+                refilModel.pre_user_inspection_remarks = request['pre_user_inspection_remarks']
+                refilModel.final_integrated_testing_date = request['final_integrated_testing_date']
+                refilModel.final_integrated_testing_remarks = request['final_integrated_testing_remarks']
+                refilModel.load_unload_on_mlv_hlf_date = request['load_unload_on_mlv_hlf_date']
+                refilModel.load_unload_on_mlv_hlf_remarks = request['load_unload_on_mlv_hlf_remarks']
+
                 refilModel.isActive = is_active
                 refilModel.save()
                 return JsonResponse({'status': 'True', 'message': "Production Status Added Successfully!"},
@@ -1064,6 +1209,26 @@ class SmsController:
                         RelifingHistoryModal.final_integrated_testing = get_prod.final_integrated_testing
                         RelifingHistoryModal.load_unload_on_mlv_hlf = get_prod.load_unload_on_mlv_hlf
 
+                        RelifingHistoryModal.emp_proofing_date = get_prod.emp_proofing_date
+                        RelifingHistoryModal.emp_proofing_remarks = get_prod.emp_proofing_remarks
+                        RelifingHistoryModal.func_tst_date = get_prod.func_tst_date
+                        RelifingHistoryModal.func_tst_remarks = get_prod.func_tst_remarks
+                        RelifingHistoryModal.func_tst_dummy_bird_date = get_prod.func_tst_dummy_bird_date
+                        RelifingHistoryModal.func_tst_dummy_bird_remarks = get_prod.func_tst_dummy_bird_remarks
+                        RelifingHistoryModal.road_test_date = get_prod.road_test_date
+                        RelifingHistoryModal.road_test_remarks = get_prod.road_test_remarks
+                        RelifingHistoryModal.post_road_test_date = get_prod.post_road_test_date
+                        RelifingHistoryModal.post_road_test_remarks = get_prod.post_road_test_remarks
+                        RelifingHistoryModal.integrated_operation_date = get_prod.integrated_operation_date
+                        RelifingHistoryModal.integrated_operation_remarks = get_prod.integrated_operation_remarks
+                        RelifingHistoryModal.rain_test_date = get_prod.rain_test_date
+                        RelifingHistoryModal.rain_test_remarks = get_prod.rain_test_remarks
+                        RelifingHistoryModal.pre_user_inspection_date = get_prod.pre_user_inspection_date
+                        RelifingHistoryModal.pre_user_inspection_remarks = get_prod.pre_user_inspection_remarks
+                        RelifingHistoryModal.final_integrated_testing_date = get_prod.final_integrated_testing_date
+                        RelifingHistoryModal.final_integrated_testing_remarks = get_prod.final_integrated_testing_remarks
+                        RelifingHistoryModal.load_unload_on_mlv_hlf_date = get_prod.load_unload_on_mlv_hlf_date
+                        RelifingHistoryModal.load_unload_on_mlv_hlf_remarks = get_prod.load_unload_on_mlv_hlf_remarks
                         RelifingHistoryModal.save()
 
                         # history saved
@@ -1126,6 +1291,27 @@ class SmsController:
                     get_prod.pre_user_inspection = request['pre_user_inspection']
                     get_prod.final_integrated_testing = request['final_integrated_testing']
                     get_prod.load_unload_on_mlv_hlf = request['load_unload_on_mlv_hlf']
+
+                    get_prod.emp_proofing_date = request['emp_proofing_date']
+                    get_prod.emp_proofing_remarks = request['emp_proofing_remarks']
+                    get_prod.func_tst_date = request['func_tst_date']
+                    get_prod.func_tst_remarks = request['func_tst_remarks']
+                    get_prod.func_tst_dummy_bird_date = request['func_tst_dummy_bird_date']
+                    get_prod.func_tst_dummy_bird_remarks = request['func_tst_dummy_bird_remarks']
+                    get_prod.road_test_date = request['road_test_date']
+                    get_prod.road_test_remarks = request['road_test_remarks']
+                    get_prod.post_road_test_date = request['post_road_test_date']
+                    get_prod.post_road_test_remarks = request['post_road_test_remarks']
+                    get_prod.integrated_operation_date = request['integrated_operation_date']
+                    get_prod.integrated_operation_remarks = request['integrated_operation_remarks']
+                    get_prod.rain_test_date = request['rain_test_date']
+                    get_prod.rain_test_remarks = request['rain_test_remarks']
+                    get_prod.pre_user_inspection_date = request['pre_user_inspection_date']
+                    get_prod.pre_user_inspection_remarks = request['pre_user_inspection_remarks']
+                    get_prod.final_integrated_testing_date = request['final_integrated_testing_date']
+                    get_prod.final_integrated_testing_remarks = request['final_integrated_testing_remarks']
+                    get_prod.load_unload_on_mlv_hlf_date = request['load_unload_on_mlv_hlf_date']
+                    get_prod.load_unload_on_mlv_hlf_remarks = request['load_unload_on_mlv_hlf_remarks']
 
                     get_prod.save()
             return JsonResponse({'status': 'True', 'message': "Production Status Updated Successfully!"},
@@ -1549,6 +1735,75 @@ class SmsController:
                                                                         incapsulation_status='Completed')
             prod_incapsulation_haultlist = ProductionSystemStatus.objects.filter(filter_objects, incapsulation_status='Halt')
 
+            prod_emp_proofing_oklist = ProductionSystemStatus.objects.filter(filter_objects, emp_proofing='OK(same stage)')
+            prod_emp_proofing_oklistNext= ProductionSystemStatus.objects.filter(filter_objects, emp_proofing='OK(next stage)')
+            prod_emp_proofing_observationlist  = ProductionSystemStatus.objects.filter(filter_objects, emp_proofing='Observation(same stage)')
+            prod_emp_proofing_observationlistNext = ProductionSystemStatus.objects.filter(filter_objects, emp_proofing='Observation(next stage)')
+            prod_emp_proofing_uplist = ProductionSystemStatus.objects.filter(filter_objects, emp_proofing='Under process')
+            prod_emp_proofing_haultlist = ProductionSystemStatus.objects.filter(filter_objects, emp_proofing='Halt')
+
+            prod_func_tst_oklistNext_oklist  = ProductionSystemStatus.objects.filter(filter_objects, func_tst='OK(same stage)')
+            prod_func_tst_oklistNext_oklistNext  = ProductionSystemStatus.objects.filter(filter_objects, func_tst='OK(next stage)')
+            prod_func_tst_oklistNext_observationlist   = ProductionSystemStatus.objects.filter(filter_objects, func_tst='Observation(same stage)')
+            prod_func_tst_oklistNext_observationlistNext  = ProductionSystemStatus.objects.filter(filter_objects, func_tst='Observation(next stage)')
+            prod_func_tst_oklistNext_uplist  = ProductionSystemStatus.objects.filter(filter_objects, func_tst='Under process')
+            prod_func_tst_oklistNext_haultlist  = ProductionSystemStatus.objects.filter(filter_objects, func_tst='Halt')
+
+            prod_func_tst_dummy_bird_oklist = ProductionSystemStatus.objects.filter(filter_objects, func_tst_dummy_bird='OK(same stage)')
+            prod_func_tst_dummy_bird_oklistNext = ProductionSystemStatus.objects.filter(filter_objects, func_tst_dummy_bird='OK(next stage)')
+            prod_func_tst_dummy_bird_observationlist  = ProductionSystemStatus.objects.filter(filter_objects, func_tst_dummy_bird='Observation(same stage)')
+            prod_func_tst_dummy_bird_observationlistNext = ProductionSystemStatus.objects.filter(filter_objects, func_tst_dummy_bird='Observation(next stage)')
+            prod_func_tst_dummy_bird_uplist = ProductionSystemStatus.objects.filter(filter_objects, func_tst_dummy_bird='Under process')
+            prod_func_tst_dummy_bird_haultlist = ProductionSystemStatus.objects.filter(filter_objects, func_tst_dummy_bird='Halt')
+
+            prod_road_test_oklist = ProductionSystemStatus.objects.filter(filter_objects, road_test='OK(same stage)')
+            prod_road_test_oklistNext = ProductionSystemStatus.objects.filter(filter_objects, road_test='OK(next stage)')
+            prod_road_test_observationlist  = ProductionSystemStatus.objects.filter(filter_objects, road_test='Observation(same stage)')
+            prod_road_test_observationlistNext = ProductionSystemStatus.objects.filter(filter_objects, road_test='Observation(next stage)')
+            prod_road_test_uplist = ProductionSystemStatus.objects.filter(filter_objects, road_test='Under process')
+            prod_road_test_haultlist = ProductionSystemStatus.objects.filter(filter_objects, road_test='Halt')
+
+            prod_post_road_test_oklist = ProductionSystemStatus.objects.filter(filter_objects, post_road_test='OK(same stage)')
+            prod_post_road_test_oklistNext = ProductionSystemStatus.objects.filter(filter_objects, post_road_test='OK(next stage)')
+            prod_post_road_test_observationlist  = ProductionSystemStatus.objects.filter(filter_objects, post_road_test='Observation(same stage)')
+            prod_post_road_test_observationlistNext = ProductionSystemStatus.objects.filter(filter_objects, post_road_test='Observation(next stage)')
+            prod_post_road_test_uplist = ProductionSystemStatus.objects.filter(filter_objects, post_road_test='Under process')
+            prod_post_road_test_haultlist = ProductionSystemStatus.objects.filter(filter_objects, post_road_test='Halt')
+
+            prod_integrated_operation_oklist = ProductionSystemStatus.objects.filter(filter_objects, integrated_operation='OK(same stage)')
+            prod_integrated_operation_oklistNext = ProductionSystemStatus.objects.filter(filter_objects, integrated_operation='OK(next stage)')
+            prod_integrated_operation_observationlist  = ProductionSystemStatus.objects.filter(filter_objects, integrated_operation='Observation(same stage)')
+            prod_integrated_operation_observationlistNext = ProductionSystemStatus.objects.filter(filter_objects, integrated_operation='Observation(next stage)')
+            prod_integrated_operation_uplist = ProductionSystemStatus.objects.filter(filter_objects, integrated_operation='Under process')
+            prod_integrated_operation_haultlist = ProductionSystemStatus.objects.filter(filter_objects, integrated_operation='Halt')
+
+            prod_rain_test_oklist = ProductionSystemStatus.objects.filter(filter_objects, rain_test='OK(same stage)')
+            prod_rain_test_oklistNext = ProductionSystemStatus.objects.filter(filter_objects, rain_test='OK(next stage)')
+            prod_rain_test_observationlist  = ProductionSystemStatus.objects.filter(filter_objects, rain_test='Observation(same stage)')
+            prod_rain_test_observationlistNext = ProductionSystemStatus.objects.filter(filter_objects, rain_test='Observation(next stage)')
+            prod_rain_test_uplist = ProductionSystemStatus.objects.filter(filter_objects, rain_test='Under process')
+            prod_rain_test_haultlist = ProductionSystemStatus.objects.filter(filter_objects, rain_test='Halt')
+
+            prod_pre_user_inspection_oklist = ProductionSystemStatus.objects.filter(filter_objects, pre_user_inspection='OK(same stage)')
+            prod_pre_user_inspection_oklistNext = ProductionSystemStatus.objects.filter(filter_objects, pre_user_inspection='OK(next stage)')
+            prod_pre_user_inspection_observationlist  = ProductionSystemStatus.objects.filter(filter_objects, pre_user_inspection='Observation(same stage)')
+            prod_pre_user_inspection_observationlistNext = ProductionSystemStatus.objects.filter(filter_objects, pre_user_inspection='Observation(next stage)')
+            prod_pre_user_inspection_uplist = ProductionSystemStatus.objects.filter(filter_objects, pre_user_inspection='Under process')
+            prod_pre_user_inspection_haultlist = ProductionSystemStatus.objects.filter(filter_objects, pre_user_inspection='Halt')
+
+            prod_final_integrated_testing_oklist = ProductionSystemStatus.objects.filter(filter_objects, final_integrated_testing='OK(same stage)')
+            prod_final_integrated_testing_oklistNext = ProductionSystemStatus.objects.filter(filter_objects, final_integrated_testing='OK(next stage)')
+            prod_final_integrated_testing_observationlist  = ProductionSystemStatus.objects.filter(filter_objects, final_integrated_testing='Observation(same stage)')
+            prod_final_integrated_testing_observationlistNext = ProductionSystemStatus.objects.filter(filter_objects, final_integrated_testing='Observation(next stage)')
+            prod_final_integrated_testing_uplist = ProductionSystemStatus.objects.filter(filter_objects, final_integrated_testing='Under process')
+            prod_final_integrated_testing_haultlist = ProductionSystemStatus.objects.filter(filter_objects, final_integrated_testing='Halt')
+
+            prod_load_unload_on_mlv_hlf_oklist = ProductionSystemStatus.objects.filter(filter_objects, load_unload_on_mlv_hlf='OK(same stage)')
+            prod_load_unload_on_mlv_hlf_oklistNext = ProductionSystemStatus.objects.filter(filter_objects, load_unload_on_mlv_hlf='OK(next stage)')
+            prod_load_unload_on_mlv_hlf_observationlist  = ProductionSystemStatus.objects.filter(filter_objects, load_unload_on_mlv_hlf='Observation(same stage)')
+            prod_load_unload_on_mlv_hlf_observationlistNext = ProductionSystemStatus.objects.filter(filter_objects, load_unload_on_mlv_hlf='Observation(next stage)')
+            prod_load_unload_on_mlv_hlf_uplist = ProductionSystemStatus.objects.filter(filter_objects, load_unload_on_mlv_hlf='Under process')
+            prod_load_unload_on_mlv_hlf_haultlist = ProductionSystemStatus.objects.filter(filter_objects, load_unload_on_mlv_hlf='Halt')
 
 
             # flight system count
@@ -1691,7 +1946,75 @@ class SmsController:
                                                                      incapsulation_status='Completed')
             flight_incapsulation_haultlist = FlightSystemStatus.objects.filter(filter_objects, incapsulation_status='Halt')
 
+            flight_emp_proofing_oklist = FlightSystemStatus.objects.filter(filter_objects, emp_proofing='OK(same stage)')
+            flight_emp_proofing_oklistNext= FlightSystemStatus.objects.filter(filter_objects, emp_proofing='OK(next stage)')
+            flight_emp_proofing_observationlist  = FlightSystemStatus.objects.filter(filter_objects, emp_proofing='Observation(same stage)')
+            flight_emp_proofing_observationlistNext = FlightSystemStatus.objects.filter(filter_objects, emp_proofing='Observation(next stage)')
+            flight_emp_proofing_uplist = FlightSystemStatus.objects.filter(filter_objects, emp_proofing='Under process')
+            flight_emp_proofing_haultlist = FlightSystemStatus.objects.filter(filter_objects, emp_proofing='Halt')
 
+            flight_func_tst_oklistNext_oklist  = FlightSystemStatus.objects.filter(filter_objects, func_tst='OK(same stage)')
+            flight_func_tst_oklistNext_oklistNext  = FlightSystemStatus.objects.filter(filter_objects, func_tst='OK(next stage)')
+            flight_func_tst_oklistNext_observationlist   = FlightSystemStatus.objects.filter(filter_objects, func_tst='Observation(same stage)')
+            flight_func_tst_oklistNext_observationlistNext  = FlightSystemStatus.objects.filter(filter_objects, func_tst='Observation(next stage)')
+            flight_func_tst_oklistNext_uplist  = FlightSystemStatus.objects.filter(filter_objects, func_tst='Under process')
+            flight_func_tst_oklistNext_haultlist  = FlightSystemStatus.objects.filter(filter_objects, func_tst='Halt')
+
+            flight_func_tst_dummy_bird_oklist = FlightSystemStatus.objects.filter(filter_objects, func_tst_dummy_bird='OK(same stage)')
+            flight_func_tst_dummy_bird_oklistNext = FlightSystemStatus.objects.filter(filter_objects, func_tst_dummy_bird='OK(next stage)')
+            flight_func_tst_dummy_bird_observationlist  = FlightSystemStatus.objects.filter(filter_objects, func_tst_dummy_bird='Observation(same stage)')
+            flight_func_tst_dummy_bird_observationlistNext = FlightSystemStatus.objects.filter(filter_objects, func_tst_dummy_bird='Observation(next stage)')
+            flight_func_tst_dummy_bird_uplist = FlightSystemStatus.objects.filter(filter_objects, func_tst_dummy_bird='Under process')
+            flight_func_tst_dummy_bird_haultlist = FlightSystemStatus.objects.filter(filter_objects, func_tst_dummy_bird='Halt')
+
+            flight_road_test_oklist = FlightSystemStatus.objects.filter(filter_objects, road_test='OK(same stage)')
+            flight_road_test_oklistNext = FlightSystemStatus.objects.filter(filter_objects, road_test='OK(next stage)')
+            flight_road_test_observationlist  = FlightSystemStatus.objects.filter(filter_objects, road_test='Observation(same stage)')
+            flight_road_test_observationlistNext = FlightSystemStatus.objects.filter(filter_objects, road_test='Observation(next stage)')
+            flight_road_test_uplist = FlightSystemStatus.objects.filter(filter_objects, road_test='Under process')
+            flight_road_test_haultlist = FlightSystemStatus.objects.filter(filter_objects, road_test='Halt')
+
+            flight_post_road_test_oklist = FlightSystemStatus.objects.filter(filter_objects, post_road_test='OK(same stage)')
+            flight_post_road_test_oklistNext = FlightSystemStatus.objects.filter(filter_objects, post_road_test='OK(next stage)')
+            flight_post_road_test_observationlist  = FlightSystemStatus.objects.filter(filter_objects, post_road_test='Observation(same stage)')
+            flight_post_road_test_observationlistNext = FlightSystemStatus.objects.filter(filter_objects, post_road_test='Observation(next stage)')
+            flight_post_road_test_uplist = FlightSystemStatus.objects.filter(filter_objects, post_road_test='Under process')
+            flight_post_road_test_haultlist = FlightSystemStatus.objects.filter(filter_objects, post_road_test='Halt')
+
+            flight_integrated_operation_oklist = FlightSystemStatus.objects.filter(filter_objects, integrated_operation='OK(same stage)')
+            flight_integrated_operation_oklistNext = FlightSystemStatus.objects.filter(filter_objects, integrated_operation='OK(next stage)')
+            flight_integrated_operation_observationlist  = FlightSystemStatus.objects.filter(filter_objects, integrated_operation='Observation(same stage)')
+            flight_integrated_operation_observationlistNext = FlightSystemStatus.objects.filter(filter_objects, integrated_operation='Observation(next stage)')
+            flight_integrated_operation_uplist = FlightSystemStatus.objects.filter(filter_objects, integrated_operation='Under process')
+            flight_integrated_operation_haultlist = FlightSystemStatus.objects.filter(filter_objects, integrated_operation='Halt')
+
+            flight_rain_test_oklist = FlightSystemStatus.objects.filter(filter_objects, rain_test='OK(same stage)')
+            flight_rain_test_oklistNext = FlightSystemStatus.objects.filter(filter_objects, rain_test='OK(next stage)')
+            flight_rain_test_observationlist  = FlightSystemStatus.objects.filter(filter_objects, rain_test='Observation(same stage)')
+            flight_rain_test_observationlistNext = FlightSystemStatus.objects.filter(filter_objects, rain_test='Observation(next stage)')
+            flight_rain_test_uplist = FlightSystemStatus.objects.filter(filter_objects, rain_test='Under process')
+            flight_rain_test_haultlist = FlightSystemStatus.objects.filter(filter_objects, rain_test='Halt')
+
+            flight_pre_user_inspection_oklist = FlightSystemStatus.objects.filter(filter_objects, pre_user_inspection='OK(same stage)')
+            flight_pre_user_inspection_oklistNext = FlightSystemStatus.objects.filter(filter_objects, pre_user_inspection='OK(next stage)')
+            flight_pre_user_inspection_observationlist  = FlightSystemStatus.objects.filter(filter_objects, pre_user_inspection='Observation(same stage)')
+            flight_pre_user_inspection_observationlistNext = FlightSystemStatus.objects.filter(filter_objects, pre_user_inspection='Observation(next stage)')
+            flight_pre_user_inspection_uplist = FlightSystemStatus.objects.filter(filter_objects, pre_user_inspection='Under process')
+            flight_pre_user_inspection_haultlist = FlightSystemStatus.objects.filter(filter_objects, pre_user_inspection='Halt')
+
+            flight_final_integrated_testing_oklist = FlightSystemStatus.objects.filter(filter_objects, final_integrated_testing='OK(same stage)')
+            flight_final_integrated_testing_oklistNext = FlightSystemStatus.objects.filter(filter_objects, final_integrated_testing='OK(next stage)')
+            flight_final_integrated_testing_observationlist  = FlightSystemStatus.objects.filter(filter_objects, final_integrated_testing='Observation(same stage)')
+            flight_final_integrated_testing_observationlistNext = FlightSystemStatus.objects.filter(filter_objects, final_integrated_testing='Observation(next stage)')
+            flight_final_integrated_testing_uplist = FlightSystemStatus.objects.filter(filter_objects, final_integrated_testing='Under process')
+            flight_final_integrated_testing_haultlist = FlightSystemStatus.objects.filter(filter_objects, final_integrated_testing='Halt')
+
+            flight_load_unload_on_mlv_hlf_oklist = FlightSystemStatus.objects.filter(filter_objects, load_unload_on_mlv_hlf='OK(same stage)')
+            flight_load_unload_on_mlv_hlf_oklistNext = FlightSystemStatus.objects.filter(filter_objects, load_unload_on_mlv_hlf='OK(next stage)')
+            flight_load_unload_on_mlv_hlf_observationlist  = FlightSystemStatus.objects.filter(filter_objects, load_unload_on_mlv_hlf='Observation(same stage)')
+            flight_load_unload_on_mlv_hlf_observationlistNext = FlightSystemStatus.objects.filter(filter_objects, load_unload_on_mlv_hlf='Observation(next stage)')
+            flight_load_unload_on_mlv_hlf_uplist = FlightSystemStatus.objects.filter(filter_objects, load_unload_on_mlv_hlf='Under process')
+            flight_load_unload_on_mlv_hlf_haultlist = FlightSystemStatus.objects.filter(filter_objects, load_unload_on_mlv_hlf='Halt')
 
 
             # relifing system count
@@ -1837,6 +2160,75 @@ class SmsController:
                                                                           incapsulation_status='Completed')
             relifing_incapsulation_haultlist = RelifingSystemStatus.objects.filter(filter_objects, incapsulation_status='Halt')
 
+            relifing_emp_proofing_oklist = RelifingSystemStatus.objects.filter(filter_objects, emp_proofing='OK(same stage)')
+            relifing_emp_proofing_oklistNext= RelifingSystemStatus.objects.filter(filter_objects, emp_proofing='OK(next stage)')
+            relifing_emp_proofing_observationlist  = RelifingSystemStatus.objects.filter(filter_objects, emp_proofing='Observation(same stage)')
+            relifing_emp_proofing_observationlistNext = RelifingSystemStatus.objects.filter(filter_objects, emp_proofing='Observation(next stage)')
+            relifing_emp_proofing_uplist = RelifingSystemStatus.objects.filter(filter_objects, emp_proofing='Under process')
+            relifing_emp_proofing_haultlist = RelifingSystemStatus.objects.filter(filter_objects, emp_proofing='Halt')
+
+            relifing_func_tst_oklistNext_oklist  = RelifingSystemStatus.objects.filter(filter_objects, func_tst='OK(same stage)')
+            relifing_func_tst_oklistNext_oklistNext  = RelifingSystemStatus.objects.filter(filter_objects, func_tst='OK(next stage)')
+            relifing_func_tst_oklistNext_observationlist   = RelifingSystemStatus.objects.filter(filter_objects, func_tst='Observation(same stage)')
+            relifing_func_tst_oklistNext_observationlistNext  = RelifingSystemStatus.objects.filter(filter_objects, func_tst='Observation(next stage)')
+            relifing_func_tst_oklistNext_uplist  = RelifingSystemStatus.objects.filter(filter_objects, func_tst='Under process')
+            relifing_func_tst_oklistNext_haultlist  = RelifingSystemStatus.objects.filter(filter_objects, func_tst='Halt')
+
+            relifing_func_tst_dummy_bird_oklist = RelifingSystemStatus.objects.filter(filter_objects, func_tst_dummy_bird='OK(same stage)')
+            relifing_func_tst_dummy_bird_oklistNext = RelifingSystemStatus.objects.filter(filter_objects, func_tst_dummy_bird='OK(next stage)')
+            relifing_func_tst_dummy_bird_observationlist  = RelifingSystemStatus.objects.filter(filter_objects, func_tst_dummy_bird='Observation(same stage)')
+            relifing_func_tst_dummy_bird_observationlistNext = RelifingSystemStatus.objects.filter(filter_objects, func_tst_dummy_bird='Observation(next stage)')
+            relifing_func_tst_dummy_bird_uplist = RelifingSystemStatus.objects.filter(filter_objects, func_tst_dummy_bird='Under process')
+            relifing_func_tst_dummy_bird_haultlist = RelifingSystemStatus.objects.filter(filter_objects, func_tst_dummy_bird='Halt')
+
+            relifing_road_test_oklist = RelifingSystemStatus.objects.filter(filter_objects, road_test='OK(same stage)')
+            relifing_road_test_oklistNext = RelifingSystemStatus.objects.filter(filter_objects, road_test='OK(next stage)')
+            relifing_road_test_observationlist  = RelifingSystemStatus.objects.filter(filter_objects, road_test='Observation(same stage)')
+            relifing_road_test_observationlistNext = RelifingSystemStatus.objects.filter(filter_objects, road_test='Observation(next stage)')
+            relifing_road_test_uplist = RelifingSystemStatus.objects.filter(filter_objects, road_test='Under process')
+            relifing_road_test_haultlist = RelifingSystemStatus.objects.filter(filter_objects, road_test='Halt')
+
+            relifing_post_road_test_oklist = RelifingSystemStatus.objects.filter(filter_objects, post_road_test='OK(same stage)')
+            relifing_post_road_test_oklistNext = RelifingSystemStatus.objects.filter(filter_objects, post_road_test='OK(next stage)')
+            relifing_post_road_test_observationlist  = RelifingSystemStatus.objects.filter(filter_objects, post_road_test='Observation(same stage)')
+            relifing_post_road_test_observationlistNext = RelifingSystemStatus.objects.filter(filter_objects, post_road_test='Observation(next stage)')
+            relifing_post_road_test_uplist = RelifingSystemStatus.objects.filter(filter_objects, post_road_test='Under process')
+            relifing_post_road_test_haultlist = RelifingSystemStatus.objects.filter(filter_objects, post_road_test='Halt')
+
+            relifing_integrated_operation_oklist = RelifingSystemStatus.objects.filter(filter_objects, integrated_operation='OK(same stage)')
+            relifing_integrated_operation_oklistNext = RelifingSystemStatus.objects.filter(filter_objects, integrated_operation='OK(next stage)')
+            relifing_integrated_operation_observationlist  = RelifingSystemStatus.objects.filter(filter_objects, integrated_operation='Observation(same stage)')
+            relifing_integrated_operation_observationlistNext = RelifingSystemStatus.objects.filter(filter_objects, integrated_operation='Observation(next stage)')
+            relifing_integrated_operation_uplist = RelifingSystemStatus.objects.filter(filter_objects, integrated_operation='Under process')
+            relifing_integrated_operation_haultlist = RelifingSystemStatus.objects.filter(filter_objects, integrated_operation='Halt')
+
+            relifing_rain_test_oklist = RelifingSystemStatus.objects.filter(filter_objects, rain_test='OK(same stage)')
+            relifing_rain_test_oklistNext = RelifingSystemStatus.objects.filter(filter_objects, rain_test='OK(next stage)')
+            relifing_rain_test_observationlist  = RelifingSystemStatus.objects.filter(filter_objects, rain_test='Observation(same stage)')
+            relifing_rain_test_observationlistNext = RelifingSystemStatus.objects.filter(filter_objects, rain_test='Observation(next stage)')
+            relifing_rain_test_uplist = RelifingSystemStatus.objects.filter(filter_objects, rain_test='Under process')
+            relifing_rain_test_haultlist = RelifingSystemStatus.objects.filter(filter_objects, rain_test='Halt')
+
+            relifing_pre_user_inspection_oklist = RelifingSystemStatus.objects.filter(filter_objects, pre_user_inspection='OK(same stage)')
+            relifing_pre_user_inspection_oklistNext = RelifingSystemStatus.objects.filter(filter_objects, pre_user_inspection='OK(next stage)')
+            relifing_pre_user_inspection_observationlist  = RelifingSystemStatus.objects.filter(filter_objects, pre_user_inspection='Observation(same stage)')
+            relifing_pre_user_inspection_observationlistNext = RelifingSystemStatus.objects.filter(filter_objects, pre_user_inspection='Observation(next stage)')
+            relifing_pre_user_inspection_uplist = RelifingSystemStatus.objects.filter(filter_objects, pre_user_inspection='Under process')
+            relifing_pre_user_inspection_haultlist = RelifingSystemStatus.objects.filter(filter_objects, pre_user_inspection='Halt')
+
+            relifing_final_integrated_testing_oklist = RelifingSystemStatus.objects.filter(filter_objects, final_integrated_testing='OK(same stage)')
+            relifing_final_integrated_testing_oklistNext = RelifingSystemStatus.objects.filter(filter_objects, final_integrated_testing='OK(next stage)')
+            relifing_final_integrated_testing_observationlist  = RelifingSystemStatus.objects.filter(filter_objects, final_integrated_testing='Observation(same stage)')
+            relifing_final_integrated_testing_observationlistNext = RelifingSystemStatus.objects.filter(filter_objects, final_integrated_testing='Observation(next stage)')
+            relifing_final_integrated_testing_uplist = RelifingSystemStatus.objects.filter(filter_objects, final_integrated_testing='Under process')
+            relifing_final_integrated_testing_haultlist = RelifingSystemStatus.objects.filter(filter_objects, final_integrated_testing='Halt')
+
+            relifing_load_unload_on_mlv_hlf_oklist = RelifingSystemStatus.objects.filter(filter_objects, load_unload_on_mlv_hlf='OK(same stage)')
+            relifing_load_unload_on_mlv_hlf_oklistNext = RelifingSystemStatus.objects.filter(filter_objects, load_unload_on_mlv_hlf='OK(next stage)')
+            relifing_load_unload_on_mlv_hlf_observationlist  = RelifingSystemStatus.objects.filter(filter_objects, load_unload_on_mlv_hlf='Observation(same stage)')
+            relifing_load_unload_on_mlv_hlf_observationlistNext = RelifingSystemStatus.objects.filter(filter_objects, load_unload_on_mlv_hlf='Observation(next stage)')
+            relifing_load_unload_on_mlv_hlf_uplist = RelifingSystemStatus.objects.filter(filter_objects, load_unload_on_mlv_hlf='Under process')
+            relifing_load_unload_on_mlv_hlf_haultlist = RelifingSystemStatus.objects.filter(filter_objects, load_unload_on_mlv_hlf='Halt')
             dist = {
                 'prod_blt_ok': prod_blt_oklist.count(),
                 'prod_blt_ok_next': prod_blt_oklistNext.count(),
@@ -2003,49 +2395,252 @@ class SmsController:
                 'relifing_enduser_observationlist_next': relifing_enduser_observationlistNext.count(),
                 'relifing_enduser_uplist': relifing_enduser_uplist.count(),
                 'relifing_enduser_haultlist': relifing_enduser_haultlist.count(),
-
-
                 'prod_sys_align_oklist' : prod_sys_align_oklist.count(),
                 'prod_sys_align_oklistNext' : prod_sys_align_oklistNext.count(),
                 'prod_sys_align_observationlist' : prod_sys_align_observationlist.count(),
                 'prod_sys_align_observationlistNext' : prod_sys_align_observationlistNext.count(),
                 'prod_sys_align_uplist' : prod_sys_align_uplist.count(),
                 'prod_sys_align_haultlist' : prod_sys_align_haultlist.count(),
-
                 'prod_incapsulation_oklist' : prod_incapsulation_oklist.count(),
                 'prod_incapsulation_oklistNext' : prod_incapsulation_oklistNext.count(),
                 'prod_incapsulation_observationlist' : prod_incapsulation_observationlist.count(),
                 'prod_incapsulation_observationlistNext' : prod_incapsulation_observationlistNext.count(),
                 'prod_incapsulation_uplist' : prod_incapsulation_uplist.count(),
                 'prod_incapsulation_haultlist' : prod_incapsulation_haultlist.count(),
-
                 'flight_sys_align_oklist' : flight_sys_align_oklist.count(),
                 'flight_sys_align_oklistNext' : flight_sys_align_oklistNext.count(),
                 'flight_sys_align_observationlist' : flight_sys_align_observationlist.count(),
                 'flight_sys_align_observationlistNext' : flight_sys_align_observationlistNext.count(),
                 'flight_sys_align_uplist' : flight_sys_align_uplist.count(),
                 'flight_sys_align_haultlist' : flight_sys_align_haultlist.count(),
-
                 'flight_incapsulation_oklist' : flight_incapsulation_oklist.count(),
                 'flight_incapsulation_oklistNext' : flight_incapsulation_oklistNext.count(),
                 'flight_incapsulation_observationlist' : flight_incapsulation_observationlist.count(),
                 'flight_incapsulation_observationlistNext' : flight_incapsulation_observationlistNext.count(),
                 'flight_incapsulation_uplist' : flight_incapsulation_uplist.count(),
                 'flight_incapsulation_haultlist' : flight_incapsulation_haultlist.count(),
-
                 'relifing_sys_align_oklist' : relifing_sys_align_oklist.count(),
                 'relifing_sys_align_oklistNext' : relifing_sys_align_oklistNext.count(),
                 'relifing_sys_align_observationlist' : relifing_sys_align_observationlist.count(),
                 'relifing_sys_align_observationlistNext' : relifing_sys_align_observationlistNext.count(),
                 'relifing_sys_align_uplist' : relifing_sys_align_uplist.count(),
                 'relifing_sys_align_haultlist' : relifing_sys_align_haultlist.count(),
-
                 'relifing_incapsulation_oklist' : relifing_incapsulation_oklist.count(),
                 'relifing_incapsulation_oklistNext' : relifing_incapsulation_oklistNext.count(),
                 'relifing_incapsulation_observationlist' : relifing_incapsulation_observationlist.count(),
                 'relifing_incapsulation_observationlistNext' : relifing_incapsulation_observationlistNext.count(),
                 'relifing_incapsulation_uplist' : relifing_incapsulation_uplist.count(),
-                'relifing_incapsulation_haultlist' : relifing_incapsulation_haultlist.count()
+                'relifing_incapsulation_haultlist' : relifing_incapsulation_haultlist.count(),
+
+                'prod_emp_proofing_oklist' : prod_emp_proofing_oklist.count(),
+                'prod_emp_proofing_oklistNext': prod_emp_proofing_oklistNext.count(),
+                'prod_emp_proofing_observationlist'  : prod_emp_proofing_observationlist.count(),
+                'prod_emp_proofing_observationlistNext' : prod_emp_proofing_observationlistNext.count(),
+                'prod_emp_proofing_uplist' : prod_emp_proofing_uplist.count(),
+                'prod_emp_proofing_haultlist' : prod_emp_proofing_haultlist.count(),
+
+                'prod_func_tst_oklistNext_oklist'  : prod_func_tst_oklistNext_oklist.count(),
+                'prod_func_tst_oklistNext_oklistNext'  : prod_func_tst_oklistNext_oklistNext.count(),
+                'prod_func_tst_oklistNext_observationlist'   : prod_func_tst_oklistNext_observationlist.count(),
+                'prod_func_tst_oklistNext_observationlistNext'  : prod_func_tst_oklistNext_observationlistNext.count(),
+                'prod_func_tst_oklistNext_uplist'  : prod_func_tst_oklistNext_uplist.count(),
+                'prod_func_tst_oklistNext_haultlist'  : prod_func_tst_oklistNext_haultlist.count(),
+
+                'prod_func_tst_dummy_bird_oklist' : prod_func_tst_dummy_bird_oklist.count(),
+                'prod_func_tst_dummy_bird_oklistNext' : prod_func_tst_dummy_bird_oklistNext.count(),
+                'prod_func_tst_dummy_bird_observationlist'  : prod_func_tst_dummy_bird_observationlist.count(),
+                'prod_func_tst_dummy_bird_observationlistNext' : prod_func_tst_dummy_bird_observationlistNext.count(),
+                'prod_func_tst_dummy_bird_uplist' : prod_func_tst_dummy_bird_uplist.count(),
+                'prod_func_tst_dummy_bird_haultlist' : prod_func_tst_dummy_bird_haultlist.count(),
+
+                'prod_road_test_oklist' : prod_road_test_oklist.count(),
+                'prod_road_test_oklistNext' : prod_road_test_oklistNext.count(),
+                'prod_road_test_observationlist'  : prod_road_test_observationlist.count(),
+                'prod_road_test_observationlistNext' : prod_road_test_observationlistNext.count(),
+                'prod_road_test_uplist' : prod_road_test_uplist.count(),
+                'prod_road_test_haultlist' : prod_road_test_haultlist.count(),
+
+                'prod_post_road_test_oklist' : prod_post_road_test_oklist.count(),
+                'prod_post_road_test_oklistNext' : prod_post_road_test_oklistNext.count(),
+                'prod_post_road_test_observationlist'  : prod_post_road_test_observationlist.count(),
+                'prod_post_road_test_observationlistNext' : prod_post_road_test_observationlistNext.count(),
+                'prod_post_road_test_uplist' : prod_post_road_test_uplist.count(),
+                'prod_post_road_test_haultlist' : prod_post_road_test_haultlist.count(),
+
+                'prod_integrated_operation_oklist' : prod_integrated_operation_oklist.count(),
+                'prod_integrated_operation_oklistNext' : prod_integrated_operation_oklistNext.count(),
+                'prod_integrated_operation_observationlist'  : prod_integrated_operation_observationlist.count(),
+                'prod_integrated_operation_observationlistNext' : prod_integrated_operation_observationlistNext.count(),
+                'prod_integrated_operation_uplist' : prod_integrated_operation_uplist.count(),
+                'prod_integrated_operation_haultlist' : prod_integrated_operation_haultlist.count(),
+
+                'prod_rain_test_oklist' : prod_rain_test_oklist.count(),
+                'prod_rain_test_oklistNext' : prod_rain_test_oklistNext.count(),
+                'prod_rain_test_observationlist'  : prod_rain_test_observationlist.count(),
+                'prod_rain_test_observationlistNext' : prod_rain_test_observationlistNext.count(),
+                'prod_rain_test_uplist' : prod_rain_test_uplist.count(),
+                'prod_rain_test_haultlist' : prod_rain_test_haultlist.count(),
+
+                'prod_pre_user_inspection_oklist' : prod_pre_user_inspection_oklist.count(),
+                'prod_pre_user_inspection_oklistNext' : prod_pre_user_inspection_oklistNext.count(),
+                'prod_pre_user_inspection_observationlist'  : prod_pre_user_inspection_observationlist.count(),
+                'prod_pre_user_inspection_observationlistNext' : prod_pre_user_inspection_observationlistNext.count(),
+                'prod_pre_user_inspection_uplist' : prod_pre_user_inspection_uplist.count(),
+                'prod_pre_user_inspection_haultlist' : prod_pre_user_inspection_haultlist.count(),
+
+                'prod_final_integrated_testing_oklist' : prod_final_integrated_testing_oklist.count(),
+                'prod_final_integrated_testing_oklistNext' : prod_final_integrated_testing_oklistNext.count(),
+                'prod_final_integrated_testing_observationlist'  : prod_final_integrated_testing_observationlist.count(),
+                'prod_final_integrated_testing_observationlistNext' : prod_final_integrated_testing_observationlistNext.count(),
+                'prod_final_integrated_testing_uplist' : prod_final_integrated_testing_uplist.count(),
+                'prod_final_integrated_testing_haultlist' : prod_final_integrated_testing_haultlist.count(),
+
+                'prod_load_unload_on_mlv_hlf_oklist' : prod_load_unload_on_mlv_hlf_oklist.count(),
+                'prod_load_unload_on_mlv_hlf_oklistNext' : prod_load_unload_on_mlv_hlf_oklistNext.count(),
+                'prod_load_unload_on_mlv_hlf_observationlist'  : prod_load_unload_on_mlv_hlf_observationlist.count(),
+                'prod_load_unload_on_mlv_hlf_observationlistNext' : prod_load_unload_on_mlv_hlf_observationlistNext.count(),
+                'prod_load_unload_on_mlv_hlf_uplist' : prod_load_unload_on_mlv_hlf_uplist.count(),
+                'prod_load_unload_on_mlv_hlf_haultlist' : prod_load_unload_on_mlv_hlf_haultlist.count(),
+
+                'relifing_emp_proofing_oklist' : relifing_emp_proofing_oklist.count(),
+                'relifing_emp_proofing_oklistNext': relifing_emp_proofing_oklistNext.count(),
+                'relifing_emp_proofing_observationlist'  : relifing_emp_proofing_observationlist.count(),
+                'relifing_emp_proofing_observationlistNext' : relifing_emp_proofing_observationlistNext.count(),
+                'relifing_emp_proofing_uplist' : relifing_emp_proofing_uplist.count(),
+                'relifing_emp_proofing_haultlist' : relifing_emp_proofing_haultlist.count(),
+
+                'relifing_func_tst_oklistNext_oklist'  : relifing_func_tst_oklistNext_oklist.count(),
+                'relifing_func_tst_oklistNext_oklistNext'  : relifing_func_tst_oklistNext_oklistNext.count(),
+                'relifing_func_tst_oklistNext_observationlist'   : relifing_func_tst_oklistNext_observationlist.count(),
+                'relifing_func_tst_oklistNext_observationlistNext'  : relifing_func_tst_oklistNext_observationlistNext.count(),
+                'relifing_func_tst_oklistNext_uplist'  : relifing_func_tst_oklistNext_uplist.count(),
+                'relifing_func_tst_oklistNext_haultlist'  : relifing_func_tst_oklistNext_haultlist.count(),
+
+                'relifing_func_tst_dummy_bird_oklist' : relifing_func_tst_dummy_bird_oklist.count(),
+                'relifing_func_tst_dummy_bird_oklistNext' : relifing_func_tst_dummy_bird_oklistNext.count(),
+                'relifing_func_tst_dummy_bird_observationlist'  : relifing_func_tst_dummy_bird_observationlist.count(),
+                'relifing_func_tst_dummy_bird_observationlistNext' : relifing_func_tst_dummy_bird_observationlistNext.count(),
+                'relifing_func_tst_dummy_bird_uplist' : relifing_func_tst_dummy_bird_uplist.count(),
+                'relifing_func_tst_dummy_bird_haultlist' : relifing_func_tst_dummy_bird_haultlist.count(),
+
+                'relifing_road_test_oklist' : relifing_road_test_oklist.count(),
+                'relifing_road_test_oklistNext' : relifing_road_test_oklistNext.count(),
+                'relifing_road_test_observationlist'  : relifing_road_test_observationlist.count(),
+                'relifing_road_test_observationlistNext' : relifing_road_test_observationlistNext.count(),
+                'relifing_road_test_uplist' : relifing_road_test_uplist.count(),
+                'relifing_road_test_haultlist' : relifing_road_test_haultlist.count(),
+
+                'relifing_post_road_test_oklist' : relifing_post_road_test_oklist.count(),
+                'relifing_post_road_test_oklistNext' : relifing_post_road_test_oklistNext.count(),
+                'relifing_post_road_test_observationlist'  : relifing_post_road_test_observationlist.count(),
+                'relifing_post_road_test_observationlistNext' : relifing_post_road_test_observationlistNext.count(),
+                'relifing_post_road_test_uplist' : relifing_post_road_test_uplist.count(),
+                'relifing_post_road_test_haultlist' : relifing_post_road_test_haultlist.count(),
+
+                'relifing_integrated_operation_oklist' : relifing_integrated_operation_oklist.count(),
+                'relifing_integrated_operation_oklistNext' : relifing_integrated_operation_oklistNext.count(),
+                'relifing_integrated_operation_observationlist'  : relifing_integrated_operation_observationlist.count(),
+                'relifing_integrated_operation_observationlistNext' : relifing_integrated_operation_observationlistNext.count(),
+                'relifing_integrated_operation_uplist' : relifing_integrated_operation_uplist.count(),
+                'relifing_integrated_operation_haultlist' : relifing_integrated_operation_haultlist.count(),
+
+                'relifing_rain_test_oklist' : relifing_rain_test_oklist.count(),
+                'relifing_rain_test_oklistNext' : relifing_rain_test_oklistNext.count(),
+                'relifing_rain_test_observationlist'  : relifing_rain_test_observationlist.count(),
+                'relifing_rain_test_observationlistNext' : relifing_rain_test_observationlistNext.count(),
+                'relifing_rain_test_uplist' : relifing_rain_test_uplist.count(),
+                'relifing_rain_test_haultlist' : relifing_rain_test_haultlist.count(),
+
+                'relifing_pre_user_inspection_oklist' : relifing_pre_user_inspection_oklist.count(),
+                'relifing_pre_user_inspection_oklistNext' : relifing_pre_user_inspection_oklistNext.count(),
+                'relifing_pre_user_inspection_observationlist'  : relifing_pre_user_inspection_observationlist.count(),
+                'relifing_pre_user_inspection_observationlistNext' : relifing_pre_user_inspection_observationlistNext.count(),
+                'relifing_pre_user_inspection_uplist' : relifing_pre_user_inspection_uplist.count(),
+                'relifing_pre_user_inspection_haultlist' : relifing_pre_user_inspection_haultlist.count(),
+
+                'relifing_final_integrated_testing_oklist' : relifing_final_integrated_testing_oklist.count(),
+                'relifing_final_integrated_testing_oklistNext' : relifing_final_integrated_testing_oklistNext.count(),
+                'relifing_final_integrated_testing_observationlist'  : relifing_final_integrated_testing_observationlist.count(),
+                'relifing_final_integrated_testing_observationlistNext' : relifing_final_integrated_testing_observationlistNext.count(),
+                'relifing_final_integrated_testing_uplist' : relifing_final_integrated_testing_uplist.count(),
+                'relifing_final_integrated_testing_haultlist' : relifing_final_integrated_testing_haultlist.count(),
+
+                'relifing_load_unload_on_mlv_hlf_oklist' : relifing_load_unload_on_mlv_hlf_oklist.count(),
+                'relifing_load_unload_on_mlv_hlf_oklistNext' : relifing_load_unload_on_mlv_hlf_oklistNext.count(),
+                'relifing_load_unload_on_mlv_hlf_observationlist'  : relifing_load_unload_on_mlv_hlf_observationlist.count(),
+                'relifing_load_unload_on_mlv_hlf_observationlistNext' : relifing_load_unload_on_mlv_hlf_observationlistNext.count(),
+                'relifing_load_unload_on_mlv_hlf_uplist' : relifing_load_unload_on_mlv_hlf_uplist.count(),
+                'relifing_load_unload_on_mlv_hlf_haultlist' : relifing_load_unload_on_mlv_hlf_haultlist.count(),
+
+                'flight_emp_proofing_oklist' : flight_emp_proofing_oklist.count(),
+                'flight_emp_proofing_oklistNext': flight_emp_proofing_oklistNext.count(),
+                'flight_emp_proofing_observationlist'  : flight_emp_proofing_observationlist.count(),
+                'flight_emp_proofing_observationlistNext' : flight_emp_proofing_observationlistNext.count(),
+                'flight_emp_proofing_uplist' : flight_emp_proofing_uplist.count(),
+                'flight_emp_proofing_haultlist' : flight_emp_proofing_haultlist.count(),
+
+                'flight_func_tst_oklistNext_oklist'  : flight_func_tst_oklistNext_oklist.count(),
+                'flight_func_tst_oklistNext_oklistNext'  : flight_func_tst_oklistNext_oklistNext.count(),
+                'flight_func_tst_oklistNext_observationlist'   : flight_func_tst_oklistNext_observationlist.count(),
+                'flight_func_tst_oklistNext_observationlistNext'  : flight_func_tst_oklistNext_observationlistNext.count(),
+                'flight_func_tst_oklistNext_uplist'  : flight_func_tst_oklistNext_uplist.count(),
+                'flight_func_tst_oklistNext_haultlist'  : flight_func_tst_oklistNext_haultlist.count(),
+
+                'flight_func_tst_dummy_bird_oklist' : flight_func_tst_dummy_bird_oklist.count(),
+                'flight_func_tst_dummy_bird_oklistNext' : flight_func_tst_dummy_bird_oklistNext.count(),
+                'flight_func_tst_dummy_bird_observationlist'  : flight_func_tst_dummy_bird_observationlist.count(),
+                'flight_func_tst_dummy_bird_observationlistNext' : flight_func_tst_dummy_bird_observationlistNext.count(),
+                'flight_func_tst_dummy_bird_uplist' : flight_func_tst_dummy_bird_uplist.count(),
+                'flight_func_tst_dummy_bird_haultlist' : flight_func_tst_dummy_bird_haultlist.count(),
+
+                'flight_road_test_oklist' : flight_road_test_oklist.count(),
+                'flight_road_test_oklistNext' : flight_road_test_oklistNext.count(),
+                'flight_road_test_observationlist'  : flight_road_test_observationlist.count(),
+                'flight_road_test_observationlistNext' : flight_road_test_observationlistNext.count(),
+                'flight_road_test_uplist' : flight_road_test_uplist.count(),
+                'flight_road_test_haultlist' : flight_road_test_haultlist.count(),
+
+                'flight_post_road_test_oklist' : flight_post_road_test_oklist.count(),
+                'flight_post_road_test_oklistNext' : flight_post_road_test_oklistNext.count(),
+                'flight_post_road_test_observationlist'  : flight_post_road_test_observationlist.count(),
+                'flight_post_road_test_observationlistNext' : flight_post_road_test_observationlistNext.count(),
+                'flight_post_road_test_uplist' : flight_post_road_test_uplist.count(),
+                'flight_post_road_test_haultlist' : flight_post_road_test_haultlist.count(),
+
+                'flight_integrated_operation_oklist' : flight_integrated_operation_oklist.count(),
+                'flight_integrated_operation_oklistNext' : flight_integrated_operation_oklistNext.count(),
+                'flight_integrated_operation_observationlist'  : flight_integrated_operation_observationlist.count(),
+                'flight_integrated_operation_observationlistNext' : flight_integrated_operation_observationlistNext.count(),
+                'flight_integrated_operation_uplist' : flight_integrated_operation_uplist.count(),
+                'flight_integrated_operation_haultlist' : flight_integrated_operation_haultlist.count(),
+
+                'flight_rain_test_oklist' : flight_rain_test_oklist.count(),
+                'flight_rain_test_oklistNext' : flight_rain_test_oklistNext.count(),
+                'flight_rain_test_observationlist'  : flight_rain_test_observationlist.count(),
+                'flight_rain_test_observationlistNext' : flight_rain_test_observationlistNext.count(),
+                'flight_rain_test_uplist' : flight_rain_test_uplist.count(),
+                'flight_rain_test_haultlist' : flight_rain_test_haultlist.count(),
+
+                'flight_pre_user_inspection_oklist' : flight_pre_user_inspection_oklist.count(),
+                'flight_pre_user_inspection_oklistNext' : flight_pre_user_inspection_oklistNext.count(),
+                'flight_pre_user_inspection_observationlist'  : flight_pre_user_inspection_observationlist.count(),
+                'flight_pre_user_inspection_observationlistNext' : flight_pre_user_inspection_observationlistNext.count(),
+                'flight_pre_user_inspection_uplist' : flight_pre_user_inspection_uplist.count(),
+                'flight_pre_user_inspection_haultlist' : flight_pre_user_inspection_haultlist.count(),
+
+                'flight_final_integrated_testing_oklist' : flight_final_integrated_testing_oklist.count(),
+                'flight_final_integrated_testing_oklistNext' : flight_final_integrated_testing_oklistNext.count(),
+                'flight_final_integrated_testing_observationlist'  : flight_final_integrated_testing_observationlist.count(),
+                'flight_final_integrated_testing_observationlistNext' : flight_final_integrated_testing_observationlistNext.count(),
+                'flight_final_integrated_testing_uplist' : flight_final_integrated_testing_uplist.count(),
+                'flight_final_integrated_testing_haultlist' : flight_final_integrated_testing_haultlist.count(),
+
+                'flight_load_unload_on_mlv_hlf_oklist' : flight_load_unload_on_mlv_hlf_oklist.count(),
+                'flight_load_unload_on_mlv_hlf_oklistNext' : flight_load_unload_on_mlv_hlf_oklistNext.count(),
+                'flight_load_unload_on_mlv_hlf_observationlist'  : flight_load_unload_on_mlv_hlf_observationlist.count(),
+                'flight_load_unload_on_mlv_hlf_observationlistNext' : flight_load_unload_on_mlv_hlf_observationlistNext.count(),
+                'flight_load_unload_on_mlv_hlf_uplist' : flight_load_unload_on_mlv_hlf_uplist.count(),
+                'flight_load_unload_on_mlv_hlf_haultlist' : flight_load_unload_on_mlv_hlf_haultlist.count(),
             }
 
             return JsonResponse({'message': 'true', 'data': dist}, status=200)
