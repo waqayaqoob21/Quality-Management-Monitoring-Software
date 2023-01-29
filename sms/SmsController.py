@@ -2566,7 +2566,7 @@ class SmsController:
 
             flight_qmc_in_process = FlightSystemStatus.objects.filter(filter_objects,
                                                                       qm_certification_status='Audit in-process')
-            flight_qmc_obs_forwarded = ProductionSystemStatus.objects.filter(filter_objects,
+            flight_qmc_obs_forwarded = FlightSystemStatus.objects.filter(filter_objects,
                                                                         qm_certification_status='QM Observations Forwarded')
 
             flight_launch_oklist = FlightSystemStatus.objects.filter(filter_objects, launchact_status='Ok')
@@ -2763,9 +2763,9 @@ class SmsController:
                                                                          bhd_status='Audit in-process')
             relifing_bhd_qm_forwarded = RelifingSystemStatus.objects.filter(filter_objects,
                                                                            bhd_status='QM observations forwarded')
-            relifing_bhd_ok = ProductionSystemStatus.objects.filter(filter_objects,
+            relifing_bhd_ok = RelifingSystemStatus.objects.filter(filter_objects,
                                                                        bhd_status='Ok')
-            relifing_bhd_submitted = ProductionSystemStatus.objects.filter(filter_objects,
+            relifing_bhd_submitted = RelifingSystemStatus.objects.filter(filter_objects,
                                                                        bhd_status='Submitted')
 
             relifing_fqm_planned = RelifingSystemStatus.objects.filter(filter_objects,
@@ -2775,12 +2775,12 @@ class SmsController:
                                                                          fqm_status='Conducted')
 
 
-            relifing_qmc_issued = FlightSystemStatus.objects.filter(filter_objects,
+            relifing_qmc_issued = RelifingSystemStatus.objects.filter(filter_objects,
                                                                   qm_certification_status='QM certificate issued')
 
-            relifing_qmc_in_process = FlightSystemStatus.objects.filter(filter_objects,
+            relifing_qmc_in_process = RelifingSystemStatus.objects.filter(filter_objects,
                                                                       qm_certification_status='Audit in-process')
-            relifing_qmc_obs_forwarded = ProductionSystemStatus.objects.filter(filter_objects,
+            relifing_qmc_obs_forwarded = RelifingSystemStatus.objects.filter(filter_objects,
                                                                         qm_certification_status='QM Observations Forwarded')
 
 
