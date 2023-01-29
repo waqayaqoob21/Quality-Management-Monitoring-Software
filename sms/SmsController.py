@@ -312,7 +312,10 @@ class SmsController:
             year = request.query_params['selected_year']
             type = request.query_params['selected_type']
             system = request.query_params['selected_system']
-            status = request.query_params['selected_system']
+            ParentStatus = request.query_params['selected_status']
+            ChildStatus = request.query_params['child_status']
+            # print(ParentStatus)
+            # print(ChildStatus)
             filter_objects = Q()
 
             def get_filter(field_name, filter_condition, filter_value):
@@ -366,14 +369,227 @@ class SmsController:
                 filter_objects &= get_filter(
                     'system', 'equal',
                     system)
+            if ParentStatus != '':
+                ListItems = []
+                if ParentStatus == 'BLT':
+                    if ChildStatus != 'Current Count':
+                        filter_objects &= get_filter('blt_status', 'equal', ChildStatus)
+                    if ChildStatus == 'Current Count':
+                        ListItems.extend(list(ProductionSystemStatus.objects.filter(blt_status='Ok').values()))
+                        ListItems.extend(list(ProductionSystemStatus.objects.filter(blt_status='Observation(same stage)').values()))
+                        ListItems.extend(list(ProductionSystemStatus.objects.filter(blt_status='Halt').values()))
+                        serializer = ProductionSystemSerialzer(ListItems, many=True)
+                        return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
 
-            # if status == 'Total':
-            #     data = ProductionSystemStatus.objects.all()
-            #     serializer = ProductionSystemSerialzer(data, many=True)
-            #     return JsonResponse({'status': 'true', 'data': serializer.data}, status=200)
+                if ParentStatus == 'EMP Proofing':
+                    if ChildStatus != 'Current Count':
+                        filter_objects &= get_filter('emp_proofing', 'equal', ChildStatus)
+                    if ChildStatus == 'Current Count':
+                        ListItems.extend(list(ProductionSystemStatus.objects.filter(emp_proofing='Ok').values()))
+                        ListItems.extend(list(ProductionSystemStatus.objects.filter(emp_proofing='Observation(same stage)').values()))
+                        ListItems.extend(list(ProductionSystemStatus.objects.filter(emp_proofing='Halt').values()))
+                    serializer = ProductionSystemSerialzer(ListItems, many=True)
+                    return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                if ParentStatus == 'Functional Test W/O Dummy Bird':
+                    if ChildStatus != 'Current Count':
+                        filter_objects &= get_filter('func_tst', 'equal', ChildStatus)
+                    if ChildStatus == 'Current Count':
+                        ListItems.extend(list(ProductionSystemStatus.objects.filter(func_tst='Ok').values()))
+                        ListItems.extend(list(ProductionSystemStatus.objects.filter(func_tst='Observation(same stage)').values()))
+                        ListItems.extend(list(ProductionSystemStatus.objects.filter(func_tst='Halt').values()))
+                    serializer = ProductionSystemSerialzer(ListItems, many=True)
+                    return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                if ParentStatus == 'Functional Test With Dummy Bird':
+                    if ChildStatus != 'Current Count':
+                        filter_objects &= get_filter('func_tst_dummy_bird', 'equal', ChildStatus)
+                    if ChildStatus == 'Current Count':
+                        ListItems.extend(list(ProductionSystemStatus.objects.filter(func_tst_dummy_bird='Ok').values()))
+                        ListItems.extend(list(
+                            ProductionSystemStatus.objects.filter(func_tst_dummy_bird='Observation(same stage)').values()))
+                        ListItems.extend(list(ProductionSystemStatus.objects.filter(func_tst_dummy_bird='Halt').values()))
+                    serializer = ProductionSystemSerialzer(ListItems, many=True)
+                    return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                if ParentStatus == 'Road Test':
+                    if ChildStatus != 'Current Count':
+                        filter_objects &= get_filter('road_test', 'equal', ChildStatus)
+                    if ChildStatus == 'Current Count':
+                        ListItems.extend(list(ProductionSystemStatus.objects.filter(road_test='Ok').values()))
+                        ListItems.extend(list(ProductionSystemStatus.objects.filter(road_test='Observation(same stage)').values()))
+                        ListItems.extend(list(ProductionSystemStatus.objects.filter(road_test='Halt').values()))
+                    serializer = ProductionSystemSerialzer(ListItems, many=True)
+                    return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                if ParentStatus == 'Post Road Test':
+                    if ChildStatus != 'Current Count':
+                        filter_objects &= get_filter('post_road_test', 'equal', ChildStatus)
+                    if ChildStatus == 'Current Count':
+                        ListItems.extend(list(ProductionSystemStatus.objects.filter(post_road_test='Ok').values()))
+                        ListItems.extend(list(ProductionSystemStatus.objects.filter(post_road_test='Observation(same stage)').values()))
+                        ListItems.extend(list(ProductionSystemStatus.objects.filter(post_road_test='Halt').values()))
+                    serializer = ProductionSystemSerialzer(ListItems, many=True)
+                    return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                if ParentStatus == 'Integrated Operation':
+                    if ChildStatus != 'Current Count':
+                        filter_objects &= get_filter('integrated_operation', 'equal', ChildStatus)
+                    if ChildStatus == 'Current Count':
+                        ListItems.extend(list(ProductionSystemStatus.objects.filter(integrated_operation='Ok').values()))
+                        ListItems.extend(list(
+                            ProductionSystemStatus.objects.filter(integrated_operation='Observation(same stage)').values()))
+                        ListItems.extend(list(ProductionSystemStatus.objects.filter(integrated_operation='Halt').values()))
+                    serializer = ProductionSystemSerialzer(ListItems, many=True)
+                    return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                if ParentStatus == 'Rain Test':
+                    if ChildStatus != 'Current Count':
+                        filter_objects &= get_filter('rain_test', 'equal', ChildStatus)
+                    if ChildStatus == 'Current Count':
+                        ListItems.extend(list(ProductionSystemStatus.objects.filter(rain_test='Ok').values()))
+                        ListItems.extend(list(ProductionSystemStatus.objects.filter(rain_test='Observation(same stage)').values()))
+                        ListItems.extend(list(ProductionSystemStatus.objects.filter(rain_test='Halt').values()))
+                    serializer = ProductionSystemSerialzer(ListItems, many=True)
+                    return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                if ParentStatus == 'Pre User Inspection':
+                    if ChildStatus != 'Current Count':
+                        filter_objects &= get_filter('pre_user_inspection', 'equal', ChildStatus)
+                    if ChildStatus == 'Current Count':
+                        ListItems.extend(list(ProductionSystemStatus.objects.filter(pre_user_inspection='Ok').values()))
+                        ListItems.extend(list(
+                            ProductionSystemStatus.objects.filter(pre_user_inspection='Observation(same stage)').values()))
+                        ListItems.extend(list(ProductionSystemStatus.objects.filter(pre_user_inspection='Halt').values()))
+                    serializer = ProductionSystemSerialzer(ListItems, many=True)
+                    return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                if ParentStatus == 'Final Integrated Testing':
+                    if ChildStatus != 'Current Count':
+                        filter_objects &= get_filter('final_integrated_testing', 'equal', ChildStatus)
+                    if ChildStatus == 'Current Count':
+                        ListItems.extend(list(ProductionSystemStatus.objects.filter(final_integrated_testing='Ok').values()))
+                        ListItems.extend(list(
+                            ProductionSystemStatus.objects.filter(final_integrated_testing='Observation(same stage)').values()))
+                        ListItems.extend(list(ProductionSystemStatus.objects.filter(final_integrated_testing='Halt').values()))
+                    serializer = ProductionSystemSerialzer(ListItems, many=True)
+                    return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                if ParentStatus == 'Loading/Unloading on MLV/HLF':
+                    if ChildStatus != 'Current Count':
+                        filter_objects &= get_filter('load_unload_on_mlv_hlf', 'equal', ChildStatus)
+                    if ChildStatus == 'Current Count':
+                        ListItems.extend(list(ProductionSystemStatus.objects.filter(load_unload_on_mlv_hlf='Ok').values()))
+                        ListItems.extend(list(
+                            ProductionSystemStatus.objects.filter(load_unload_on_mlv_hlf='Observation(same stage)').values()))
+                        ListItems.extend(list(ProductionSystemStatus.objects.filter(load_unload_on_mlv_hlf='Halt').values()))
+                        serializer = ProductionSystemSerialzer(ListItems, many=True)
+                        return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                if ParentStatus == 'Pre-HIL':
+                    if ChildStatus != 'Current Count':
+                        filter_objects &= get_filter('pre_hil_status', 'equal', ChildStatus)
+                    if ChildStatus == 'Current Count':
+                        ListItems.extend(list(ProductionSystemStatus.objects.filter(pre_hil_status='Ok').values()))
+                        ListItems.extend(list(ProductionSystemStatus.objects.filter(pre_hil_status='Observation(same stage)').values()))
+                        ListItems.extend(list(ProductionSystemStatus.objects.filter(pre_hil_status='Halt').values()))
+                        serializer = ProductionSystemSerialzer(ListItems, many=True)
+                        return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                if ParentStatus == 'Vibration':
+                    if ChildStatus != 'Current Count':
+                        filter_objects &= get_filter('vibaration_status', 'equal', ChildStatus)
+                    if ChildStatus == 'Current Count':
+                        ListItems.extend(list(ProductionSystemStatus.objects.filter(vibaration_status='Ok').values()))
+                        ListItems.extend(list(ProductionSystemStatus.objects.filter(vibaration_status='Observation(same stage)').values()))
+                        ListItems.extend(list(ProductionSystemStatus.objects.filter(vibaration_status='Halt').values()))
+                        serializer = ProductionSystemSerialzer(ListItems, many=True)
+                        return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                if ParentStatus == 'CG Balancing':
+                    if ChildStatus != 'Current Count':
+                        filter_objects &= get_filter('cgbalancing_date_status', 'equal', ChildStatus)
+                    if ChildStatus == 'Current Count':
+                        ListItems.extend(list(ProductionSystemStatus.objects.filter(cgbalancing_date_status='Ok').values()))
+                        ListItems.extend(list(
+                            ProductionSystemStatus.objects.filter(cgbalancing_date_status='Observation(same stage)').values()))
+                        ListItems.extend(list(ProductionSystemStatus.objects.filter(cgbalancing_date_status='Halt').values()))
+                        serializer = ProductionSystemSerialzer(ListItems, many=True)
+                        return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                if ParentStatus == 'Post-HIL':
+                    if ChildStatus != 'Current Count':
+                        filter_objects &= get_filter('post_hil_status', 'equal', ChildStatus)
+                    if ChildStatus == 'Current Count':
+                        ListItems.extend(list(ProductionSystemStatus.objects.filter(post_hil_status='Ok').values()))
+                        ListItems.extend(list(ProductionSystemStatus.objects.filter(post_hil_status='Observation(same stage)').values()))
+                        ListItems.extend(list(ProductionSystemStatus.objects.filter(post_hil_status='Halt').values()))
+                        serializer = ProductionSystemSerialzer(ListItems, many=True)
+                        return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                if ParentStatus == 'System Alignment':
+                    if ChildStatus != 'Current Count':
+                        filter_objects &= get_filter('sys_align_status', 'equal', ChildStatus)
+                    if ChildStatus == 'Current Count':
+                        ListItems.extend(list(ProductionSystemStatus.objects.filter(sys_align_status='Ok').values()))
+                        ListItems.extend(list(ProductionSystemStatus.objects.filter(sys_align_status='Observation(same stage)').values()))
+                        ListItems.extend(list(ProductionSystemStatus.objects.filter(sys_align_status='Halt').values()))
+                        serializer = ProductionSystemSerialzer(ListItems, many=True)
+                        return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                if ParentStatus == 'Incapsulation':
+                    if ChildStatus != 'Current Count':
+                        filter_objects &= get_filter('incapsulation_status', 'equal', ChildStatus)
+                    if ChildStatus == 'Current Count':
+                        ListItems.extend(list(ProductionSystemStatus.objects.filter(incapsulation_status='Ok').values()))
+                        ListItems.extend(list(
+                            ProductionSystemStatus.objects.filter(incapsulation_status='Observation(same stage)').values()))
+                        ListItems.extend(list(ProductionSystemStatus.objects.filter(incapsulation_status='Halt').values()))
+                        serializer = ProductionSystemSerialzer(ListItems, many=True)
+                        return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                if ParentStatus == 'Final Integrated Testing':
+                    if ChildStatus != 'Current Count':
+                        filter_objects &= get_filter('final_integration_status', 'equal', ChildStatus)
+                    if ChildStatus == 'Current Count':
+                        ListItems.extend(list(ProductionSystemStatus.objects.filter(final_integration_status='Ok').values()))
+                        ListItems.extend(list(
+                            ProductionSystemStatus.objects.filter(final_integration_status='Observation(Same Stage)').values()))
+                        ListItems.extend(list(ProductionSystemStatus.objects.filter(final_integration_status='Halt').values()))
+                        serializer = ProductionSystemSerialzer(ListItems, many=True)
+                        return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                if ParentStatus == 'FGT Status':
+                    if ChildStatus != 'Current Count':
+                        filter_objects &= get_filter('fgt_status', 'equal', ChildStatus)
+                    if ChildStatus == 'Current Count':
+                        ListItems.extend(list(ProductionSystemStatus.objects.filter(fgt_status='Ok').values()))
+                        ListItems.extend(list(ProductionSystemStatus.objects.filter(fgt_status='Observation(same stage)').values()))
+                        ListItems.extend(list(ProductionSystemStatus.objects.filter(fgt_status='Halt').values()))
+                        serializer = ProductionSystemSerialzer(ListItems, many=True)
+                        return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                if ParentStatus == 'BHD Status':
+                    if ChildStatus != 'Current Count':
+                        filter_objects &= get_filter('bhd_status', 'equal', ChildStatus)
+                    if ChildStatus == 'Current Count':
+                        ListItems.extend(list(ProductionSystemStatus.objects.filter(bhd_status='Ok').values()))
+                        ListItems.extend(list(ProductionSystemStatus.objects.filter(bhd_status='Not Submitted').values()))
+                        ListItems.extend(list(ProductionSystemStatus.objects.filter(bhd_status='QM Observations Forwarded').values()))
+                        serializer = ProductionSystemSerialzer(ListItems, many=True)
+                        return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                if ParentStatus == 'FQM Status':
+                    if ChildStatus != 'Current Count':
+                        filter_objects &= get_filter('fqm_status', 'equal', ChildStatus)
+                    if ChildStatus == 'Current Count':
+                        ListItems.extend(list(ProductionSystemStatus.objects.filter(fqm_status='Not Conducted').values()))
+                        serializer = ProductionSystemSerialzer(ListItems, many=True)
+                        return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                if ParentStatus == 'QM Certification Status':
+                    if ChildStatus != 'Current Count':
+                        filter_objects &= get_filter('qm_certification_status', 'equal', ChildStatus)
+                    if ChildStatus == 'Current Count':
+                        ListItems.extend(list(
+                            ProductionSystemStatus.objects.filter(qm_certification_status='QM certificate issued').values()))
+                        ListItems.extend(list(
+                            ProductionSystemStatus.objects.filter(qm_certification_status='QM Observations Forwarded').values()))
+                        serializer = ProductionSystemSerialzer(ListItems, many=True)
+                        return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                if ParentStatus == 'Launch/ End User':
+                    if ChildStatus != 'Current Count':
+                        filter_objects &= get_filter('enduser_status', 'equal', ChildStatus)
+                    else:
+                        ListItems.extend(list(ProductionSystemStatus.objects.filter(enduser_status = 'Ok').values()))
+                        ListItems.extend(list(ProductionSystemStatus.objects.filter(enduser_status = 'Observation(Same Stage)').values()))
+                        ListItems.extend(list(ProductionSystemStatus.objects.filter(enduser_status = 'Halt').values()))
+                        serializer = ProductionSystemSerialzer(ListItems, many=True)
+                        return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+
             # else:
-            data = ProductionSystemStatus.objects.filter(filter_objects)
-            serializer = ProductionSystemSerialzer(data, many=True)
+            dataList = ProductionSystemStatus.objects.filter(filter_objects)
+            serializer = ProductionSystemSerialzer(dataList, many=True)
             print(serializer.data)
             return JsonResponse({'status': 'true', 'data': serializer.data}, status=200)
         except Exception as e:
@@ -848,6 +1064,10 @@ class SmsController:
         year = request.query_params['selected_year']
         type = request.query_params['selected_type']
         system = request.query_params['selected_system']
+        ParentStatus = request.query_params['selected_status']
+        ChildStatus = request.query_params['child_status']
+        # print(ParentStatus)
+        # print(ChildStatus)
         filter_objects = Q()
 
         def get_filter(field_name, filter_condition, filter_value):
@@ -901,6 +1121,220 @@ class SmsController:
             filter_objects &= get_filter(
                 'system', 'equal',
                 system)
+
+        if ParentStatus != '':
+            ListItems = []
+            if ParentStatus == 'BLT':
+                if ChildStatus != 'Current Count':
+                    filter_objects &= get_filter('blt_status', 'equal', ChildStatus)
+                else:
+                    ListItems.extend(list(FlightSystemStatus.objects.filter(blt_status='Ok').values()))
+                    ListItems.extend(list(FlightSystemStatus.objects.filter(blt_status='Observation(same stage)').values()))
+                    ListItems.extend(list(FlightSystemStatus.objects.filter(blt_status='Halt').values()))
+
+                    serializer = FlightSystemSerialzer(ListItems, many=True)
+                    return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+
+            if ParentStatus == 'EMP Proofing':
+                if ChildStatus != 'Current Count':
+                    filter_objects &= get_filter('emp_proofing', 'equal', ChildStatus)
+                else:
+                    ListItems.extend(list(FlightSystemStatus.objects.filter(emp_proofing='Ok').values()))
+                    ListItems.extend(list(FlightSystemStatus.objects.filter(emp_proofing='Observation(same stage)').values()))
+                    ListItems.extend(list(FlightSystemStatus.objects.filter(emp_proofing='Halt').values()))
+
+                    serializer = FlightSystemSerialzer(ListItems, many=True)
+                    return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+            if ParentStatus == 'Functional Test W/O Dummy Bird':
+                if ChildStatus != 'Current Count':
+                    filter_objects &= get_filter('func_tst', 'equal', ChildStatus)
+                else:
+                    ListItems.extend(list(FlightSystemStatus.objects.filter(func_tst='Ok').values()))
+                    ListItems.extend(list(FlightSystemStatus.objects.filter(func_tst='Observation(same stage)').values()))
+                    ListItems.extend(list(FlightSystemStatus.objects.filter(func_tst='Halt').values()))
+
+                    serializer = FlightSystemSerialzer(ListItems, many=True)
+                    return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+            if ParentStatus == 'Functional Test With Dummy Bird':
+                if ChildStatus != 'Current Count':
+                    filter_objects &= get_filter('func_tst_dummy_bird', 'equal', ChildStatus)
+                else:
+                    ListItems.extend(list(FlightSystemStatus.objects.filter(func_tst_dummy_bird='Ok').values()))
+                    ListItems.extend(list(FlightSystemStatus.objects.filter(func_tst_dummy_bird='Observation(same stage)').values()))
+                    ListItems.extend(list(FlightSystemStatus.objects.filter(func_tst_dummy_bird='Halt').values()))
+
+                    serializer = FlightSystemSerialzer(ListItems, many=True)
+                    return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+            if ParentStatus == 'Road Test':
+                if ChildStatus != 'Current Count':
+                    filter_objects &= get_filter('road_test', 'equal', ChildStatus)
+                else:
+                    ListItems.extend(list(FlightSystemStatus.objects.filter(road_test='Ok').values()))
+                    ListItems.extend(list(FlightSystemStatus.objects.filter(road_test='Observation(same stage)').values()))
+                    ListItems.extend(list(FlightSystemStatus.objects.filter(road_test='Halt').values()))
+
+                    serializer = FlightSystemSerialzer(ListItems, many=True)
+                    return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+            if ParentStatus == 'Post Road Test':
+                if ChildStatus != 'Current Count':
+                    filter_objects &= get_filter('post_road_test', 'equal', ChildStatus)
+                else:
+                    ListItems.extend(list(FlightSystemStatus.objects.filter(post_road_test='Ok').values()))
+                    ListItems.extend(list(FlightSystemStatus.objects.filter(post_road_test='Observation(same stage)').values()))
+                    ListItems.extend(list(FlightSystemStatus.objects.filter(post_road_test='Halt').values()))
+                    serializer = FlightSystemSerialzer(ListItems, many=True)
+                    return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+            if ParentStatus == 'Integrated Operation':
+                if ChildStatus != 'Current Count':
+                    filter_objects &= get_filter('integrated_operation', 'equal', ChildStatus)
+                if ChildStatus == 'Current Count':
+                    ListItems.extend(list(FlightSystemStatus.objects.filter(integrated_operation='Ok').values()))
+                    ListItems.extend(list(FlightSystemStatus.objects.filter(integrated_operation='Observation(same stage)').values()))
+                    ListItems.extend(list(FlightSystemStatus.objects.filter(integrated_operation='Halt').values()))
+                    serializer = FlightSystemSerialzer(ListItems, many=True)
+                    return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+            if ParentStatus == 'Rain Test':
+                if ChildStatus != 'Current Count':
+                    filter_objects &= get_filter('rain_test', 'equal', ChildStatus)
+                if ChildStatus == 'Current Count':
+                    ListItems.extend(list(FlightSystemStatus.objects.filter(rain_test='Ok').values()))
+                    ListItems.extend(list(FlightSystemStatus.objects.filter(rain_test='Observation(same stage)').values()))
+                    ListItems.extend(list(FlightSystemStatus.objects.filter(rain_test='Halt').values()))
+                    serializer = FlightSystemSerialzer(ListItems, many=True)
+                    return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+            if ParentStatus == 'Pre User Inspection':
+                if ChildStatus != 'Current Count':
+                    filter_objects &= get_filter('pre_user_inspection', 'equal', ChildStatus)
+                if ChildStatus == 'Current Count':
+                    ListItems.extend(list(FlightSystemStatus.objects.filter(pre_user_inspection='Ok').values()))
+                    ListItems.extend(list(FlightSystemStatus.objects.filter(pre_user_inspection='Observation(same stage)').values()))
+                    ListItems.extend(list(FlightSystemStatus.objects.filter(pre_user_inspection='Halt').values()))
+                    serializer = FlightSystemSerialzer(ListItems, many=True)
+                    return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+            if ParentStatus == 'Final Integrated Testing':
+                if ChildStatus != 'Current Count':
+                    filter_objects &= get_filter('final_integrated_testing', 'equal', ChildStatus)
+                if ChildStatus == 'Current Count':
+                    ListItems.extend(list(FlightSystemStatus.objects.filter(final_integrated_testing='Ok').values()))
+                    ListItems.extend(list(FlightSystemStatus.objects.filter(final_integrated_testing='Observation(same stage)').values()))
+                    ListItems.extend(list(FlightSystemStatus.objects.filter(final_integrated_testing='Halt').values()))
+                    serializer = FlightSystemSerialzer(ListItems, many=True)
+                    return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+            if ParentStatus == 'Loading/Unloading on MLV/HLF':
+                if ChildStatus != 'Current Count':
+                    filter_objects &= get_filter('load_unload_on_mlv_hlf', 'equal', ChildStatus)
+                if ChildStatus == 'Current Count':
+                    ListItems.extend(list(FlightSystemStatus.objects.filter(load_unload_on_mlv_hlf='Ok').values()))
+                    ListItems.extend(list(FlightSystemStatus.objects.filter(load_unload_on_mlv_hlf='Observation(same stage)').values()))
+                    ListItems.extend(list(FlightSystemStatus.objects.filter(load_unload_on_mlv_hlf='Halt').values()))
+                    serializer = FlightSystemSerialzer(ListItems, many=True)
+                    return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+            if ParentStatus == 'Pre-HIL':
+                if ChildStatus != 'Current Count':
+                    filter_objects &= get_filter('pre_hil_status', 'equal', ChildStatus)
+                if ChildStatus == 'Current Count':
+                    ListItems.extend(list(FlightSystemStatus.objects.filter(pre_hil_status='Ok').values()))
+                    ListItems.extend(list(FlightSystemStatus.objects.filter(pre_hil_status='Observation(same stage)').values()))
+                    ListItems.extend(list(FlightSystemStatus.objects.filter(pre_hil_status='Halt').values()))
+                    serializer = FlightSystemSerialzer(ListItems, many=True)
+                    return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+            if ParentStatus == 'Vibration':
+                if ChildStatus != 'Current Count':
+                    filter_objects &= get_filter('vibaration_status', 'equal', ChildStatus)
+                if ChildStatus == 'Current Count':
+                    ListItems.extend(list(FlightSystemStatus.objects.filter(vibaration_status='Ok').values()))
+                    ListItems.extend(list(FlightSystemStatus.objects.filter(vibaration_status='Observation(same stage)').values()))
+                    ListItems.extend(list(FlightSystemStatus.objects.filter(vibaration_status='Halt').values()))
+                    serializer = FlightSystemSerialzer(ListItems, many=True)
+                    return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+            if ParentStatus == 'CG Balancing':
+                if ChildStatus != 'Current Count':
+                    filter_objects &= get_filter('cgbalancing_date_status', 'equal', ChildStatus)
+                if ChildStatus == 'Current Count':
+                    ListItems.extend(list(FlightSystemStatus.objects.filter(cgbalancing_date_status='Ok').values()))
+                    ListItems.extend(list(FlightSystemStatus.objects.filter(cgbalancing_date_status='Observation(same stage)').values()))
+                    ListItems.extend(list(FlightSystemStatus.objects.filter(cgbalancing_date_status='Halt').values()))
+                    serializer = FlightSystemSerialzer(ListItems, many=True)
+                    return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+            if ParentStatus == 'Post-HIL':
+                if ChildStatus != 'Current Count':
+                    filter_objects &= get_filter('post_hil_status', 'equal', ChildStatus)
+                if ChildStatus == 'Current Count':
+                    ListItems.extend(list(FlightSystemStatus.objects.filter(post_hil_status='Ok').values()))
+                    ListItems.extend(list(FlightSystemStatus.objects.filter(post_hil_status='Observation(same stage)').values()))
+                    ListItems.extend(list(FlightSystemStatus.objects.filter(post_hil_status='Halt').values()))
+                    serializer = FlightSystemSerialzer(ListItems, many=True)
+                    return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+            if ParentStatus == 'System Alignment':
+                if ChildStatus != 'Current Count':
+                    filter_objects &= get_filter('sys_align_status', 'equal', ChildStatus)
+                if ChildStatus == 'Current Count':
+                    ListItems.extend(list(FlightSystemStatus.objects.filter(sys_align_status='Ok').values()))
+                    ListItems.extend(list(FlightSystemStatus.objects.filter(sys_align_status='Observation(same stage)').values()))
+                    ListItems.extend(list(FlightSystemStatus.objects.filter(sys_align_status='Halt').values()))
+                    serializer = FlightSystemSerialzer(ListItems, many=True)
+                    return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+            if ParentStatus == 'Incapsulation':
+                if ChildStatus != 'Current Count':
+                    filter_objects &= get_filter('incapsulation_status', 'equal', ChildStatus)
+                if ChildStatus == 'Current Count':
+                    ListItems.extend(list(FlightSystemStatus.objects.filter(incapsulation_status='Ok').values()))
+                    ListItems.extend(list(FlightSystemStatus.objects.filter(incapsulation_status='Observation(same stage)').values()))
+                    ListItems.extend(list(FlightSystemStatus.objects.filter(incapsulation_status='Halt').values()))
+                    serializer = FlightSystemSerialzer(ListItems, many=True)
+                    return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+            if ParentStatus == 'Final Integrated Testing':
+                if ChildStatus != 'Current Count':
+                    filter_objects &= get_filter('final_integration_status', 'equal', ChildStatus)
+                if ChildStatus == 'Current Count':
+                    ListItems.extend(list(FlightSystemStatus.objects.filter(final_integration_status='Ok').values()))
+                    ListItems.extend(list(FlightSystemStatus.objects.filter(final_integration_status='Observation(Same Stage)').values()))
+                    ListItems.extend(list(FlightSystemStatus.objects.filter(final_integration_status='Halt').values()))
+                    serializer = FlightSystemSerialzer(ListItems, many=True)
+                    return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+            if ParentStatus == 'FGT Status':
+                if ChildStatus != 'Current Count':
+                    filter_objects &= get_filter('fgt_status', 'equal', ChildStatus)
+                if ChildStatus == 'Current Count':
+                    ListItems.extend(list(FlightSystemStatus.objects.filter(fgt_status='Ok').values()))
+                    ListItems.extend(list(FlightSystemStatus.objects.filter(fgt_status='Observation(same stage)').values()))
+                    ListItems.extend(list(FlightSystemStatus.objects.filter(fgt_status='Halt').values()))
+                    serializer = FlightSystemSerialzer(ListItems, many=True)
+                    return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+            if ParentStatus == 'BHD Status':
+                if ChildStatus != 'Current Count':
+                    filter_objects &= get_filter('bhd_status', 'equal', ChildStatus)
+                if ChildStatus == 'Current Count':
+                    ListItems.extend(list(FlightSystemStatus.objects.filter(bhd_status='Ok').values()))
+                    ListItems.extend(list(FlightSystemStatus.objects.filter(bhd_status='Not Submitted').values()))
+                    ListItems.extend(list(FlightSystemStatus.objects.filter(bhd_status='QM Observations Forwarded').values()))
+                    serializer = FlightSystemSerialzer(ListItems, many=True)
+                    return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+            if ParentStatus == 'FQM Status':
+                if ChildStatus != 'Current Count':
+                    filter_objects &= get_filter('fqm_status', 'equal', ChildStatus)
+                if ChildStatus == 'Current Count':
+                    ListItems.extend(list(FlightSystemStatus.objects.filter(fqm_status='Not Conducted').values()))
+                    serializer = FlightSystemSerialzer(ListItems, many=True)
+                    return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+            if ParentStatus == 'QM Certification Status':
+                if ChildStatus != 'Current Count':
+                    filter_objects &= get_filter('qm_certification_status', 'equal', ChildStatus)
+                if ChildStatus == 'Current Count':
+                    ListItems.extend(list(FlightSystemStatus.objects.filter(qm_certification_status='QM certificate issued').values()))
+                    ListItems.extend(list(FlightSystemStatus.objects.filter(qm_certification_status='QM Observations Forwarded').values()))
+                    serializer = FlightSystemSerialzer(ListItems, many=True)
+                    return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+            if ParentStatus == 'Launch/ End User':
+                if ChildStatus != 'Current Count':
+                    filter_objects &= get_filter('launchact_status', 'equal', ChildStatus)
+                if ChildStatus == 'Current Count':
+                    ListItems.extends(list(FlightSystemStatus.objects.filter(blt_status = 'Ok').values()))
+                    ListItems.extends(list(FlightSystemStatus.objects.filter(blt_status = 'Observation(Same Stage)').values()))
+                    ListItems.extends(list(FlightSystemStatus.objects.filter(blt_status = 'Halt').values()))
+                    serializer = FlightSystemSerialzer(ListItems, many=True)
+                    return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+
         data = FlightSystemStatus.objects.filter(filter_objects)
         serializer = FlightSystemSerialzer(data, many=True)
         return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
@@ -1326,6 +1760,13 @@ class SmsController:
             year = request.query_params['selected_year']
             type = request.query_params['selected_type']
             system = request.query_params['selected_system']
+            ParentStatus = request.query_params['selected_status']
+            ChildStatus = request.query_params['child_status']
+            # print(ParentStatus)
+            # print(ChildStatus)
+            # setupItems = status.split(':')
+            # ParentStatus = setupItems[0]
+            # ChildStatus = setupItems[1]
             filter_objects = Q()
 
             def get_filter(field_name, filter_condition, filter_value):
@@ -1379,11 +1820,224 @@ class SmsController:
                 filter_objects &= get_filter(
                     'system', 'equal',
                     system)
-            # if status == 'Total':
-            #     data = RelifingSystemStatus.objects.all()
-            #     serializer = RelifingSystemSerialzer(data, many=True)
-            #     return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
-            # else:
+            if ParentStatus != '':
+                ListItems = []
+                if ParentStatus == 'BLT':
+                    if ChildStatus != 'Current Count':
+                        filter_objects &= get_filter('blt_status', 'equal', ChildStatus)
+                    if ChildStatus == 'Current Count':
+                        ListItems.extend(list(RelifingSystemStatus.objects.filter(blt_status='Ok').values()))
+                        ListItems.extend(list(RelifingSystemStatus.objects.filter(blt_status='Observation(same stage)').values()))
+                        ListItems.extend(list(RelifingSystemStatus.objects.filter(blt_status='Halt').values()))
+                        serializer = RelifingSystemSerialzer(ListItems, many=True)
+                        return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+
+                if ParentStatus == 'EMP Proofing':
+                    if ChildStatus != 'Current Count':
+                        filter_objects &= get_filter('emp_proofing', 'equal', ChildStatus)
+                    if ChildStatus == 'Current Count':
+                        ListItems.extend(list(RelifingSystemStatus.objects.filter(emp_proofing='Ok').values()))
+                        ListItems.extend(list(RelifingSystemStatus.objects.filter(emp_proofing='Observation(same stage)').values()))
+                        ListItems.extend(list(RelifingSystemStatus.objects.filter(emp_proofing='Halt').values()))
+                        serializer = RelifingSystemSerialzer(ListItems, many=True)
+                        return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                if ParentStatus == 'Functional Test W/O Dummy Bird':
+                    if ChildStatus != 'Current Count':
+                        filter_objects &= get_filter('func_tst', 'equal', ChildStatus)
+                    if ChildStatus == 'Current Count':
+                        ListItems.extend(list(RelifingSystemStatus.objects.filter(func_tst='Ok').values()))
+                        ListItems.extend(list(RelifingSystemStatus.objects.filter(func_tst='Observation(same stage)').values()))
+                        ListItems.extend(list(RelifingSystemStatus.objects.filter(func_tst='Halt').values()))
+                    serializer = RelifingSystemSerialzer(ListItems, many=True)
+                    return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                if ParentStatus == 'Functional Test With Dummy Bird':
+                    if ChildStatus != 'Current Count':
+                        filter_objects &= get_filter('func_tst_dummy_bird', 'equal', ChildStatus)
+                    if ChildStatus == 'Current Count':
+                        ListItems.extend(list(RelifingSystemStatus.objects.filter(func_tst_dummy_bird='Ok').values()))
+                        ListItems.extend(list(
+                            RelifingSystemStatus.objects.filter(func_tst_dummy_bird='Observation(same stage)').values()))
+                        ListItems.extend(list(RelifingSystemStatus.objects.filter(func_tst_dummy_bird='Halt').values()))
+                        serializer = RelifingSystemSerialzer(ListItems, many=True)
+                        return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                if ParentStatus == 'Road Test':
+                    if ChildStatus != 'Current Count':
+                        filter_objects &= get_filter('road_test', 'equal', ChildStatus)
+                    if ChildStatus == 'Current Count':
+                        ListItems.extend(list(RelifingSystemStatus.objects.filter(road_test='Ok').values()))
+                        ListItems.extend(list(RelifingSystemStatus.objects.filter(road_test='Observation(same stage)').values()))
+                        ListItems.extend(list(RelifingSystemStatus.objects.filter(road_test='Halt').values()))
+                        serializer = RelifingSystemSerialzer(ListItems, many=True)
+                        return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                if ParentStatus == 'Post Road Test':
+                    if ChildStatus != 'Current Count':
+                        filter_objects &= get_filter('post_road_test', 'equal', ChildStatus)
+                    if ChildStatus == 'Current Count':
+                        ListItems.extend(list(RelifingSystemStatus.objects.filter(post_road_test='Ok').values()))
+                        ListItems.extend(list(RelifingSystemStatus.objects.filter(post_road_test='Observation(same stage)').values()))
+                        ListItems.extend(list(RelifingSystemStatus.objects.filter(post_road_test='Halt').values()))
+                        serializer = RelifingSystemSerialzer(ListItems, many=True)
+                        return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                if ParentStatus == 'Integrated Operation':
+                    if ChildStatus != 'Current Count':
+                        filter_objects &= get_filter('integrated_operation', 'equal', ChildStatus)
+                    if ChildStatus == 'Current Count':
+                        ListItems.extend(list(RelifingSystemStatus.objects.filter(integrated_operation='Ok').values()))
+                        ListItems.extend(list(
+                            RelifingSystemStatus.objects.filter(integrated_operation='Observation(same stage)').values()))
+                        ListItems.extend(list(RelifingSystemStatus.objects.filter(integrated_operation='Halt').values()))
+                        serializer = RelifingSystemSerialzer(ListItems, many=True)
+                        return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                if ParentStatus == 'Rain Test':
+                    if ChildStatus != 'Current Count':
+                        filter_objects &= get_filter('rain_test', 'equal', ChildStatus)
+                    if ChildStatus == 'Current Count':
+                        ListItems.extend(list(RelifingSystemStatus.objects.filter(rain_test='Ok').values()))
+                        ListItems.extend(list(RelifingSystemStatus.objects.filter(rain_test='Observation(same stage)').values()))
+                        ListItems.extend(list(RelifingSystemStatus.objects.filter(rain_test='Halt').values()))
+                        serializer = RelifingSystemSerialzer(ListItems, many=True)
+                        return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                if ParentStatus == 'Pre User Inspection':
+                    if ChildStatus != 'Current Count':
+                        filter_objects &= get_filter('pre_user_inspection', 'equal', ChildStatus)
+                    if ChildStatus == 'Current Count':
+                        ListItems.extend(list(RelifingSystemStatus.objects.filter(pre_user_inspection='Ok').values()))
+                        ListItems.extend(list(
+                            RelifingSystemStatus.objects.filter(pre_user_inspection='Observation(same stage)').values()))
+                        ListItems.extend(list(RelifingSystemStatus.objects.filter(pre_user_inspection='Halt').values()))
+                        serializer = RelifingSystemSerialzer(ListItems, many=True)
+                        return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                if ParentStatus == 'Final Integrated Testing':
+                    if ChildStatus != 'Current Count':
+                        filter_objects &= get_filter('final_integrated_testing', 'equal', ChildStatus)
+                    if ChildStatus == 'Current Count':
+                        ListItems.extend(list(RelifingSystemStatus.objects.filter(final_integrated_testing='Ok').values()))
+                        ListItems.extend(list(
+                            RelifingSystemStatus.objects.filter(final_integrated_testing='Observation(same stage)').values()))
+                        ListItems.extend(list(RelifingSystemStatus.objects.filter(final_integrated_testing='Halt').values()))
+                        serializer = RelifingSystemSerialzer(ListItems, many=True)
+                        return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                if ParentStatus == 'Loading/Unloading on MLV/HLF':
+                    if ChildStatus != 'Current Count':
+                        filter_objects &= get_filter('load_unload_on_mlv_hlf', 'equal', ChildStatus)
+                    if ChildStatus == 'Current Count':
+                        ListItems.extend(list(RelifingSystemStatus.objects.filter(load_unload_on_mlv_hlf='Ok').values()))
+                        ListItems.extend(list(
+                            RelifingSystemStatus.objects.filter(load_unload_on_mlv_hlf='Observation(same stage)').values()))
+                        ListItems.extend(list(RelifingSystemStatus.objects.filter(load_unload_on_mlv_hlf='Halt').values()))
+                        serializer = RelifingSystemSerialzer(ListItems, many=True)
+                        return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                if ParentStatus == 'Pre-HIL':
+                    if ChildStatus != 'Current Count':
+                        filter_objects &= get_filter('pre_hil_status', 'equal', ChildStatus)
+                    if ChildStatus == 'Current Count':
+                        ListItems.extend(list(RelifingSystemStatus.objects.filter(pre_hil_status='Ok').values()))
+                        ListItems.extend(list(RelifingSystemStatus.objects.filter(pre_hil_status='Observation(same stage)').values()))
+                        ListItems.extend(list(RelifingSystemStatus.objects.filter(pre_hil_status='Halt').values()))
+                        serializer = RelifingSystemSerialzer(ListItems, many=True)
+                        return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                if ParentStatus == 'Vibration':
+                    if ChildStatus != 'Current Count':
+                        filter_objects &= get_filter('vibaration_status', 'equal', ChildStatus)
+                    if ChildStatus == 'Current Count':
+                        ListItems.extend(list(RelifingSystemStatus.objects.filter(vibaration_status='Ok').values()))
+                        ListItems.extend(list(RelifingSystemStatus.objects.filter(vibaration_status='Observation(same stage)').values()))
+                        ListItems.extend(list(RelifingSystemStatus.objects.filter(vibaration_status='Halt').values()))
+                        serializer = RelifingSystemSerialzer(ListItems, many=True)
+                        return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                if ParentStatus == 'CG Balancing':
+                    if ChildStatus != 'Current Count':
+                        filter_objects &= get_filter('cgbalancing_date_status', 'equal', ChildStatus)
+                    if ChildStatus == 'Current Count':
+                        ListItems.extend(list(RelifingSystemStatus.objects.filter(cgbalancing_date_status='Ok').values()))
+                        ListItems.extend(list(
+                            RelifingSystemStatus.objects.filter(cgbalancing_date_status='Observation(same stage)').values()))
+                        ListItems.extend(list(RelifingSystemStatus.objects.filter(cgbalancing_date_status='Halt').values()))
+                        serializer = RelifingSystemSerialzer(ListItems, many=True)
+                        return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                if ParentStatus == 'Post-HIL':
+                    if ChildStatus != 'Current Count':
+                        filter_objects &= get_filter('post_hil_status', 'equal', ChildStatus)
+                    if ChildStatus == 'Current Count':
+                        ListItems.extend(list(RelifingSystemStatus.objects.filter(post_hil_status='Ok').values()))
+                        ListItems.extend(list(RelifingSystemStatus.objects.filter(post_hil_status='Observation(same stage)').values()))
+                        ListItems.extend(list(RelifingSystemStatus.objects.filter(post_hil_status='Halt').values()))
+                        serializer = RelifingSystemSerialzer(ListItems, many=True)
+                        return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                if ParentStatus == 'System Alignment':
+                    if ChildStatus != 'Current Count':
+                        filter_objects &= get_filter('sys_align_status', 'equal', ChildStatus)
+                    if ChildStatus == 'Current Count':
+                        ListItems.extend(list(RelifingSystemStatus.objects.filter(sys_align_status='Ok').values()))
+                        ListItems.extend(list(RelifingSystemStatus.objects.filter(sys_align_status='Observation(same stage)').values()))
+                        ListItems.extend(list(RelifingSystemStatus.objects.filter(sys_align_status='Halt').values()))
+                        serializer = RelifingSystemSerialzer(ListItems, many=True)
+                        return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                if ParentStatus == 'Incapsulation':
+                    if ChildStatus != 'Current Count':
+                        filter_objects &= get_filter('incapsulation_status', 'equal', ChildStatus)
+                    if ChildStatus == 'Current Count':
+                        ListItems.extend(list(RelifingSystemStatus.objects.filter(incapsulation_status='Ok').values()))
+                        ListItems.extend(list(
+                            RelifingSystemStatus.objects.filter(incapsulation_status='Observation(same stage)').values()))
+                        ListItems.extend(list(RelifingSystemStatus.objects.filter(incapsulation_status='Halt').values()))
+                        serializer = RelifingSystemSerialzer(ListItems, many=True)
+                        return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                if ParentStatus == 'Final Integrated Testing':
+                    if ChildStatus != 'Current Count':
+                        filter_objects &= get_filter('final_integration_status', 'equal', ChildStatus)
+                    if ChildStatus == 'Current Count':
+                        ListItems.extend(list(RelifingSystemStatus.objects.filter(final_integration_status='Ok').values()))
+                        ListItems.extend(list(
+                            RelifingSystemStatus.objects.filter(final_integration_status='Observation(Same Stage)').values()))
+                        ListItems.extend(list(RelifingSystemStatus.objects.filter(final_integration_status='Halt').values()))
+                        serializer = RelifingSystemSerialzer(ListItems, many=True)
+                        return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                if ParentStatus == 'FGT Status':
+                    if ChildStatus != 'Current Count':
+                        filter_objects &= get_filter('fgt_status', 'equal', ChildStatus)
+                    if ChildStatus == 'Current Count':
+                        ListItems.extend(list(RelifingSystemStatus.objects.filter(fgt_status='Ok').values()))
+                        ListItems.extend(list(RelifingSystemStatus.objects.filter(fgt_status='Observation(same stage)').values()))
+                        ListItems.extend(list(RelifingSystemStatus.objects.filter(fgt_status='Halt').values()))
+                        serializer = RelifingSystemSerialzer(ListItems, many=True)
+                        return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                if ParentStatus == 'BHD Status':
+                    if ChildStatus != 'Current Count':
+                        filter_objects &= get_filter('bhd_status', 'equal', ChildStatus)
+                    if ChildStatus == 'Current Count':
+                        ListItems.extend(list(RelifingSystemStatus.objects.filter(bhd_status='Ok').values()))
+                        ListItems.extend(list(RelifingSystemStatus.objects.filter(bhd_status='Not Submitted').values()))
+                        ListItems.extend(list(RelifingSystemStatus.objects.filter(bhd_status='QM Observations Forwarded').values()))
+                        serializer = FlightSystemSerialzer(ListItems, many=True)
+                        return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                if ParentStatus == 'FQM Status':
+                    if ChildStatus != 'Current Count':
+                        filter_objects &= get_filter('fqm_status', 'equal', ChildStatus)
+                    if ChildStatus == 'Current Count':
+                        ListItems.extend(list(RelifingSystemStatus.objects.filter(fqm_status='Not Conducted').values()))
+                        serializer = RelifingSystemSerialzer(ListItems, many=True)
+                        return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                if ParentStatus == 'QM Certification Status':
+                    if ChildStatus != 'Current Count':
+                        filter_objects &= get_filter('qm_certification_status', 'equal', ChildStatus)
+                    if ChildStatus == 'Current Count':
+                        ListItems.extend(list(
+                            RelifingSystemStatus.objects.filter(qm_certification_status='QM certificate issued').values()))
+                        ListItems.extend(list(
+                            RelifingSystemStatus.objects.filter(qm_certification_status='QM Observations Forwarded').values()))
+                        serializer = RelifingSystemSerialzer(ListItems, many=True)
+                        return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                if ParentStatus == 'Launch/ End User':
+                    if ChildStatus != 'Current Count':
+                        filter_objects &= get_filter('enduser_status', 'equal', ChildStatus)
+                    if ChildStatus == 'Current Count':
+                        ListItems.extend(list(RelifingSystemStatus.objects.filter(enduser_status = 'Ok').values()))
+                        ListItems.extend(list(RelifingSystemStatus.objects.filter(enduser_status = 'Observation(Same Stage)').values()))
+                        ListItems.extend(list(RelifingSystemStatus.objects.filter(enduser_status = 'Halt').values()))
+                    serializer = RelifingSystemSerialzer(ListItems, many=True)
+                    return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+
             data = RelifingSystemStatus.objects.filter(filter_objects)
             serializer = RelifingSystemSerialzer(data, many=True)
             return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
@@ -1596,7 +2250,7 @@ class SmsController:
                     system)
 
             # production system count
-            prod_blt_oklist = ProductionSystemStatus.objects.filter(filter_objects, blt_status='OK(same stage)')
+            prod_blt_oklist = ProductionSystemStatus.objects.filter(filter_objects, blt_status='Ok')
             prod_blt_oklistNext = ProductionSystemStatus.objects.filter(filter_objects, blt_status='OK(next stage)')
             prod_blt_observationlist = ProductionSystemStatus.objects.filter(filter_objects,
                                                                              blt_status='Observation(same stage)')
@@ -1605,7 +2259,7 @@ class SmsController:
             prod_blt_uplist = ProductionSystemStatus.objects.filter(filter_objects, blt_status='Under process')
             prod_blt_haultlist = ProductionSystemStatus.objects.filter(filter_objects, blt_status='Halt')
 
-            prod_prehil_oklist = ProductionSystemStatus.objects.filter(filter_objects, pre_hil_status='OK(same stage)')
+            prod_prehil_oklist = ProductionSystemStatus.objects.filter(filter_objects, pre_hil_status='Ok')
             prod_prehil_oklistNext = ProductionSystemStatus.objects.filter(filter_objects,
                                                                            pre_hil_status='OK(next stage)')
             prod_prehil_observationlist = ProductionSystemStatus.objects.filter(filter_objects,
@@ -1616,7 +2270,7 @@ class SmsController:
             prod_prehil_haultlist = ProductionSystemStatus.objects.filter(filter_objects, pre_hil_status='Halt')
 
             prod_posthil_oklist = ProductionSystemStatus.objects.filter(filter_objects,
-                                                                        post_hil_status='OK(same stage)')
+                                                                        post_hil_status='Ok')
             prod_posthil_oklistNext = ProductionSystemStatus.objects.filter(filter_objects,
                                                                             post_hil_status='OK(next stage)')
             prod_posthil_observationlist = ProductionSystemStatus.objects.filter(filter_objects,
@@ -1627,7 +2281,7 @@ class SmsController:
             prod_posthil_haultlist = ProductionSystemStatus.objects.filter(filter_objects, post_hil_status='Halt')
 
             prod_finalintegration_oklist = ProductionSystemStatus.objects.filter(filter_objects,
-                                                                                 final_integration_status='OK(same stage)')
+                                                                                 final_integration_status='Ok')
             prod_finalintegration_oklistNext = ProductionSystemStatus.objects.filter(filter_objects,
                                                                                      final_integration_status='OK(next stage)')
 
@@ -1643,7 +2297,7 @@ class SmsController:
                                                                                     final_integration_status='Halt')
 
             prod_vibration_oklist = ProductionSystemStatus.objects.filter(filter_objects,
-                                                                          vibaration_status='OK(same stage)')
+                                                                          vibaration_status='Ok')
             prod_vibration_oklistNext = ProductionSystemStatus.objects.filter(filter_objects,
                                                                               vibaration_status='OK(next stage)')
 
@@ -1656,7 +2310,7 @@ class SmsController:
             prod_vibration_haultlist = ProductionSystemStatus.objects.filter(filter_objects, vibaration_status='Halt')
 
             prod_cg_oklist = ProductionSystemStatus.objects.filter(filter_objects,
-                                                                   cgbalancing_date_status='OK(same stage)')
+                                                                   cgbalancing_date_status='Ok')
 
             prod_cg_oklistNext = ProductionSystemStatus.objects.filter(filter_objects,
                                                                        cgbalancing_date_status='OK(next stage)')
@@ -1669,7 +2323,7 @@ class SmsController:
                                                                    cgbalancing_date_status='Under process')
             prod_cg_haultlist = ProductionSystemStatus.objects.filter(filter_objects, cgbalancing_date_status='Halt')
 
-            prod_fgt_oklist = ProductionSystemStatus.objects.filter(filter_objects, fgt_status='OK(same stage)')
+            prod_fgt_oklist = ProductionSystemStatus.objects.filter(filter_objects, fgt_status='Ok')
             prod_fgt_oklistNext = ProductionSystemStatus.objects.filter(filter_objects, fgt_status='OK(next stage)')
             prod_fgt_observationlist = ProductionSystemStatus.objects.filter(filter_objects,
                                                                              fgt_status='Observation(same stage)')
@@ -1682,9 +2336,14 @@ class SmsController:
             prod_bhd_ok = ProductionSystemStatus.objects.filter(filter_objects,
                                                                        bhd_status='Ok')
             prod_bhd_submitted = ProductionSystemStatus.objects.filter(filter_objects,
-                                                                       bhd_status='BHD Submitted')
-            # prod_bhd_qmforwarded = ProductionSystemStatus.objects.filter(filter_objects,
-            #                                                              bhd_status='QM observations forwarded')
+                                                                       bhd_status='Submitted')
+            prod_bhd_not_submitted = ProductionSystemStatus.objects.filter(filter_objects,
+                                                                       bhd_status='Not Submitted')
+            prod_bhd_qm_forwarded = ProductionSystemStatus.objects.filter(filter_objects,
+                                                                         bhd_status='QM observations forwarded')
+            prod_bhd_inprocess= ProductionSystemStatus.objects.filter(filter_objects,
+                                                                         bhd_status='Audit in-process')
+
 
             prod_fqm_planned = ProductionSystemStatus.objects.filter(filter_objects,
                                                                      fqm_status='Planned')
@@ -1700,7 +2359,7 @@ class SmsController:
             prod_qmc_obs_forwarded = ProductionSystemStatus.objects.filter(filter_objects,
                                                                         qm_certification_status='QM Observations Forwarded')
 
-            prod_enduser_oklist = ProductionSystemStatus.objects.filter(filter_objects, enduser_status='OK(same stage)')
+            prod_enduser_oklist = ProductionSystemStatus.objects.filter(filter_objects, enduser_status='Ok')
             prod_enduser_oklistNext = ProductionSystemStatus.objects.filter(filter_objects,
                                                                             enduser_status='OK(next stage)')
             prod_enduser_observationlist = ProductionSystemStatus.objects.filter(filter_objects,
@@ -1712,7 +2371,7 @@ class SmsController:
             prod_enduser_haultlist = ProductionSystemStatus.objects.filter(filter_objects, enduser_status='Halt')
 
 
-            prod_sys_align_oklist = ProductionSystemStatus.objects.filter(filter_objects, sys_align_status='OK(same stage)')
+            prod_sys_align_oklist = ProductionSystemStatus.objects.filter(filter_objects, sys_align_status='Ok')
             prod_sys_align_oklistNext = ProductionSystemStatus.objects.filter(filter_objects,
                                                                             sys_align_status='OK(next stage)')
             prod_sys_align_observationlist = ProductionSystemStatus.objects.filter(filter_objects,
@@ -1724,7 +2383,7 @@ class SmsController:
             prod_sys_align_haultlist = ProductionSystemStatus.objects.filter(filter_objects, sys_align_status='Halt')
 
 
-            prod_incapsulation_oklist = ProductionSystemStatus.objects.filter(filter_objects, incapsulation_status='OK(same stage)')
+            prod_incapsulation_oklist = ProductionSystemStatus.objects.filter(filter_objects, incapsulation_status='Ok')
             prod_incapsulation_oklistNext = ProductionSystemStatus.objects.filter(filter_objects,
                                                                             incapsulation_status='OK(next stage)')
             prod_incapsulation_observationlist = ProductionSystemStatus.objects.filter(filter_objects,
@@ -1735,70 +2394,70 @@ class SmsController:
                                                                         incapsulation_status='Completed')
             prod_incapsulation_haultlist = ProductionSystemStatus.objects.filter(filter_objects, incapsulation_status='Halt')
 
-            prod_emp_proofing_oklist = ProductionSystemStatus.objects.filter(filter_objects, emp_proofing='OK(same stage)')
+            prod_emp_proofing_oklist = ProductionSystemStatus.objects.filter(filter_objects, emp_proofing='Ok')
             prod_emp_proofing_oklistNext= ProductionSystemStatus.objects.filter(filter_objects, emp_proofing='OK(next stage)')
             prod_emp_proofing_observationlist  = ProductionSystemStatus.objects.filter(filter_objects, emp_proofing='Observation(same stage)')
             prod_emp_proofing_observationlistNext = ProductionSystemStatus.objects.filter(filter_objects, emp_proofing='Observation(next stage)')
             prod_emp_proofing_uplist = ProductionSystemStatus.objects.filter(filter_objects, emp_proofing='Under process')
             prod_emp_proofing_haultlist = ProductionSystemStatus.objects.filter(filter_objects, emp_proofing='Halt')
 
-            prod_func_tst_oklistNext_oklist  = ProductionSystemStatus.objects.filter(filter_objects, func_tst='OK(same stage)')
+            prod_func_tst_oklistNext_oklist  = ProductionSystemStatus.objects.filter(filter_objects, func_tst='Ok')
             prod_func_tst_oklistNext_oklistNext  = ProductionSystemStatus.objects.filter(filter_objects, func_tst='OK(next stage)')
             prod_func_tst_oklistNext_observationlist   = ProductionSystemStatus.objects.filter(filter_objects, func_tst='Observation(same stage)')
             prod_func_tst_oklistNext_observationlistNext  = ProductionSystemStatus.objects.filter(filter_objects, func_tst='Observation(next stage)')
             prod_func_tst_oklistNext_uplist  = ProductionSystemStatus.objects.filter(filter_objects, func_tst='Under process')
             prod_func_tst_oklistNext_haultlist  = ProductionSystemStatus.objects.filter(filter_objects, func_tst='Halt')
 
-            prod_func_tst_dummy_bird_oklist = ProductionSystemStatus.objects.filter(filter_objects, func_tst_dummy_bird='OK(same stage)')
+            prod_func_tst_dummy_bird_oklist = ProductionSystemStatus.objects.filter(filter_objects, func_tst_dummy_bird='Ok')
             prod_func_tst_dummy_bird_oklistNext = ProductionSystemStatus.objects.filter(filter_objects, func_tst_dummy_bird='OK(next stage)')
             prod_func_tst_dummy_bird_observationlist  = ProductionSystemStatus.objects.filter(filter_objects, func_tst_dummy_bird='Observation(same stage)')
             prod_func_tst_dummy_bird_observationlistNext = ProductionSystemStatus.objects.filter(filter_objects, func_tst_dummy_bird='Observation(next stage)')
             prod_func_tst_dummy_bird_uplist = ProductionSystemStatus.objects.filter(filter_objects, func_tst_dummy_bird='Under process')
             prod_func_tst_dummy_bird_haultlist = ProductionSystemStatus.objects.filter(filter_objects, func_tst_dummy_bird='Halt')
 
-            prod_road_test_oklist = ProductionSystemStatus.objects.filter(filter_objects, road_test='OK(same stage)')
+            prod_road_test_oklist = ProductionSystemStatus.objects.filter(filter_objects, road_test='Ok')
             prod_road_test_oklistNext = ProductionSystemStatus.objects.filter(filter_objects, road_test='OK(next stage)')
             prod_road_test_observationlist  = ProductionSystemStatus.objects.filter(filter_objects, road_test='Observation(same stage)')
             prod_road_test_observationlistNext = ProductionSystemStatus.objects.filter(filter_objects, road_test='Observation(next stage)')
             prod_road_test_uplist = ProductionSystemStatus.objects.filter(filter_objects, road_test='Under process')
             prod_road_test_haultlist = ProductionSystemStatus.objects.filter(filter_objects, road_test='Halt')
 
-            prod_post_road_test_oklist = ProductionSystemStatus.objects.filter(filter_objects, post_road_test='OK(same stage)')
+            prod_post_road_test_oklist = ProductionSystemStatus.objects.filter(filter_objects, post_road_test='Ok')
             prod_post_road_test_oklistNext = ProductionSystemStatus.objects.filter(filter_objects, post_road_test='OK(next stage)')
             prod_post_road_test_observationlist  = ProductionSystemStatus.objects.filter(filter_objects, post_road_test='Observation(same stage)')
             prod_post_road_test_observationlistNext = ProductionSystemStatus.objects.filter(filter_objects, post_road_test='Observation(next stage)')
             prod_post_road_test_uplist = ProductionSystemStatus.objects.filter(filter_objects, post_road_test='Under process')
             prod_post_road_test_haultlist = ProductionSystemStatus.objects.filter(filter_objects, post_road_test='Halt')
 
-            prod_integrated_operation_oklist = ProductionSystemStatus.objects.filter(filter_objects, integrated_operation='OK(same stage)')
+            prod_integrated_operation_oklist = ProductionSystemStatus.objects.filter(filter_objects, integrated_operation='Ok')
             prod_integrated_operation_oklistNext = ProductionSystemStatus.objects.filter(filter_objects, integrated_operation='OK(next stage)')
             prod_integrated_operation_observationlist  = ProductionSystemStatus.objects.filter(filter_objects, integrated_operation='Observation(same stage)')
             prod_integrated_operation_observationlistNext = ProductionSystemStatus.objects.filter(filter_objects, integrated_operation='Observation(next stage)')
             prod_integrated_operation_uplist = ProductionSystemStatus.objects.filter(filter_objects, integrated_operation='Under process')
             prod_integrated_operation_haultlist = ProductionSystemStatus.objects.filter(filter_objects, integrated_operation='Halt')
 
-            prod_rain_test_oklist = ProductionSystemStatus.objects.filter(filter_objects, rain_test='OK(same stage)')
+            prod_rain_test_oklist = ProductionSystemStatus.objects.filter(filter_objects, rain_test='Ok')
             prod_rain_test_oklistNext = ProductionSystemStatus.objects.filter(filter_objects, rain_test='OK(next stage)')
             prod_rain_test_observationlist  = ProductionSystemStatus.objects.filter(filter_objects, rain_test='Observation(same stage)')
             prod_rain_test_observationlistNext = ProductionSystemStatus.objects.filter(filter_objects, rain_test='Observation(next stage)')
             prod_rain_test_uplist = ProductionSystemStatus.objects.filter(filter_objects, rain_test='Under process')
             prod_rain_test_haultlist = ProductionSystemStatus.objects.filter(filter_objects, rain_test='Halt')
 
-            prod_pre_user_inspection_oklist = ProductionSystemStatus.objects.filter(filter_objects, pre_user_inspection='OK(same stage)')
+            prod_pre_user_inspection_oklist = ProductionSystemStatus.objects.filter(filter_objects, pre_user_inspection='Ok')
             prod_pre_user_inspection_oklistNext = ProductionSystemStatus.objects.filter(filter_objects, pre_user_inspection='OK(next stage)')
             prod_pre_user_inspection_observationlist  = ProductionSystemStatus.objects.filter(filter_objects, pre_user_inspection='Observation(same stage)')
             prod_pre_user_inspection_observationlistNext = ProductionSystemStatus.objects.filter(filter_objects, pre_user_inspection='Observation(next stage)')
             prod_pre_user_inspection_uplist = ProductionSystemStatus.objects.filter(filter_objects, pre_user_inspection='Under process')
             prod_pre_user_inspection_haultlist = ProductionSystemStatus.objects.filter(filter_objects, pre_user_inspection='Halt')
 
-            prod_final_integrated_testing_oklist = ProductionSystemStatus.objects.filter(filter_objects, final_integrated_testing='OK(same stage)')
+            prod_final_integrated_testing_oklist = ProductionSystemStatus.objects.filter(filter_objects, final_integrated_testing='Ok')
             prod_final_integrated_testing_oklistNext = ProductionSystemStatus.objects.filter(filter_objects, final_integrated_testing='OK(next stage)')
             prod_final_integrated_testing_observationlist  = ProductionSystemStatus.objects.filter(filter_objects, final_integrated_testing='Observation(same stage)')
             prod_final_integrated_testing_observationlistNext = ProductionSystemStatus.objects.filter(filter_objects, final_integrated_testing='Observation(next stage)')
             prod_final_integrated_testing_uplist = ProductionSystemStatus.objects.filter(filter_objects, final_integrated_testing='Under process')
             prod_final_integrated_testing_haultlist = ProductionSystemStatus.objects.filter(filter_objects, final_integrated_testing='Halt')
 
-            prod_load_unload_on_mlv_hlf_oklist = ProductionSystemStatus.objects.filter(filter_objects, load_unload_on_mlv_hlf='OK(same stage)')
+            prod_load_unload_on_mlv_hlf_oklist = ProductionSystemStatus.objects.filter(filter_objects, load_unload_on_mlv_hlf='Ok')
             prod_load_unload_on_mlv_hlf_oklistNext = ProductionSystemStatus.objects.filter(filter_objects, load_unload_on_mlv_hlf='OK(next stage)')
             prod_load_unload_on_mlv_hlf_observationlist  = ProductionSystemStatus.objects.filter(filter_objects, load_unload_on_mlv_hlf='Observation(same stage)')
             prod_load_unload_on_mlv_hlf_observationlistNext = ProductionSystemStatus.objects.filter(filter_objects, load_unload_on_mlv_hlf='Observation(next stage)')
@@ -1807,7 +2466,7 @@ class SmsController:
 
 
             # flight system count
-            flight_blt_oklist = FlightSystemStatus.objects.filter(filter_objects, blt_status='OK(same stage)')
+            flight_blt_oklist = FlightSystemStatus.objects.filter(filter_objects, blt_status='Ok')
             flight_blt_oklistNext = FlightSystemStatus.objects.filter(filter_objects, blt_status='OK(next stage)')
             flight_blt_observationlist = FlightSystemStatus.objects.filter(filter_objects,
                                                                            blt_status='Observation(same stage)')
@@ -1816,7 +2475,7 @@ class SmsController:
             flight_blt_uplist = FlightSystemStatus.objects.filter(filter_objects, blt_status='Under process')
             flight_blt_haultlist = FlightSystemStatus.objects.filter(filter_objects, blt_status='Halt')
 
-            flight_prehil_oklist = FlightSystemStatus.objects.filter(filter_objects, pre_hil_status='OK(same stage)')
+            flight_prehil_oklist = FlightSystemStatus.objects.filter(filter_objects, pre_hil_status='Ok')
             flight_prehil_oklistNext = FlightSystemStatus.objects.filter(filter_objects,
                                                                          pre_hil_status='OK(next stage)')
             flight_prehil_observationlist = FlightSystemStatus.objects.filter(filter_objects,
@@ -1826,7 +2485,7 @@ class SmsController:
             flight_prehil_uplist = FlightSystemStatus.objects.filter(filter_objects, pre_hil_status='Under process')
             flight_prehil_haultlist = FlightSystemStatus.objects.filter(filter_objects, pre_hil_status='Halt')
 
-            flight_posthil_oklist = FlightSystemStatus.objects.filter(filter_objects, post_hil_status='OK(same stage)')
+            flight_posthil_oklist = FlightSystemStatus.objects.filter(filter_objects, post_hil_status='Ok')
             flight_posthil_oklistNext = FlightSystemStatus.objects.filter(filter_objects,
                                                                           post_hil_status='OK(next stage)')
             flight_posthil_observationlist = FlightSystemStatus.objects.filter(filter_objects,
@@ -1837,7 +2496,7 @@ class SmsController:
             flight_posthil_haultlist = FlightSystemStatus.objects.filter(filter_objects, post_hil_status='Halt')
 
             flight_finalintegration_oklist = FlightSystemStatus.objects.filter(filter_objects,
-                                                                               final_integration_status='OK(same stage)')
+                                                                               final_integration_status='Ok')
             flight_finalintegration_oklistNext = FlightSystemStatus.objects.filter(filter_objects,
                                                                                    final_integration_status='OK(next stage)')
 
@@ -1851,7 +2510,7 @@ class SmsController:
                                                                                   final_integration_status='Halt')
 
             flight_vibration_oklist = FlightSystemStatus.objects.filter(filter_objects,
-                                                                        vibaration_status='OK(same stage)')
+                                                                        vibaration_status='Ok')
             flight_vibration_oklistNext = FlightSystemStatus.objects.filter(filter_objects,
                                                                             vibaration_status='OK(next stage)')
             flight_vibration_observationlist = FlightSystemStatus.objects.filter(filter_objects,
@@ -1863,7 +2522,7 @@ class SmsController:
             flight_vibration_haultlist = FlightSystemStatus.objects.filter(filter_objects, vibaration_status='Halt')
 
             flight_cg_oklist = FlightSystemStatus.objects.filter(filter_objects,
-                                                                 cgbalancing_date_status='OK(same stage)')
+                                                                 cgbalancing_date_status='Ok')
             flight_cg_oklistNext = FlightSystemStatus.objects.filter(filter_objects,
                                                                      cgbalancing_date_status='OK(next stage)')
             flight_cg_observationlist = FlightSystemStatus.objects.filter(filter_objects,
@@ -1874,7 +2533,7 @@ class SmsController:
                                                                  cgbalancing_date_status='Under process')
             flight_cg_haultlist = FlightSystemStatus.objects.filter(filter_objects, cgbalancing_date_status='Halt')
 
-            flight_fgt_oklist = FlightSystemStatus.objects.filter(filter_objects, fgt_status='OK(same stage)')
+            flight_fgt_oklist = FlightSystemStatus.objects.filter(filter_objects, fgt_status='Ok')
             flight_fgt_oklistNext = FlightSystemStatus.objects.filter(filter_objects, fgt_status='OK(next stage)')
             flight_fgt_observationlist = FlightSystemStatus.objects.filter(filter_objects,
                                                                            fgt_status='Observation(same stage)')
@@ -1884,16 +2543,17 @@ class SmsController:
                                                                   fgt_status='Under process')
             flight_fgt_haultlist = FlightSystemStatus.objects.filter(filter_objects, fgt_status='Halt')
 
-            # flight_bhd_notsubmit = FlightSystemStatus.objects.filter(filter_objects,
-            #                                                          bhd_status='BHD not submitted for QM audit')
-            # flight_bhd_inprocess = FlightSystemStatus.objects.filter(filter_objects,
-            #                                                          bhd_status='Audit in-process')
-            # flight_bhd_qmforwarded = FlightSystemStatus.objects.filter(filter_objects,
-            #                                                            bhd_status='QM observations forwarded')
-            flight_bhd_ok = ProductionSystemStatus.objects.filter(filter_objects,
+            flight_bhd_not_submit = FlightSystemStatus.objects.filter(filter_objects,
+                                                                     bhd_status='Not Submitted')
+            flight_bhd_inprocess = FlightSystemStatus.objects.filter(filter_objects,
+                                                                     bhd_status='Audit in-process')
+            flight_bhd_qm_forwarded = FlightSystemStatus.objects.filter(filter_objects,
+                                                                       bhd_status='QM observations forwarded')
+            flight_bhd_ok = FlightSystemStatus.objects.filter(filter_objects,
                                                                        bhd_status='Ok')
-            flight_bhd_submitted = ProductionSystemStatus.objects.filter(filter_objects,
-                                                                       bhd_status='BHD Submitted')
+            flight_bhd_submitted = FlightSystemStatus.objects.filter(filter_objects,
+                                                                       bhd_status='Submitted')
+
 
             flight_fqm_planned = FlightSystemStatus.objects.filter(filter_objects,
                                                                    fqm_status='Planned')
@@ -1909,7 +2569,7 @@ class SmsController:
             flight_qmc_obs_forwarded = ProductionSystemStatus.objects.filter(filter_objects,
                                                                         qm_certification_status='QM Observations Forwarded')
 
-            flight_launch_oklist = FlightSystemStatus.objects.filter(filter_objects, launchact_status='OK(same stage)')
+            flight_launch_oklist = FlightSystemStatus.objects.filter(filter_objects, launchact_status='Ok')
             flight_launch_oklistNext = FlightSystemStatus.objects.filter(filter_objects,
                                                                          launchact_status='OK(next stage)')
             flight_launch_observationlist = FlightSystemStatus.objects.filter(filter_objects,
@@ -1922,7 +2582,7 @@ class SmsController:
 
 
 
-            flight_sys_align_oklist = FlightSystemStatus.objects.filter(filter_objects, sys_align_status='OK(same stage)')
+            flight_sys_align_oklist = FlightSystemStatus.objects.filter(filter_objects, sys_align_status='Ok')
             flight_sys_align_oklistNext = FlightSystemStatus.objects.filter(filter_objects,
                                                                          sys_align_status='OK(next stage)')
             flight_sys_align_observationlist = FlightSystemStatus.objects.filter(filter_objects,
@@ -1935,7 +2595,7 @@ class SmsController:
 
 
 
-            flight_incapsulation_oklist = FlightSystemStatus.objects.filter(filter_objects, incapsulation_status='OK(same stage)')
+            flight_incapsulation_oklist = FlightSystemStatus.objects.filter(filter_objects, incapsulation_status='Ok')
             flight_incapsulation_oklistNext = FlightSystemStatus.objects.filter(filter_objects,
                                                                          incapsulation_status='OK(next stage)')
             flight_incapsulation_observationlist = FlightSystemStatus.objects.filter(filter_objects,
@@ -1946,70 +2606,70 @@ class SmsController:
                                                                      incapsulation_status='Completed')
             flight_incapsulation_haultlist = FlightSystemStatus.objects.filter(filter_objects, incapsulation_status='Halt')
 
-            flight_emp_proofing_oklist = FlightSystemStatus.objects.filter(filter_objects, emp_proofing='OK(same stage)')
+            flight_emp_proofing_oklist = FlightSystemStatus.objects.filter(filter_objects, emp_proofing='Ok')
             flight_emp_proofing_oklistNext= FlightSystemStatus.objects.filter(filter_objects, emp_proofing='OK(next stage)')
             flight_emp_proofing_observationlist  = FlightSystemStatus.objects.filter(filter_objects, emp_proofing='Observation(same stage)')
             flight_emp_proofing_observationlistNext = FlightSystemStatus.objects.filter(filter_objects, emp_proofing='Observation(next stage)')
             flight_emp_proofing_uplist = FlightSystemStatus.objects.filter(filter_objects, emp_proofing='Under process')
             flight_emp_proofing_haultlist = FlightSystemStatus.objects.filter(filter_objects, emp_proofing='Halt')
 
-            flight_func_tst_oklistNext_oklist  = FlightSystemStatus.objects.filter(filter_objects, func_tst='OK(same stage)')
+            flight_func_tst_oklistNext_oklist  = FlightSystemStatus.objects.filter(filter_objects, func_tst='Ok')
             flight_func_tst_oklistNext_oklistNext  = FlightSystemStatus.objects.filter(filter_objects, func_tst='OK(next stage)')
             flight_func_tst_oklistNext_observationlist   = FlightSystemStatus.objects.filter(filter_objects, func_tst='Observation(same stage)')
             flight_func_tst_oklistNext_observationlistNext  = FlightSystemStatus.objects.filter(filter_objects, func_tst='Observation(next stage)')
             flight_func_tst_oklistNext_uplist  = FlightSystemStatus.objects.filter(filter_objects, func_tst='Under process')
             flight_func_tst_oklistNext_haultlist  = FlightSystemStatus.objects.filter(filter_objects, func_tst='Halt')
 
-            flight_func_tst_dummy_bird_oklist = FlightSystemStatus.objects.filter(filter_objects, func_tst_dummy_bird='OK(same stage)')
+            flight_func_tst_dummy_bird_oklist = FlightSystemStatus.objects.filter(filter_objects, func_tst_dummy_bird='Ok')
             flight_func_tst_dummy_bird_oklistNext = FlightSystemStatus.objects.filter(filter_objects, func_tst_dummy_bird='OK(next stage)')
             flight_func_tst_dummy_bird_observationlist  = FlightSystemStatus.objects.filter(filter_objects, func_tst_dummy_bird='Observation(same stage)')
             flight_func_tst_dummy_bird_observationlistNext = FlightSystemStatus.objects.filter(filter_objects, func_tst_dummy_bird='Observation(next stage)')
             flight_func_tst_dummy_bird_uplist = FlightSystemStatus.objects.filter(filter_objects, func_tst_dummy_bird='Under process')
             flight_func_tst_dummy_bird_haultlist = FlightSystemStatus.objects.filter(filter_objects, func_tst_dummy_bird='Halt')
 
-            flight_road_test_oklist = FlightSystemStatus.objects.filter(filter_objects, road_test='OK(same stage)')
+            flight_road_test_oklist = FlightSystemStatus.objects.filter(filter_objects, road_test='Ok')
             flight_road_test_oklistNext = FlightSystemStatus.objects.filter(filter_objects, road_test='OK(next stage)')
             flight_road_test_observationlist  = FlightSystemStatus.objects.filter(filter_objects, road_test='Observation(same stage)')
             flight_road_test_observationlistNext = FlightSystemStatus.objects.filter(filter_objects, road_test='Observation(next stage)')
             flight_road_test_uplist = FlightSystemStatus.objects.filter(filter_objects, road_test='Under process')
             flight_road_test_haultlist = FlightSystemStatus.objects.filter(filter_objects, road_test='Halt')
 
-            flight_post_road_test_oklist = FlightSystemStatus.objects.filter(filter_objects, post_road_test='OK(same stage)')
+            flight_post_road_test_oklist = FlightSystemStatus.objects.filter(filter_objects, post_road_test='Ok')
             flight_post_road_test_oklistNext = FlightSystemStatus.objects.filter(filter_objects, post_road_test='OK(next stage)')
             flight_post_road_test_observationlist  = FlightSystemStatus.objects.filter(filter_objects, post_road_test='Observation(same stage)')
             flight_post_road_test_observationlistNext = FlightSystemStatus.objects.filter(filter_objects, post_road_test='Observation(next stage)')
             flight_post_road_test_uplist = FlightSystemStatus.objects.filter(filter_objects, post_road_test='Under process')
             flight_post_road_test_haultlist = FlightSystemStatus.objects.filter(filter_objects, post_road_test='Halt')
 
-            flight_integrated_operation_oklist = FlightSystemStatus.objects.filter(filter_objects, integrated_operation='OK(same stage)')
+            flight_integrated_operation_oklist = FlightSystemStatus.objects.filter(filter_objects, integrated_operation='Ok')
             flight_integrated_operation_oklistNext = FlightSystemStatus.objects.filter(filter_objects, integrated_operation='OK(next stage)')
             flight_integrated_operation_observationlist  = FlightSystemStatus.objects.filter(filter_objects, integrated_operation='Observation(same stage)')
             flight_integrated_operation_observationlistNext = FlightSystemStatus.objects.filter(filter_objects, integrated_operation='Observation(next stage)')
             flight_integrated_operation_uplist = FlightSystemStatus.objects.filter(filter_objects, integrated_operation='Under process')
             flight_integrated_operation_haultlist = FlightSystemStatus.objects.filter(filter_objects, integrated_operation='Halt')
 
-            flight_rain_test_oklist = FlightSystemStatus.objects.filter(filter_objects, rain_test='OK(same stage)')
+            flight_rain_test_oklist = FlightSystemStatus.objects.filter(filter_objects, rain_test='Ok')
             flight_rain_test_oklistNext = FlightSystemStatus.objects.filter(filter_objects, rain_test='OK(next stage)')
             flight_rain_test_observationlist  = FlightSystemStatus.objects.filter(filter_objects, rain_test='Observation(same stage)')
             flight_rain_test_observationlistNext = FlightSystemStatus.objects.filter(filter_objects, rain_test='Observation(next stage)')
             flight_rain_test_uplist = FlightSystemStatus.objects.filter(filter_objects, rain_test='Under process')
             flight_rain_test_haultlist = FlightSystemStatus.objects.filter(filter_objects, rain_test='Halt')
 
-            flight_pre_user_inspection_oklist = FlightSystemStatus.objects.filter(filter_objects, pre_user_inspection='OK(same stage)')
+            flight_pre_user_inspection_oklist = FlightSystemStatus.objects.filter(filter_objects, pre_user_inspection='Ok')
             flight_pre_user_inspection_oklistNext = FlightSystemStatus.objects.filter(filter_objects, pre_user_inspection='OK(next stage)')
             flight_pre_user_inspection_observationlist  = FlightSystemStatus.objects.filter(filter_objects, pre_user_inspection='Observation(same stage)')
             flight_pre_user_inspection_observationlistNext = FlightSystemStatus.objects.filter(filter_objects, pre_user_inspection='Observation(next stage)')
             flight_pre_user_inspection_uplist = FlightSystemStatus.objects.filter(filter_objects, pre_user_inspection='Under process')
             flight_pre_user_inspection_haultlist = FlightSystemStatus.objects.filter(filter_objects, pre_user_inspection='Halt')
 
-            flight_final_integrated_testing_oklist = FlightSystemStatus.objects.filter(filter_objects, final_integrated_testing='OK(same stage)')
+            flight_final_integrated_testing_oklist = FlightSystemStatus.objects.filter(filter_objects, final_integrated_testing='Ok')
             flight_final_integrated_testing_oklistNext = FlightSystemStatus.objects.filter(filter_objects, final_integrated_testing='OK(next stage)')
             flight_final_integrated_testing_observationlist  = FlightSystemStatus.objects.filter(filter_objects, final_integrated_testing='Observation(same stage)')
             flight_final_integrated_testing_observationlistNext = FlightSystemStatus.objects.filter(filter_objects, final_integrated_testing='Observation(next stage)')
             flight_final_integrated_testing_uplist = FlightSystemStatus.objects.filter(filter_objects, final_integrated_testing='Under process')
             flight_final_integrated_testing_haultlist = FlightSystemStatus.objects.filter(filter_objects, final_integrated_testing='Halt')
 
-            flight_load_unload_on_mlv_hlf_oklist = FlightSystemStatus.objects.filter(filter_objects, load_unload_on_mlv_hlf='OK(same stage)')
+            flight_load_unload_on_mlv_hlf_oklist = FlightSystemStatus.objects.filter(filter_objects, load_unload_on_mlv_hlf='Ok')
             flight_load_unload_on_mlv_hlf_oklistNext = FlightSystemStatus.objects.filter(filter_objects, load_unload_on_mlv_hlf='OK(next stage)')
             flight_load_unload_on_mlv_hlf_observationlist  = FlightSystemStatus.objects.filter(filter_objects, load_unload_on_mlv_hlf='Observation(same stage)')
             flight_load_unload_on_mlv_hlf_observationlistNext = FlightSystemStatus.objects.filter(filter_objects, load_unload_on_mlv_hlf='Observation(next stage)')
@@ -2018,7 +2678,7 @@ class SmsController:
 
 
             # relifing system count
-            relifing_blt_oklist = RelifingSystemStatus.objects.filter(filter_objects, blt_status='OK(same stage)')
+            relifing_blt_oklist = RelifingSystemStatus.objects.filter(filter_objects, blt_status='Ok')
             relifing_blt_oklistNext = RelifingSystemStatus.objects.filter(filter_objects, blt_status='OK(next stage)')
             relifing_blt_observationlist = RelifingSystemStatus.objects.filter(filter_objects,
                                                                                blt_status='Observation(same stage)')
@@ -2028,7 +2688,7 @@ class SmsController:
             relifing_blt_haultlist = RelifingSystemStatus.objects.filter(filter_objects, blt_status='Halt')
 
             relifing_prehil_oklist = RelifingSystemStatus.objects.filter(filter_objects,
-                                                                         pre_hil_status='OK(same stage)')
+                                                                         pre_hil_status='Ok')
             relifing_prehil_oklistNext = RelifingSystemStatus.objects.filter(filter_objects,
                                                                              pre_hil_status='OK(next stage)')
             relifing_prehil_observationlist = RelifingSystemStatus.objects.filter(filter_objects,
@@ -2039,7 +2699,7 @@ class SmsController:
             relifing_prehil_haultlist = RelifingSystemStatus.objects.filter(filter_objects, pre_hil_status='Halt')
 
             relifing_posthil_oklist = RelifingSystemStatus.objects.filter(filter_objects,
-                                                                          post_hil_status='OK(same stage)')
+                                                                          post_hil_status='Ok')
             relifing_posthil_oklistNext = RelifingSystemStatus.objects.filter(filter_objects,
                                                                               post_hil_status='OK(next stage)')
             relifing_posthil_observationlist = RelifingSystemStatus.objects.filter(filter_objects,
@@ -2051,7 +2711,7 @@ class SmsController:
             relifing_posthil_haultlist = RelifingSystemStatus.objects.filter(filter_objects, post_hil_status='Halt')
 
             relifing_finalintegration_oklist = RelifingSystemStatus.objects.filter(filter_objects,
-                                                                                   final_integration_status='OK(same stage)')
+                                                                                   final_integration_status='Ok')
             relifing_finalintegration_oklistNext = RelifingSystemStatus.objects.filter(filter_objects,
                                                                                        final_integration_status='OK(next stage)')
             relifing_finalintegration_observationlist = RelifingSystemStatus.objects.filter(filter_objects,
@@ -2064,7 +2724,7 @@ class SmsController:
                                                                                       final_integration_status='Halt')
 
             relifing_vibration_oklist = RelifingSystemStatus.objects.filter(filter_objects,
-                                                                            vibaration_status='OK(same stage)')
+                                                                            vibaration_status='Ok')
             relifing_vibration_oklistNext = RelifingSystemStatus.objects.filter(filter_objects,
                                                                                 vibaration_status='OK(next stage)')
             relifing_vibration_observationlist = RelifingSystemStatus.objects.filter(filter_objects,
@@ -2076,7 +2736,7 @@ class SmsController:
             relifing_vibration_haultlist = RelifingSystemStatus.objects.filter(filter_objects, vibaration_status='Halt')
 
             relifing_cg_oklist = RelifingSystemStatus.objects.filter(filter_objects,
-                                                                     cgbalancing_date_status='OK(same stage)')
+                                                                     cgbalancing_date_status='Ok')
             relifing_cg_oklistNext = RelifingSystemStatus.objects.filter(filter_objects,
                                                                          cgbalancing_date_status='OK(next stage)')
             relifing_cg_observationlist = RelifingSystemStatus.objects.filter(filter_objects,
@@ -2087,7 +2747,7 @@ class SmsController:
                                                                      cgbalancing_date_status='Under process')
             relifing_cg_haultlist = RelifingSystemStatus.objects.filter(filter_objects, cgbalancing_date_status='Halt')
 
-            relifing_fgt_oklist = RelifingSystemStatus.objects.filter(filter_objects, fgt_status='OK(same stage)')
+            relifing_fgt_oklist = RelifingSystemStatus.objects.filter(filter_objects, fgt_status='Ok')
             relifing_fgt_oklistNext = RelifingSystemStatus.objects.filter(filter_objects, fgt_status='OK(next stage)')
             relifing_fgt_observationlist = RelifingSystemStatus.objects.filter(filter_objects,
                                                                                fgt_status='Observation(same stage)')
@@ -2097,16 +2757,16 @@ class SmsController:
                                                                       fgt_status='Under process')
             relifing_fgt_haultlist = RelifingSystemStatus.objects.filter(filter_objects, fgt_status='Halt')
 
-            # relifing_bhd_notsubmit = RelifingSystemStatus.objects.filter(filter_objects,
-            #                                                              bhd_status='BHD not submitted for QM audit')
-            # relifing_bhd_inprocess = RelifingSystemStatus.objects.filter(filter_objects,
-            #                                                              bhd_status='Audit in-process')
-            # relifing_bhd_qmforwarded = RelifingSystemStatus.objects.filter(filter_objects,
-            #                                                                bhd_status='QM observations forwarded')
+            relifing_bhd_not_submit = RelifingSystemStatus.objects.filter(filter_objects,
+                                                                         bhd_status='Not Submitted')
+            relifing_bhd_inprocess = RelifingSystemStatus.objects.filter(filter_objects,
+                                                                         bhd_status='Audit in-process')
+            relifing_bhd_qm_forwarded = RelifingSystemStatus.objects.filter(filter_objects,
+                                                                           bhd_status='QM observations forwarded')
             relifing_bhd_ok = ProductionSystemStatus.objects.filter(filter_objects,
                                                                        bhd_status='Ok')
             relifing_bhd_submitted = ProductionSystemStatus.objects.filter(filter_objects,
-                                                                       bhd_status='BHD Submitted')
+                                                                       bhd_status='Submitted')
 
             relifing_fqm_planned = RelifingSystemStatus.objects.filter(filter_objects,
                                                                        fqm_status='Planned')
@@ -2122,8 +2782,11 @@ class SmsController:
                                                                       qm_certification_status='Audit in-process')
             relifing_qmc_obs_forwarded = ProductionSystemStatus.objects.filter(filter_objects,
                                                                         qm_certification_status='QM Observations Forwarded')
+
+
+
             relifing_enduser_oklist = RelifingSystemStatus.objects.filter(filter_objects,
-                                                                          enduser_status='OK(same stage)')
+                                                                          enduser_status='Ok')
             relifing_enduser_oklistNext = RelifingSystemStatus.objects.filter(filter_objects,
                                                                               enduser_status='OK(next stage)')
             relifing_enduser_observationlist = RelifingSystemStatus.objects.filter(filter_objects,
@@ -2136,7 +2799,7 @@ class SmsController:
 
 
             relifing_sys_align_oklist = RelifingSystemStatus.objects.filter(filter_objects,
-                                                                          sys_align_status='OK(same stage)')
+                                                                          sys_align_status='Ok')
             relifing_sys_align_oklistNext = RelifingSystemStatus.objects.filter(filter_objects,
                                                                               sys_align_status='OK(next stage)')
             relifing_sys_align_observationlist = RelifingSystemStatus.objects.filter(filter_objects,
@@ -2149,7 +2812,7 @@ class SmsController:
 
 
             relifing_incapsulation_oklist = RelifingSystemStatus.objects.filter(filter_objects,
-                                                                          incapsulation_status='OK(same stage)')
+                                                                          incapsulation_status='Ok')
             relifing_incapsulation_oklistNext = RelifingSystemStatus.objects.filter(filter_objects,
                                                                               incapsulation_status='OK(next stage)')
             relifing_incapsulation_observationlist = RelifingSystemStatus.objects.filter(filter_objects,
@@ -2160,70 +2823,70 @@ class SmsController:
                                                                           incapsulation_status='Completed')
             relifing_incapsulation_haultlist = RelifingSystemStatus.objects.filter(filter_objects, incapsulation_status='Halt')
 
-            relifing_emp_proofing_oklist = RelifingSystemStatus.objects.filter(filter_objects, emp_proofing='OK(same stage)')
+            relifing_emp_proofing_oklist = RelifingSystemStatus.objects.filter(filter_objects, emp_proofing='Ok')
             relifing_emp_proofing_oklistNext= RelifingSystemStatus.objects.filter(filter_objects, emp_proofing='OK(next stage)')
             relifing_emp_proofing_observationlist  = RelifingSystemStatus.objects.filter(filter_objects, emp_proofing='Observation(same stage)')
             relifing_emp_proofing_observationlistNext = RelifingSystemStatus.objects.filter(filter_objects, emp_proofing='Observation(next stage)')
             relifing_emp_proofing_uplist = RelifingSystemStatus.objects.filter(filter_objects, emp_proofing='Under process')
             relifing_emp_proofing_haultlist = RelifingSystemStatus.objects.filter(filter_objects, emp_proofing='Halt')
 
-            relifing_func_tst_oklistNext_oklist  = RelifingSystemStatus.objects.filter(filter_objects, func_tst='OK(same stage)')
+            relifing_func_tst_oklistNext_oklist  = RelifingSystemStatus.objects.filter(filter_objects, func_tst='Ok')
             relifing_func_tst_oklistNext_oklistNext  = RelifingSystemStatus.objects.filter(filter_objects, func_tst='OK(next stage)')
             relifing_func_tst_oklistNext_observationlist   = RelifingSystemStatus.objects.filter(filter_objects, func_tst='Observation(same stage)')
             relifing_func_tst_oklistNext_observationlistNext  = RelifingSystemStatus.objects.filter(filter_objects, func_tst='Observation(next stage)')
             relifing_func_tst_oklistNext_uplist  = RelifingSystemStatus.objects.filter(filter_objects, func_tst='Under process')
             relifing_func_tst_oklistNext_haultlist  = RelifingSystemStatus.objects.filter(filter_objects, func_tst='Halt')
 
-            relifing_func_tst_dummy_bird_oklist = RelifingSystemStatus.objects.filter(filter_objects, func_tst_dummy_bird='OK(same stage)')
+            relifing_func_tst_dummy_bird_oklist = RelifingSystemStatus.objects.filter(filter_objects, func_tst_dummy_bird='Ok')
             relifing_func_tst_dummy_bird_oklistNext = RelifingSystemStatus.objects.filter(filter_objects, func_tst_dummy_bird='OK(next stage)')
             relifing_func_tst_dummy_bird_observationlist  = RelifingSystemStatus.objects.filter(filter_objects, func_tst_dummy_bird='Observation(same stage)')
             relifing_func_tst_dummy_bird_observationlistNext = RelifingSystemStatus.objects.filter(filter_objects, func_tst_dummy_bird='Observation(next stage)')
             relifing_func_tst_dummy_bird_uplist = RelifingSystemStatus.objects.filter(filter_objects, func_tst_dummy_bird='Under process')
             relifing_func_tst_dummy_bird_haultlist = RelifingSystemStatus.objects.filter(filter_objects, func_tst_dummy_bird='Halt')
 
-            relifing_road_test_oklist = RelifingSystemStatus.objects.filter(filter_objects, road_test='OK(same stage)')
+            relifing_road_test_oklist = RelifingSystemStatus.objects.filter(filter_objects, road_test='Ok')
             relifing_road_test_oklistNext = RelifingSystemStatus.objects.filter(filter_objects, road_test='OK(next stage)')
             relifing_road_test_observationlist  = RelifingSystemStatus.objects.filter(filter_objects, road_test='Observation(same stage)')
             relifing_road_test_observationlistNext = RelifingSystemStatus.objects.filter(filter_objects, road_test='Observation(next stage)')
             relifing_road_test_uplist = RelifingSystemStatus.objects.filter(filter_objects, road_test='Under process')
             relifing_road_test_haultlist = RelifingSystemStatus.objects.filter(filter_objects, road_test='Halt')
 
-            relifing_post_road_test_oklist = RelifingSystemStatus.objects.filter(filter_objects, post_road_test='OK(same stage)')
+            relifing_post_road_test_oklist = RelifingSystemStatus.objects.filter(filter_objects, post_road_test='Ok')
             relifing_post_road_test_oklistNext = RelifingSystemStatus.objects.filter(filter_objects, post_road_test='OK(next stage)')
             relifing_post_road_test_observationlist  = RelifingSystemStatus.objects.filter(filter_objects, post_road_test='Observation(same stage)')
             relifing_post_road_test_observationlistNext = RelifingSystemStatus.objects.filter(filter_objects, post_road_test='Observation(next stage)')
             relifing_post_road_test_uplist = RelifingSystemStatus.objects.filter(filter_objects, post_road_test='Under process')
             relifing_post_road_test_haultlist = RelifingSystemStatus.objects.filter(filter_objects, post_road_test='Halt')
 
-            relifing_integrated_operation_oklist = RelifingSystemStatus.objects.filter(filter_objects, integrated_operation='OK(same stage)')
+            relifing_integrated_operation_oklist = RelifingSystemStatus.objects.filter(filter_objects, integrated_operation='Ok')
             relifing_integrated_operation_oklistNext = RelifingSystemStatus.objects.filter(filter_objects, integrated_operation='OK(next stage)')
             relifing_integrated_operation_observationlist  = RelifingSystemStatus.objects.filter(filter_objects, integrated_operation='Observation(same stage)')
             relifing_integrated_operation_observationlistNext = RelifingSystemStatus.objects.filter(filter_objects, integrated_operation='Observation(next stage)')
             relifing_integrated_operation_uplist = RelifingSystemStatus.objects.filter(filter_objects, integrated_operation='Under process')
             relifing_integrated_operation_haultlist = RelifingSystemStatus.objects.filter(filter_objects, integrated_operation='Halt')
 
-            relifing_rain_test_oklist = RelifingSystemStatus.objects.filter(filter_objects, rain_test='OK(same stage)')
+            relifing_rain_test_oklist = RelifingSystemStatus.objects.filter(filter_objects, rain_test='Ok')
             relifing_rain_test_oklistNext = RelifingSystemStatus.objects.filter(filter_objects, rain_test='OK(next stage)')
             relifing_rain_test_observationlist  = RelifingSystemStatus.objects.filter(filter_objects, rain_test='Observation(same stage)')
             relifing_rain_test_observationlistNext = RelifingSystemStatus.objects.filter(filter_objects, rain_test='Observation(next stage)')
             relifing_rain_test_uplist = RelifingSystemStatus.objects.filter(filter_objects, rain_test='Under process')
             relifing_rain_test_haultlist = RelifingSystemStatus.objects.filter(filter_objects, rain_test='Halt')
 
-            relifing_pre_user_inspection_oklist = RelifingSystemStatus.objects.filter(filter_objects, pre_user_inspection='OK(same stage)')
+            relifing_pre_user_inspection_oklist = RelifingSystemStatus.objects.filter(filter_objects, pre_user_inspection='Ok')
             relifing_pre_user_inspection_oklistNext = RelifingSystemStatus.objects.filter(filter_objects, pre_user_inspection='OK(next stage)')
             relifing_pre_user_inspection_observationlist  = RelifingSystemStatus.objects.filter(filter_objects, pre_user_inspection='Observation(same stage)')
             relifing_pre_user_inspection_observationlistNext = RelifingSystemStatus.objects.filter(filter_objects, pre_user_inspection='Observation(next stage)')
             relifing_pre_user_inspection_uplist = RelifingSystemStatus.objects.filter(filter_objects, pre_user_inspection='Under process')
             relifing_pre_user_inspection_haultlist = RelifingSystemStatus.objects.filter(filter_objects, pre_user_inspection='Halt')
 
-            relifing_final_integrated_testing_oklist = RelifingSystemStatus.objects.filter(filter_objects, final_integrated_testing='OK(same stage)')
+            relifing_final_integrated_testing_oklist = RelifingSystemStatus.objects.filter(filter_objects, final_integrated_testing='Ok')
             relifing_final_integrated_testing_oklistNext = RelifingSystemStatus.objects.filter(filter_objects, final_integrated_testing='OK(next stage)')
             relifing_final_integrated_testing_observationlist  = RelifingSystemStatus.objects.filter(filter_objects, final_integrated_testing='Observation(same stage)')
             relifing_final_integrated_testing_observationlistNext = RelifingSystemStatus.objects.filter(filter_objects, final_integrated_testing='Observation(next stage)')
             relifing_final_integrated_testing_uplist = RelifingSystemStatus.objects.filter(filter_objects, final_integrated_testing='Under process')
             relifing_final_integrated_testing_haultlist = RelifingSystemStatus.objects.filter(filter_objects, final_integrated_testing='Halt')
 
-            relifing_load_unload_on_mlv_hlf_oklist = RelifingSystemStatus.objects.filter(filter_objects, load_unload_on_mlv_hlf='OK(same stage)')
+            relifing_load_unload_on_mlv_hlf_oklist = RelifingSystemStatus.objects.filter(filter_objects, load_unload_on_mlv_hlf='Ok')
             relifing_load_unload_on_mlv_hlf_oklistNext = RelifingSystemStatus.objects.filter(filter_objects, load_unload_on_mlv_hlf='OK(next stage)')
             relifing_load_unload_on_mlv_hlf_observationlist  = RelifingSystemStatus.objects.filter(filter_objects, load_unload_on_mlv_hlf='Observation(same stage)')
             relifing_load_unload_on_mlv_hlf_observationlistNext = RelifingSystemStatus.objects.filter(filter_objects, load_unload_on_mlv_hlf='Observation(next stage)')
@@ -2356,12 +3019,26 @@ class SmsController:
                 'relifing_fgt_observationlist_next': relifing_fgt_observationlistNext.count(),
                 'relifing_fgt_uplist': relifing_fgt_uplist.count(),
                 'relifing_fgt_haultlist': relifing_fgt_haultlist.count(),
+
                 'prod_bhd_ok': prod_bhd_ok.count(),
                 'prod_bhd_submitted': prod_bhd_submitted.count(),
+                'prod_bhd_not_submitted' : prod_bhd_not_submitted.count(),
+                'prod_bhd_qm_forwarded' : prod_bhd_qm_forwarded.count(),
+                'prod_bhd_inprocess' : prod_bhd_inprocess.count(),
+
                 'flight_bhd_ok': flight_bhd_ok.count(),
                 'flight_bhd_submitted': flight_bhd_submitted.count(),
+                'flight_bhd_not_submit' : flight_bhd_not_submit.count(),
+                'flight_bhd_inprocess' : flight_bhd_inprocess.count(),
+                'flight_bhd_qm_forwarded' : flight_bhd_qm_forwarded.count(),
+
+
                 'relifing_bhd_ok': relifing_bhd_ok.count(),
                 'relifing_bhd_submitted': relifing_bhd_submitted.count(),
+                'relifing_bhd_not_submit' : relifing_bhd_not_submit.count(),
+                'relifing_bhd_inprocess' : relifing_bhd_inprocess.count(),
+                'relifing_bhd_qm_forwarded' : relifing_bhd_qm_forwarded.count(),
+
                 'prod_fqm_planned': prod_fqm_planned.count(),
                 'prod_fqm_conducted': prod_fqm_conducted.count(),
                 'flight_fqm_planned': flight_fqm_planned.count(),
