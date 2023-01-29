@@ -162,6 +162,16 @@ class AmsController:
                 data = TaskSummary.objects.filter(current_over_due_filter, task_date__gt=F('target_date'),assigned_date__year=selected_year)
                 serializer = TaskSummarySerialzer(data, many=True)
                 return JsonResponse({'message': 'true', 'data': serializer.data}, status=200)
+
+            if status == 'total_current_year':
+                current_total_filter = Q()
+                if selected_group != '':
+                    current_total_filter &= get_filter(
+                        'assigned_to', 'equal',
+                        selected_group)
+                data = TaskSummary.objects.filter(current_total_filter, assigned_date__year=selected_year)
+                serializer = TaskSummarySerialzer(data, many=True)
+                return JsonResponse({'message': 'true', 'data': serializer.data}, status=200)
             if status == 'total_overdue':
                 current_over_due_filter = Q()
                 current_over_due_filter &= get_filter(

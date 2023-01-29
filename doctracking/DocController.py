@@ -84,10 +84,14 @@ class DocController:
                 get_doc.due_date = request['due_date']
                 if request['task_date'] != "":
                     get_doc.task_date = request['task_date']
+                else:
+                    get_doc.task_date = None
                 get_doc.status = request['status']
                 get_doc.sent_to = request['sent_to']
                 if request['sent_date'] != "":
                     get_doc.sent_date = request['sent_date']
+                else:
+                    get_doc.sent_date = None
                 get_doc.product_sr_no = request['product_sr_no']
                 get_doc.tracking_id = request['tracking_id']
                 if request['isActive'] == 'true':
@@ -285,7 +289,19 @@ class DocController:
                         total_filter_document_totaloverdue &= get_filter(
                             'sender', 'equal',
                             current_org)
-                docList = doctracking.objects.filter(total_filter_document_totaloverdue, due_date__lt=F('task_date')).order_by('-id')
+
+                total_over_due_all = doctracking.objects.filter(total_filter_document_totaloverdue).order_by('-id')
+                list = []
+                if total_over_due_all is not None:
+                    for item in total_over_due_all:
+                        if item.task_date is None:
+                            item.task_date = datetime.today() + timedelta(hours=5)
+                        if item.due_date.date() < item.task_date.date():
+                            list.append(item)
+
+                docList = list  # doctracking.objects.filter(total_filter_document_totaloverdue,
+                #                          due_date__lt=F('task_date')).order_by('-id')
+
                 serializer = DocListSerializer(docList, many=True)
                 return JsonResponse({'status': 'True', 'data': serializer.data},
                                     status=200)
@@ -505,8 +521,19 @@ class DocController:
                         # total_filter_document_totaloverdue &= get_filter(
                         #     'status', 'not_equal',
                         #     'Approved')
-                    docList = doctracking.objects.filter(total_filter_document_totaloverdue, receive_date__year=current_year,
-                                                         due_date__lt=F('task_date')).order_by('-id')
+
+                    total_over_due_current = doctracking.objects.filter(total_filter_document_totaloverdue,
+                                                                        receive_date__year=current_year).order_by('-id')
+                    list = []
+                    if total_over_due_current is not None:
+                        for item in total_over_due_current:
+                            if item.task_date is None:
+                                item.task_date = datetime.today() + timedelta(hours=5)
+                            if item.due_date.date() < item.task_date.date():
+                                list.append(item)
+                    docList = list  # doctracking.objects.filter(total_filter_document_totaloverdue,
+                    #                          receive_date__year=current_year,
+                    #                         due_date__lt=F('task_date')).order_by('-id')
 
                     serializer = DocListSerializer(docList, many=True)
                     return JsonResponse({'status': 'True', 'data': serializer.data},
@@ -1040,8 +1067,25 @@ class DocController:
             over_due_bhd = 0
             ATP_count = 0
             total_doc_approvedList = doctracking.objects.filter(status='Approved')
-            over_due_doc_total = doctracking.objects.filter(total_filter_document, due_date__lt=F('task_date')).count()
-            over_due_bhd_total = doctracking.objects.filter(total_type_bhd, due_date__lt=F('task_date')).count()
+            over_due_doc_total_all = doctracking.objects.filter(total_filter_document)
+            count_all = 0
+            if over_due_doc_total_all is not None:
+                for item in over_due_doc_total_all:
+                    if item.task_date is None:
+                        item.task_date = datetime.today() + timedelta(hours=5)
+                    if item.due_date.date() < item.task_date.date():
+                        count_all = count_all + 1
+
+            over_due_bhd_total_all = doctracking.objects.filter(total_type_bhd)
+            count_all_bhds = 0
+            if over_due_bhd_total_all is not None:
+                for item in over_due_bhd_total_all:
+                    if item.task_date is None:
+                        item.task_date = datetime.today() + timedelta(hours=5)
+                    if item.due_date.date() < item.task_date.date():
+                        count_all_bhds = count_all_bhds + 1
+            over_due_doc_total = count_all  # over_due_doc_total_all.filter(due_date__lt=F('task_date')).count()
+            over_due_bhd_total = count_all_bhds  # doctracking.objects.filter(total_type_bhd, due_date__lt=F('task_date')).count()
             total_bhd_count_filter = Q()
             total_bhd_count_filter &= get_filter(
                 'doc_type', 'equal',
@@ -1101,11 +1145,30 @@ class DocController:
             current_over_document_filter &= get_filter(
                 'doc_type', 'not_equal',
                 'BHD')
-            over_due_document = over_due.filter(current_over_document_filter, receive_date__year=selected_year,
-                                                due_date__lt=F('task_date')).count()
-            over_due_bhd = over_due.filter(overdueBHd_filter_objects, receive_date__year=selected_year,
-                                           due_date__lt=F('task_date'),
-                                           doc_type='BHD').count()
+
+            count_current_doc = 0
+            current_over_due_doc_all = over_due.filter(current_over_document_filter, receive_date__year=selected_year)
+            if current_over_due_doc_all is not None:
+                for item in current_over_due_doc_all:
+                    if item.task_date is None:
+                        item.task_date = datetime.today() + timedelta(hours=5)
+                    if item.due_date.date() < item.task_date.date():
+                        count_current_doc = count_current_doc + 1
+            over_due_document = count_current_doc  # over_due.filter(current_over_document_filter, receive_date__year=selected_year,
+            #                due_date__lt=F('task_date')).count()
+
+            count_current_bhd = 0
+            current_over_due_bhd_all = over_due.filter(overdueBHd_filter_objects, receive_date__year=selected_year,
+                                                       doc_type='BHD')
+            if current_over_due_bhd_all is not None:
+                for item in current_over_due_bhd_all:
+                    if item.task_date is None:
+                        item.task_date = datetime.today() + timedelta(hours=5)
+                    if item.due_date.date() < item.task_date.date():
+                        count_current_bhd = count_current_bhd + 1
+            over_due_bhd = count_current_bhd  # over_due.filter(overdueBHd_filter_objects, receive_date__year=selected_year,
+            #               due_date__lt=F('task_date'),
+            #               doc_type='BHD').count()
 
             current_filter_objects = Q()
             if selected_type == 'document' or selected_type == '':
@@ -1454,7 +1517,6 @@ class DocController:
             doc_not_completedList = 0
             total_over_due = 0
             current_year = datetime.today().year
-            current_year_task = TaskSummary.objects.filter(assigned_date__year=current_year).count()
 
             total_filter_objects = Q()
             total_filter_objects &= get_filter(
@@ -1472,8 +1534,10 @@ class DocController:
                     selected_group)
             current_over_due_filter = Q()
             current_over_due_filter &= get_filter(
-                    'status', 'equal',
-                    'Task in-process')
+                'status', 'equal',
+                'Task in-process')
+            current_year_task = TaskSummary.objects.filter(all_filter_objects,
+                                                           assigned_date__year=selected_year).count()
             doc_not_completedList = TaskSummary.objects.filter(total_filter_objects).count()
             total_task_inprocess = TaskSummary.objects.filter(all_filter_objects, status='Task in-process').count()
             total_task_follow_up = TaskSummary.objects.filter(all_filter_objects, status='Task follow-up').count()
