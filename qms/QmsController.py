@@ -122,7 +122,7 @@ class QmsController:
 
     @staticmethod
     def GetQmsAuditList(request, self=None):
-        try:
+        # try:
             current_status = request.query_params.get('audit_status')
             current_year = request.query_params.get('year')
             current_org = request.query_params.get('organization')
@@ -218,17 +218,63 @@ class QmsController:
             #         current_org)
 
             dataList = QmsAudit.objects.filter(filter_objects)
-            if current_status == 'QMS Total Overdue':
-                dataList = QmsAudit.objects.filter(audit_start_date__gt=F('planned_date'))
+
             if current_status == 'QMS Total Under Process':
                 dataList = QmsAudit.objects.filter(~Q(audit_status = 'Completed'))
             if current_status == 'QMS Total Completed':
                 dataList = QmsAudit.objects.filter(audit_status = 'Completed')
             if current_status == 'QMS Total Audits':
                 dataList = QmsAudit.objects.all().order_by('-id')
-            if current_status == 'Overdue':
-                dataList = dataList.filter(audit_start_date__gt=F('planned_date'))
+            if current_status == 'QMS Total Overdue':
+                OverdueList = []
+                if current_org == '' and standItems == '' and setItems == '':
+                    inprocess_overdueCount = QmsAudit.objects.all()
+                    list = []
+                    if inprocess_overdueCount is not None:
+                        for item in inprocess_overdueCount:
+                            if item.audit_start_date is None:
+                                item.audit_start_date = datetime.today() + timedelta(hours=5)
+                            if item.planned_date.date() < item.audit_start_date.date():
+                                list.append(item)
+                    OverdueList = list
+                elif current_org == '' and standItems != '' and setItems == '':
+                    list = []
+                    for stand in standItems:
+                        inprocess_overdueCount = QmsAudit.objects.filter(standard=stand)
+                        if inprocess_overdueCount is not None:
+                            for item in inprocess_overdueCount:
+                                if item.audit_start_date is None:
+                                    item.audit_start_date = datetime.today() + timedelta(hours=5)
+                                if item.planned_date.date() < item.audit_start_date.date():
+                                    list.append(item)
+                    OverdueList = list
 
+                elif current_org != '' and standItems == '' and setItems != '':
+                    list = []
+                    for set in setItems:
+                        inprocess_overdueCount = QmsAudit.objects.filter(Organization=current_org, setup=set)
+                        if inprocess_overdueCount is not None:
+                            for item in inprocess_overdueCount:
+                                if item.audit_start_date is None:
+                                    item.audit_start_date = datetime.today() + timedelta(hours=5)
+                                if item.planned_date.date() < item.audit_start_date.date():
+                                    list.append(item)
+                    OverdueList = list
+                else:
+                    for (stand, set) in itertools.zip_longest(standItems, setItems):
+                        inprocess_overdueCount = QmsAudit.objects.filter(Organization=current_org, standard=stand,
+                                                                         setup=set)
+                        list = []
+                        if inprocess_overdueCount is not None:
+                            for item in inprocess_overdueCount:
+                                if item.audit_start_date is None:
+                                    item.audit_start_date = datetime.today() + timedelta(hours=5)
+                                if item.planned_date.date() < item.audit_start_date.date():
+                                    list.append(item)
+                    OverdueList = list
+                serializer = QmsAuditSerializer(OverdueList, many=True)
+                return JsonResponse({'status': 'True', 'data': serializer.data},
+                                        status=200)
             if len(standItems) > 0 and len(setItems)>0:
                 temp =[]
                 for (set,stand) in itertools.zip_longest (setItems,standItems):
@@ -245,12 +291,23 @@ class QmsController:
                     temp.extend(dataList.filter(standard=stand))
                 dataList = temp
 
+            if current_status == 'Overdue':
+                # dataList = dataList.filter(audit_start_date__gt=F('planned_date'))
+                # total_over_due_all = doctracking.objects.filter(total_filter_document_totaloverdue).order_by('-id')
+                list = []
+                if dataList is not None:
+                    for item in dataList:
+                        if item.audit_start_date is None:
+                            item.audit_start_date = datetime.today() + timedelta(hours=5)
+                        if item.planned_date.date() < item.audit_start_date.date():
+                            list.append(item)
+                dataList = list
             serializer = QmsAuditSerializer(dataList, many=True)
             return JsonResponse({'status': 'True', 'data': serializer.data},
                                 status=200)
-        except Exception as e:
-            print(e)
-            return JsonResponse({'status': 'False', "message": "Internal Server Error"}, status=500)
+        # except Exception as e:
+        #     print(e)
+        #     return JsonResponse({'status': 'False', "message": "Internal Server Error"}, status=500)
 
     @staticmethod
     def GetQmsAuditListCount(request, self=None):
@@ -293,16 +350,36 @@ class QmsController:
                 total_audits = QmsAudit.objects.count()
                 audit_under_process = QmsAudit.objects.filter(~Q(audit_status='Completed')).count()
                 audit_completed = QmsAudit.objects.filter(audit_status='Completed').count()
-                inprocess_overdue = QmsAudit.objects.filter(audit_start_date__gt=F('planned_date')).count()
+                # inprocess_overdue = QmsAudit.objects.filter(audit_start_date__gt=F('planned_date')).count()
+                inprocess_overdueCount = QmsAudit.objects.all()
 
+                list = []
+                if inprocess_overdueCount is not None:
+                    for item in inprocess_overdueCount:
+                        if item.audit_start_date is None:
+                            item.audit_start_date = datetime.today() + timedelta(hours=5)
+                        if item.planned_date.date() < item.audit_start_date.date():
+                            list.append(item)
+                inprocess_overdue = len(list)
             elif selected_org == '' and standItems != '' and setItems == '':
                 for stand in standItems:
                     tot_audits = QmsAudit.objects.filter(standard=stand).count()
                     tot_under_process = QmsAudit.objects.filter(~Q(audit_status='Completed'),
                                                                 standard=stand).count()
                     tot_completed = QmsAudit.objects.filter(audit_status='Completed', standard=stand).count()
-                    tot_overdue = QmsAudit.objects.filter(audit_start_date__gt=F('planned_date'),
-                                                          standard=stand).count()
+                    # tot_overdue = QmsAudit.objects.filter(audit_start_date__gt=F('planned_date'),
+                    #                                       standard=stand).count()
+                    inprocess_overdueCount = QmsAudit.objects.filter(standard=stand)
+
+                    list = []
+                    if inprocess_overdueCount is not None:
+                        for item in inprocess_overdueCount:
+                            if item.audit_start_date is None:
+                                item.audit_start_date = datetime.today() + timedelta(hours=5)
+                            if item.planned_date.date() < item.audit_start_date.date():
+                                list.append(item)
+                    tot_overdue = len(list)
+
                     total_audits += tot_audits
                     audit_under_process += tot_under_process
                     audit_completed += tot_completed
@@ -315,8 +392,19 @@ class QmsController:
                                                                 setup=set).count()
                     tot_completed = QmsAudit.objects.filter(audit_status='Completed', Organization=selected_org,
                                                             setup=set).count()
-                    tot_overdue = QmsAudit.objects.filter(audit_start_date__gt=F('planned_date'),
-                                                          Organization=selected_org, setup=set).count()
+                    # tot_overdue = QmsAudit.objects.filter(audit_start_date__gt=F('planned_date'),
+                    #                                       Organization=selected_org, setup=set).count()
+                    inprocess_overdueCount = QmsAudit.objects.filter(Organization=selected_org, setup=set)
+
+                    list = []
+                    if inprocess_overdueCount is not None:
+                        for item in inprocess_overdueCount:
+                            if item.audit_start_date is None:
+                                item.audit_start_date = datetime.today() + timedelta(hours=5)
+                            if item.planned_date.date() < item.audit_start_date.date():
+                                list.append(item)
+                    tot_overdue = len(list)
+
                     total_audits += tot_audits
                     audit_under_process += tot_under_process
                     audit_completed += tot_completed
@@ -330,8 +418,18 @@ class QmsController:
                                                                 standard=stand, setup=set).count()
                     tot_completed = QmsAudit.objects.filter(audit_status='Completed', Organization=selected_org,
                                                             standard=stand, setup=set).count()
-                    tot_overdue = QmsAudit.objects.filter(audit_start_date__gt=F('planned_date'),
-                                                          Organization=selected_org, standard=stand, setup=set).count()
+                    # tot_overdue = QmsAudit.objects.filter(audit_start_date__gt=F('planned_date'),
+                    #                                       Organization=selected_org, standard=stand, setup=set).count()
+                    inprocess_overdueCount = QmsAudit.objects.filter(Organization=selected_org, standard=stand, setup=set)
+
+                    list = []
+                    if inprocess_overdueCount is not None:
+                        for item in inprocess_overdueCount:
+                            if item.audit_start_date is None:
+                                item.audit_start_date = datetime.today() + timedelta(hours=5)
+                            if item.planned_date.date() < item.audit_start_date.date():
+                                list.append(item)
+                    tot_overdue = len(list)
                     total_audits += tot_audits
                     audit_under_process += tot_under_process
                     audit_completed += tot_completed
@@ -350,7 +448,18 @@ class QmsController:
                     currYearAuditRemaining = QmsAudit.objects.filter(planned_date__year=selected_year,
                                                               audit_status='Remaining').count()
 
-                    currYearOverdue = QmsAudit.objects.filter(planned_date__year = selected_year,audit_start_date__gt=F('planned_date')).count()
+                    # currYearOverdue = QmsAudit.objects.filter(planned_date__year = selected_year,audit_start_date__gt=F('planned_date')).count()
+
+                    inprocess_overdueCount = QmsAudit.objects.filter(planned_date__year = selected_year)
+
+                    list = []
+                    if inprocess_overdueCount is not None:
+                        for item in inprocess_overdueCount:
+                            if item.audit_start_date is None:
+                                item.audit_start_date = datetime.today() + timedelta(hours=5)
+                            if item.planned_date.date() < item.audit_start_date.date():
+                                list.append(item)
+                    currYearOverdue = len(list)
 
                     currYearCertified = QmsAudit.objects.filter(certification_status='Certified',planned_date__year=selected_year,).count()
                     currYearNotCertified = QmsAudit.objects.filter(certification_status='Not Certified',planned_date__year=selected_year,).count()
@@ -368,8 +477,18 @@ class QmsController:
                         tot_audit_remaining = QmsAudit.objects.filter(planned_date__year=selected_year,
                                                                   Organization = selected_org,setup=set, audit_status='Remaining').count()
 
-                        tot_inprocess_overdue = QmsAudit.objects.filter(planned_date__year=selected_year,
-                                                                    Organization = selected_org,setup=set,audit_start_date__gt=F('planned_date')).count()
+                        # tot_inprocess_overdue = QmsAudit.objects.filter(planned_date__year=selected_year,
+                        #                                             Organization = selected_org,setup=set,audit_start_date__gt=F('planned_date')).count()
+                        inprocess_overdueCount = QmsAudit.objects.filter(planned_date__year=selected_year,Organization = selected_org,setup=set)
+
+                        list = []
+                        if inprocess_overdueCount is not None:
+                            for item in inprocess_overdueCount:
+                                if item.audit_start_date is None:
+                                    item.audit_start_date = datetime.today() + timedelta(hours=5)
+                                if item.planned_date.date() < item.audit_start_date.date():
+                                    list.append(item)
+                        tot_inprocess_overdue = len(list)
 
                         tot_certified = QmsAudit.objects.filter(certification_status='Certified',planned_date__year=selected_year,
                                                                   Organization = selected_org,setup=set).count()
@@ -399,8 +518,20 @@ class QmsController:
                         tot_audit_remaining = QmsAudit.objects.filter(planned_date__year=selected_year,
                                                                   standard=stand,
                                                                   audit_status='Remaining').count()
-                        tot_inprocess_overdue = QmsAudit.objects.filter(planned_date__year=selected_year,
-                                                                    standard=stand,audit_start_date__gt=F('planned_date')).count()
+                        # tot_inprocess_overdue = QmsAudit.objects.filter(planned_date__year=selected_year,
+                        #                                             standard=stand,audit_start_date__gt=F('planned_date')).count()
+
+                        inprocess_overdueCount = QmsAudit.objects.filter(planned_date__year=selected_year,standard=stand)
+
+                        list = []
+                        if inprocess_overdueCount is not None:
+                            for item in inprocess_overdueCount:
+                                if item.audit_start_date is None:
+                                    item.audit_start_date = datetime.today() + timedelta(hours=5)
+                                if item.planned_date.date() < item.audit_start_date.date():
+                                    list.append(item)
+                        tot_inprocess_overdue = len(list)
+
                         tot_certified = QmsAudit.objects.filter(certification_status='Certified',planned_date__year=selected_year,
                                                                   standard=stand).count()
 
@@ -431,10 +562,21 @@ class QmsController:
                         tot_audit_remaining = QmsAudit.objects.filter(planned_date__year=selected_year,
                                                                   Organization=selected_org, standard=stand,
                                                                   setup=set, audit_status='Remaining').count()
-                        tot_inprocess_overdue = QmsAudit.objects.filter(audit_start_date__gt=F('planned_date'),planned_date__year=selected_year,
-                                                                       Organization=selected_org,
-                                                                       standard=stand,
-                                                                       setup=set).count()
+                        # tot_inprocess_overdue = QmsAudit.objects.filter(audit_start_date__gt=F('planned_date'),planned_date__year=selected_year,
+                        #                                                Organization=selected_org,
+                        #                                                standard=stand,
+                        #                                                setup=set).count()
+                        inprocess_overdueCount = QmsAudit.objects.filter(planned_date__year=selected_year,standard=stand,Organization=selected_org,setup=set)
+
+                        list = []
+                        if inprocess_overdueCount is not None:
+                            for item in inprocess_overdueCount:
+                                if item.audit_start_date is None:
+                                    item.audit_start_date = datetime.today() + timedelta(hours=5)
+                                if item.planned_date.date() < item.audit_start_date.date():
+                                    list.append(item)
+                        tot_inprocess_overdue = len(list)
+
                         tot_certified = QmsAudit.objects.filter(certification_status='Certified',planned_date__year=selected_year,
                                                                        Organization=selected_org,
                                                                        standard=stand,
