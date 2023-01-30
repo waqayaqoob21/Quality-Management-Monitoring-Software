@@ -14,8 +14,8 @@ from datetime import date
 class QmsController:
     @staticmethod
     def AddQmsAudit(request):
-            qmsModel = QmsAudit()
-        # try:
+        qmsModel = QmsAudit()
+        try:
             id = request['id']
             if id == '0':
                 qmsModel.audit_id =  request['audit_id']
@@ -29,9 +29,9 @@ class QmsController:
                     qmsModel.certification_validity_rescheduling_date = request['certification_validity_rescheduling_date']
                 qmsModel.audit_type = request['audit_type']
                 qmsModel.planned_date = request['planned_date']
-                qmsModel.audit_start_date = request['audit_start_date']
+                if request['audit_start_date'] != '':
+                    qmsModel.audit_start_date = request['audit_start_date']
                 if request['audit_due_date'] != '':
-
                     qmsModel.audit_due_date = request['audit_due_date']
                 if request['audit_close_date'] != '':
                     qmsModel.audit_close_date = request['audit_close_date']
@@ -53,8 +53,7 @@ class QmsController:
                 get_qms = QmsAudit.objects.filter(id=id).first()
                 if get_qms is not None:
                     if get_qms.audit_status != request['audit_status'] or str(get_qms.certification_validity_date.date()) != request['certification_validity_date'] \
-                            or str(get_qms.planned_date.date()) != request['planned_date'] or  str(get_qms.audit_start_date.date()) !=  request['audit_start_date']\
-                            or str(get_qms.audit_close_date.date()) != request['audit_close_date'] or str(get_qms.audit_due_date.date()) != request['audit_due_date']:
+                            or str(get_qms.planned_date.date()) != request['planned_date'] or str(get_qms.audit_due_date.date()) != request['audit_due_date']:
                         auditHistory = QmsAuditHistory()
                         auditHistory.audit_id = get_qms.audit_id
                         auditHistory.Organization = get_qms.Organization
@@ -67,7 +66,8 @@ class QmsController:
                             auditHistory.certification_validity_rescheduling_date = get_qms.certification_validity_rescheduling_date
                         auditHistory.audit_type = get_qms.audit_type
                         auditHistory.planned_date = get_qms.planned_date
-                        auditHistory.audit_start_date = get_qms.audit_start_date
+                        if request['audit_start_date'] != '':
+                            auditHistory.audit_start_date = get_qms.audit_start_date
                         if request['audit_due_date'] != '':
                             auditHistory.audit_due_date = get_qms.audit_due_date
                         if request['audit_close_date'] != '':
@@ -97,7 +97,8 @@ class QmsController:
                     get_qms.certification_validity_rescheduling_date = request['certification_validity_rescheduling_date']
                 get_qms.audit_type = request['audit_type']
                 get_qms.planned_date = request['planned_date']
-                get_qms.audit_start_date = request['audit_start_date']
+                if request['audit_start_date'] != '':
+                    get_qms.audit_start_date = request['audit_start_date']
                 if request['audit_due_date'] != '':
                     get_qms.audit_due_date = request['audit_due_date']
                 if request['audit_close_date'] != '':
@@ -116,8 +117,8 @@ class QmsController:
                 get_qms.save()
                 return JsonResponse({'status': 'True', 'message': "QMS Audit Updated Successfully!"},
                                     status=200)
-        # except Exception as e:
-        #     return JsonResponse({'status': 'False', "message": "QMS Audit Not Saved"}, status=500)
+        except Exception as e:
+            return JsonResponse({'status': 'False', "message": "QMS Audit Not Saved"}, status=500)
 
     @staticmethod
     def GetQmsAuditList(request, self=None):
