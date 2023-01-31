@@ -24,7 +24,8 @@ class QmsController:
                 qmsModel.setup = request['setup']
                 qmsModel.certification_status = request['certification_status']
                 qmsModel.previous_standard = request['previous_standard']
-                qmsModel.certification_validity_date = request['certification_validity_date']
+                if request['certification_validity_date'] != '':
+                    qmsModel.certification_validity_date = request['certification_validity_date']
                 if request['certification_validity_rescheduling_date'] != '':
                     qmsModel.certification_validity_rescheduling_date = request['certification_validity_rescheduling_date']
                 qmsModel.audit_type = request['audit_type']
@@ -52,47 +53,82 @@ class QmsController:
             else:
                 get_qms = QmsAudit.objects.filter(id=id).first()
                 if get_qms is not None:
-                    if get_qms.audit_status != request['audit_status'] or str(get_qms.certification_validity_date.date()) != request['certification_validity_date'] \
-                            or str(get_qms.planned_date.date()) != request['planned_date'] or str(get_qms.audit_due_date.date()) != request['audit_due_date']:
-                        auditHistory = QmsAuditHistory()
-                        auditHistory.audit_id = get_qms.audit_id
-                        auditHistory.Organization = get_qms.Organization
-                        auditHistory.site = get_qms.site
-                        auditHistory.setup = get_qms.setup
-                        auditHistory.certification_status = get_qms.certification_status
-                        auditHistory.previous_standard = get_qms.previous_standard
-                        auditHistory.certification_validity_date = get_qms.certification_validity_date
-                        if request['certification_validity_rescheduling_date'] != '':
-                            auditHistory.certification_validity_rescheduling_date = get_qms.certification_validity_rescheduling_date
-                        auditHistory.audit_type = get_qms.audit_type
-                        auditHistory.planned_date = get_qms.planned_date
-                        if request['audit_start_date'] != '':
-                            auditHistory.audit_start_date = get_qms.audit_start_date
-                        if request['audit_due_date'] != '':
-                            auditHistory.audit_due_date = get_qms.audit_due_date
-                        if request['audit_close_date'] != '':
-                            auditHistory.audit_close_date = get_qms.audit_close_date
-                        if request['audit_revise_date'] != '':
-                            auditHistory.audit_revise_date = get_qms.audit_revise_date
-                        auditHistory.audit_status = get_qms.audit_status
-                        auditHistory.standard = get_qms.standard
-                        if request['new_date'] != '':
-                            auditHistory.new_date = request['new_date']
-                        if request['follow_up_date'] != '':
-                            auditHistory.follow_up_date = request['follow_up_date']
-                        auditHistory.follow_up_remarks = request['follow_up_remarks']
-                        auditHistory.remarks = get_qms.remarks
-                        auditHistory.certification_setup = get_qms.certification_setup
-                        auditHistory.qms_audit_id = id
-                        auditHistory.save()
-
+                    if request['certification_validity_date'] != '':
+                        if get_qms.audit_status != request['audit_status'] or str(get_qms.certification_validity_date.date()) != request['certification_validity_date'] \
+                                or str(get_qms.planned_date.date()) != request['planned_date']:
+                            auditHistory = QmsAuditHistory()
+                            auditHistory.audit_id = get_qms.audit_id
+                            auditHistory.Organization = get_qms.Organization
+                            auditHistory.site = get_qms.site
+                            auditHistory.setup = get_qms.setup
+                            auditHistory.certification_status = get_qms.certification_status
+                            auditHistory.previous_standard = get_qms.previous_standard
+                            auditHistory.certification_validity_date = get_qms.certification_validity_date
+                            if request['certification_validity_rescheduling_date'] != '':
+                                auditHistory.certification_validity_rescheduling_date = get_qms.certification_validity_rescheduling_date
+                            auditHistory.audit_type = get_qms.audit_type
+                            auditHistory.planned_date = get_qms.planned_date
+                            if request['audit_start_date'] != '':
+                                auditHistory.audit_start_date = get_qms.audit_start_date
+                            if request['audit_due_date'] != '':
+                                auditHistory.audit_due_date = get_qms.audit_due_date
+                            if request['audit_close_date'] != '':
+                                auditHistory.audit_close_date = get_qms.audit_close_date
+                            if request['audit_revise_date'] != '':
+                                auditHistory.audit_revise_date = get_qms.audit_revise_date
+                            auditHistory.audit_status = get_qms.audit_status
+                            auditHistory.standard = get_qms.standard
+                            if request['new_date'] != '':
+                                auditHistory.new_date = request['new_date']
+                            if request['follow_up_date'] != '':
+                                auditHistory.follow_up_date = request['follow_up_date']
+                            auditHistory.follow_up_remarks = request['follow_up_remarks']
+                            auditHistory.remarks = get_qms.remarks
+                            auditHistory.certification_setup = get_qms.certification_setup
+                            auditHistory.qms_audit_id = id
+                            auditHistory.save()
+                    else:
+                        if get_qms.audit_status != request['audit_status'] or str(get_qms.planned_date.date()) != request['planned_date']:
+                                auditHistory = QmsAuditHistory()
+                                auditHistory.audit_id = get_qms.audit_id
+                                auditHistory.Organization = get_qms.Organization
+                                auditHistory.site = get_qms.site
+                                auditHistory.setup = get_qms.setup
+                                auditHistory.certification_status = get_qms.certification_status
+                                auditHistory.previous_standard = get_qms.previous_standard
+                                if request['certification_validity_date'] != '':
+                                    auditHistory.certification_validity_date = get_qms.certification_validity_date
+                                if request['certification_validity_rescheduling_date'] != '':
+                                    auditHistory.certification_validity_rescheduling_date = get_qms.certification_validity_rescheduling_date
+                                auditHistory.audit_type = get_qms.audit_type
+                                auditHistory.planned_date = get_qms.planned_date
+                                if request['audit_start_date'] != '':
+                                    auditHistory.audit_start_date = get_qms.audit_start_date
+                                if request['audit_due_date'] != '':
+                                    auditHistory.audit_due_date = get_qms.audit_due_date
+                                if request['audit_close_date'] != '':
+                                    auditHistory.audit_close_date = get_qms.audit_close_date
+                                if request['audit_revise_date'] != '':
+                                    auditHistory.audit_revise_date = get_qms.audit_revise_date
+                                auditHistory.audit_status = get_qms.audit_status
+                                auditHistory.standard = get_qms.standard
+                                if request['new_date'] != '':
+                                    auditHistory.new_date = request['new_date']
+                                if request['follow_up_date'] != '':
+                                    auditHistory.follow_up_date = request['follow_up_date']
+                                auditHistory.follow_up_remarks = request['follow_up_remarks']
+                                auditHistory.remarks = get_qms.remarks
+                                auditHistory.certification_setup = get_qms.certification_setup
+                                auditHistory.qms_audit_id = id
+                                auditHistory.save()
                 # get_qms.audit_id = 0  # request['audit_id']
                 get_qms.Organization = request['Organization']
                 get_qms.site = request['site']
                 get_qms.setup = request['setup']
                 get_qms.certification_status = request['certification_status']
                 get_qms.previous_standard = request['previous_standard']
-                get_qms.certification_validity_date = request['certification_validity_date']
+                if request['certification_validity_date'] != '':
+                    get_qms.certification_validity_date = request['certification_validity_date']
                 if request['certification_validity_rescheduling_date'] != '':
                     get_qms.certification_validity_rescheduling_date = request['certification_validity_rescheduling_date']
                 get_qms.audit_type = request['audit_type']
