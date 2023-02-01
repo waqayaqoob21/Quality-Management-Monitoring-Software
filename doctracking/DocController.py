@@ -184,6 +184,8 @@ class DocController:
             current_year = request.query_params.get('year')
             current_org = request.query_params.get('org')
             current_type = request.query_params.get('type')
+            receiveFrom = request.query_params.get('receive_date_from')
+            receiveTo = request.query_params.get('receive_date_to')
             total_filter_objects = Q()
             if current_org != '' and current_org != 'All':
                 total_filter_objects &= get_filter(
@@ -226,17 +228,32 @@ class DocController:
                         'status', 'not_equal',
                         'QM Certificate issued')
                     docList = doctracking.objects.filter(total_filter_objects).order_by('-id')
+
+                    if receiveFrom != '' and receiveTo != '':
+                        docList = docList.filter(receive_date__gte=receiveFrom,
+                                                             receive_date__lte=receiveTo).order_by('-id')
+                        # serializer = DocListSerializer(docList, many=True)
+                        # return JsonResponse({'status': 'True', 'data': serializer.data},
+                        #                     status=200)
                     serializer = DocListSerializer(docList, many=True)
                     return JsonResponse({'status': 'True', 'data': serializer.data},
                                         status=200)
                 else:
+
                     total_filter_objects &= get_filter(
                         'doc_type', 'equal',
                         'BHD')
                     docList = doctracking.objects.filter(total_filter_objects).order_by('-id')
+                    if receiveFrom != '' and receiveTo != '':
+                        docList = docList.filter(receive_date__gte=receiveFrom,
+                                                             receive_date__lte=receiveTo).order_by('-id')
+                        # serializer = DocListSerializer(docList, many=True)
+                        # return JsonResponse({'status': 'True', 'data': serializer.data},
+                        #                     status=200)
                     serializer = DocListSerializer(docList, many=True)
                     return JsonResponse({'status': 'True', 'data': serializer.data},
                                         status=200)
+
             if current_status == 'totalApproved':
                 total_filter_objects &= get_filter(
                     'status', 'equal',
