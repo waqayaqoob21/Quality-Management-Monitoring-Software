@@ -375,7 +375,7 @@ class SmsController:
                     if ChildStatus != 'Current Count':
                         filter_objects &= get_filter('blt_status', 'equal', ChildStatus)
                     if ChildStatus == 'Current Count':
-                        ListItems.extend(list(ProductionSystemStatus.objects.filter(blt_status='Ok').values()))
+                        ListItems.extend(list(ProductionSystemStatus.objects.filter(blt_status='Under process').values()))
                         ListItems.extend(list(ProductionSystemStatus.objects.filter(blt_status='Observation(same stage)').values()))
                         ListItems.extend(list(ProductionSystemStatus.objects.filter(blt_status='Halt').values()))
                         serializer = ProductionSystemSerialzer(ListItems, many=True)
@@ -385,7 +385,7 @@ class SmsController:
                     if ChildStatus != 'Current Count':
                         filter_objects &= get_filter('emp_proofing', 'equal', ChildStatus)
                     if ChildStatus == 'Current Count':
-                        ListItems.extend(list(ProductionSystemStatus.objects.filter(emp_proofing='Ok').values()))
+                        ListItems.extend(list(ProductionSystemStatus.objects.filter(emp_proofing='Under process').values()))
                         ListItems.extend(list(ProductionSystemStatus.objects.filter(emp_proofing='Observation(same stage)').values()))
                         ListItems.extend(list(ProductionSystemStatus.objects.filter(emp_proofing='Halt').values()))
                     serializer = ProductionSystemSerialzer(ListItems, many=True)
@@ -394,7 +394,7 @@ class SmsController:
                     if ChildStatus != 'Current Count':
                         filter_objects &= get_filter('func_tst', 'equal', ChildStatus)
                     if ChildStatus == 'Current Count':
-                        ListItems.extend(list(ProductionSystemStatus.objects.filter(func_tst='Ok').values()))
+                        ListItems.extend(list(ProductionSystemStatus.objects.filter(func_tst='Under process').values()))
                         ListItems.extend(list(ProductionSystemStatus.objects.filter(func_tst='Observation(same stage)').values()))
                         ListItems.extend(list(ProductionSystemStatus.objects.filter(func_tst='Halt').values()))
                     serializer = ProductionSystemSerialzer(ListItems, many=True)
@@ -403,7 +403,7 @@ class SmsController:
                     if ChildStatus != 'Current Count':
                         filter_objects &= get_filter('func_tst_dummy_bird', 'equal', ChildStatus)
                     if ChildStatus == 'Current Count':
-                        ListItems.extend(list(ProductionSystemStatus.objects.filter(func_tst_dummy_bird='Ok').values()))
+                        ListItems.extend(list(ProductionSystemStatus.objects.filter(func_tst_dummy_bird='Under process').values()))
                         ListItems.extend(list(
                             ProductionSystemStatus.objects.filter(func_tst_dummy_bird='Observation(same stage)').values()))
                         ListItems.extend(list(ProductionSystemStatus.objects.filter(func_tst_dummy_bird='Halt').values()))
@@ -413,7 +413,7 @@ class SmsController:
                     if ChildStatus != 'Current Count':
                         filter_objects &= get_filter('road_test', 'equal', ChildStatus)
                     if ChildStatus == 'Current Count':
-                        ListItems.extend(list(ProductionSystemStatus.objects.filter(road_test='Ok').values()))
+                        ListItems.extend(list(ProductionSystemStatus.objects.filter(road_test='Under process').values()))
                         ListItems.extend(list(ProductionSystemStatus.objects.filter(road_test='Observation(same stage)').values()))
                         ListItems.extend(list(ProductionSystemStatus.objects.filter(road_test='Halt').values()))
                     serializer = ProductionSystemSerialzer(ListItems, many=True)
@@ -422,7 +422,7 @@ class SmsController:
                     if ChildStatus != 'Current Count':
                         filter_objects &= get_filter('post_road_test', 'equal', ChildStatus)
                     if ChildStatus == 'Current Count':
-                        ListItems.extend(list(ProductionSystemStatus.objects.filter(post_road_test='Ok').values()))
+                        ListItems.extend(list(ProductionSystemStatus.objects.filter(post_road_test='Under process').values()))
                         ListItems.extend(list(ProductionSystemStatus.objects.filter(post_road_test='Observation(same stage)').values()))
                         ListItems.extend(list(ProductionSystemStatus.objects.filter(post_road_test='Halt').values()))
                     serializer = ProductionSystemSerialzer(ListItems, many=True)
@@ -431,7 +431,7 @@ class SmsController:
                     if ChildStatus != 'Current Count':
                         filter_objects &= get_filter('integrated_operation', 'equal', ChildStatus)
                     if ChildStatus == 'Current Count':
-                        ListItems.extend(list(ProductionSystemStatus.objects.filter(integrated_operation='Ok').values()))
+                        ListItems.extend(list(ProductionSystemStatus.objects.filter(integrated_operation='Under process').values()))
                         ListItems.extend(list(
                             ProductionSystemStatus.objects.filter(integrated_operation='Observation(same stage)').values()))
                         ListItems.extend(list(ProductionSystemStatus.objects.filter(integrated_operation='Halt').values()))
@@ -441,7 +441,7 @@ class SmsController:
                     if ChildStatus != 'Current Count':
                         filter_objects &= get_filter('rain_test', 'equal', ChildStatus)
                     if ChildStatus == 'Current Count':
-                        ListItems.extend(list(ProductionSystemStatus.objects.filter(rain_test='Ok').values()))
+                        ListItems.extend(list(ProductionSystemStatus.objects.filter(rain_test='Under process').values()))
                         ListItems.extend(list(ProductionSystemStatus.objects.filter(rain_test='Observation(same stage)').values()))
                         ListItems.extend(list(ProductionSystemStatus.objects.filter(rain_test='Halt').values()))
                     serializer = ProductionSystemSerialzer(ListItems, many=True)
@@ -450,7 +450,7 @@ class SmsController:
                     if ChildStatus != 'Current Count':
                         filter_objects &= get_filter('pre_user_inspection', 'equal', ChildStatus)
                     if ChildStatus == 'Current Count':
-                        ListItems.extend(list(ProductionSystemStatus.objects.filter(pre_user_inspection='Ok').values()))
+                        ListItems.extend(list(ProductionSystemStatus.objects.filter(pre_user_inspection='Under process').values()))
                         ListItems.extend(list(
                             ProductionSystemStatus.objects.filter(pre_user_inspection='Observation(same stage)').values()))
                         ListItems.extend(list(ProductionSystemStatus.objects.filter(pre_user_inspection='Halt').values()))
@@ -460,7 +460,7 @@ class SmsController:
                     if ChildStatus != 'Current Count':
                         filter_objects &= get_filter('final_integrated_testing', 'equal', ChildStatus)
                     if ChildStatus == 'Current Count':
-                        ListItems.extend(list(ProductionSystemStatus.objects.filter(final_integrated_testing='Ok').values()))
+                        ListItems.extend(list(ProductionSystemStatus.objects.filter(final_integrated_testing='Under process').values()))
                         ListItems.extend(list(
                             ProductionSystemStatus.objects.filter(final_integrated_testing='Observation(same stage)').values()))
                         ListItems.extend(list(ProductionSystemStatus.objects.filter(final_integrated_testing='Halt').values()))
@@ -470,7 +470,7 @@ class SmsController:
                     if ChildStatus != 'Current Count':
                         filter_objects &= get_filter('load_unload_on_mlv_hlf', 'equal', ChildStatus)
                     if ChildStatus == 'Current Count':
-                        ListItems.extend(list(ProductionSystemStatus.objects.filter(load_unload_on_mlv_hlf='Ok').values()))
+                        ListItems.extend(list(ProductionSystemStatus.objects.filter(load_unload_on_mlv_hlf='Under process').values()))
                         ListItems.extend(list(
                             ProductionSystemStatus.objects.filter(load_unload_on_mlv_hlf='Observation(same stage)').values()))
                         ListItems.extend(list(ProductionSystemStatus.objects.filter(load_unload_on_mlv_hlf='Halt').values()))
@@ -480,7 +480,7 @@ class SmsController:
                     if ChildStatus != 'Current Count':
                         filter_objects &= get_filter('pre_hil_status', 'equal', ChildStatus)
                     if ChildStatus == 'Current Count':
-                        ListItems.extend(list(ProductionSystemStatus.objects.filter(pre_hil_status='Ok').values()))
+                        ListItems.extend(list(ProductionSystemStatus.objects.filter(pre_hil_status='Under process').values()))
                         ListItems.extend(list(ProductionSystemStatus.objects.filter(pre_hil_status='Observation(same stage)').values()))
                         ListItems.extend(list(ProductionSystemStatus.objects.filter(pre_hil_status='Halt').values()))
                         serializer = ProductionSystemSerialzer(ListItems, many=True)
@@ -489,7 +489,7 @@ class SmsController:
                     if ChildStatus != 'Current Count':
                         filter_objects &= get_filter('vibaration_status', 'equal', ChildStatus)
                     if ChildStatus == 'Current Count':
-                        ListItems.extend(list(ProductionSystemStatus.objects.filter(vibaration_status='Ok').values()))
+                        ListItems.extend(list(ProductionSystemStatus.objects.filter(vibaration_status='Under process').values()))
                         ListItems.extend(list(ProductionSystemStatus.objects.filter(vibaration_status='Observation(same stage)').values()))
                         ListItems.extend(list(ProductionSystemStatus.objects.filter(vibaration_status='Halt').values()))
                         serializer = ProductionSystemSerialzer(ListItems, many=True)
@@ -498,7 +498,7 @@ class SmsController:
                     if ChildStatus != 'Current Count':
                         filter_objects &= get_filter('cgbalancing_date_status', 'equal', ChildStatus)
                     if ChildStatus == 'Current Count':
-                        ListItems.extend(list(ProductionSystemStatus.objects.filter(cgbalancing_date_status='Ok').values()))
+                        ListItems.extend(list(ProductionSystemStatus.objects.filter(cgbalancing_date_status='Under process').values()))
                         ListItems.extend(list(
                             ProductionSystemStatus.objects.filter(cgbalancing_date_status='Observation(same stage)').values()))
                         ListItems.extend(list(ProductionSystemStatus.objects.filter(cgbalancing_date_status='Halt').values()))
@@ -508,7 +508,7 @@ class SmsController:
                     if ChildStatus != 'Current Count':
                         filter_objects &= get_filter('post_hil_status', 'equal', ChildStatus)
                     if ChildStatus == 'Current Count':
-                        ListItems.extend(list(ProductionSystemStatus.objects.filter(post_hil_status='Ok').values()))
+                        ListItems.extend(list(ProductionSystemStatus.objects.filter(post_hil_status='Under process').values()))
                         ListItems.extend(list(ProductionSystemStatus.objects.filter(post_hil_status='Observation(same stage)').values()))
                         ListItems.extend(list(ProductionSystemStatus.objects.filter(post_hil_status='Halt').values()))
                         serializer = ProductionSystemSerialzer(ListItems, many=True)
@@ -517,7 +517,7 @@ class SmsController:
                     if ChildStatus != 'Current Count':
                         filter_objects &= get_filter('sys_align_status', 'equal', ChildStatus)
                     if ChildStatus == 'Current Count':
-                        ListItems.extend(list(ProductionSystemStatus.objects.filter(sys_align_status='Ok').values()))
+                        ListItems.extend(list(ProductionSystemStatus.objects.filter(sys_align_status='Under process').values()))
                         ListItems.extend(list(ProductionSystemStatus.objects.filter(sys_align_status='Observation(same stage)').values()))
                         ListItems.extend(list(ProductionSystemStatus.objects.filter(sys_align_status='Halt').values()))
                         serializer = ProductionSystemSerialzer(ListItems, many=True)
@@ -526,7 +526,7 @@ class SmsController:
                     if ChildStatus != 'Current Count':
                         filter_objects &= get_filter('incapsulation_status', 'equal', ChildStatus)
                     if ChildStatus == 'Current Count':
-                        ListItems.extend(list(ProductionSystemStatus.objects.filter(incapsulation_status='Ok').values()))
+                        ListItems.extend(list(ProductionSystemStatus.objects.filter(incapsulation_status='Under process').values()))
                         ListItems.extend(list(
                             ProductionSystemStatus.objects.filter(incapsulation_status='Observation(same stage)').values()))
                         ListItems.extend(list(ProductionSystemStatus.objects.filter(incapsulation_status='Halt').values()))
@@ -536,7 +536,7 @@ class SmsController:
                     if ChildStatus != 'Current Count':
                         filter_objects &= get_filter('final_integration_status', 'equal', ChildStatus)
                     if ChildStatus == 'Current Count':
-                        ListItems.extend(list(ProductionSystemStatus.objects.filter(final_integration_status='Ok').values()))
+                        ListItems.extend(list(ProductionSystemStatus.objects.filter(final_integration_status='Under process').values()))
                         ListItems.extend(list(
                             ProductionSystemStatus.objects.filter(final_integration_status='Observation(Same Stage)').values()))
                         ListItems.extend(list(ProductionSystemStatus.objects.filter(final_integration_status='Halt').values()))
@@ -546,7 +546,7 @@ class SmsController:
                     if ChildStatus != 'Current Count':
                         filter_objects &= get_filter('fgt_status', 'equal', ChildStatus)
                     if ChildStatus == 'Current Count':
-                        ListItems.extend(list(ProductionSystemStatus.objects.filter(fgt_status='Ok').values()))
+                        ListItems.extend(list(ProductionSystemStatus.objects.filter(fgt_status='Under process').values()))
                         ListItems.extend(list(ProductionSystemStatus.objects.filter(fgt_status='Observation(same stage)').values()))
                         ListItems.extend(list(ProductionSystemStatus.objects.filter(fgt_status='Halt').values()))
                         serializer = ProductionSystemSerialzer(ListItems, many=True)
@@ -1128,7 +1128,7 @@ class SmsController:
                 if ChildStatus != 'Current Count':
                     filter_objects &= get_filter('blt_status', 'equal', ChildStatus)
                 else:
-                    ListItems.extend(list(FlightSystemStatus.objects.filter(blt_status='Ok').values()))
+                    ListItems.extend(list(FlightSystemStatus.objects.filter(blt_status='Under process').values()))
                     ListItems.extend(list(FlightSystemStatus.objects.filter(blt_status='Observation(same stage)').values()))
                     ListItems.extend(list(FlightSystemStatus.objects.filter(blt_status='Halt').values()))
 
@@ -1139,7 +1139,7 @@ class SmsController:
                 if ChildStatus != 'Current Count':
                     filter_objects &= get_filter('emp_proofing', 'equal', ChildStatus)
                 else:
-                    ListItems.extend(list(FlightSystemStatus.objects.filter(emp_proofing='Ok').values()))
+                    ListItems.extend(list(FlightSystemStatus.objects.filter(emp_proofing='Under process').values()))
                     ListItems.extend(list(FlightSystemStatus.objects.filter(emp_proofing='Observation(same stage)').values()))
                     ListItems.extend(list(FlightSystemStatus.objects.filter(emp_proofing='Halt').values()))
 
@@ -1149,7 +1149,7 @@ class SmsController:
                 if ChildStatus != 'Current Count':
                     filter_objects &= get_filter('func_tst', 'equal', ChildStatus)
                 else:
-                    ListItems.extend(list(FlightSystemStatus.objects.filter(func_tst='Ok').values()))
+                    ListItems.extend(list(FlightSystemStatus.objects.filter(func_tst='Under process').values()))
                     ListItems.extend(list(FlightSystemStatus.objects.filter(func_tst='Observation(same stage)').values()))
                     ListItems.extend(list(FlightSystemStatus.objects.filter(func_tst='Halt').values()))
 
@@ -1159,7 +1159,7 @@ class SmsController:
                 if ChildStatus != 'Current Count':
                     filter_objects &= get_filter('func_tst_dummy_bird', 'equal', ChildStatus)
                 else:
-                    ListItems.extend(list(FlightSystemStatus.objects.filter(func_tst_dummy_bird='Ok').values()))
+                    ListItems.extend(list(FlightSystemStatus.objects.filter(func_tst_dummy_bird='Under process').values()))
                     ListItems.extend(list(FlightSystemStatus.objects.filter(func_tst_dummy_bird='Observation(same stage)').values()))
                     ListItems.extend(list(FlightSystemStatus.objects.filter(func_tst_dummy_bird='Halt').values()))
 
@@ -1169,7 +1169,7 @@ class SmsController:
                 if ChildStatus != 'Current Count':
                     filter_objects &= get_filter('road_test', 'equal', ChildStatus)
                 else:
-                    ListItems.extend(list(FlightSystemStatus.objects.filter(road_test='Ok').values()))
+                    ListItems.extend(list(FlightSystemStatus.objects.filter(road_test='Under process').values()))
                     ListItems.extend(list(FlightSystemStatus.objects.filter(road_test='Observation(same stage)').values()))
                     ListItems.extend(list(FlightSystemStatus.objects.filter(road_test='Halt').values()))
 
@@ -1179,7 +1179,7 @@ class SmsController:
                 if ChildStatus != 'Current Count':
                     filter_objects &= get_filter('post_road_test', 'equal', ChildStatus)
                 else:
-                    ListItems.extend(list(FlightSystemStatus.objects.filter(post_road_test='Ok').values()))
+                    ListItems.extend(list(FlightSystemStatus.objects.filter(post_road_test='Under process').values()))
                     ListItems.extend(list(FlightSystemStatus.objects.filter(post_road_test='Observation(same stage)').values()))
                     ListItems.extend(list(FlightSystemStatus.objects.filter(post_road_test='Halt').values()))
                     serializer = FlightSystemSerialzer(ListItems, many=True)
@@ -1188,7 +1188,7 @@ class SmsController:
                 if ChildStatus != 'Current Count':
                     filter_objects &= get_filter('integrated_operation', 'equal', ChildStatus)
                 if ChildStatus == 'Current Count':
-                    ListItems.extend(list(FlightSystemStatus.objects.filter(integrated_operation='Ok').values()))
+                    ListItems.extend(list(FlightSystemStatus.objects.filter(integrated_operation='Under process').values()))
                     ListItems.extend(list(FlightSystemStatus.objects.filter(integrated_operation='Observation(same stage)').values()))
                     ListItems.extend(list(FlightSystemStatus.objects.filter(integrated_operation='Halt').values()))
                     serializer = FlightSystemSerialzer(ListItems, many=True)
@@ -1197,7 +1197,7 @@ class SmsController:
                 if ChildStatus != 'Current Count':
                     filter_objects &= get_filter('rain_test', 'equal', ChildStatus)
                 if ChildStatus == 'Current Count':
-                    ListItems.extend(list(FlightSystemStatus.objects.filter(rain_test='Ok').values()))
+                    ListItems.extend(list(FlightSystemStatus.objects.filter(rain_test='Under process').values()))
                     ListItems.extend(list(FlightSystemStatus.objects.filter(rain_test='Observation(same stage)').values()))
                     ListItems.extend(list(FlightSystemStatus.objects.filter(rain_test='Halt').values()))
                     serializer = FlightSystemSerialzer(ListItems, many=True)
@@ -1206,7 +1206,7 @@ class SmsController:
                 if ChildStatus != 'Current Count':
                     filter_objects &= get_filter('pre_user_inspection', 'equal', ChildStatus)
                 if ChildStatus == 'Current Count':
-                    ListItems.extend(list(FlightSystemStatus.objects.filter(pre_user_inspection='Ok').values()))
+                    ListItems.extend(list(FlightSystemStatus.objects.filter(pre_user_inspection='Under process').values()))
                     ListItems.extend(list(FlightSystemStatus.objects.filter(pre_user_inspection='Observation(same stage)').values()))
                     ListItems.extend(list(FlightSystemStatus.objects.filter(pre_user_inspection='Halt').values()))
                     serializer = FlightSystemSerialzer(ListItems, many=True)
@@ -1215,7 +1215,7 @@ class SmsController:
                 if ChildStatus != 'Current Count':
                     filter_objects &= get_filter('final_integrated_testing', 'equal', ChildStatus)
                 if ChildStatus == 'Current Count':
-                    ListItems.extend(list(FlightSystemStatus.objects.filter(final_integrated_testing='Ok').values()))
+                    ListItems.extend(list(FlightSystemStatus.objects.filter(final_integrated_testing='Under process').values()))
                     ListItems.extend(list(FlightSystemStatus.objects.filter(final_integrated_testing='Observation(same stage)').values()))
                     ListItems.extend(list(FlightSystemStatus.objects.filter(final_integrated_testing='Halt').values()))
                     serializer = FlightSystemSerialzer(ListItems, many=True)
@@ -1224,7 +1224,7 @@ class SmsController:
                 if ChildStatus != 'Current Count':
                     filter_objects &= get_filter('load_unload_on_mlv_hlf', 'equal', ChildStatus)
                 if ChildStatus == 'Current Count':
-                    ListItems.extend(list(FlightSystemStatus.objects.filter(load_unload_on_mlv_hlf='Ok').values()))
+                    ListItems.extend(list(FlightSystemStatus.objects.filter(load_unload_on_mlv_hlf='Under process').values()))
                     ListItems.extend(list(FlightSystemStatus.objects.filter(load_unload_on_mlv_hlf='Observation(same stage)').values()))
                     ListItems.extend(list(FlightSystemStatus.objects.filter(load_unload_on_mlv_hlf='Halt').values()))
                     serializer = FlightSystemSerialzer(ListItems, many=True)
@@ -1233,7 +1233,7 @@ class SmsController:
                 if ChildStatus != 'Current Count':
                     filter_objects &= get_filter('pre_hil_status', 'equal', ChildStatus)
                 if ChildStatus == 'Current Count':
-                    ListItems.extend(list(FlightSystemStatus.objects.filter(pre_hil_status='Ok').values()))
+                    ListItems.extend(list(FlightSystemStatus.objects.filter(pre_hil_status='Under process').values()))
                     ListItems.extend(list(FlightSystemStatus.objects.filter(pre_hil_status='Observation(same stage)').values()))
                     ListItems.extend(list(FlightSystemStatus.objects.filter(pre_hil_status='Halt').values()))
                     serializer = FlightSystemSerialzer(ListItems, many=True)
@@ -1242,7 +1242,7 @@ class SmsController:
                 if ChildStatus != 'Current Count':
                     filter_objects &= get_filter('vibaration_status', 'equal', ChildStatus)
                 if ChildStatus == 'Current Count':
-                    ListItems.extend(list(FlightSystemStatus.objects.filter(vibaration_status='Ok').values()))
+                    ListItems.extend(list(FlightSystemStatus.objects.filter(vibaration_status='Under process').values()))
                     ListItems.extend(list(FlightSystemStatus.objects.filter(vibaration_status='Observation(same stage)').values()))
                     ListItems.extend(list(FlightSystemStatus.objects.filter(vibaration_status='Halt').values()))
                     serializer = FlightSystemSerialzer(ListItems, many=True)
@@ -1251,7 +1251,7 @@ class SmsController:
                 if ChildStatus != 'Current Count':
                     filter_objects &= get_filter('cgbalancing_date_status', 'equal', ChildStatus)
                 if ChildStatus == 'Current Count':
-                    ListItems.extend(list(FlightSystemStatus.objects.filter(cgbalancing_date_status='Ok').values()))
+                    ListItems.extend(list(FlightSystemStatus.objects.filter(cgbalancing_date_status='Under process').values()))
                     ListItems.extend(list(FlightSystemStatus.objects.filter(cgbalancing_date_status='Observation(same stage)').values()))
                     ListItems.extend(list(FlightSystemStatus.objects.filter(cgbalancing_date_status='Halt').values()))
                     serializer = FlightSystemSerialzer(ListItems, many=True)
@@ -1260,7 +1260,7 @@ class SmsController:
                 if ChildStatus != 'Current Count':
                     filter_objects &= get_filter('post_hil_status', 'equal', ChildStatus)
                 if ChildStatus == 'Current Count':
-                    ListItems.extend(list(FlightSystemStatus.objects.filter(post_hil_status='Ok').values()))
+                    ListItems.extend(list(FlightSystemStatus.objects.filter(post_hil_status='Under process').values()))
                     ListItems.extend(list(FlightSystemStatus.objects.filter(post_hil_status='Observation(same stage)').values()))
                     ListItems.extend(list(FlightSystemStatus.objects.filter(post_hil_status='Halt').values()))
                     serializer = FlightSystemSerialzer(ListItems, many=True)
@@ -1269,7 +1269,7 @@ class SmsController:
                 if ChildStatus != 'Current Count':
                     filter_objects &= get_filter('sys_align_status', 'equal', ChildStatus)
                 if ChildStatus == 'Current Count':
-                    ListItems.extend(list(FlightSystemStatus.objects.filter(sys_align_status='Ok').values()))
+                    ListItems.extend(list(FlightSystemStatus.objects.filter(sys_align_status='Under process').values()))
                     ListItems.extend(list(FlightSystemStatus.objects.filter(sys_align_status='Observation(same stage)').values()))
                     ListItems.extend(list(FlightSystemStatus.objects.filter(sys_align_status='Halt').values()))
                     serializer = FlightSystemSerialzer(ListItems, many=True)
@@ -1278,7 +1278,7 @@ class SmsController:
                 if ChildStatus != 'Current Count':
                     filter_objects &= get_filter('incapsulation_status', 'equal', ChildStatus)
                 if ChildStatus == 'Current Count':
-                    ListItems.extend(list(FlightSystemStatus.objects.filter(incapsulation_status='Ok').values()))
+                    ListItems.extend(list(FlightSystemStatus.objects.filter(incapsulation_status='Under process').values()))
                     ListItems.extend(list(FlightSystemStatus.objects.filter(incapsulation_status='Observation(same stage)').values()))
                     ListItems.extend(list(FlightSystemStatus.objects.filter(incapsulation_status='Halt').values()))
                     serializer = FlightSystemSerialzer(ListItems, many=True)
@@ -1287,7 +1287,7 @@ class SmsController:
                 if ChildStatus != 'Current Count':
                     filter_objects &= get_filter('final_integration_status', 'equal', ChildStatus)
                 if ChildStatus == 'Current Count':
-                    ListItems.extend(list(FlightSystemStatus.objects.filter(final_integration_status='Ok').values()))
+                    ListItems.extend(list(FlightSystemStatus.objects.filter(final_integration_status='Under process').values()))
                     ListItems.extend(list(FlightSystemStatus.objects.filter(final_integration_status='Observation(Same Stage)').values()))
                     ListItems.extend(list(FlightSystemStatus.objects.filter(final_integration_status='Halt').values()))
                     serializer = FlightSystemSerialzer(ListItems, many=True)
@@ -1296,7 +1296,7 @@ class SmsController:
                 if ChildStatus != 'Current Count':
                     filter_objects &= get_filter('fgt_status', 'equal', ChildStatus)
                 if ChildStatus == 'Current Count':
-                    ListItems.extend(list(FlightSystemStatus.objects.filter(fgt_status='Ok').values()))
+                    ListItems.extend(list(FlightSystemStatus.objects.filter(fgt_status='Under process').values()))
                     ListItems.extend(list(FlightSystemStatus.objects.filter(fgt_status='Observation(same stage)').values()))
                     ListItems.extend(list(FlightSystemStatus.objects.filter(fgt_status='Halt').values()))
                     serializer = FlightSystemSerialzer(ListItems, many=True)
@@ -1826,7 +1826,7 @@ class SmsController:
                     if ChildStatus != 'Current Count':
                         filter_objects &= get_filter('blt_status', 'equal', ChildStatus)
                     if ChildStatus == 'Current Count':
-                        ListItems.extend(list(RelifingSystemStatus.objects.filter(blt_status='Ok').values()))
+                        ListItems.extend(list(RelifingSystemStatus.objects.filter(blt_status='Under process').values()))
                         ListItems.extend(list(RelifingSystemStatus.objects.filter(blt_status='Observation(same stage)').values()))
                         ListItems.extend(list(RelifingSystemStatus.objects.filter(blt_status='Halt').values()))
                         serializer = RelifingSystemSerialzer(ListItems, many=True)
@@ -1836,7 +1836,7 @@ class SmsController:
                     if ChildStatus != 'Current Count':
                         filter_objects &= get_filter('emp_proofing', 'equal', ChildStatus)
                     if ChildStatus == 'Current Count':
-                        ListItems.extend(list(RelifingSystemStatus.objects.filter(emp_proofing='Ok').values()))
+                        ListItems.extend(list(RelifingSystemStatus.objects.filter(emp_proofing='Under process').values()))
                         ListItems.extend(list(RelifingSystemStatus.objects.filter(emp_proofing='Observation(same stage)').values()))
                         ListItems.extend(list(RelifingSystemStatus.objects.filter(emp_proofing='Halt').values()))
                         serializer = RelifingSystemSerialzer(ListItems, many=True)
@@ -1845,7 +1845,7 @@ class SmsController:
                     if ChildStatus != 'Current Count':
                         filter_objects &= get_filter('func_tst', 'equal', ChildStatus)
                     if ChildStatus == 'Current Count':
-                        ListItems.extend(list(RelifingSystemStatus.objects.filter(func_tst='Ok').values()))
+                        ListItems.extend(list(RelifingSystemStatus.objects.filter(func_tst='Under process').values()))
                         ListItems.extend(list(RelifingSystemStatus.objects.filter(func_tst='Observation(same stage)').values()))
                         ListItems.extend(list(RelifingSystemStatus.objects.filter(func_tst='Halt').values()))
                     serializer = RelifingSystemSerialzer(ListItems, many=True)
@@ -1854,7 +1854,7 @@ class SmsController:
                     if ChildStatus != 'Current Count':
                         filter_objects &= get_filter('func_tst_dummy_bird', 'equal', ChildStatus)
                     if ChildStatus == 'Current Count':
-                        ListItems.extend(list(RelifingSystemStatus.objects.filter(func_tst_dummy_bird='Ok').values()))
+                        ListItems.extend(list(RelifingSystemStatus.objects.filter(func_tst_dummy_bird='Under process').values()))
                         ListItems.extend(list(
                             RelifingSystemStatus.objects.filter(func_tst_dummy_bird='Observation(same stage)').values()))
                         ListItems.extend(list(RelifingSystemStatus.objects.filter(func_tst_dummy_bird='Halt').values()))
@@ -1864,7 +1864,7 @@ class SmsController:
                     if ChildStatus != 'Current Count':
                         filter_objects &= get_filter('road_test', 'equal', ChildStatus)
                     if ChildStatus == 'Current Count':
-                        ListItems.extend(list(RelifingSystemStatus.objects.filter(road_test='Ok').values()))
+                        ListItems.extend(list(RelifingSystemStatus.objects.filter(road_test='Under process').values()))
                         ListItems.extend(list(RelifingSystemStatus.objects.filter(road_test='Observation(same stage)').values()))
                         ListItems.extend(list(RelifingSystemStatus.objects.filter(road_test='Halt').values()))
                         serializer = RelifingSystemSerialzer(ListItems, many=True)
@@ -1873,7 +1873,7 @@ class SmsController:
                     if ChildStatus != 'Current Count':
                         filter_objects &= get_filter('post_road_test', 'equal', ChildStatus)
                     if ChildStatus == 'Current Count':
-                        ListItems.extend(list(RelifingSystemStatus.objects.filter(post_road_test='Ok').values()))
+                        ListItems.extend(list(RelifingSystemStatus.objects.filter(post_road_test='Under process').values()))
                         ListItems.extend(list(RelifingSystemStatus.objects.filter(post_road_test='Observation(same stage)').values()))
                         ListItems.extend(list(RelifingSystemStatus.objects.filter(post_road_test='Halt').values()))
                         serializer = RelifingSystemSerialzer(ListItems, many=True)
@@ -1882,7 +1882,7 @@ class SmsController:
                     if ChildStatus != 'Current Count':
                         filter_objects &= get_filter('integrated_operation', 'equal', ChildStatus)
                     if ChildStatus == 'Current Count':
-                        ListItems.extend(list(RelifingSystemStatus.objects.filter(integrated_operation='Ok').values()))
+                        ListItems.extend(list(RelifingSystemStatus.objects.filter(integrated_operation='Under process').values()))
                         ListItems.extend(list(
                             RelifingSystemStatus.objects.filter(integrated_operation='Observation(same stage)').values()))
                         ListItems.extend(list(RelifingSystemStatus.objects.filter(integrated_operation='Halt').values()))
@@ -1892,7 +1892,7 @@ class SmsController:
                     if ChildStatus != 'Current Count':
                         filter_objects &= get_filter('rain_test', 'equal', ChildStatus)
                     if ChildStatus == 'Current Count':
-                        ListItems.extend(list(RelifingSystemStatus.objects.filter(rain_test='Ok').values()))
+                        ListItems.extend(list(RelifingSystemStatus.objects.filter(rain_test='Under process').values()))
                         ListItems.extend(list(RelifingSystemStatus.objects.filter(rain_test='Observation(same stage)').values()))
                         ListItems.extend(list(RelifingSystemStatus.objects.filter(rain_test='Halt').values()))
                         serializer = RelifingSystemSerialzer(ListItems, many=True)
@@ -1901,7 +1901,7 @@ class SmsController:
                     if ChildStatus != 'Current Count':
                         filter_objects &= get_filter('pre_user_inspection', 'equal', ChildStatus)
                     if ChildStatus == 'Current Count':
-                        ListItems.extend(list(RelifingSystemStatus.objects.filter(pre_user_inspection='Ok').values()))
+                        ListItems.extend(list(RelifingSystemStatus.objects.filter(pre_user_inspection='Under process').values()))
                         ListItems.extend(list(
                             RelifingSystemStatus.objects.filter(pre_user_inspection='Observation(same stage)').values()))
                         ListItems.extend(list(RelifingSystemStatus.objects.filter(pre_user_inspection='Halt').values()))
@@ -1911,7 +1911,7 @@ class SmsController:
                     if ChildStatus != 'Current Count':
                         filter_objects &= get_filter('final_integrated_testing', 'equal', ChildStatus)
                     if ChildStatus == 'Current Count':
-                        ListItems.extend(list(RelifingSystemStatus.objects.filter(final_integrated_testing='Ok').values()))
+                        ListItems.extend(list(RelifingSystemStatus.objects.filter(final_integrated_testing='Under process').values()))
                         ListItems.extend(list(
                             RelifingSystemStatus.objects.filter(final_integrated_testing='Observation(same stage)').values()))
                         ListItems.extend(list(RelifingSystemStatus.objects.filter(final_integrated_testing='Halt').values()))
@@ -1921,7 +1921,7 @@ class SmsController:
                     if ChildStatus != 'Current Count':
                         filter_objects &= get_filter('load_unload_on_mlv_hlf', 'equal', ChildStatus)
                     if ChildStatus == 'Current Count':
-                        ListItems.extend(list(RelifingSystemStatus.objects.filter(load_unload_on_mlv_hlf='Ok').values()))
+                        ListItems.extend(list(RelifingSystemStatus.objects.filter(load_unload_on_mlv_hlf='Under process').values()))
                         ListItems.extend(list(
                             RelifingSystemStatus.objects.filter(load_unload_on_mlv_hlf='Observation(same stage)').values()))
                         ListItems.extend(list(RelifingSystemStatus.objects.filter(load_unload_on_mlv_hlf='Halt').values()))
@@ -1931,7 +1931,7 @@ class SmsController:
                     if ChildStatus != 'Current Count':
                         filter_objects &= get_filter('pre_hil_status', 'equal', ChildStatus)
                     if ChildStatus == 'Current Count':
-                        ListItems.extend(list(RelifingSystemStatus.objects.filter(pre_hil_status='Ok').values()))
+                        ListItems.extend(list(RelifingSystemStatus.objects.filter(pre_hil_status='Under process').values()))
                         ListItems.extend(list(RelifingSystemStatus.objects.filter(pre_hil_status='Observation(same stage)').values()))
                         ListItems.extend(list(RelifingSystemStatus.objects.filter(pre_hil_status='Halt').values()))
                         serializer = RelifingSystemSerialzer(ListItems, many=True)
@@ -1940,7 +1940,7 @@ class SmsController:
                     if ChildStatus != 'Current Count':
                         filter_objects &= get_filter('vibaration_status', 'equal', ChildStatus)
                     if ChildStatus == 'Current Count':
-                        ListItems.extend(list(RelifingSystemStatus.objects.filter(vibaration_status='Ok').values()))
+                        ListItems.extend(list(RelifingSystemStatus.objects.filter(vibaration_status='Under process').values()))
                         ListItems.extend(list(RelifingSystemStatus.objects.filter(vibaration_status='Observation(same stage)').values()))
                         ListItems.extend(list(RelifingSystemStatus.objects.filter(vibaration_status='Halt').values()))
                         serializer = RelifingSystemSerialzer(ListItems, many=True)
@@ -1949,7 +1949,7 @@ class SmsController:
                     if ChildStatus != 'Current Count':
                         filter_objects &= get_filter('cgbalancing_date_status', 'equal', ChildStatus)
                     if ChildStatus == 'Current Count':
-                        ListItems.extend(list(RelifingSystemStatus.objects.filter(cgbalancing_date_status='Ok').values()))
+                        ListItems.extend(list(RelifingSystemStatus.objects.filter(cgbalancing_date_status='Under process').values()))
                         ListItems.extend(list(
                             RelifingSystemStatus.objects.filter(cgbalancing_date_status='Observation(same stage)').values()))
                         ListItems.extend(list(RelifingSystemStatus.objects.filter(cgbalancing_date_status='Halt').values()))
@@ -1959,7 +1959,7 @@ class SmsController:
                     if ChildStatus != 'Current Count':
                         filter_objects &= get_filter('post_hil_status', 'equal', ChildStatus)
                     if ChildStatus == 'Current Count':
-                        ListItems.extend(list(RelifingSystemStatus.objects.filter(post_hil_status='Ok').values()))
+                        ListItems.extend(list(RelifingSystemStatus.objects.filter(post_hil_status='Under process').values()))
                         ListItems.extend(list(RelifingSystemStatus.objects.filter(post_hil_status='Observation(same stage)').values()))
                         ListItems.extend(list(RelifingSystemStatus.objects.filter(post_hil_status='Halt').values()))
                         serializer = RelifingSystemSerialzer(ListItems, many=True)
@@ -1968,7 +1968,7 @@ class SmsController:
                     if ChildStatus != 'Current Count':
                         filter_objects &= get_filter('sys_align_status', 'equal', ChildStatus)
                     if ChildStatus == 'Current Count':
-                        ListItems.extend(list(RelifingSystemStatus.objects.filter(sys_align_status='Ok').values()))
+                        ListItems.extend(list(RelifingSystemStatus.objects.filter(sys_align_status='Under process').values()))
                         ListItems.extend(list(RelifingSystemStatus.objects.filter(sys_align_status='Observation(same stage)').values()))
                         ListItems.extend(list(RelifingSystemStatus.objects.filter(sys_align_status='Halt').values()))
                         serializer = RelifingSystemSerialzer(ListItems, many=True)
@@ -1977,7 +1977,7 @@ class SmsController:
                     if ChildStatus != 'Current Count':
                         filter_objects &= get_filter('incapsulation_status', 'equal', ChildStatus)
                     if ChildStatus == 'Current Count':
-                        ListItems.extend(list(RelifingSystemStatus.objects.filter(incapsulation_status='Ok').values()))
+                        ListItems.extend(list(RelifingSystemStatus.objects.filter(incapsulation_status='Under process').values()))
                         ListItems.extend(list(
                             RelifingSystemStatus.objects.filter(incapsulation_status='Observation(same stage)').values()))
                         ListItems.extend(list(RelifingSystemStatus.objects.filter(incapsulation_status='Halt').values()))
@@ -1987,7 +1987,7 @@ class SmsController:
                     if ChildStatus != 'Current Count':
                         filter_objects &= get_filter('final_integration_status', 'equal', ChildStatus)
                     if ChildStatus == 'Current Count':
-                        ListItems.extend(list(RelifingSystemStatus.objects.filter(final_integration_status='Ok').values()))
+                        ListItems.extend(list(RelifingSystemStatus.objects.filter(final_integration_status='Under process').values()))
                         ListItems.extend(list(
                             RelifingSystemStatus.objects.filter(final_integration_status='Observation(Same Stage)').values()))
                         ListItems.extend(list(RelifingSystemStatus.objects.filter(final_integration_status='Halt').values()))
@@ -1997,7 +1997,7 @@ class SmsController:
                     if ChildStatus != 'Current Count':
                         filter_objects &= get_filter('fgt_status', 'equal', ChildStatus)
                     if ChildStatus == 'Current Count':
-                        ListItems.extend(list(RelifingSystemStatus.objects.filter(fgt_status='Ok').values()))
+                        ListItems.extend(list(RelifingSystemStatus.objects.filter(fgt_status='Under process').values()))
                         ListItems.extend(list(RelifingSystemStatus.objects.filter(fgt_status='Observation(same stage)').values()))
                         ListItems.extend(list(RelifingSystemStatus.objects.filter(fgt_status='Halt').values()))
                         serializer = RelifingSystemSerialzer(ListItems, many=True)
@@ -2292,7 +2292,7 @@ class SmsController:
                                                                                               final_integration_status='Observation(next stage)')
 
             prod_finalintegration_completelist = ProductionSystemStatus.objects.filter(filter_objects,
-                                                                                       final_integration_status='Completed')
+                                                                                       final_integration_status='Under process')
             prod_finalintegration_haultlist = ProductionSystemStatus.objects.filter(filter_objects,
                                                                                     final_integration_status='Halt')
 
@@ -2379,7 +2379,7 @@ class SmsController:
             prod_sys_align_observationlistNext = ProductionSystemStatus.objects.filter(filter_objects,
                                                                                      sys_align_status='Observation(next stage)')
             prod_sys_align_uplist = ProductionSystemStatus.objects.filter(filter_objects,
-                                                                        sys_align_status='Completed')
+                                                                        sys_align_status='Under process')
             prod_sys_align_haultlist = ProductionSystemStatus.objects.filter(filter_objects, sys_align_status='Halt')
 
 
@@ -2391,7 +2391,7 @@ class SmsController:
             prod_incapsulation_observationlistNext = ProductionSystemStatus.objects.filter(filter_objects,
                                                                                      incapsulation_status='Observation(next stage)')
             prod_incapsulation_uplist = ProductionSystemStatus.objects.filter(filter_objects,
-                                                                        incapsulation_status='Completed')
+                                                                        incapsulation_status='Under process')
             prod_incapsulation_haultlist = ProductionSystemStatus.objects.filter(filter_objects, incapsulation_status='Halt')
 
             prod_emp_proofing_oklist = ProductionSystemStatus.objects.filter(filter_objects, emp_proofing='Ok')
@@ -2505,7 +2505,7 @@ class SmsController:
             flight_finalintegration_observationlistNext = FlightSystemStatus.objects.filter(filter_objects,
                                                                                             final_integration_status='Observation(next stage)')
             flight_finalintegration_completelist = FlightSystemStatus.objects.filter(filter_objects,
-                                                                                     final_integration_status='Completed')
+                                                                                     final_integration_status='Under process')
             flight_finalintegration_haultlist = FlightSystemStatus.objects.filter(filter_objects,
                                                                                   final_integration_status='Halt')
 
@@ -2590,7 +2590,7 @@ class SmsController:
             flight_sys_align_observationlistNext = FlightSystemStatus.objects.filter(filter_objects,
                                                                                   sys_align_status='Observation(next stage)')
             flight_sys_align_uplist = FlightSystemStatus.objects.filter(filter_objects,
-                                                                     sys_align_status='Completed')
+                                                                     sys_align_status='Under process')
             flight_sys_align_haultlist = FlightSystemStatus.objects.filter(filter_objects, sys_align_status='Halt')
 
 
@@ -2603,7 +2603,7 @@ class SmsController:
             flight_incapsulation_observationlistNext = FlightSystemStatus.objects.filter(filter_objects,
                                                                                   incapsulation_status='Observation(next stage)')
             flight_incapsulation_uplist = FlightSystemStatus.objects.filter(filter_objects,
-                                                                     incapsulation_status='Completed')
+                                                                     incapsulation_status='Under process')
             flight_incapsulation_haultlist = FlightSystemStatus.objects.filter(filter_objects, incapsulation_status='Halt')
 
             flight_emp_proofing_oklist = FlightSystemStatus.objects.filter(filter_objects, emp_proofing='Ok')
@@ -2710,6 +2710,8 @@ class SmsController:
                                                                           post_hil_status='Under process')
             relifing_posthil_haultlist = RelifingSystemStatus.objects.filter(filter_objects, post_hil_status='Halt')
 
+
+
             relifing_finalintegration_oklist = RelifingSystemStatus.objects.filter(filter_objects,
                                                                                    final_integration_status='Ok')
             relifing_finalintegration_oklistNext = RelifingSystemStatus.objects.filter(filter_objects,
@@ -2719,7 +2721,7 @@ class SmsController:
             relifing_finalintegration_observationlistNext = RelifingSystemStatus.objects.filter(filter_objects,
                                                                                                 final_integration_status='Observation(next stage)')
             relifing_finalintegration_completelist = RelifingSystemStatus.objects.filter(filter_objects,
-                                                                                         final_integration_status='Completed')
+                                                                                         final_integration_status='Under process')
             relifing_finalintegration_haultlist = RelifingSystemStatus.objects.filter(filter_objects,
                                                                                       final_integration_status='Halt')
 
@@ -2807,7 +2809,7 @@ class SmsController:
             relifing_sys_align_observationlistNext = RelifingSystemStatus.objects.filter(filter_objects,
                                                                                        sys_align_status='Observation(next stage)')
             relifing_sys_align_uplist = RelifingSystemStatus.objects.filter(filter_objects,
-                                                                          sys_align_status='Completed')
+                                                                          sys_align_status='Under process')
             relifing_sys_align_haultlist = RelifingSystemStatus.objects.filter(filter_objects, sys_align_status='Halt')
 
 
@@ -2820,7 +2822,7 @@ class SmsController:
             relifing_incapsulation_observationlistNext = RelifingSystemStatus.objects.filter(filter_objects,
                                                                                        incapsulation_status='Observation(next stage)')
             relifing_incapsulation_uplist = RelifingSystemStatus.objects.filter(filter_objects,
-                                                                          incapsulation_status='Completed')
+                                                                          incapsulation_status='Under process')
             relifing_incapsulation_haultlist = RelifingSystemStatus.objects.filter(filter_objects, incapsulation_status='Halt')
 
             relifing_emp_proofing_oklist = RelifingSystemStatus.objects.filter(filter_objects, emp_proofing='Ok')

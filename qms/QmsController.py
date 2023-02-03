@@ -98,12 +98,16 @@ class QmsController:
                                 auditHistory.previous_standard = get_qms.previous_standard
                                 if request['certification_validity_date'] != '':
                                     auditHistory.certification_validity_date = get_qms.certification_validity_date
+                                else:
+                                    auditHistory.certification_validity_date = None
                                 if request['certification_validity_rescheduling_date'] != '':
                                     auditHistory.certification_validity_rescheduling_date = get_qms.certification_validity_rescheduling_date
                                 auditHistory.audit_type = get_qms.audit_type
                                 auditHistory.planned_date = get_qms.planned_date
                                 if request['audit_start_date'] != '':
                                     auditHistory.audit_start_date = get_qms.audit_start_date
+                                else:
+                                    auditHistory.audit_start_date = None
                                 if request['audit_due_date'] != '':
                                     auditHistory.audit_due_date = get_qms.audit_due_date
                                 if request['audit_close_date'] != '':
@@ -129,12 +133,16 @@ class QmsController:
                 get_qms.previous_standard = request['previous_standard']
                 if request['certification_validity_date'] != '':
                     get_qms.certification_validity_date = request['certification_validity_date']
+                else:
+                    get_qms.certification_validity_date = None
                 if request['certification_validity_rescheduling_date'] != '':
                     get_qms.certification_validity_rescheduling_date = request['certification_validity_rescheduling_date']
                 get_qms.audit_type = request['audit_type']
                 get_qms.planned_date = request['planned_date']
                 if request['audit_start_date'] != '':
                     get_qms.audit_start_date = request['audit_start_date']
+                else:
+                    get_qms.audit_start_date = None
                 if request['audit_due_date'] != '':
                     get_qms.audit_due_date = request['audit_due_date']
                 if request['audit_close_date'] != '':
