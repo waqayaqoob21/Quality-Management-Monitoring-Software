@@ -55,6 +55,7 @@ class AmsController:
                         taskHistoryModal.target_date = get_task.target_date
                         if request['task_date'] != '':
                             taskHistoryModal.task_date = get_task.task_date
+
                         taskHistoryModal.status = get_task.status
                         taskHistoryModal.remarks = get_task.remarks
                         taskHistoryModal.follow_up = get_task.follow_up
@@ -68,6 +69,8 @@ class AmsController:
                 task.target_date = request['target_date']
                 if request['task_date'] != '':
                     task.task_date = request['task_date']
+                else:
+                    task.task_date = None
                 task.status = request['status']
                 task.remarks = request['remarks']
                 task.follow_up = request['follow_up']
@@ -134,11 +137,12 @@ class AmsController:
             status = request.query_params['status']
             selected_group = request.query_params['group']
             selected_year = request.query_params['year']
+            assignFrom = request.query_params.get('assign_date_from')
+            assignTo = request.query_params.get('assign_date_to')
             data = []
             total_filter_objects = Q()
             all_filter_objects = Q()
             if selected_group != '':
-
                 all_filter_objects &= get_filter(
                     'assigned_to', 'equal',
                     selected_group)
@@ -159,7 +163,8 @@ class AmsController:
                 current_over_due_filter &= get_filter(
                     'status', 'equal',
                     'Task in-process')
-                data = TaskSummary.objects.filter(current_over_due_filter, task_date__gt=F('target_date'),assigned_date__year=selected_year)
+                data = TaskSummary.objects.filter(current_over_due_filter, task_date__gt=F('target_date'),
+                                                  assigned_date__year=selected_year)
                 serializer = TaskSummarySerialzer(data, many=True)
                 return JsonResponse({'message': 'true', 'data': serializer.data}, status=200)
 
@@ -181,8 +186,10 @@ class AmsController:
                 serializer = TaskSummarySerialzer(data, many=True)
                 return JsonResponse({'message': 'true', 'data': serializer.data}, status=200)
             if status == 'all_tasks':
-
                 data = TaskSummary.objects.filter(all_filter_objects)
+                if assignFrom != '' and assignTo != '':
+                    data = data.filter(assigned_date__gte=assignFrom,
+                                       assigned_date__lte=assignTo).order_by('-id')
                 serializer = TaskSummarySerialzer(data, many=True)
                 return JsonResponse({'message': 'true', 'data': serializer.data}, status=200)
             if status == 'total_TaskCompleted':
