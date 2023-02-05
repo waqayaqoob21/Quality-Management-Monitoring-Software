@@ -14,8 +14,8 @@ from datetime import date
 class QmsController:
     @staticmethod
     def AddQmsAudit(request):
-        qmsModel = QmsAudit()
-        try:
+            qmsModel = QmsAudit()
+        # try:
             id = request['id']
             if id == '0':
                 qmsModel.audit_id =  request['audit_id']
@@ -53,42 +53,12 @@ class QmsController:
             else:
                 get_qms = QmsAudit.objects.filter(id=id).first()
                 if get_qms is not None:
-                    if request['certification_validity_date'] != '':
-                        if get_qms.audit_status != request['audit_status'] or str(get_qms.certification_validity_date.date()) != request['certification_validity_date'] \
-                                or str(get_qms.planned_date.date()) != request['planned_date']:
-                            auditHistory = QmsAuditHistory()
-                            auditHistory.audit_id = get_qms.audit_id
-                            auditHistory.Organization = get_qms.Organization
-                            auditHistory.site = get_qms.site
-                            auditHistory.setup = get_qms.setup
-                            auditHistory.certification_status = get_qms.certification_status
-                            auditHistory.previous_standard = get_qms.previous_standard
-                            auditHistory.certification_validity_date = get_qms.certification_validity_date
-                            if request['certification_validity_rescheduling_date'] != '':
-                                auditHistory.certification_validity_rescheduling_date = get_qms.certification_validity_rescheduling_date
-                            auditHistory.audit_type = get_qms.audit_type
-                            auditHistory.planned_date = get_qms.planned_date
-                            if request['audit_start_date'] != '':
-                                auditHistory.audit_start_date = get_qms.audit_start_date
-                            if request['audit_due_date'] != '':
-                                auditHistory.audit_due_date = get_qms.audit_due_date
-                            if request['audit_close_date'] != '':
-                                auditHistory.audit_close_date = get_qms.audit_close_date
-                            if request['audit_revise_date'] != '':
-                                auditHistory.audit_revise_date = get_qms.audit_revise_date
-                            auditHistory.audit_status = get_qms.audit_status
-                            auditHistory.standard = get_qms.standard
-                            if request['new_date'] != '':
-                                auditHistory.new_date = request['new_date']
-                            if request['follow_up_date'] != '':
-                                auditHistory.follow_up_date = request['follow_up_date']
-                            auditHistory.follow_up_remarks = request['follow_up_remarks']
-                            auditHistory.remarks = get_qms.remarks
-                            auditHistory.certification_setup = get_qms.certification_setup
-                            auditHistory.qms_audit_id = id
-                            auditHistory.save()
-                    else:
-                        if get_qms.audit_status != request['audit_status'] or str(get_qms.planned_date.date()) != request['planned_date']:
+                        if get_qms.audit_status != request['audit_status'] or str(get_qms.planned_date.date()) != request['planned_date']\
+                                or str(get_qms.certification_validity_date) != request['certification_validity_date']\
+                                or str(get_qms.certification_validity_rescheduling_date) != request['certification_validity_rescheduling_date']\
+                                or str(get_qms.audit_start_date) != request['audit_start_date']or str(get_qms.audit_due_date) != request['audit_due_date']\
+                                or str(get_qms.audit_close_date) != request['audit_close_date']or str(get_qms.audit_revise_date) != request['audit_revise_date']\
+                                or str(get_qms.new_date) != request['new_date']or str(get_qms.follow_up_date) != request['follow_up_date']:
                                 auditHistory = QmsAuditHistory()
                                 auditHistory.audit_id = get_qms.audit_id
                                 auditHistory.Organization = get_qms.Organization
@@ -102,6 +72,8 @@ class QmsController:
                                     auditHistory.certification_validity_date = None
                                 if request['certification_validity_rescheduling_date'] != '':
                                     auditHistory.certification_validity_rescheduling_date = get_qms.certification_validity_rescheduling_date
+                                else:
+                                    auditHistory.certification_validity_rescheduling_date = None
                                 auditHistory.audit_type = get_qms.audit_type
                                 auditHistory.planned_date = get_qms.planned_date
                                 if request['audit_start_date'] != '':
@@ -110,16 +82,26 @@ class QmsController:
                                     auditHistory.audit_start_date = None
                                 if request['audit_due_date'] != '':
                                     auditHistory.audit_due_date = get_qms.audit_due_date
+                                else:
+                                    auditHistory.audit_due_date = None
                                 if request['audit_close_date'] != '':
                                     auditHistory.audit_close_date = get_qms.audit_close_date
+                                else:
+                                    auditHistory.audit_close_date = None
                                 if request['audit_revise_date'] != '':
                                     auditHistory.audit_revise_date = get_qms.audit_revise_date
+                                else:
+                                    auditHistory.audit_revise_date = None
                                 auditHistory.audit_status = get_qms.audit_status
                                 auditHistory.standard = get_qms.standard
                                 if request['new_date'] != '':
                                     auditHistory.new_date = request['new_date']
+                                else:
+                                    auditHistory.new_date = None
                                 if request['follow_up_date'] != '':
                                     auditHistory.follow_up_date = request['follow_up_date']
+                                else:
+                                    auditHistory.follow_up_date = None
                                 auditHistory.follow_up_remarks = request['follow_up_remarks']
                                 auditHistory.remarks = get_qms.remarks
                                 auditHistory.certification_setup = get_qms.certification_setup
@@ -137,6 +119,8 @@ class QmsController:
                     get_qms.certification_validity_date = None
                 if request['certification_validity_rescheduling_date'] != '':
                     get_qms.certification_validity_rescheduling_date = request['certification_validity_rescheduling_date']
+                else:
+                    get_qms.certification_validity_rescheduling_date = None
                 get_qms.audit_type = request['audit_type']
                 get_qms.planned_date = request['planned_date']
                 if request['audit_start_date'] != '':
@@ -145,24 +129,34 @@ class QmsController:
                     get_qms.audit_start_date = None
                 if request['audit_due_date'] != '':
                     get_qms.audit_due_date = request['audit_due_date']
+                else:
+                    get_qms.audit_due_date = None
                 if request['audit_close_date'] != '':
                     get_qms.audit_close_date = request['audit_close_date']
+                else:
+                    get_qms.audit_close_date = None
                 if request['audit_revise_date'] != '':
                     get_qms.audit_revise_date = request['audit_revise_date']
+                else:
+                    get_qms.audit_revise_date = None
                 get_qms.audit_status = request['audit_status']
                 get_qms.standard = request['standard']
                 if request['new_date'] != '':
                     get_qms.new_date = request['new_date']
+                else:
+                    get_qms.new_date = None
                 if request['follow_up_date'] != '':
                     get_qms.follow_up_date = request['follow_up_date']
+                else:
+                    get_qms.follow_up_date = None
                 get_qms.follow_up_remarks = request['follow_up_remarks']
                 get_qms.remarks = request['remarks']
                 get_qms.certification_setup = request['certification_setup']
                 get_qms.save()
                 return JsonResponse({'status': 'True', 'message': "QMS Audit Updated Successfully!"},
                                     status=200)
-        except Exception as e:
-            return JsonResponse({'status': 'False', "message": "QMS Audit Not Saved"}, status=500)
+        # except Exception as e:
+        #     return JsonResponse({'status': 'False', "message": "QMS Audit Not Saved"}, status=500)
 
     @staticmethod
     def GetQmsAuditList(request, self=None):
@@ -1077,12 +1071,14 @@ class QmsController:
                 cespModel.site = request['site']
                 cespModel.setup = request['setup']
                 cespModel.certification_status = request['certification_status']
-                cespModel.certification_validity_date = request['certification_validity_date']
+                if request['certification_validity_date'] != '':
+                    cespModel.certification_validity_date = request['certification_validity_date']
                 if request['certification_validity_rescheduling_date'] != '':
                     cespModel.certification_validity_rescheduling_date = request['certification_validity_rescheduling_date']
                 cespModel.audit_type = request['audit_type']
                 cespModel.planned_date = request['planned_date']
-                cespModel.audit_start_date = request['audit_start_date']
+                if request['audit_start_date'] != '':
+                    cespModel.audit_start_date = request['audit_start_date']
                 if request['audit_revise_date'] != '':
                     cespModel.audit_revise_date = request['audit_revise_date']
                 if request['audit_close_date'] != '':
@@ -1098,10 +1094,14 @@ class QmsController:
             else:
                 get_cesp = CespAudit.objects.filter(id=id).first()
                 if get_cesp is not None:
-                    if get_cesp.audit_status != request['audit_status'] or str(get_cesp.certification_validity_date.date()) != \
-                            request['certification_validity_date'] or str(get_cesp.planned_date.date()) != request['planned_date'] or str(get_cesp.audit_start_date.date()) != \
-                            request['audit_start_date'] or str(get_cesp.audit_close_date.date()) != request['audit_close_date']\
-                            or str(get_cesp.audit_due_date.date()) != request['audit_due_date']:
+                    if get_cesp.audit_status != request['audit_status'] or str(get_cesp.certification_validity_date) != request['certification_validity_date'] \
+                            or str(get_cesp.certification_validity_rescheduling_date) != request['certification_validity_rescheduling_date'] \
+                            or str(get_cesp.planned_date) != request['planned_date'] \
+                            or str(get_cesp.audit_start_date) != request['audit_start_date']\
+                            or str(get_cesp.audit_close_date) != request['audit_close_date']\
+                            or str(get_cesp.audit_due_date) != request['audit_due_date'] \
+                            or str(get_cesp.audit_revise_date) != request['audit_revise_date']:
+
                         CespHistory = CespAuditHistory()
                         CespHistory.audit_id = get_cesp.audit_id
                         cespModel.commission = get_cesp.commission
@@ -1109,18 +1109,32 @@ class QmsController:
                         CespHistory.setup = get_cesp.setup
                         CespHistory.site = get_cesp.site
                         CespHistory.certification_status = get_cesp.certification_status
-                        CespHistory.certification_validity_date = get_cesp.certification_validity_date
+                        if request['certification_validity_date'] != '':
+                            CespHistory.certification_validity_date = get_cesp.certification_validity_date
+                        else:
+                            CespHistory.certification_validity_date = None
                         if request['certification_validity_rescheduling_date'] != '':
                             CespHistory.certification_validity_rescheduling_date = get_cesp.certification_validity_rescheduling_date
+                        else:
+                            CespHistory.certification_validity_rescheduling_date = None
                         CespHistory.audit_type = get_cesp.audit_type
                         CespHistory.planned_date = get_cesp.planned_date
-                        CespHistory.audit_start_date = get_cesp.audit_start_date
+                        if request['audit_start_date'] != '':
+                            CespHistory.audit_start_date = get_cesp.audit_start_date
+                        else:
+                            CespHistory.audit_start_date = None
                         if request['audit_revise_date'] != '':
                             cespModel.audit_revise_date = get_cesp.audit_revise_date
+                        else:
+                            CespHistory.audit_revise_date = None
                         if request['audit_close_date'] != '':
                             CespHistory.audit_close_date = get_cesp.audit_close_date
+                        else:
+                            CespHistory.audit_close_date = None
                         if request['audit_due_date'] != '':
                             CespHistory.audit_due_date = get_cesp.audit_due_date
+                        else:
+                            CespHistory.audit_due_date = None
                         CespHistory.audit_status = get_cesp.audit_status
                         CespHistory.standard = get_cesp.standard
                         CespHistory.remarks = get_cesp.remarks
@@ -1133,18 +1147,32 @@ class QmsController:
                 get_cesp.setup = request['setup']
                 get_cesp.site = request['site']
                 get_cesp.certification_status = request['certification_status']
-                get_cesp.certification_validity_date = request['certification_validity_date']
+                if request['certification_validity_date'] != '':
+                    get_cesp.certification_validity_date = request['certification_validity_date']
+                else:
+                    get_cesp.certification_validity_date = None
                 if request['certification_validity_rescheduling_date'] != '':
                     get_cesp.certification_validity_rescheduling_date = request['certification_validity_rescheduling_date']
+                else:
+                    get_cesp.certification_validity_rescheduling_date = None
                 get_cesp.audit_type = request['audit_type']
                 get_cesp.planned_date = request['planned_date']
-                get_cesp.audit_start_date = request['audit_start_date']
+                if request['audit_start_date'] != '':
+                    get_cesp.audit_start_date = request['audit_start_date']
+                else:
+                    get_cesp.audit_start_date = None
                 if request['audit_revise_date'] != '':
                     get_cesp.audit_revise_date = request['audit_revise_date']
+                else:
+                    get_cesp.audit_revise_date = None
                 if request['audit_close_date'] != '':
                     get_cesp.audit_close_date = request['audit_close_date']
+                else:
+                    get_cesp.audit_close_date = None
                 if request['audit_due_date'] != '':
                     get_cesp.audit_due_date = request['audit_due_date']
+                else:
+                    get_cesp.audit_due_date = None
                 get_cesp.audit_status = request['audit_status']
                 get_cesp.standard = request['standard']
                 get_cesp.remarks = request['remarks']
