@@ -369,226 +369,221 @@ class SmsController:
                 filter_objects &= get_filter(
                     'system', 'equal',
                     system)
+
+
+            # else:
+            dataList = ProductionSystemStatus.objects.filter(filter_objects)
             if ParentStatus != '':
                 ListItems = []
                 if ParentStatus == 'BLT':
                     if ChildStatus != 'Current Count':
-                        filter_objects &= get_filter('blt_status', 'equal', ChildStatus)
+                        # filter_objects &= get_filter('blt_status', 'equal', ChildStatus)
+                        ListItems = dataList.filter(blt_status = ChildStatus)
                     if ChildStatus == 'Current Count':
-                        ListItems.extend(list(ProductionSystemStatus.objects.filter(blt_status='Under process').values()))
-                        ListItems.extend(list(ProductionSystemStatus.objects.filter(blt_status='Observation(same stage)').values()))
-                        ListItems.extend(list(ProductionSystemStatus.objects.filter(blt_status='Halt').values()))
-                        serializer = ProductionSystemSerialzer(ListItems, many=True)
-                        return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                        for data  in dataList:
+                            if data.blt_status == 'Under process' or data.blt_status=='Observation(same stage)' or data.blt_status=='Halt':
+                                ListItems.append(data)
 
                 if ParentStatus == 'EMP Proofing':
                     if ChildStatus != 'Current Count':
-                        filter_objects &= get_filter('emp_proofing', 'equal', ChildStatus)
+                        # filter_objects &= get_filter('emp_proofing', 'equal', ChildStatus)
+                        ListItems = dataList.filter(emp_proofing = ChildStatus)
+
                     if ChildStatus == 'Current Count':
-                        ListItems.extend(list(ProductionSystemStatus.objects.filter(emp_proofing='Under process').values()))
-                        ListItems.extend(list(ProductionSystemStatus.objects.filter(emp_proofing='Observation(same stage)').values()))
-                        ListItems.extend(list(ProductionSystemStatus.objects.filter(emp_proofing='Halt').values()))
-                    serializer = ProductionSystemSerialzer(ListItems, many=True)
-                    return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                        for data  in dataList:
+                            if data.emp_proofing == 'Under process' or data.emp_proofing=='Observation(same stage)' or data.emp_proofing=='Halt':
+                                ListItems.append(data)
+
                 if ParentStatus == 'Functional Test W/O Dummy Bird':
                     if ChildStatus != 'Current Count':
-                        filter_objects &= get_filter('func_tst', 'equal', ChildStatus)
+                        ListItems = dataList.filter(func_tst = ChildStatus)
+
                     if ChildStatus == 'Current Count':
-                        ListItems.extend(list(ProductionSystemStatus.objects.filter(func_tst='Under process').values()))
-                        ListItems.extend(list(ProductionSystemStatus.objects.filter(func_tst='Observation(same stage)').values()))
-                        ListItems.extend(list(ProductionSystemStatus.objects.filter(func_tst='Halt').values()))
-                    serializer = ProductionSystemSerialzer(ListItems, many=True)
-                    return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                        for data  in dataList:
+                            if data.func_tst == 'Under process' or data.func_tst=='Observation(same stage)' or data.func_tst=='Halt':
+                                ListItems.append(data)
+
                 if ParentStatus == 'Functional Test With Dummy Bird':
                     if ChildStatus != 'Current Count':
-                        filter_objects &= get_filter('func_tst_dummy_bird', 'equal', ChildStatus)
+                        ListItems = dataList.filter(func_tst_dummy_bird = ChildStatus)
+
                     if ChildStatus == 'Current Count':
-                        ListItems.extend(list(ProductionSystemStatus.objects.filter(func_tst_dummy_bird='Under process').values()))
-                        ListItems.extend(list(
-                            ProductionSystemStatus.objects.filter(func_tst_dummy_bird='Observation(same stage)').values()))
-                        ListItems.extend(list(ProductionSystemStatus.objects.filter(func_tst_dummy_bird='Halt').values()))
-                    serializer = ProductionSystemSerialzer(ListItems, many=True)
-                    return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                        for data  in dataList:
+                            if data.func_tst_dummy_bird == 'Under process' or data.func_tst_dummy_bird=='Observation(same stage)' or data.func_tst_dummy_bird=='Halt':
+                                ListItems.append(data)
+
                 if ParentStatus == 'Road Test':
                     if ChildStatus != 'Current Count':
-                        filter_objects &= get_filter('road_test', 'equal', ChildStatus)
+                        ListItems = dataList.filter(road_test = ChildStatus)
+
                     if ChildStatus == 'Current Count':
-                        ListItems.extend(list(ProductionSystemStatus.objects.filter(road_test='Under process').values()))
-                        ListItems.extend(list(ProductionSystemStatus.objects.filter(road_test='Observation(same stage)').values()))
-                        ListItems.extend(list(ProductionSystemStatus.objects.filter(road_test='Halt').values()))
-                    serializer = ProductionSystemSerialzer(ListItems, many=True)
-                    return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                        for data  in dataList:
+                            if data.road_test == 'Under process' or data.road_test=='Observation(same stage)' or data.road_test=='Halt':
+                                ListItems.append(data)
+
                 if ParentStatus == 'Post Road Test':
                     if ChildStatus != 'Current Count':
-                        filter_objects &= get_filter('post_road_test', 'equal', ChildStatus)
+                        ListItems = dataList.filter(post_road_test = ChildStatus)
+
                     if ChildStatus == 'Current Count':
-                        ListItems.extend(list(ProductionSystemStatus.objects.filter(post_road_test='Under process').values()))
-                        ListItems.extend(list(ProductionSystemStatus.objects.filter(post_road_test='Observation(same stage)').values()))
-                        ListItems.extend(list(ProductionSystemStatus.objects.filter(post_road_test='Halt').values()))
-                    serializer = ProductionSystemSerialzer(ListItems, many=True)
-                    return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                        for data  in dataList:
+                            if data.post_road_test == 'Under process' or data.post_road_test=='Observation(same stage)' or data.post_road_test=='Halt':
+                                ListItems.append(data)
+
                 if ParentStatus == 'Integrated Operation':
                     if ChildStatus != 'Current Count':
-                        filter_objects &= get_filter('integrated_operation', 'equal', ChildStatus)
+                        ListItems = dataList.filter(integrated_operation = ChildStatus)
+
                     if ChildStatus == 'Current Count':
-                        ListItems.extend(list(ProductionSystemStatus.objects.filter(integrated_operation='Under process').values()))
-                        ListItems.extend(list(
-                            ProductionSystemStatus.objects.filter(integrated_operation='Observation(same stage)').values()))
-                        ListItems.extend(list(ProductionSystemStatus.objects.filter(integrated_operation='Halt').values()))
-                    serializer = ProductionSystemSerialzer(ListItems, many=True)
-                    return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                        for data  in dataList:
+                            if data.integrated_operation == 'Under process' or data.integrated_operation=='Observation(same stage)' or data.integrated_operation=='Halt':
+                                ListItems.append(data)
+
                 if ParentStatus == 'Rain Test':
                     if ChildStatus != 'Current Count':
-                        filter_objects &= get_filter('rain_test', 'equal', ChildStatus)
+                        ListItems = dataList.filter(rain_test = ChildStatus)
+
                     if ChildStatus == 'Current Count':
-                        ListItems.extend(list(ProductionSystemStatus.objects.filter(rain_test='Under process').values()))
-                        ListItems.extend(list(ProductionSystemStatus.objects.filter(rain_test='Observation(same stage)').values()))
-                        ListItems.extend(list(ProductionSystemStatus.objects.filter(rain_test='Halt').values()))
-                    serializer = ProductionSystemSerialzer(ListItems, many=True)
-                    return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                        for data  in dataList:
+                            if data.rain_test == 'Under process' or data.rain_test=='Observation(same stage)' or data.rain_test=='Halt':
+                                ListItems.append(data)
+
                 if ParentStatus == 'Pre User Inspection':
                     if ChildStatus != 'Current Count':
-                        filter_objects &= get_filter('pre_user_inspection', 'equal', ChildStatus)
+                        ListItems = dataList.filter(pre_user_inspection = ChildStatus)
+
                     if ChildStatus == 'Current Count':
-                        ListItems.extend(list(ProductionSystemStatus.objects.filter(pre_user_inspection='Under process').values()))
-                        ListItems.extend(list(
-                            ProductionSystemStatus.objects.filter(pre_user_inspection='Observation(same stage)').values()))
-                        ListItems.extend(list(ProductionSystemStatus.objects.filter(pre_user_inspection='Halt').values()))
-                    serializer = ProductionSystemSerialzer(ListItems, many=True)
-                    return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
-                if ParentStatus == 'Final Integrated Testing':
+                        for data  in dataList:
+                            if data.pre_user_inspection == 'Under process' or data.pre_user_inspection=='Observation(same stage)' or data.pre_user_inspection=='Halt':
+                                ListItems.append(data)
+
+                if ParentStatus == 'Final Integration':
                     if ChildStatus != 'Current Count':
-                        filter_objects &= get_filter('final_integrated_testing', 'equal', ChildStatus)
+                        ListItems = dataList.filter(final_integration_status = ChildStatus)
+
                     if ChildStatus == 'Current Count':
-                        ListItems.extend(list(ProductionSystemStatus.objects.filter(final_integrated_testing='Under process').values()))
-                        ListItems.extend(list(
-                            ProductionSystemStatus.objects.filter(final_integrated_testing='Observation(same stage)').values()))
-                        ListItems.extend(list(ProductionSystemStatus.objects.filter(final_integrated_testing='Halt').values()))
-                    serializer = ProductionSystemSerialzer(ListItems, many=True)
-                    return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                        for data  in dataList:
+                            if data.final_integration_status == 'Under process' or data.final_integration_status=='Observation(same stage)' or data.final_integration_status=='Halt':
+                                ListItems.append(data)
+
                 if ParentStatus == 'Loading/Unloading on MLV/HLF':
                     if ChildStatus != 'Current Count':
-                        filter_objects &= get_filter('load_unload_on_mlv_hlf', 'equal', ChildStatus)
+                        ListItems = dataList.filter(load_unload_on_mlv_hlf = ChildStatus)
+
                     if ChildStatus == 'Current Count':
-                        ListItems.extend(list(ProductionSystemStatus.objects.filter(load_unload_on_mlv_hlf='Under process').values()))
-                        ListItems.extend(list(
-                            ProductionSystemStatus.objects.filter(load_unload_on_mlv_hlf='Observation(same stage)').values()))
-                        ListItems.extend(list(ProductionSystemStatus.objects.filter(load_unload_on_mlv_hlf='Halt').values()))
-                        serializer = ProductionSystemSerialzer(ListItems, many=True)
-                        return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                        for data  in dataList:
+                            if data.load_unload_on_mlv_hlf == 'Under process' or data.load_unload_on_mlv_hlf=='Observation(same stage)' or data.load_unload_on_mlv_hlf=='Halt':
+                                ListItems.append(data)
+
                 if ParentStatus == 'Pre-HIL':
                     if ChildStatus != 'Current Count':
-                        filter_objects &= get_filter('pre_hil_status', 'equal', ChildStatus)
+                        ListItems = dataList.filter(pre_hil_status = ChildStatus)
+
                     if ChildStatus == 'Current Count':
-                        ListItems.extend(list(ProductionSystemStatus.objects.filter(pre_hil_status='Under process').values()))
-                        ListItems.extend(list(ProductionSystemStatus.objects.filter(pre_hil_status='Observation(same stage)').values()))
-                        ListItems.extend(list(ProductionSystemStatus.objects.filter(pre_hil_status='Halt').values()))
-                        serializer = ProductionSystemSerialzer(ListItems, many=True)
-                        return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                        for data  in dataList:
+                            if data.pre_hil_status == 'Under process' or data.pre_hil_status=='Observation(same stage)' or data.pre_hil_status=='Halt':
+                                ListItems.append(data)
+
                 if ParentStatus == 'Vibration':
                     if ChildStatus != 'Current Count':
-                        filter_objects &= get_filter('vibaration_status', 'equal', ChildStatus)
+                        ListItems = dataList.filter(vibaration_status = ChildStatus)
+
                     if ChildStatus == 'Current Count':
-                        ListItems.extend(list(ProductionSystemStatus.objects.filter(vibaration_status='Under process').values()))
-                        ListItems.extend(list(ProductionSystemStatus.objects.filter(vibaration_status='Observation(same stage)').values()))
-                        ListItems.extend(list(ProductionSystemStatus.objects.filter(vibaration_status='Halt').values()))
-                        serializer = ProductionSystemSerialzer(ListItems, many=True)
-                        return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                        for data  in dataList:
+                            if data.vibaration_status == 'Under process' or data.vibaration_status=='Observation(same stage)' or data.vibaration_status=='Halt':
+                                ListItems.append(data)
+
                 if ParentStatus == 'CG Balancing':
                     if ChildStatus != 'Current Count':
-                        filter_objects &= get_filter('cgbalancing_date_status', 'equal', ChildStatus)
+                        ListItems = dataList.filter(cgbalancing_date_status = ChildStatus)
+
                     if ChildStatus == 'Current Count':
-                        ListItems.extend(list(ProductionSystemStatus.objects.filter(cgbalancing_date_status='Under process').values()))
-                        ListItems.extend(list(
-                            ProductionSystemStatus.objects.filter(cgbalancing_date_status='Observation(same stage)').values()))
-                        ListItems.extend(list(ProductionSystemStatus.objects.filter(cgbalancing_date_status='Halt').values()))
-                        serializer = ProductionSystemSerialzer(ListItems, many=True)
-                        return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                        for data  in dataList:
+                            if data.cgbalancing_date_status == 'Under process' or data.cgbalancing_date_status=='Observation(same stage)' or data.cgbalancing_date_status=='Halt':
+                                ListItems.append(data)
+
                 if ParentStatus == 'Post-HIL':
                     if ChildStatus != 'Current Count':
-                        filter_objects &= get_filter('post_hil_status', 'equal', ChildStatus)
+                        ListItems = dataList.filter(post_hil_status = ChildStatus)
+
                     if ChildStatus == 'Current Count':
-                        ListItems.extend(list(ProductionSystemStatus.objects.filter(post_hil_status='Under process').values()))
-                        ListItems.extend(list(ProductionSystemStatus.objects.filter(post_hil_status='Observation(same stage)').values()))
-                        ListItems.extend(list(ProductionSystemStatus.objects.filter(post_hil_status='Halt').values()))
-                        serializer = ProductionSystemSerialzer(ListItems, many=True)
-                        return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                        for data  in dataList:
+                            if data.post_hil_status == 'Under process' or data.post_hil_status=='Observation(same stage)' or data.post_hil_status=='Halt':
+                                ListItems.append(data)
+
                 if ParentStatus == 'System Alignment':
                     if ChildStatus != 'Current Count':
-                        filter_objects &= get_filter('sys_align_status', 'equal', ChildStatus)
+                        ListItems = dataList.filter(sys_align_status = ChildStatus)
+
                     if ChildStatus == 'Current Count':
-                        ListItems.extend(list(ProductionSystemStatus.objects.filter(sys_align_status='Under process').values()))
-                        ListItems.extend(list(ProductionSystemStatus.objects.filter(sys_align_status='Observation(same stage)').values()))
-                        ListItems.extend(list(ProductionSystemStatus.objects.filter(sys_align_status='Halt').values()))
-                        serializer = ProductionSystemSerialzer(ListItems, many=True)
-                        return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                        for data  in dataList:
+                            if data.sys_align_status == 'Under process' or data.sys_align_status=='Observation(same stage)' or data.sys_align_status=='Halt':
+                                ListItems.append(data)
+
                 if ParentStatus == 'Incapsulation':
                     if ChildStatus != 'Current Count':
-                        filter_objects &= get_filter('incapsulation_status', 'equal', ChildStatus)
+                        ListItems = dataList.filter(incapsulation_status = ChildStatus)
+
                     if ChildStatus == 'Current Count':
-                        ListItems.extend(list(ProductionSystemStatus.objects.filter(incapsulation_status='Under process').values()))
-                        ListItems.extend(list(
-                            ProductionSystemStatus.objects.filter(incapsulation_status='Observation(same stage)').values()))
-                        ListItems.extend(list(ProductionSystemStatus.objects.filter(incapsulation_status='Halt').values()))
-                        serializer = ProductionSystemSerialzer(ListItems, many=True)
-                        return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                        for data  in dataList:
+                            if data.incapsulation_status == 'Under process' or data.incapsulation_status=='Observation(same stage)' or data.incapsulation_status=='Halt':
+                                ListItems.append(data)
+
                 if ParentStatus == 'Final Integrated Testing':
                     if ChildStatus != 'Current Count':
-                        filter_objects &= get_filter('final_integration_status', 'equal', ChildStatus)
+                        ListItems = dataList.filter(final_integration_status = ChildStatus)
+
                     if ChildStatus == 'Current Count':
-                        ListItems.extend(list(ProductionSystemStatus.objects.filter(final_integration_status='Under process').values()))
-                        ListItems.extend(list(
-                            ProductionSystemStatus.objects.filter(final_integration_status='Observation(Same Stage)').values()))
-                        ListItems.extend(list(ProductionSystemStatus.objects.filter(final_integration_status='Halt').values()))
-                        serializer = ProductionSystemSerialzer(ListItems, many=True)
-                        return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                        for data  in dataList:
+                            if data.final_integration_status == 'Under process' or data.final_integration_status=='Observation(same stage)' or data.final_integration_status=='Halt':
+                                ListItems.append(data)
+
                 if ParentStatus == 'FGT Status':
                     if ChildStatus != 'Current Count':
-                        filter_objects &= get_filter('fgt_status', 'equal', ChildStatus)
+                        ListItems = dataList.filter(fgt_status = ChildStatus)
+
                     if ChildStatus == 'Current Count':
-                        ListItems.extend(list(ProductionSystemStatus.objects.filter(fgt_status='Under process').values()))
-                        ListItems.extend(list(ProductionSystemStatus.objects.filter(fgt_status='Observation(same stage)').values()))
-                        ListItems.extend(list(ProductionSystemStatus.objects.filter(fgt_status='Halt').values()))
-                        serializer = ProductionSystemSerialzer(ListItems, many=True)
-                        return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                        for data  in dataList:
+                            if data.fgt_status == 'Under process' or data.fgt_status=='Observation(same stage)' or data.fgt_status=='Halt':
+                                ListItems.append(data)
+
                 if ParentStatus == 'BHD Status':
                     if ChildStatus != 'Current Count':
-                        filter_objects &= get_filter('bhd_status', 'equal', ChildStatus)
+                        ListItems = dataList.filter(bhd_status = ChildStatus)
+
                     if ChildStatus == 'Current Count':
-                        ListItems.extend(list(ProductionSystemStatus.objects.filter(bhd_status='Ok').values()))
-                        ListItems.extend(list(ProductionSystemStatus.objects.filter(bhd_status='Not Submitted').values()))
-                        ListItems.extend(list(ProductionSystemStatus.objects.filter(bhd_status='QM Observations Forwarded').values()))
-                        serializer = ProductionSystemSerialzer(ListItems, many=True)
-                        return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                        for data  in dataList:
+                            if data.bhd_status == 'Ok' or data.bhd_status=='Not Submitted)' or data.bhd_status=='QM Observations Forwarded':
+                                ListItems.append(data)
+
                 if ParentStatus == 'FQM Status':
                     if ChildStatus != 'Current Count':
-                        filter_objects &= get_filter('fqm_status', 'equal', ChildStatus)
+                        ListItems = dataList.filter(fqm_status = ChildStatus)
+
                     if ChildStatus == 'Current Count':
-                        ListItems.extend(list(ProductionSystemStatus.objects.filter(fqm_status='Not Conducted').values()))
-                        serializer = ProductionSystemSerialzer(ListItems, many=True)
-                        return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                        for data  in dataList:
+                            if data.fqm_status=='Not Conducted)':
+                                ListItems.append(data)
+
                 if ParentStatus == 'QM Certification Status':
                     if ChildStatus != 'Current Count':
-                        filter_objects &= get_filter('qm_certification_status', 'equal', ChildStatus)
+                        ListItems = dataList.filter(qm_certification_status = ChildStatus)
+
                     if ChildStatus == 'Current Count':
-                        ListItems.extend(list(
-                            ProductionSystemStatus.objects.filter(qm_certification_status='QM certificate issued').values()))
-                        ListItems.extend(list(
-                            ProductionSystemStatus.objects.filter(qm_certification_status='QM Observations Forwarded').values()))
-                        serializer = ProductionSystemSerialzer(ListItems, many=True)
-                        return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                        for data  in dataList:
+                            if data.qm_certification_status == 'QM certificate issued' or data.qm_certification_status=='QM Observations Forwarded)':
+                                ListItems.append(data)
+
                 if ParentStatus == 'Launch/ End User':
                     if ChildStatus != 'Current Count':
-                        filter_objects &= get_filter('enduser_status', 'equal', ChildStatus)
+                        ListItems = dataList.filter(enduser_status = ChildStatus)
                     else:
-                        ListItems.extend(list(ProductionSystemStatus.objects.filter(enduser_status = 'Ok').values()))
-                        ListItems.extend(list(ProductionSystemStatus.objects.filter(enduser_status = 'Observation(Same Stage)').values()))
-                        ListItems.extend(list(ProductionSystemStatus.objects.filter(enduser_status = 'Halt').values()))
-                        serializer = ProductionSystemSerialzer(ListItems, many=True)
-                        return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                        for data  in dataList:
+                            if data.enduser_status == 'Ok' or data.enduser_status=='Observation(Same Stage)' or data.enduser_status=='Halt':
+                                ListItems.append(data)
 
-            # else:
-            dataList = ProductionSystemStatus.objects.filter(filter_objects)
+                serializer = ProductionSystemSerialzer(ListItems, many=True)
+                return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
             serializer = ProductionSystemSerialzer(dataList, many=True)
             print(serializer.data)
             return JsonResponse({'status': 'true', 'data': serializer.data}, status=200)
@@ -1122,221 +1117,222 @@ class SmsController:
                 'system', 'equal',
                 system)
 
+
+        dataList = FlightSystemStatus.objects.filter(filter_objects)
         if ParentStatus != '':
             ListItems = []
             if ParentStatus == 'BLT':
                 if ChildStatus != 'Current Count':
-                    filter_objects &= get_filter('blt_status', 'equal', ChildStatus)
-                else:
-                    ListItems.extend(list(FlightSystemStatus.objects.filter(blt_status='Under process').values()))
-                    ListItems.extend(list(FlightSystemStatus.objects.filter(blt_status='Observation(same stage)').values()))
-                    ListItems.extend(list(FlightSystemStatus.objects.filter(blt_status='Halt').values()))
-
-                    serializer = FlightSystemSerialzer(ListItems, many=True)
-                    return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                    # filter_objects &= get_filter('blt_status', 'equal', ChildStatus)
+                    ListItems = dataList.filter(blt_status=ChildStatus)
+                if ChildStatus == 'Current Count':
+                    for data in dataList:
+                        if data.blt_status == 'Under process' or data.blt_status == 'Observation(same stage)' or data.blt_status == 'Halt':
+                            ListItems.append(data)
 
             if ParentStatus == 'EMP Proofing':
                 if ChildStatus != 'Current Count':
-                    filter_objects &= get_filter('emp_proofing', 'equal', ChildStatus)
-                else:
-                    ListItems.extend(list(FlightSystemStatus.objects.filter(emp_proofing='Under process').values()))
-                    ListItems.extend(list(FlightSystemStatus.objects.filter(emp_proofing='Observation(same stage)').values()))
-                    ListItems.extend(list(FlightSystemStatus.objects.filter(emp_proofing='Halt').values()))
+                    # filter_objects &= get_filter('emp_proofing', 'equal', ChildStatus)
+                    ListItems = dataList.filter(emp_proofing=ChildStatus)
 
-                    serializer = FlightSystemSerialzer(ListItems, many=True)
-                    return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                if ChildStatus == 'Current Count':
+                    for data in dataList:
+                        if data.emp_proofing == 'Under process' or data.emp_proofing == 'Observation(same stage)' or data.emp_proofing == 'Halt':
+                            ListItems.append(data)
+
             if ParentStatus == 'Functional Test W/O Dummy Bird':
                 if ChildStatus != 'Current Count':
-                    filter_objects &= get_filter('func_tst', 'equal', ChildStatus)
-                else:
-                    ListItems.extend(list(FlightSystemStatus.objects.filter(func_tst='Under process').values()))
-                    ListItems.extend(list(FlightSystemStatus.objects.filter(func_tst='Observation(same stage)').values()))
-                    ListItems.extend(list(FlightSystemStatus.objects.filter(func_tst='Halt').values()))
+                    ListItems = dataList.filter(func_tst=ChildStatus)
 
-                    serializer = FlightSystemSerialzer(ListItems, many=True)
-                    return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                if ChildStatus == 'Current Count':
+                    for data in dataList:
+                        if data.func_tst == 'Under process' or data.func_tst == 'Observation(same stage)' or data.func_tst == 'Halt':
+                            ListItems.append(data)
+
             if ParentStatus == 'Functional Test With Dummy Bird':
                 if ChildStatus != 'Current Count':
-                    filter_objects &= get_filter('func_tst_dummy_bird', 'equal', ChildStatus)
-                else:
-                    ListItems.extend(list(FlightSystemStatus.objects.filter(func_tst_dummy_bird='Under process').values()))
-                    ListItems.extend(list(FlightSystemStatus.objects.filter(func_tst_dummy_bird='Observation(same stage)').values()))
-                    ListItems.extend(list(FlightSystemStatus.objects.filter(func_tst_dummy_bird='Halt').values()))
+                    ListItems = dataList.filter(func_tst_dummy_bird=ChildStatus)
 
-                    serializer = FlightSystemSerialzer(ListItems, many=True)
-                    return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                if ChildStatus == 'Current Count':
+                    for data in dataList:
+                        if data.func_tst_dummy_bird == 'Under process' or data.func_tst_dummy_bird == 'Observation(same stage)' or data.func_tst_dummy_bird == 'Halt':
+                            ListItems.append(data)
+
             if ParentStatus == 'Road Test':
                 if ChildStatus != 'Current Count':
-                    filter_objects &= get_filter('road_test', 'equal', ChildStatus)
-                else:
-                    ListItems.extend(list(FlightSystemStatus.objects.filter(road_test='Under process').values()))
-                    ListItems.extend(list(FlightSystemStatus.objects.filter(road_test='Observation(same stage)').values()))
-                    ListItems.extend(list(FlightSystemStatus.objects.filter(road_test='Halt').values()))
+                    ListItems = dataList.filter(road_test=ChildStatus)
 
-                    serializer = FlightSystemSerialzer(ListItems, many=True)
-                    return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                if ChildStatus == 'Current Count':
+                    for data in dataList:
+                        if data.road_test == 'Under process' or data.road_test == 'Observation(same stage)' or data.road_test == 'Halt':
+                            ListItems.append(data)
+
             if ParentStatus == 'Post Road Test':
                 if ChildStatus != 'Current Count':
-                    filter_objects &= get_filter('post_road_test', 'equal', ChildStatus)
-                else:
-                    ListItems.extend(list(FlightSystemStatus.objects.filter(post_road_test='Under process').values()))
-                    ListItems.extend(list(FlightSystemStatus.objects.filter(post_road_test='Observation(same stage)').values()))
-                    ListItems.extend(list(FlightSystemStatus.objects.filter(post_road_test='Halt').values()))
-                    serializer = FlightSystemSerialzer(ListItems, many=True)
-                    return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                    ListItems = dataList.filter(post_road_test=ChildStatus)
+
+                if ChildStatus == 'Current Count':
+                    for data in dataList:
+                        if data.post_road_test == 'Under process' or data.post_road_test == 'Observation(same stage)' or data.post_road_test == 'Halt':
+                            ListItems.append(data)
+
             if ParentStatus == 'Integrated Operation':
                 if ChildStatus != 'Current Count':
-                    filter_objects &= get_filter('integrated_operation', 'equal', ChildStatus)
+                    ListItems = dataList.filter(integrated_operation=ChildStatus)
+
                 if ChildStatus == 'Current Count':
-                    ListItems.extend(list(FlightSystemStatus.objects.filter(integrated_operation='Under process').values()))
-                    ListItems.extend(list(FlightSystemStatus.objects.filter(integrated_operation='Observation(same stage)').values()))
-                    ListItems.extend(list(FlightSystemStatus.objects.filter(integrated_operation='Halt').values()))
-                    serializer = FlightSystemSerialzer(ListItems, many=True)
-                    return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                    for data in dataList:
+                        if data.integrated_operation == 'Under process' or data.integrated_operation == 'Observation(same stage)' or data.integrated_operation == 'Halt':
+                            ListItems.append(data)
+
             if ParentStatus == 'Rain Test':
                 if ChildStatus != 'Current Count':
-                    filter_objects &= get_filter('rain_test', 'equal', ChildStatus)
+                    ListItems = dataList.filter(rain_test=ChildStatus)
+
                 if ChildStatus == 'Current Count':
-                    ListItems.extend(list(FlightSystemStatus.objects.filter(rain_test='Under process').values()))
-                    ListItems.extend(list(FlightSystemStatus.objects.filter(rain_test='Observation(same stage)').values()))
-                    ListItems.extend(list(FlightSystemStatus.objects.filter(rain_test='Halt').values()))
-                    serializer = FlightSystemSerialzer(ListItems, many=True)
-                    return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                    for data in dataList:
+                        if data.rain_test == 'Under process' or data.rain_test == 'Observation(same stage)' or data.rain_test == 'Halt':
+                            ListItems.append(data)
+
             if ParentStatus == 'Pre User Inspection':
                 if ChildStatus != 'Current Count':
-                    filter_objects &= get_filter('pre_user_inspection', 'equal', ChildStatus)
+                    ListItems = dataList.filter(pre_user_inspection=ChildStatus)
+
                 if ChildStatus == 'Current Count':
-                    ListItems.extend(list(FlightSystemStatus.objects.filter(pre_user_inspection='Under process').values()))
-                    ListItems.extend(list(FlightSystemStatus.objects.filter(pre_user_inspection='Observation(same stage)').values()))
-                    ListItems.extend(list(FlightSystemStatus.objects.filter(pre_user_inspection='Halt').values()))
-                    serializer = FlightSystemSerialzer(ListItems, many=True)
-                    return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
-            if ParentStatus == 'Final Integrated Testing':
+                    for data in dataList:
+                        if data.pre_user_inspection == 'Under process' or data.pre_user_inspection == 'Observation(same stage)' or data.pre_user_inspection == 'Halt':
+                            ListItems.append(data)
+
+            if ParentStatus == 'Final Integration':
                 if ChildStatus != 'Current Count':
-                    filter_objects &= get_filter('final_integrated_testing', 'equal', ChildStatus)
+                    ListItems = dataList.filter(final_integration_status=ChildStatus)
+
                 if ChildStatus == 'Current Count':
-                    ListItems.extend(list(FlightSystemStatus.objects.filter(final_integrated_testing='Under process').values()))
-                    ListItems.extend(list(FlightSystemStatus.objects.filter(final_integrated_testing='Observation(same stage)').values()))
-                    ListItems.extend(list(FlightSystemStatus.objects.filter(final_integrated_testing='Halt').values()))
-                    serializer = FlightSystemSerialzer(ListItems, many=True)
-                    return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                    for data in dataList:
+                        if data.final_integration_status == 'Under process' or data.final_integration_status == 'Observation(same stage)' or data.final_integration_status == 'Halt':
+                            ListItems.append(data)
+
             if ParentStatus == 'Loading/Unloading on MLV/HLF':
                 if ChildStatus != 'Current Count':
-                    filter_objects &= get_filter('load_unload_on_mlv_hlf', 'equal', ChildStatus)
+                    ListItems = dataList.filter(load_unload_on_mlv_hlf=ChildStatus)
+
                 if ChildStatus == 'Current Count':
-                    ListItems.extend(list(FlightSystemStatus.objects.filter(load_unload_on_mlv_hlf='Under process').values()))
-                    ListItems.extend(list(FlightSystemStatus.objects.filter(load_unload_on_mlv_hlf='Observation(same stage)').values()))
-                    ListItems.extend(list(FlightSystemStatus.objects.filter(load_unload_on_mlv_hlf='Halt').values()))
-                    serializer = FlightSystemSerialzer(ListItems, many=True)
-                    return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                    for data in dataList:
+                        if data.load_unload_on_mlv_hlf == 'Under process' or data.load_unload_on_mlv_hlf == 'Observation(same stage)' or data.load_unload_on_mlv_hlf == 'Halt':
+                            ListItems.append(data)
+
             if ParentStatus == 'Pre-HIL':
                 if ChildStatus != 'Current Count':
-                    filter_objects &= get_filter('pre_hil_status', 'equal', ChildStatus)
+                    ListItems = dataList.filter(pre_hil_status=ChildStatus)
+
                 if ChildStatus == 'Current Count':
-                    ListItems.extend(list(FlightSystemStatus.objects.filter(pre_hil_status='Under process').values()))
-                    ListItems.extend(list(FlightSystemStatus.objects.filter(pre_hil_status='Observation(same stage)').values()))
-                    ListItems.extend(list(FlightSystemStatus.objects.filter(pre_hil_status='Halt').values()))
-                    serializer = FlightSystemSerialzer(ListItems, many=True)
-                    return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                    for data in dataList:
+                        if data.pre_hil_status == 'Under process' or data.pre_hil_status == 'Observation(same stage)' or data.pre_hil_status == 'Halt':
+                            ListItems.append(data)
+
             if ParentStatus == 'Vibration':
                 if ChildStatus != 'Current Count':
-                    filter_objects &= get_filter('vibaration_status', 'equal', ChildStatus)
+                    ListItems = dataList.filter(vibaration_status=ChildStatus)
+
                 if ChildStatus == 'Current Count':
-                    ListItems.extend(list(FlightSystemStatus.objects.filter(vibaration_status='Under process').values()))
-                    ListItems.extend(list(FlightSystemStatus.objects.filter(vibaration_status='Observation(same stage)').values()))
-                    ListItems.extend(list(FlightSystemStatus.objects.filter(vibaration_status='Halt').values()))
-                    serializer = FlightSystemSerialzer(ListItems, many=True)
-                    return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                    for data in dataList:
+                        if data.vibaration_status == 'Under process' or data.vibaration_status == 'Observation(same stage)' or data.vibaration_status == 'Halt':
+                            ListItems.append(data)
+
             if ParentStatus == 'CG Balancing':
                 if ChildStatus != 'Current Count':
-                    filter_objects &= get_filter('cgbalancing_date_status', 'equal', ChildStatus)
+                    ListItems = dataList.filter(cgbalancing_date_status=ChildStatus)
+
                 if ChildStatus == 'Current Count':
-                    ListItems.extend(list(FlightSystemStatus.objects.filter(cgbalancing_date_status='Under process').values()))
-                    ListItems.extend(list(FlightSystemStatus.objects.filter(cgbalancing_date_status='Observation(same stage)').values()))
-                    ListItems.extend(list(FlightSystemStatus.objects.filter(cgbalancing_date_status='Halt').values()))
-                    serializer = FlightSystemSerialzer(ListItems, many=True)
-                    return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                    for data in dataList:
+                        if data.cgbalancing_date_status == 'Under process' or data.cgbalancing_date_status == 'Observation(same stage)' or data.cgbalancing_date_status == 'Halt':
+                            ListItems.append(data)
+
             if ParentStatus == 'Post-HIL':
                 if ChildStatus != 'Current Count':
-                    filter_objects &= get_filter('post_hil_status', 'equal', ChildStatus)
+                    ListItems = dataList.filter(post_hil_status=ChildStatus)
+
                 if ChildStatus == 'Current Count':
-                    ListItems.extend(list(FlightSystemStatus.objects.filter(post_hil_status='Under process').values()))
-                    ListItems.extend(list(FlightSystemStatus.objects.filter(post_hil_status='Observation(same stage)').values()))
-                    ListItems.extend(list(FlightSystemStatus.objects.filter(post_hil_status='Halt').values()))
-                    serializer = FlightSystemSerialzer(ListItems, many=True)
-                    return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                    for data in dataList:
+                        if data.post_hil_status == 'Under process' or data.post_hil_status == 'Observation(same stage)' or data.post_hil_status == 'Halt':
+                            ListItems.append(data)
+
             if ParentStatus == 'System Alignment':
                 if ChildStatus != 'Current Count':
-                    filter_objects &= get_filter('sys_align_status', 'equal', ChildStatus)
+                    ListItems = dataList.filter(sys_align_status=ChildStatus)
+
                 if ChildStatus == 'Current Count':
-                    ListItems.extend(list(FlightSystemStatus.objects.filter(sys_align_status='Under process').values()))
-                    ListItems.extend(list(FlightSystemStatus.objects.filter(sys_align_status='Observation(same stage)').values()))
-                    ListItems.extend(list(FlightSystemStatus.objects.filter(sys_align_status='Halt').values()))
-                    serializer = FlightSystemSerialzer(ListItems, many=True)
-                    return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                    for data in dataList:
+                        if data.sys_align_status == 'Under process' or data.sys_align_status == 'Observation(same stage)' or data.sys_align_status == 'Halt':
+                            ListItems.append(data)
+
             if ParentStatus == 'Incapsulation':
                 if ChildStatus != 'Current Count':
-                    filter_objects &= get_filter('incapsulation_status', 'equal', ChildStatus)
+                    ListItems = dataList.filter(incapsulation_status=ChildStatus)
+
                 if ChildStatus == 'Current Count':
-                    ListItems.extend(list(FlightSystemStatus.objects.filter(incapsulation_status='Under process').values()))
-                    ListItems.extend(list(FlightSystemStatus.objects.filter(incapsulation_status='Observation(same stage)').values()))
-                    ListItems.extend(list(FlightSystemStatus.objects.filter(incapsulation_status='Halt').values()))
-                    serializer = FlightSystemSerialzer(ListItems, many=True)
-                    return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                    for data in dataList:
+                        if data.incapsulation_status == 'Under process' or data.incapsulation_status == 'Observation(same stage)' or data.incapsulation_status == 'Halt':
+                            ListItems.append(data)
+
             if ParentStatus == 'Final Integrated Testing':
                 if ChildStatus != 'Current Count':
-                    filter_objects &= get_filter('final_integration_status', 'equal', ChildStatus)
+                    ListItems = dataList.filter(final_integration_status=ChildStatus)
+
                 if ChildStatus == 'Current Count':
-                    ListItems.extend(list(FlightSystemStatus.objects.filter(final_integration_status='Under process').values()))
-                    ListItems.extend(list(FlightSystemStatus.objects.filter(final_integration_status='Observation(Same Stage)').values()))
-                    ListItems.extend(list(FlightSystemStatus.objects.filter(final_integration_status='Halt').values()))
-                    serializer = FlightSystemSerialzer(ListItems, many=True)
-                    return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                    for data in dataList:
+                        if data.final_integration_status == 'Under process' or data.final_integration_status == 'Observation(same stage)' or data.final_integration_status == 'Halt':
+                            ListItems.append(data)
+
             if ParentStatus == 'FGT Status':
                 if ChildStatus != 'Current Count':
-                    filter_objects &= get_filter('fgt_status', 'equal', ChildStatus)
+                    ListItems = dataList.filter(fgt_status=ChildStatus)
+
                 if ChildStatus == 'Current Count':
-                    ListItems.extend(list(FlightSystemStatus.objects.filter(fgt_status='Under process').values()))
-                    ListItems.extend(list(FlightSystemStatus.objects.filter(fgt_status='Observation(same stage)').values()))
-                    ListItems.extend(list(FlightSystemStatus.objects.filter(fgt_status='Halt').values()))
-                    serializer = FlightSystemSerialzer(ListItems, many=True)
-                    return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                    for data in dataList:
+                        if data.fgt_status == 'Under process' or data.fgt_status == 'Observation(same stage)' or data.fgt_status == 'Halt':
+                            ListItems.append(data)
+
             if ParentStatus == 'BHD Status':
                 if ChildStatus != 'Current Count':
-                    filter_objects &= get_filter('bhd_status', 'equal', ChildStatus)
+                    ListItems = dataList.filter(bhd_status=ChildStatus)
+
                 if ChildStatus == 'Current Count':
-                    ListItems.extend(list(FlightSystemStatus.objects.filter(bhd_status='Ok').values()))
-                    ListItems.extend(list(FlightSystemStatus.objects.filter(bhd_status='Not Submitted').values()))
-                    ListItems.extend(list(FlightSystemStatus.objects.filter(bhd_status='QM Observations Forwarded').values()))
-                    serializer = FlightSystemSerialzer(ListItems, many=True)
-                    return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                    for data in dataList:
+                        if data.bhd_status == 'Ok' or data.bhd_status == 'Not Submitted)' or data.bhd_status == 'QM Observations Forwarded':
+                            ListItems.append(data)
+
             if ParentStatus == 'FQM Status':
                 if ChildStatus != 'Current Count':
-                    filter_objects &= get_filter('fqm_status', 'equal', ChildStatus)
+                    ListItems = dataList.filter(fqm_status=ChildStatus)
+
                 if ChildStatus == 'Current Count':
-                    ListItems.extend(list(FlightSystemStatus.objects.filter(fqm_status='Not Conducted').values()))
-                    serializer = FlightSystemSerialzer(ListItems, many=True)
-                    return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                    for data in dataList:
+                        if data.fqm_status == 'Not Conducted)':
+                            ListItems.append(data)
+
             if ParentStatus == 'QM Certification Status':
                 if ChildStatus != 'Current Count':
-                    filter_objects &= get_filter('qm_certification_status', 'equal', ChildStatus)
+                    ListItems = dataList.filter(qm_certification_status=ChildStatus)
+
                 if ChildStatus == 'Current Count':
-                    ListItems.extend(list(FlightSystemStatus.objects.filter(qm_certification_status='QM certificate issued').values()))
-                    ListItems.extend(list(FlightSystemStatus.objects.filter(qm_certification_status='QM Observations Forwarded').values()))
-                    serializer = FlightSystemSerialzer(ListItems, many=True)
-                    return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                    for data in dataList:
+                        if data.qm_certification_status == 'QM certificate issued' or data.qm_certification_status == 'QM Observations Forwarded)':
+                            ListItems.append(data)
+
             if ParentStatus == 'Launch/ End User':
                 if ChildStatus != 'Current Count':
-                    filter_objects &= get_filter('launchact_status', 'equal', ChildStatus)
-                if ChildStatus == 'Current Count':
-                    ListItems.extends(list(FlightSystemStatus.objects.filter(blt_status = 'Ok').values()))
-                    ListItems.extends(list(FlightSystemStatus.objects.filter(blt_status = 'Observation(Same Stage)').values()))
-                    ListItems.extends(list(FlightSystemStatus.objects.filter(blt_status = 'Halt').values()))
-                    serializer = FlightSystemSerialzer(ListItems, many=True)
-                    return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                    ListItems = dataList.filter(launchact_status=ChildStatus)
+                else:
+                    for data in dataList:
+                        if data.launchact_status == 'Ok' or data.launchact_status == 'Observation(Same Stage)' or data.launchact_status == 'Halt':
+                            ListItems.append(data)
 
-        data = FlightSystemStatus.objects.filter(filter_objects)
-        serializer = FlightSystemSerialzer(data, many=True)
+            serializer = ProductionSystemSerialzer(ListItems, many=True)
+            return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+
+
+        serializer = FlightSystemSerialzer(dataList, many=True)
         return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
 
     # except:
@@ -1820,226 +1816,220 @@ class SmsController:
                 filter_objects &= get_filter(
                     'system', 'equal',
                     system)
+
+            dataList = RelifingSystemStatus.objects.filter(filter_objects)
             if ParentStatus != '':
                 ListItems = []
                 if ParentStatus == 'BLT':
                     if ChildStatus != 'Current Count':
-                        filter_objects &= get_filter('blt_status', 'equal', ChildStatus)
+                        # filter_objects &= get_filter('blt_status', 'equal', ChildStatus)
+                        ListItems = dataList.filter(blt_status=ChildStatus)
                     if ChildStatus == 'Current Count':
-                        ListItems.extend(list(RelifingSystemStatus.objects.filter(blt_status='Under process').values()))
-                        ListItems.extend(list(RelifingSystemStatus.objects.filter(blt_status='Observation(same stage)').values()))
-                        ListItems.extend(list(RelifingSystemStatus.objects.filter(blt_status='Halt').values()))
-                        serializer = RelifingSystemSerialzer(ListItems, many=True)
-                        return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                        for data in dataList:
+                            if data.blt_status == 'Under process' or data.blt_status == 'Observation(same stage)' or data.blt_status == 'Halt':
+                                ListItems.append(data)
 
                 if ParentStatus == 'EMP Proofing':
                     if ChildStatus != 'Current Count':
-                        filter_objects &= get_filter('emp_proofing', 'equal', ChildStatus)
+                        # filter_objects &= get_filter('emp_proofing', 'equal', ChildStatus)
+                        ListItems = dataList.filter(emp_proofing=ChildStatus)
+
                     if ChildStatus == 'Current Count':
-                        ListItems.extend(list(RelifingSystemStatus.objects.filter(emp_proofing='Under process').values()))
-                        ListItems.extend(list(RelifingSystemStatus.objects.filter(emp_proofing='Observation(same stage)').values()))
-                        ListItems.extend(list(RelifingSystemStatus.objects.filter(emp_proofing='Halt').values()))
-                        serializer = RelifingSystemSerialzer(ListItems, many=True)
-                        return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                        for data in dataList:
+                            if data.emp_proofing == 'Under process' or data.emp_proofing == 'Observation(same stage)' or data.emp_proofing == 'Halt':
+                                ListItems.append(data)
+
                 if ParentStatus == 'Functional Test W/O Dummy Bird':
                     if ChildStatus != 'Current Count':
-                        filter_objects &= get_filter('func_tst', 'equal', ChildStatus)
+                        ListItems = dataList.filter(func_tst=ChildStatus)
+
                     if ChildStatus == 'Current Count':
-                        ListItems.extend(list(RelifingSystemStatus.objects.filter(func_tst='Under process').values()))
-                        ListItems.extend(list(RelifingSystemStatus.objects.filter(func_tst='Observation(same stage)').values()))
-                        ListItems.extend(list(RelifingSystemStatus.objects.filter(func_tst='Halt').values()))
-                    serializer = RelifingSystemSerialzer(ListItems, many=True)
-                    return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                        for data in dataList:
+                            if data.func_tst == 'Under process' or data.func_tst == 'Observation(same stage)' or data.func_tst == 'Halt':
+                                ListItems.append(data)
+
                 if ParentStatus == 'Functional Test With Dummy Bird':
                     if ChildStatus != 'Current Count':
-                        filter_objects &= get_filter('func_tst_dummy_bird', 'equal', ChildStatus)
+                        ListItems = dataList.filter(func_tst_dummy_bird=ChildStatus)
+
                     if ChildStatus == 'Current Count':
-                        ListItems.extend(list(RelifingSystemStatus.objects.filter(func_tst_dummy_bird='Under process').values()))
-                        ListItems.extend(list(
-                            RelifingSystemStatus.objects.filter(func_tst_dummy_bird='Observation(same stage)').values()))
-                        ListItems.extend(list(RelifingSystemStatus.objects.filter(func_tst_dummy_bird='Halt').values()))
-                        serializer = RelifingSystemSerialzer(ListItems, many=True)
-                        return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                        for data in dataList:
+                            if data.func_tst_dummy_bird == 'Under process' or data.func_tst_dummy_bird == 'Observation(same stage)' or data.func_tst_dummy_bird == 'Halt':
+                                ListItems.append(data)
+
                 if ParentStatus == 'Road Test':
                     if ChildStatus != 'Current Count':
-                        filter_objects &= get_filter('road_test', 'equal', ChildStatus)
+                        ListItems = dataList.filter(road_test=ChildStatus)
+
                     if ChildStatus == 'Current Count':
-                        ListItems.extend(list(RelifingSystemStatus.objects.filter(road_test='Under process').values()))
-                        ListItems.extend(list(RelifingSystemStatus.objects.filter(road_test='Observation(same stage)').values()))
-                        ListItems.extend(list(RelifingSystemStatus.objects.filter(road_test='Halt').values()))
-                        serializer = RelifingSystemSerialzer(ListItems, many=True)
-                        return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                        for data in dataList:
+                            if data.road_test == 'Under process' or data.road_test == 'Observation(same stage)' or data.road_test == 'Halt':
+                                ListItems.append(data)
+
                 if ParentStatus == 'Post Road Test':
                     if ChildStatus != 'Current Count':
-                        filter_objects &= get_filter('post_road_test', 'equal', ChildStatus)
+                        ListItems = dataList.filter(post_road_test=ChildStatus)
+
                     if ChildStatus == 'Current Count':
-                        ListItems.extend(list(RelifingSystemStatus.objects.filter(post_road_test='Under process').values()))
-                        ListItems.extend(list(RelifingSystemStatus.objects.filter(post_road_test='Observation(same stage)').values()))
-                        ListItems.extend(list(RelifingSystemStatus.objects.filter(post_road_test='Halt').values()))
-                        serializer = RelifingSystemSerialzer(ListItems, many=True)
-                        return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                        for data in dataList:
+                            if data.post_road_test == 'Under process' or data.post_road_test == 'Observation(same stage)' or data.post_road_test == 'Halt':
+                                ListItems.append(data)
+
                 if ParentStatus == 'Integrated Operation':
                     if ChildStatus != 'Current Count':
-                        filter_objects &= get_filter('integrated_operation', 'equal', ChildStatus)
+                        ListItems = dataList.filter(integrated_operation=ChildStatus)
+
                     if ChildStatus == 'Current Count':
-                        ListItems.extend(list(RelifingSystemStatus.objects.filter(integrated_operation='Under process').values()))
-                        ListItems.extend(list(
-                            RelifingSystemStatus.objects.filter(integrated_operation='Observation(same stage)').values()))
-                        ListItems.extend(list(RelifingSystemStatus.objects.filter(integrated_operation='Halt').values()))
-                        serializer = RelifingSystemSerialzer(ListItems, many=True)
-                        return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                        for data in dataList:
+                            if data.integrated_operation == 'Under process' or data.integrated_operation == 'Observation(same stage)' or data.integrated_operation == 'Halt':
+                                ListItems.append(data)
+
                 if ParentStatus == 'Rain Test':
                     if ChildStatus != 'Current Count':
-                        filter_objects &= get_filter('rain_test', 'equal', ChildStatus)
+                        ListItems = dataList.filter(rain_test=ChildStatus)
+
                     if ChildStatus == 'Current Count':
-                        ListItems.extend(list(RelifingSystemStatus.objects.filter(rain_test='Under process').values()))
-                        ListItems.extend(list(RelifingSystemStatus.objects.filter(rain_test='Observation(same stage)').values()))
-                        ListItems.extend(list(RelifingSystemStatus.objects.filter(rain_test='Halt').values()))
-                        serializer = RelifingSystemSerialzer(ListItems, many=True)
-                        return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                        for data in dataList:
+                            if data.rain_test == 'Under process' or data.rain_test == 'Observation(same stage)' or data.rain_test == 'Halt':
+                                ListItems.append(data)
+
                 if ParentStatus == 'Pre User Inspection':
                     if ChildStatus != 'Current Count':
-                        filter_objects &= get_filter('pre_user_inspection', 'equal', ChildStatus)
+                        ListItems = dataList.filter(pre_user_inspection=ChildStatus)
+
                     if ChildStatus == 'Current Count':
-                        ListItems.extend(list(RelifingSystemStatus.objects.filter(pre_user_inspection='Under process').values()))
-                        ListItems.extend(list(
-                            RelifingSystemStatus.objects.filter(pre_user_inspection='Observation(same stage)').values()))
-                        ListItems.extend(list(RelifingSystemStatus.objects.filter(pre_user_inspection='Halt').values()))
-                        serializer = RelifingSystemSerialzer(ListItems, many=True)
-                        return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
-                if ParentStatus == 'Final Integrated Testing':
+                        for data in dataList:
+                            if data.pre_user_inspection == 'Under process' or data.pre_user_inspection == 'Observation(same stage)' or data.pre_user_inspection == 'Halt':
+                                ListItems.append(data)
+
+                if ParentStatus == 'Final Integration':
                     if ChildStatus != 'Current Count':
-                        filter_objects &= get_filter('final_integrated_testing', 'equal', ChildStatus)
+                        ListItems = dataList.filter(final_integration_status=ChildStatus)
+
                     if ChildStatus == 'Current Count':
-                        ListItems.extend(list(RelifingSystemStatus.objects.filter(final_integrated_testing='Under process').values()))
-                        ListItems.extend(list(
-                            RelifingSystemStatus.objects.filter(final_integrated_testing='Observation(same stage)').values()))
-                        ListItems.extend(list(RelifingSystemStatus.objects.filter(final_integrated_testing='Halt').values()))
-                        serializer = RelifingSystemSerialzer(ListItems, many=True)
-                        return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                        for data in dataList:
+                            if data.final_integration_status == 'Under process' or data.final_integration_status == 'Observation(same stage)' or data.final_integration_status == 'Halt':
+                                ListItems.append(data)
+
                 if ParentStatus == 'Loading/Unloading on MLV/HLF':
                     if ChildStatus != 'Current Count':
-                        filter_objects &= get_filter('load_unload_on_mlv_hlf', 'equal', ChildStatus)
+                        ListItems = dataList.filter(load_unload_on_mlv_hlf=ChildStatus)
+
                     if ChildStatus == 'Current Count':
-                        ListItems.extend(list(RelifingSystemStatus.objects.filter(load_unload_on_mlv_hlf='Under process').values()))
-                        ListItems.extend(list(
-                            RelifingSystemStatus.objects.filter(load_unload_on_mlv_hlf='Observation(same stage)').values()))
-                        ListItems.extend(list(RelifingSystemStatus.objects.filter(load_unload_on_mlv_hlf='Halt').values()))
-                        serializer = RelifingSystemSerialzer(ListItems, many=True)
-                        return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                        for data in dataList:
+                            if data.load_unload_on_mlv_hlf == 'Under process' or data.load_unload_on_mlv_hlf == 'Observation(same stage)' or data.load_unload_on_mlv_hlf == 'Halt':
+                                ListItems.append(data)
+
                 if ParentStatus == 'Pre-HIL':
                     if ChildStatus != 'Current Count':
-                        filter_objects &= get_filter('pre_hil_status', 'equal', ChildStatus)
+                        ListItems = dataList.filter(pre_hil_status=ChildStatus)
+
                     if ChildStatus == 'Current Count':
-                        ListItems.extend(list(RelifingSystemStatus.objects.filter(pre_hil_status='Under process').values()))
-                        ListItems.extend(list(RelifingSystemStatus.objects.filter(pre_hil_status='Observation(same stage)').values()))
-                        ListItems.extend(list(RelifingSystemStatus.objects.filter(pre_hil_status='Halt').values()))
-                        serializer = RelifingSystemSerialzer(ListItems, many=True)
-                        return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                        for data in dataList:
+                            if data.pre_hil_status == 'Under process' or data.pre_hil_status == 'Observation(same stage)' or data.pre_hil_status == 'Halt':
+                                ListItems.append(data)
+
                 if ParentStatus == 'Vibration':
                     if ChildStatus != 'Current Count':
-                        filter_objects &= get_filter('vibaration_status', 'equal', ChildStatus)
+                        ListItems = dataList.filter(vibaration_status=ChildStatus)
+
                     if ChildStatus == 'Current Count':
-                        ListItems.extend(list(RelifingSystemStatus.objects.filter(vibaration_status='Under process').values()))
-                        ListItems.extend(list(RelifingSystemStatus.objects.filter(vibaration_status='Observation(same stage)').values()))
-                        ListItems.extend(list(RelifingSystemStatus.objects.filter(vibaration_status='Halt').values()))
-                        serializer = RelifingSystemSerialzer(ListItems, many=True)
-                        return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                        for data in dataList:
+                            if data.vibaration_status == 'Under process' or data.vibaration_status == 'Observation(same stage)' or data.vibaration_status == 'Halt':
+                                ListItems.append(data)
+
                 if ParentStatus == 'CG Balancing':
                     if ChildStatus != 'Current Count':
-                        filter_objects &= get_filter('cgbalancing_date_status', 'equal', ChildStatus)
+                        ListItems = dataList.filter(cgbalancing_date_status=ChildStatus)
+
                     if ChildStatus == 'Current Count':
-                        ListItems.extend(list(RelifingSystemStatus.objects.filter(cgbalancing_date_status='Under process').values()))
-                        ListItems.extend(list(
-                            RelifingSystemStatus.objects.filter(cgbalancing_date_status='Observation(same stage)').values()))
-                        ListItems.extend(list(RelifingSystemStatus.objects.filter(cgbalancing_date_status='Halt').values()))
-                        serializer = RelifingSystemSerialzer(ListItems, many=True)
-                        return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                        for data in dataList:
+                            if data.cgbalancing_date_status == 'Under process' or data.cgbalancing_date_status == 'Observation(same stage)' or data.cgbalancing_date_status == 'Halt':
+                                ListItems.append(data)
+
                 if ParentStatus == 'Post-HIL':
                     if ChildStatus != 'Current Count':
-                        filter_objects &= get_filter('post_hil_status', 'equal', ChildStatus)
+                        ListItems = dataList.filter(post_hil_status=ChildStatus)
+
                     if ChildStatus == 'Current Count':
-                        ListItems.extend(list(RelifingSystemStatus.objects.filter(post_hil_status='Under process').values()))
-                        ListItems.extend(list(RelifingSystemStatus.objects.filter(post_hil_status='Observation(same stage)').values()))
-                        ListItems.extend(list(RelifingSystemStatus.objects.filter(post_hil_status='Halt').values()))
-                        serializer = RelifingSystemSerialzer(ListItems, many=True)
-                        return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                        for data in dataList:
+                            if data.post_hil_status == 'Under process' or data.post_hil_status == 'Observation(same stage)' or data.post_hil_status == 'Halt':
+                                ListItems.append(data)
+
                 if ParentStatus == 'System Alignment':
                     if ChildStatus != 'Current Count':
-                        filter_objects &= get_filter('sys_align_status', 'equal', ChildStatus)
+                        ListItems = dataList.filter(sys_align_status=ChildStatus)
+
                     if ChildStatus == 'Current Count':
-                        ListItems.extend(list(RelifingSystemStatus.objects.filter(sys_align_status='Under process').values()))
-                        ListItems.extend(list(RelifingSystemStatus.objects.filter(sys_align_status='Observation(same stage)').values()))
-                        ListItems.extend(list(RelifingSystemStatus.objects.filter(sys_align_status='Halt').values()))
-                        serializer = RelifingSystemSerialzer(ListItems, many=True)
-                        return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                        for data in dataList:
+                            if data.sys_align_status == 'Under process' or data.sys_align_status == 'Observation(same stage)' or data.sys_align_status == 'Halt':
+                                ListItems.append(data)
+
                 if ParentStatus == 'Incapsulation':
                     if ChildStatus != 'Current Count':
-                        filter_objects &= get_filter('incapsulation_status', 'equal', ChildStatus)
+                        ListItems = dataList.filter(incapsulation_status=ChildStatus)
+
                     if ChildStatus == 'Current Count':
-                        ListItems.extend(list(RelifingSystemStatus.objects.filter(incapsulation_status='Under process').values()))
-                        ListItems.extend(list(
-                            RelifingSystemStatus.objects.filter(incapsulation_status='Observation(same stage)').values()))
-                        ListItems.extend(list(RelifingSystemStatus.objects.filter(incapsulation_status='Halt').values()))
-                        serializer = RelifingSystemSerialzer(ListItems, many=True)
-                        return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                        for data in dataList:
+                            if data.incapsulation_status == 'Under process' or data.incapsulation_status == 'Observation(same stage)' or data.incapsulation_status == 'Halt':
+                                ListItems.append(data)
+
                 if ParentStatus == 'Final Integrated Testing':
                     if ChildStatus != 'Current Count':
-                        filter_objects &= get_filter('final_integration_status', 'equal', ChildStatus)
+                        ListItems = dataList.filter(final_integration_status=ChildStatus)
+
                     if ChildStatus == 'Current Count':
-                        ListItems.extend(list(RelifingSystemStatus.objects.filter(final_integration_status='Under process').values()))
-                        ListItems.extend(list(
-                            RelifingSystemStatus.objects.filter(final_integration_status='Observation(Same Stage)').values()))
-                        ListItems.extend(list(RelifingSystemStatus.objects.filter(final_integration_status='Halt').values()))
-                        serializer = RelifingSystemSerialzer(ListItems, many=True)
-                        return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                        for data in dataList:
+                            if data.final_integration_status == 'Under process' or data.final_integration_status == 'Observation(same stage)' or data.final_integration_status == 'Halt':
+                                ListItems.append(data)
+
                 if ParentStatus == 'FGT Status':
                     if ChildStatus != 'Current Count':
-                        filter_objects &= get_filter('fgt_status', 'equal', ChildStatus)
+                        ListItems = dataList.filter(fgt_status=ChildStatus)
+
                     if ChildStatus == 'Current Count':
-                        ListItems.extend(list(RelifingSystemStatus.objects.filter(fgt_status='Under process').values()))
-                        ListItems.extend(list(RelifingSystemStatus.objects.filter(fgt_status='Observation(same stage)').values()))
-                        ListItems.extend(list(RelifingSystemStatus.objects.filter(fgt_status='Halt').values()))
-                        serializer = RelifingSystemSerialzer(ListItems, many=True)
-                        return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                        for data in dataList:
+                            if data.fgt_status == 'Under process' or data.fgt_status == 'Observation(same stage)' or data.fgt_status == 'Halt':
+                                ListItems.append(data)
+
                 if ParentStatus == 'BHD Status':
                     if ChildStatus != 'Current Count':
-                        filter_objects &= get_filter('bhd_status', 'equal', ChildStatus)
+                        ListItems = dataList.filter(bhd_status=ChildStatus)
+
                     if ChildStatus == 'Current Count':
-                        ListItems.extend(list(RelifingSystemStatus.objects.filter(bhd_status='Ok').values()))
-                        ListItems.extend(list(RelifingSystemStatus.objects.filter(bhd_status='Not Submitted').values()))
-                        ListItems.extend(list(RelifingSystemStatus.objects.filter(bhd_status='QM Observations Forwarded').values()))
-                        serializer = FlightSystemSerialzer(ListItems, many=True)
-                        return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                        for data in dataList:
+                            if data.bhd_status == 'Ok' or data.bhd_status == 'Not Submitted)' or data.bhd_status == 'QM Observations Forwarded':
+                                ListItems.append(data)
+
                 if ParentStatus == 'FQM Status':
                     if ChildStatus != 'Current Count':
-                        filter_objects &= get_filter('fqm_status', 'equal', ChildStatus)
+                        ListItems = dataList.filter(fqm_status=ChildStatus)
+
                     if ChildStatus == 'Current Count':
-                        ListItems.extend(list(RelifingSystemStatus.objects.filter(fqm_status='Not Conducted').values()))
-                        serializer = RelifingSystemSerialzer(ListItems, many=True)
-                        return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                        for data in dataList:
+                            if data.fqm_status == 'Not Conducted)':
+                                ListItems.append(data)
+
                 if ParentStatus == 'QM Certification Status':
                     if ChildStatus != 'Current Count':
-                        filter_objects &= get_filter('qm_certification_status', 'equal', ChildStatus)
+                        ListItems = dataList.filter(qm_certification_status=ChildStatus)
+
                     if ChildStatus == 'Current Count':
-                        ListItems.extend(list(
-                            RelifingSystemStatus.objects.filter(qm_certification_status='QM certificate issued').values()))
-                        ListItems.extend(list(
-                            RelifingSystemStatus.objects.filter(qm_certification_status='QM Observations Forwarded').values()))
-                        serializer = RelifingSystemSerialzer(ListItems, many=True)
-                        return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                        for data in dataList:
+                            if data.qm_certification_status == 'QM certificate issued' or data.qm_certification_status == 'QM Observations Forwarded)':
+                                ListItems.append(data)
+
                 if ParentStatus == 'Launch/ End User':
                     if ChildStatus != 'Current Count':
-                        filter_objects &= get_filter('enduser_status', 'equal', ChildStatus)
-                    if ChildStatus == 'Current Count':
-                        ListItems.extend(list(RelifingSystemStatus.objects.filter(enduser_status = 'Ok').values()))
-                        ListItems.extend(list(RelifingSystemStatus.objects.filter(enduser_status = 'Observation(Same Stage)').values()))
-                        ListItems.extend(list(RelifingSystemStatus.objects.filter(enduser_status = 'Halt').values()))
-                    serializer = RelifingSystemSerialzer(ListItems, many=True)
-                    return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                        ListItems = dataList.filter(enduser_status=ChildStatus)
+                    else:
+                        for data in dataList:
+                            if data.enduser_status == 'Ok' or data.enduser_status == 'Observation(Same Stage)' or data.enduser_status == 'Halt':
+                                ListItems.append(data)
 
-            data = RelifingSystemStatus.objects.filter(filter_objects)
-            serializer = RelifingSystemSerialzer(data, many=True)
+                serializer = ProductionSystemSerialzer(ListItems, many=True)
+                return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+            serializer = RelifingSystemSerialzer(dataList, many=True)
             return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
         except:
             return JsonResponse({'message': 'Sorry! No Task found.'}, status=200)
