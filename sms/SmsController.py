@@ -1328,7 +1328,7 @@ class SmsController:
                         if data.launchact_status == 'Ok' or data.launchact_status == 'Observation(Same Stage)' or data.launchact_status == 'Halt':
                             ListItems.append(data)
 
-            serializer = ProductionSystemSerialzer(ListItems, many=True)
+            serializer = FlightSystemSerialzer(ListItems, many=True)
             return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
 
 

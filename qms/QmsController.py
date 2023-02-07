@@ -160,7 +160,7 @@ class QmsController:
 
     @staticmethod
     def GetQmsAuditList(request, self=None):
-        # try:
+        try:
             current_status = request.query_params.get('audit_status')
             current_year = request.query_params.get('year')
             current_org = request.query_params.get('organization')
@@ -235,25 +235,16 @@ class QmsController:
                 filter_objects &= get_filter(
                     'planned_date__year', 'equal',
                     current_year)
-            if current_status == 'Completed':
-                filter_objects &= get_filter(
-                    'audit_status', 'equal', 'Completed')
-            if current_status == 'In-Process':
-                filter_objects &= get_filter(
-                'audit_status', 'equal','In-Process')
+            if current_status == 'Completed' or current_status == 'In-Process'  or current_status == 'Extended' or current_status == 'Conducted'\
+                        or current_status == 'Not Conducted' or current_status == 'Planned':
+                    filter_objects &= get_filter(
+                        'audit_status', 'equal', current_status)
 
-            if current_status == 'Certified':
+            if current_status == 'Certified' or current_status == 'Decertified' or current_status == 'Internal Accreditation' \
+                    or current_status == 'Un-Certified'or current_status == 'Un-Accredited'or current_status == 'Certified by CeSP'or current_status == 'To be Certified':
                 filter_objects &= get_filter(
                     'certification_status', 'equal',
                     current_status)
-            if current_status == 'Not Certified':
-                filter_objects &= get_filter(
-                    'certification_status', 'not_equal',
-                    'Certified')
-            # if current_org != '':
-            #     filter_objects &= get_filter(
-            #         'Organization', 'equal',
-            #         current_org)
 
             dataList = QmsAudit.objects.filter(filter_objects)
 
@@ -343,9 +334,9 @@ class QmsController:
             serializer = QmsAuditSerializer(dataList, many=True)
             return JsonResponse({'status': 'True', 'data': serializer.data},
                                 status=200)
-        # except Exception as e:
-        #     print(e)
-        #     return JsonResponse({'status': 'False', "message": "Internal Server Error"}, status=500)
+        except Exception as e:
+            print(e)
+            return JsonResponse({'status': 'False', "message": "Internal Server Error"}, status=500)
 
     @staticmethod
     def GetQmsAuditListCount(request, self=None):
@@ -375,12 +366,18 @@ class QmsController:
             currYearOverdue = 0
             currYearTendingOverdue = 0
             currYearDelayOverdue = 0
-            currYearAuditScheduled = 0
-            currYearAuditRemaining = 0
+            currYearAuditExtended= 0
+            currYearAuditConducted = 0
+            currYearAuditNotConducted = 0
+            currYearAuditPlanned = 0
+
             currYearCertified = 0
-            currYearNotCertified = 0
-
-
+            currYearDeCertified = 0
+            currYearAccredited = 0
+            currYearUncertified = 0
+            currYearUnaccredited = 0
+            currYearCertifiedByCesp = 0
+            currYearToBeCertified = 0
 
             currYearTotalAudits = QmsAudit.objects.filter(planned_date__year=selected_year).count()
 
@@ -479,14 +476,33 @@ class QmsController:
                 if selected_org == '' and setItems == '' and standItems =='':
                     currYearAuditInprocess = QmsAudit.objects.filter(planned_date__year=selected_year,
                                                                audit_status='In-Process').count()
-                    currYearAuditScheduled = QmsAudit.objects.filter(planned_date__year=selected_year,
-                                                                   audit_status='Scheduled').count()
+
                     currYearAuditCompleted = QmsAudit.objects.filter(planned_date__year=selected_year,
                                                               audit_status='Completed').count()
-                    currYearAuditRemaining = QmsAudit.objects.filter(planned_date__year=selected_year,
-                                                              audit_status='Remaining').count()
+                    currYearAuditExtended = QmsAudit.objects.filter(planned_date__year=selected_year,
+                                                              audit_status='Extended').count()
+                    currYearAuditConducted = QmsAudit.objects.filter(planned_date__year=selected_year,
+                                                                     audit_status='Conducted').count()
+                    currYearAuditNotConducted = QmsAudit.objects.filter(planned_date__year=selected_year,
+                                                                     audit_status='Not Conducted').count()
+                    currYearAuditPlanned = QmsAudit.objects.filter(planned_date__year=selected_year,
+                                                                     audit_status='Planned').count()
 
-                    # currYearOverdue = QmsAudit.objects.filter(planned_date__year = selected_year,audit_start_date__gt=F('planned_date')).count()
+                    currYearCertified = QmsAudit.objects.filter(certification_status='Certified',planned_date__year=selected_year).count()
+                    currYearDeCertified = QmsAudit.objects.filter(certification_status='Decertified',
+                                                                      planned_date__year=selected_year).count()
+
+                    currYearAccredited = QmsAudit.objects.filter(certification_status='Internal Accreditation',
+                                                                     planned_date__year=selected_year).count()
+                    currYearUncertified = QmsAudit.objects.filter(certification_status='Un-Certified',
+                                                                      planned_date__year=selected_year).count()
+
+                    currYearUnaccredited = QmsAudit.objects.filter(certification_status='Un-Accredited',
+                                                                       planned_date__year=selected_year).count()
+                    currYearCertifiedByCesp = QmsAudit.objects.filter(certification_status='Certified by CeSP',
+                                                                          planned_date__year=selected_year).count()
+                    currYearToBeCertified = QmsAudit.objects.filter(certification_status='To be Certified',
+                                                                        planned_date__year=selected_year).count()
 
                     inprocess_overdueCount = QmsAudit.objects.filter(planned_date__year = selected_year)
 
@@ -499,24 +515,42 @@ class QmsController:
                                 list.append(item)
                     currYearOverdue = len(list)
 
-                    currYearCertified = QmsAudit.objects.filter(certification_status='Certified',planned_date__year=selected_year,).count()
-                    currYearNotCertified = QmsAudit.objects.filter(certification_status='Not Certified',planned_date__year=selected_year,).count()
+
 
                 elif selected_org != '' and setItems != '' and standItems =='':
                     for set in setItems:
 
                         tot_audit_in_process = QmsAudit.objects.filter(planned_date__year=selected_year,
                                                                    Organization = selected_org,setup=set, audit_status='In-Process').count()
-                        tot_audit_schedule = QmsAudit.objects.filter(planned_date__year=selected_year,
-                                                                       Organization = selected_org,setup=set,
-                                                                       audit_status='Scheduled').count()
+
                         tot_audit_completed = QmsAudit.objects.filter(planned_date__year=selected_year,
                                                                   Organization = selected_org,setup=set, audit_status='Completed').count()
-                        tot_audit_remaining = QmsAudit.objects.filter(planned_date__year=selected_year,
-                                                                  Organization = selected_org,setup=set, audit_status='Remaining').count()
 
-                        # tot_inprocess_overdue = QmsAudit.objects.filter(planned_date__year=selected_year,
-                        #                                             Organization = selected_org,setup=set,audit_start_date__gt=F('planned_date')).count()
+
+                        tot_currYearAuditExtended = QmsAudit.objects.filter(planned_date__year=selected_year,Organization = selected_org,setup=set,
+                                                                        audit_status='Extended').count()
+                        tot_currYearAuditConducted = QmsAudit.objects.filter(planned_date__year=selected_year,Organization = selected_org,setup=set,
+                                                                         audit_status='Conducted').count()
+                        tot_currYearAuditNotConducted = QmsAudit.objects.filter(planned_date__year=selected_year,Organization = selected_org,setup=set,
+                                                                            audit_status='Not Conducted').count()
+                        tot_currYearAuditPlanned = QmsAudit.objects.filter(planned_date__year=selected_year,Organization = selected_org,setup=set,
+                                                                       audit_status='Planned').count()
+                        tot_currYearCertified = QmsAudit.objects.filter(certification_status='Certified',Organization = selected_org,setup=set,
+                                                                    planned_date__year=selected_year).count()
+                        tot_currYearDeCertified = QmsAudit.objects.filter(certification_status='Decertified',Organization = selected_org,setup=set,
+                                                                    planned_date__year=selected_year).count()
+
+                        tot_currYearAccredited = QmsAudit.objects.filter(certification_status='Internal Accreditation',Organization = selected_org,setup=set,
+                                                                    planned_date__year=selected_year).count()
+                        tot_currYearUncertified = QmsAudit.objects.filter(certification_status='Un-Certified',Organization = selected_org,setup=set,
+                                                                    planned_date__year=selected_year).count()
+
+                        tot_currYearUnaccredited = QmsAudit.objects.filter(certification_status='Un-Accredited',Organization = selected_org,setup=set,
+                                                                    planned_date__year=selected_year).count()
+                        tot_currYearCertifiedByCesp = QmsAudit.objects.filter(certification_status='Certified by CeSP',Organization = selected_org,setup=set,
+                                                                    planned_date__year=selected_year).count()
+                        tot_currYearToBeCertified = QmsAudit.objects.filter(certification_status='To be Certified',Organization = selected_org,setup=set,
+                                                                    planned_date__year=selected_year).count()
                         inprocess_overdueCount = QmsAudit.objects.filter(planned_date__year=selected_year,Organization = selected_org,setup=set)
 
                         list = []
@@ -528,36 +562,57 @@ class QmsController:
                                     list.append(item)
                         tot_inprocess_overdue = len(list)
 
-                        tot_certified = QmsAudit.objects.filter(certification_status='Certified',planned_date__year=selected_year,
-                                                                  Organization = selected_org,setup=set).count()
 
-                        tot_not_certified= QmsAudit.objects.filter(certification_status='Not Certified',planned_date__year=selected_year,
-                                                                  Organization = selected_org,setup=set).count()
                         # currYearTotalAudits += tot_current_year_audits
                         currYearAuditInprocess += tot_audit_in_process
-                        currYearAuditScheduled += tot_audit_schedule
                         currYearAuditCompleted += tot_audit_completed
-                        currYearAuditRemaining += tot_audit_remaining
                         currYearOverdue += tot_inprocess_overdue
-                        currYearCertified += tot_certified
-                        currYearNotCertified += tot_not_certified
 
+                        currYearAuditExtended = tot_currYearAuditExtended
+                        currYearAuditConducted = tot_currYearAuditConducted
+                        currYearAuditNotConducted = tot_currYearAuditNotConducted
+                        currYearAuditPlanned = tot_currYearAuditPlanned
+                        currYearCertified = tot_currYearCertified
+
+                        currYearDeCertified = tot_currYearDeCertified
+                        currYearAccredited = tot_currYearAccredited
+                        currYearUncertified = tot_currYearUncertified
+                        currYearUnaccredited = tot_currYearUnaccredited
+                        currYearCertifiedByCesp = tot_currYearCertifiedByCesp
+                        currYearToBeCertified = tot_currYearToBeCertified
                 elif selected_org == ''  and setItems == '' and standItems != '':
                     for stand in standItems:
                         tot_audit_in_process = QmsAudit.objects.filter(planned_date__year=selected_year,
                                                                    standard=stand,
                                                                    audit_status='In-Process').count()
-                        tot_audit_schedule = QmsAudit.objects.filter(planned_date__year=selected_year,
-                                                                       standard=stand,
-                                                                       audit_status='Scheduled').count()
                         tot_audit_completed = QmsAudit.objects.filter(planned_date__year=selected_year,
                                                                   standard=stand,
                                                                   audit_status='Completed').count()
-                        tot_audit_remaining = QmsAudit.objects.filter(planned_date__year=selected_year,
-                                                                  standard=stand,
-                                                                  audit_status='Remaining').count()
-                        # tot_inprocess_overdue = QmsAudit.objects.filter(planned_date__year=selected_year,
-                        #                                             standard=stand,audit_start_date__gt=F('planned_date')).count()
+
+                        tot_currYearAuditExtended = QmsAudit.objects.filter(planned_date__year=selected_year,standard=stand,
+                                                                        audit_status='Extended').count()
+                        tot_currYearAuditConducted = QmsAudit.objects.filter(planned_date__year=selected_year,standard=stand,
+                                                                         audit_status='Conducted').count()
+                        tot_currYearAuditNotConducted = QmsAudit.objects.filter(planned_date__year=selected_year,standard=stand,
+                                                                            audit_status='Not Conducted').count()
+                        tot_currYearAuditPlanned = QmsAudit.objects.filter(planned_date__year=selected_year,standard=stand,
+                                                                       audit_status='Planned').count()
+                        tot_currYearCertified = QmsAudit.objects.filter(certification_status='Certified',standard=stand,
+                                                                    planned_date__year=selected_year).count()
+                        tot_currYearDeCertified = QmsAudit.objects.filter(certification_status='Decertified',standard=stand,
+                                                                    planned_date__year=selected_year).count()
+
+                        tot_currYearAccredited = QmsAudit.objects.filter(certification_status='Internal Accreditation',standard=stand,
+                                                                    planned_date__year=selected_year).count()
+                        tot_currYearUncertified = QmsAudit.objects.filter(certification_status='Un-Certified',standard=stand,
+                                                                    planned_date__year=selected_year).count()
+
+                        tot_currYearUnaccredited = QmsAudit.objects.filter(certification_status='Un-Accredited',standard=stand,
+                                                                    planned_date__year=selected_year).count()
+                        tot_currYearCertifiedByCesp = QmsAudit.objects.filter(certification_status='Certified by CeSP',standard=stand,
+                                                                    planned_date__year=selected_year).count()
+                        tot_currYearToBeCertified = QmsAudit.objects.filter(certification_status='To be Certified',standard=stand,
+                                                                    planned_date__year=selected_year).count()
 
                         inprocess_overdueCount = QmsAudit.objects.filter(planned_date__year=selected_year,standard=stand)
 
@@ -570,40 +625,56 @@ class QmsController:
                                     list.append(item)
                         tot_inprocess_overdue = len(list)
 
-                        tot_certified = QmsAudit.objects.filter(certification_status='Certified',planned_date__year=selected_year,
-                                                                  standard=stand).count()
 
-                        tot_not_certified = QmsAudit.objects.filter(certification_status='Not Certified', planned_date__year=selected_year,
-                                                                  standard=stand).count()
-                        # currYearTotalAudits += tot_current_year_audits
                         currYearAuditInprocess += tot_audit_in_process
-                        currYearAuditScheduled += tot_audit_schedule
                         currYearAuditCompleted += tot_audit_completed
-                        currYearAuditRemaining += tot_audit_remaining
                         currYearOverdue += tot_inprocess_overdue
-                        currYearCertified += tot_certified
-                        currYearNotCertified += tot_not_certified
 
+                        currYearAuditExtended = tot_currYearAuditExtended
+                        currYearAuditConducted = tot_currYearAuditConducted
+                        currYearAuditNotConducted = tot_currYearAuditNotConducted
+                        currYearAuditPlanned = tot_currYearAuditPlanned
+                        currYearCertified = tot_currYearCertified
+
+                        currYearDeCertified = tot_currYearDeCertified
+                        currYearAccredited = tot_currYearAccredited
+                        currYearUncertified = tot_currYearUncertified
+                        currYearUnaccredited = tot_currYearUnaccredited
+                        currYearCertifiedByCesp = tot_currYearCertifiedByCesp
+                        currYearToBeCertified = tot_currYearToBeCertified
                 else:
                     for (stand, set) in itertools.zip_longest(standItems, setItems):
                         tot_audit_in_process = QmsAudit.objects.filter(planned_date__year=selected_year,
                                                                    Organization=selected_org, standard=stand,
                                                                    setup=set, audit_status='In-Process').count()
-                        tot_audit_schedule = QmsAudit.objects.filter(planned_date__year=selected_year,
-                                                                       Organization=selected_org,
-                                                                       standard=stand,
-                                                                       setup=set,
-                                                                       audit_status='Scheduled').count()
+
                         tot_audit_completed = QmsAudit.objects.filter(planned_date__year=selected_year,
                                                                   Organization=selected_org, standard=stand,
                                                                   setup=set, audit_status='Completed').count()
-                        tot_audit_remaining = QmsAudit.objects.filter(planned_date__year=selected_year,
-                                                                  Organization=selected_org, standard=stand,
-                                                                  setup=set, audit_status='Remaining').count()
-                        # tot_inprocess_overdue = QmsAudit.objects.filter(audit_start_date__gt=F('planned_date'),planned_date__year=selected_year,
-                        #                                                Organization=selected_org,
-                        #                                                standard=stand,
-                        #                                                setup=set).count()
+
+                        tot_currYearAuditExtended = QmsAudit.objects.filter(planned_date__year=selected_year,Organization=selected_org, standard=stand,
+                                                                  setup=set,audit_status='Extended').count()
+                        tot_currYearAuditConducted = QmsAudit.objects.filter(planned_date__year=selected_year,Organization=selected_org, standard=stand,
+                                                                  setup=set,audit_status='Conducted').count()
+                        tot_currYearAuditNotConducted = QmsAudit.objects.filter(planned_date__year=selected_year,Organization=selected_org, standard=stand,
+                                                                  setup=set,audit_status='Not Conducted').count()
+                        tot_currYearAuditPlanned = QmsAudit.objects.filter(planned_date__year=selected_year,Organization=selected_org, standard=stand,
+                                                                  setup=set,audit_status='Planned').count()
+                        tot_currYearCertified = QmsAudit.objects.filter(certification_status='Certified',Organization=selected_org, standard=stand,
+                                                                  setup=set,planned_date__year=selected_year).count()
+                        tot_currYearDeCertified = QmsAudit.objects.filter(certification_status='Decertified',Organization=selected_org, standard=stand,
+                                                                  setup=set,planned_date__year=selected_year).count()
+                        tot_currYearAccredited = QmsAudit.objects.filter(certification_status='Internal Accreditation',Organization=selected_org, standard=stand,
+                                                                  setup=set,planned_date__year=selected_year).count()
+                        tot_currYearUncertified = QmsAudit.objects.filter(certification_status='Un-Certified',Organization=selected_org, standard=stand,
+                                                                  setup=set,planned_date__year=selected_year).count()
+
+                        tot_currYearUnaccredited = QmsAudit.objects.filter(certification_status='Un-Accredited',Organization=selected_org, standard=stand,
+                                                                  setup=set,planned_date__year=selected_year).count()
+                        tot_currYearCertifiedByCesp = QmsAudit.objects.filter(certification_status='Certified by CeSP',Organization=selected_org, standard=stand,
+                                                                  setup=set,planned_date__year=selected_year).count()
+                        tot_currYearToBeCertified = QmsAudit.objects.filter(certification_status='To be Certified',Organization=selected_org, standard=stand,
+                                                                  setup=set,planned_date__year=selected_year).count()
                         inprocess_overdueCount = QmsAudit.objects.filter(planned_date__year=selected_year,standard=stand,Organization=selected_org,setup=set)
 
                         list = []
@@ -615,34 +686,39 @@ class QmsController:
                                     list.append(item)
                         tot_inprocess_overdue = len(list)
 
-                        tot_certified = QmsAudit.objects.filter(certification_status='Certified',planned_date__year=selected_year,
-                                                                       Organization=selected_org,
-                                                                       standard=stand,
-                                                                       setup=set).count()
-
-                        tot_not_certified = QmsAudit.objects.filter(certification_status='Not Certified',
-                                                                    planned_date__year=selected_year,
-                                                                    Organization=selected_org,setup=set,
-                                                                    standard=stand).count()
-                        # currYearTotalAudits += tot_current_year_audits
                         currYearAuditInprocess += tot_audit_in_process
-                        currYearAuditScheduled += tot_audit_schedule
                         currYearAuditCompleted += tot_audit_completed
-                        currYearAuditRemaining += tot_audit_remaining
                         currYearOverdue += tot_inprocess_overdue
-                        currYearCertified += tot_certified
-                        currYearNotCertified += tot_not_certified
 
+                        currYearAuditExtended = tot_currYearAuditExtended
+                        currYearAuditConducted = tot_currYearAuditConducted
+                        currYearAuditNotConducted = tot_currYearAuditNotConducted
+                        currYearAuditPlanned = tot_currYearAuditPlanned
+                        currYearCertified = tot_currYearCertified
+
+                        currYearDeCertified = tot_currYearDeCertified
+                        currYearAccredited = tot_currYearAccredited
+                        currYearUncertified = tot_currYearUncertified
+                        currYearUnaccredited = tot_currYearUnaccredited
+                        currYearCertifiedByCesp = tot_currYearCertifiedByCesp
+                        currYearToBeCertified = tot_currYearToBeCertified
 
             dist = {
                 'currYearTotalAudits': currYearTotalAudits,
                 'currYearAuditInprocess': currYearAuditInprocess,
                 'currYearAuditCompleted': currYearAuditCompleted,
-                'currYearAuditRemaining': currYearAuditRemaining,
-                'currYearAuditScheduled': currYearAuditScheduled,
+                'currYearAuditExtended': currYearAuditExtended,
+                'currYearAuditConducted': currYearAuditConducted,
+                'currYearAuditNotConducted': currYearAuditNotConducted,
+                'currYearAuditPlanned': currYearAuditPlanned,
                 'currYearOverdue': currYearOverdue,
                 'currYearCertified': currYearCertified,
-                'currYearNotCertified': currYearNotCertified,
+                'currYearDeCertified': currYearDeCertified,
+                'currYearAccredited': currYearAccredited,
+                'currYearUncertified': currYearUncertified,
+                'currYearUnaccredited': currYearUnaccredited,
+                'currYearCertifiedByCesp': currYearCertifiedByCesp,
+                'currYearToBeCertified': currYearToBeCertified,
                 'total_audits': total_audits,
                 'audit_completed': audit_completed,
                 'audit_under_process': audit_under_process,
@@ -1254,21 +1330,12 @@ class QmsController:
                 filter_objects &= get_filter('commission', 'equal',current_comm)
             if current_org != '':
                 filter_objects &= get_filter('Organization', 'equal',current_org)
-            if current_status == 'Completed':
+            if current_status == 'Completed' or current_status == 'In-Process' or current_status == 'Extended'\
+                    or current_status == 'Conducted' or current_status == 'Not Conducted' or current_status == 'Planned':
                 filter_objects &= get_filter('audit_status', 'equal',current_status)
-            if current_status == 'In-Process':
-                filter_objects &= get_filter('audit_status', 'equal',current_status)
-            if current_status == 'Certified':
-                filter_objects &= get_filter('certification_status', 'equal',current_status)
-            if current_status == 'New Client':
-                filter_objects &= get_filter('certification_status', 'equal',current_status)
-            if current_status == 'Suspended':
-                filter_objects &= get_filter('certification_status', 'equal',current_status)
-            if current_status == 'Widthdrawl':
-                filter_objects &= get_filter('certification_status', 'equal',current_status)
 
-
-
+            if current_status == 'Certified' or current_status == 'New Client' or current_status == 'Suspended' or current_status == 'Widthdrawl':
+                filter_objects &= get_filter('certification_status', 'equal',current_status)
 
             dataList = CespAudit.objects.filter(filter_objects)
             if current_status == 'Total CeSP Under Process':
@@ -1328,8 +1395,12 @@ class QmsController:
             currYearAuditInprocess = 0
             currYearAuditCompleted = 0
             currYearOverdue = 0
-            currYearAuditScheduled = 0
-            currYearAuditRemaining = 0
+
+            currYearAuditExtended = 0
+            currYearAuditConducted = 0
+            currYearAuditNotConducted = 0
+            currYearAuditPlanned = 0
+
             currYearCertified = 0
             currYearNewClient = 0
             currYearSuspended = 0
@@ -1404,12 +1475,18 @@ class QmsController:
                 if selected_comm ==''  and selected_org == '' and selected_setup == noVal and selected_standard == noVal:
                     currYearAuditInprocess = CespAudit.objects.filter(planned_date__year=selected_year,
                                                                      audit_status='In-Process').count()
-                    currYearAuditScheduled = CespAudit.objects.filter(planned_date__year=selected_year,
-                                                                     audit_status='Scheduled').count()
+
                     currYearAuditCompleted = CespAudit.objects.filter(planned_date__year=selected_year,
                                                                      audit_status='Completed').count()
-                    currYearAuditRemaining = CespAudit.objects.filter(planned_date__year=selected_year,
-                                                                     audit_status='Remaining').count()
+                    currYearAuditExtended = CespAudit.objects.filter(planned_date__year=selected_year,
+                                                                     audit_status='Extended').count()
+
+                    currYearAuditConducted = CespAudit.objects.filter(planned_date__year=selected_year,
+                                                                     audit_status='Conducted').count()
+                    currYearAuditNotConducted = CespAudit.objects.filter(planned_date__year=selected_year,
+                                                                     audit_status='Not Conducted').count()
+                    currYearAuditPlanned = CespAudit.objects.filter(planned_date__year=selected_year,
+                                                                     audit_status='Planned').count()
 
                     currYearOverdue = CespAudit.objects.filter(planned_date__year = selected_year,audit_start_date__gt=F('planned_date')).count()
 
@@ -1426,12 +1503,18 @@ class QmsController:
                         # tot_current_year_audits = CespAudit.objects.filter(planned_date__year=selected_year).count()
                         tot_audit_in_process = CespAudit.objects.filter(planned_date__year=selected_year,
                                                                        standard=stand, audit_status='In-Process').count()
-                        tot_audit_schedule = CespAudit.objects.filter(planned_date__year=selected_year,
-                                                                     standard=stand, audit_status='Scheduled').count()
+
                         tot_audit_completed = CespAudit.objects.filter(planned_date__year=selected_year,
                                                                       standard=stand, audit_status='Completed').count()
-                        tot_audit_remaining = CespAudit.objects.filter(planned_date__year=selected_year,
-                                                                      standard=stand, audit_status='Remaining').count()
+                        tot_currYearAuditExtended = CespAudit.objects.filter(planned_date__year=selected_year,
+                                                                         standard=stand,audit_status='Extended').count()
+
+                        tot_currYearAuditConducted = CespAudit.objects.filter(planned_date__year=selected_year,
+                                                                          standard=stand,audit_status='Conducted').count()
+                        tot_currYearAuditNotConducted = CespAudit.objects.filter(planned_date__year=selected_year,
+                                                                             standard=stand,audit_status='Not Conducted').count()
+                        tot_currYearAuditPlanned = CespAudit.objects.filter(planned_date__year=selected_year,
+                                                                        standard=stand,audit_status='Planned').count()
 
                         countOverdue = CespAudit.objects.filter(planned_date__year=selected_year,
                                                  audit_start_date__gt=F('planned_date'), standard=stand).count()
@@ -1445,9 +1528,13 @@ class QmsController:
                         tot_currYearWidthdrawl = CespAudit.objects.filter(planned_date__year=selected_year,
                                                                             standard=stand, certification_status='Widthdrawl').count()
                         currYearAuditInprocess += tot_audit_in_process
-                        currYearAuditScheduled += tot_audit_schedule
                         currYearAuditCompleted += tot_audit_completed
-                        currYearAuditRemaining += tot_audit_remaining
+
+                        currYearAuditExtended += tot_currYearAuditExtended
+                        currYearAuditConducted += tot_currYearAuditConducted
+                        currYearAuditNotConducted += tot_currYearAuditNotConducted
+                        currYearAuditPlanned += tot_currYearAuditPlanned
+
                         currYearOverdue += countOverdue
                         currYearCertified += tot_currYearCertified
                         currYearNewClient += tot_currYearNewClient
@@ -1458,16 +1545,19 @@ class QmsController:
                         tot_audit_in_process = CespAudit.objects.filter(planned_date__year=selected_year,commission = selected_comm,
                                                                        Organization=selected_org, setup=set,
                                                                        audit_status='In-Process').count()
-                        tot_audit_schedule = CespAudit.objects.filter(planned_date__year=selected_year,commission = selected_comm,
-                                                                     Organization=selected_org,
-                                                                     setup=set,
-                                                                     audit_status='Scheduled').count()
+
                         tot_audit_completed = CespAudit.objects.filter(planned_date__year=selected_year,commission = selected_comm,
                                                                       Organization=selected_org, setup=set,
                                                                       audit_status='Completed').count()
-                        tot_audit_remaining = CespAudit.objects.filter(planned_date__year=selected_year,
-                                                                      Organization=selected_org, setup=set,
-                                                                      audit_status='Remaining').count()
+                        tot_currYearAuditExtended = CespAudit.objects.filter(planned_date__year=selected_year,
+                                                                         Organization=selected_org, setup=set,audit_status='Extended').count()
+
+                        tot_currYearAuditConducted = CespAudit.objects.filter(planned_date__year=selected_year,
+                                                                          Organization=selected_org, setup=set,audit_status='Conducted').count()
+                        tot_currYearAuditNotConducted = CespAudit.objects.filter(planned_date__year=selected_year,
+                                                                             Organization=selected_org, setup=set,audit_status='Not Conducted').count()
+                        tot_currYearAuditPlanned = CespAudit.objects.filter(planned_date__year=selected_year,
+                                                                        Organization=selected_org, setup=set,audit_status='Planned').count()
 
                         countOverdue = CespAudit.objects.filter(planned_date__year=selected_year,
                                                  audit_start_date__gt=F('planned_date'),commission = selected_comm,Organization=selected_org, setup=set).count()
@@ -1485,9 +1575,12 @@ class QmsController:
                                                                             Organization=selected_org, setup=set,
                                                                             certification_status='Widthdrawl').count()
                         currYearAuditInprocess += tot_audit_in_process
-                        currYearAuditScheduled += tot_audit_schedule
                         currYearAuditCompleted += tot_audit_completed
-                        currYearAuditRemaining += tot_audit_remaining
+                        currYearAuditExtended += tot_currYearAuditExtended
+                        currYearAuditConducted += tot_currYearAuditConducted
+                        currYearAuditNotConducted += tot_currYearAuditNotConducted
+                        currYearAuditPlanned += tot_currYearAuditPlanned
+
                         currYearOverdue += countOverdue
                         currYearCertified += tot_currYearCertified
                         currYearNewClient += tot_currYearNewClient
@@ -1498,17 +1591,19 @@ class QmsController:
                         tot_audit_in_process = CespAudit.objects.filter(planned_date__year=selected_year,commission = selected_comm,
                                                                        Organization=selected_org, standard=stand,
                                                                        setup=set, audit_status='In-Process').count()
-                        tot_audit_schedule = CespAudit.objects.filter(planned_date__year=selected_year,
-                                                                     Organization=selected_org,
-                                                                     standard=stand,
-                                                                     setup=set,
-                                                                     audit_status='Scheduled').count()
+
                         tot_audit_completed = CespAudit.objects.filter(planned_date__year=selected_year,commission = selected_comm,
                                                                       Organization=selected_org, standard=stand,
                                                                       setup=set, audit_status='Completed').count()
-                        tot_audit_remaining = CespAudit.objects.filter(planned_date__year=selected_year,commission = selected_comm,
-                                                                      Organization=selected_org, standard=stand,
-                                                                      setup=set, audit_status='Remaining').count()
+                        tot_currYearAuditExtended = CespAudit.objects.filter(planned_date__year=selected_year,
+                                                                         Organization=selected_org, setup=set,standard=stand,audit_status='Extended').count()
+
+                        tot_currYearAuditConducted = CespAudit.objects.filter(planned_date__year=selected_year,
+                                                                          Organization=selected_org, setup=set,standard=stand,audit_status='Conducted').count()
+                        tot_currYearAuditNotConducted = CespAudit.objects.filter(planned_date__year=selected_year,
+                                                                             Organization=selected_org, setup=set,standard=stand,audit_status='Not Conducted').count()
+                        tot_currYearAuditPlanned = CespAudit.objects.filter(planned_date__year=selected_year,
+                                                                        Organization=selected_org, setup=set,standard=stand,audit_status='Planned').count()
 
                         countOverdue = CespAudit.objects.filter(planned_date__year=selected_year,
                                                  audit_start_date__gt=F('planned_date'), commission = selected_comm,
@@ -1533,9 +1628,12 @@ class QmsController:
                                                                             setup=set,
                                                                             certification_status='Widthdrawl').count()
                         currYearAuditInprocess += tot_audit_in_process
-                        currYearAuditScheduled += tot_audit_schedule
                         currYearAuditCompleted += tot_audit_completed
-                        currYearAuditRemaining += tot_audit_remaining
+                        currYearAuditExtended += tot_currYearAuditExtended
+                        currYearAuditConducted += tot_currYearAuditConducted
+                        currYearAuditNotConducted += tot_currYearAuditNotConducted
+                        currYearAuditPlanned += tot_currYearAuditPlanned
+
                         currYearOverdue += countOverdue
                         currYearCertified += tot_currYearCertified
                         currYearNewClient += tot_currYearNewClient
@@ -1550,8 +1648,10 @@ class QmsController:
                 'currYearTotalAudits': currYearTotalAudits,
                 'currYearAuditInprocess': currYearAuditInprocess,
                 'currYearAuditCompleted': currYearAuditCompleted,
-                'currYearAuditRemaining': currYearAuditRemaining,
-                'currYearAuditScheduled': currYearAuditScheduled,
+                'currYearAuditExtended': currYearAuditExtended,
+                'currYearAuditConducted': currYearAuditConducted,
+                'currYearAuditNotConducted': currYearAuditNotConducted,
+                'currYearAuditPlanned': currYearAuditPlanned,
                 'currYearOverdue': currYearOverdue,
                 'currYearCertified': currYearCertified,
                 'currYearNewClient' : currYearNewClient,
