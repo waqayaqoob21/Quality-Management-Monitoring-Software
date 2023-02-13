@@ -92,3 +92,10 @@ class ActiveMotors(models.Model):
     overall_remarks = models.TextField()
     attachments = models.TextField()
     Created_at = models.DateTimeField(auto_now_add=True)
+
+
+class organization_lot_ids(models.Model):
+    id = models.AutoField(primary_key=True)
+    organization = models.CharField(max_length=100, null=False)
+    lot_id_number = models.CharField(max_length=100, null=False)
+    Created_at = models.DateTimeField(auto_now_add=True)
