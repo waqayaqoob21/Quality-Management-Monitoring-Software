@@ -16,7 +16,5 @@ urlpatterns = [
 
         path('gethistory/', GetActiveMotorHistoryAPIVIEW.as_view(), name='gethistory'),
 
-        path('addlotids/', AddLotIdsAPIVIEW.as_view(), name='addlotids'),
-        path('getLot/', GetLotAPIVIEW.as_view(), name='getLot'),
 
 ]
