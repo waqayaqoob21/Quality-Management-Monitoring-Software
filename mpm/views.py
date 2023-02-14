@@ -21,6 +21,23 @@ class AddActiveMotorAPIVIEW(APIView):
 #         result = motor_obj.EditActiveMotor(request.data)
 #         print(result)
 #         return result
+class AddLotIdsAPIVIEW(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        print(request.data)
+
+        result = motor_obj.AddLotIds(request.data)
+        return result
+
+
+class GetLotAPIVIEW(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+
+        result = motor_obj.GetLots(request)
+        return result
 class DeletetActiveMotorAPIVIEW(APIView):
     permission_classes = [AllowAny]
     def get(self, request):
@@ -36,7 +53,14 @@ class GetActiveMotorListCountAPIVIEW(APIView):
     permission_classes = [AllowAny]
 
     def get(self, request):
-        result = motor_obj.GetActiveMotorListCount(request)
+        result = motor_obj.getProcessMonitoringDashboardCount(request)
+        return result
+
+class GetActiveMotorHistoryAPIVIEW(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        result = motor_obj.GetActiveMotorHistoryList(request)
         return result
 class GetActiveMotorPDFAPIVIEW(APIView):
     permission_classes = [AllowAny]

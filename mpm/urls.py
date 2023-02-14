@@ -11,6 +11,10 @@ urlpatterns = [
 
         path('getpdf/', GetActiveMotorPDFAPIVIEW.as_view(), name='getpdf'),
         path('getexcel/', GetActiveMotorExcelAPIVIEW.as_view(), name='getexcel'),
+        path('addlotids/', AddLotIdsAPIVIEW.as_view(), name='addlotids'),
+        path('getLot/', GetLotAPIVIEW.as_view(), name='getLot'),
+
+        path('gethistory/', GetActiveMotorHistoryAPIVIEW.as_view(), name='gethistory'),
 
 
 ]

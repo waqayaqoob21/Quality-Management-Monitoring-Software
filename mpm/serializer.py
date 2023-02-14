@@ -1,14 +1,16 @@
 from rest_framework.serializers import Serializer
 from rest_framework.fields import CharField, IntegerField, DateTimeField
-
-
+from rest_framework import serializers
+from mpm.models import organization_lot_ids
 
 class ActiveMotorSerializer(Serializer):
     id = IntegerField()
-    types = CharField()
-    system = CharField()
+    system_type = CharField()
+    system_name = CharField()
+    organization = CharField()
+    testing_date = CharField()
+    testing_type = CharField()
     motor_id = CharField()
-    year = DateTimeField()
     component_type = CharField()
     qualification_insulation_lining_propellant_rm= CharField()
     qualification_insulation_lining_propellant_rm_date= DateTimeField()
@@ -86,6 +88,75 @@ class ActiveMotorSerializer(Serializer):
     ut_endoscopy_rt_grain_date = DateTimeField()
     ut_endoscopy_rt_grain_remarks = CharField()
 
+
+    battery_type = DateTimeField()
+    tb_type = CharField()
+    battery_id = CharField()
+    lot_id = CharField()
+    matiral_qualified_date = DateTimeField()
+    matiral_qualified_status = CharField()
+    matiral_qualified_remarks = CharField()
+
+    compo_manufacturing_date = DateTimeField()
+    compo_manufacturing_status = CharField()
+    compo_manufacturing_remarks = CharField()
+
+    powerpack_assembly_date = DateTimeField()
+    powerpack_assembly_status = CharField()
+    powerpack_assembly_remarks = CharField()
+
+    powerpack_testing_date = DateTimeField()
+    powerpack_testing_status = CharField()
+    powerpack_testing_remarks = CharField()
+
+    raw_material_inspection_date = DateTimeField()
+    raw_material_inspection_status = CharField()
+    raw_material_inspection_remarks = CharField()
+
+    pressing_electrode_date = DateTimeField()
+    pressing_electrode_status = CharField()
+    pressing_electrode_remarks = CharField()
+
+    formation_process_date = DateTimeField()
+    formation_process_status = CharField()
+    formation_process_remarks = CharField()
+
+    assembly_process_date = DateTimeField()
+    assembly_process_status = CharField()
+    assembly_process_remarks = CharField()
+
+    battery_testing_date = DateTimeField()
+    battery_testing_status = CharField()
+    battery_testing_remarks = CharField()
+
+    final_qualification_date = DateTimeField()
+    final_qualification_status = CharField()
+    final_qualification_remarks = CharField()
+
+
+    pd_type = CharField()
+    pd_id = CharField()
+
+    qualification_raw_material_date = DateTimeField()
+    qualification_raw_material_status = CharField()
+    qualification_raw_material_remarks = CharField()
+
+    filling_date = DateTimeField()
+    filling_status = CharField()
+    filling_remarks = CharField()
+
+    assembling_integration_date = DateTimeField()
+    assembling_integration_status = CharField()
+    assembling_integration_remarks = CharField()
+
+    qualification_testing_date = DateTimeField()
+    qualification_testing_status = CharField()
+    qualification_testing_remarks = CharField()
+
+    performance_testing_date = DateTimeField()
+    performance_testing_status = CharField()
+    performance_testing_remarks = CharField()
+
     ncr_status  = CharField()
     ncr_status_remarks = CharField()
     overall_status = CharField()
@@ -95,3 +166,7 @@ class ActiveMotorSerializer(Serializer):
 
 
 
+class LotIdsSerialzer(serializers.ModelSerializer):
+    class Meta:
+        model = organization_lot_ids
+        fields = ['id', 'organization', 'lot_id_number','Created_at']
