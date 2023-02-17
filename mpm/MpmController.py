@@ -22,7 +22,7 @@ class MpmController:
             motorModel = ActiveMotors()
             if id == 0 or id == '0':
                 motorModel.system_type = request['system_type']
-                motorModel.system_name = request['system_name']
+                motorModel.system_name = request['system_Name']
                 motorModel.organization = request['organization']
                 motorModel.testing_type = request['testing_type']
                 motorModel.testing_date = request['testing_date']
@@ -366,7 +366,7 @@ class MpmController:
                         MotorHistory.save()
 
                     get_motor.system_type = request['system_type']
-                    get_motor.system_name = request['system_name']
+                    get_motor.system_name = request['system_Name']
                     get_motor.organization = request['organization']
                     get_motor.testing_type = request['testing_type']
                     get_motor.testing_date = request['testing_date']
@@ -632,7 +632,7 @@ class MpmController:
                         for data in dataList:
                             if data.qualification_insulation_lining_propellant_rm == 'Under process' or data.qualification_insulation_lining_propellant_rm == 'Observation(same stage)' or data.qualification_insulation_lining_propellant_rm == 'Halt':
                                 ListItems.append(data)
-                elif ParentStatus == 'Acceptance of casting':
+                elif ParentStatus == 'Acceptance of casing':
                     if ChildStatus != 'Current Count':
                         ListItems = dataList.filter(acceptance_casting=ChildStatus)
                     if ChildStatus == 'Current Count':
@@ -660,7 +660,7 @@ class MpmController:
                         for data in dataList:
                             if data.ut_rt_insulated_case == 'Under process' or data.ut_rt_insulated_case == 'Observation(same stage)' or data.ut_rt_insulated_case == 'Halt':
                                 ListItems.append(data)
-                elif ParentStatus == 'Acceptance of Silver Material':
+                elif ParentStatus == 'Acceptance of Sliver Material':
                     if ChildStatus != 'Current Count':
                         ListItems = dataList.filter(acceptance_silver_material=ChildStatus)
                     if ChildStatus == 'Current Count':
@@ -695,7 +695,7 @@ class MpmController:
                         for data in dataList:
                             if data.lining == 'Under process' or data.lining == 'Observation(same stage)' or data.lining == 'Halt':
                                 ListItems.append(data)
-                elif ParentStatus == 'Casting':
+                elif ParentStatus == 'Casing':
                     if ChildStatus != 'Current Count':
                         ListItems = dataList.filter(casting=ChildStatus)
                     if ChildStatus == 'Current Count':
@@ -744,7 +744,7 @@ class MpmController:
                         for data in dataList:
                             if data.trimming_Propellant_grain == 'Under process' or data.trimming_Propellant_grain == 'Observation(same stage)' or data.trimming_Propellant_grain == 'Halt':
                                 ListItems.append(data)
-                elif ParentStatus == 'Mass of linear':
+                elif ParentStatus == 'Mass of liner':
                     if ChildStatus != 'Current Count':
                         ListItems = dataList.filter(mass_liner_insulation_propellant_srm=ChildStatus)
                     if ChildStatus == 'Current Count':
@@ -844,7 +844,7 @@ class MpmController:
                         for data in dataList:
                             if data.filling_status == 'Under process' or data.filling_status == 'Observation(same stage)' or data.filling_status == 'Halt':
                                 ListItems.append(data)
-                elif ParentStatus == 'Assembling/Ingegration':
+                elif ParentStatus == 'Assembling/Integration':
                     if ChildStatus != 'Current Count':
                         ListItems = dataList.filter(assembling_integration_status=ChildStatus)
                     if ChildStatus == 'Current Count':
