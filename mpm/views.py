@@ -38,6 +38,13 @@ class GetLotAPIVIEW(APIView):
 
         result = motor_obj.GetLots(request)
         return result
+
+class DeleteLotIdAPIVIEW(APIView):
+    permission_classes = [AllowAny]
+    def get(self, request):
+        result = motor_obj.DeleteLotId(request)
+        return result
+
 class DeletetActiveMotorAPIVIEW(APIView):
     permission_classes = [AllowAny]
     def get(self, request):

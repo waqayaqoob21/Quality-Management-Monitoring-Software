@@ -622,7 +622,7 @@ class MpmController:
                     'component_type', 'equal',
                     current_comp)
 
-            dataList = ActiveMotors.objects.filter(filter_objects)
+            dataList = ActiveMotors.objects.filter(filter_objects).order_by('-id')
             if ParentStatus != '':
                 ListItems = []
                 if ParentStatus == 'Qualification of raw material of insulation':
@@ -952,13 +952,13 @@ class MpmController:
     #         return JsonResponse({'status': 'False', "message": "Internal Server Error"}, status=500)
     @staticmethod
     def DeleteActiveMotor(request):
-        # try:
+        try:
             auditId = request.query_params['id']
             motor = ActiveMotors.objects.get(id=auditId)
             motor.delete()
             return JsonResponse({'message': 'Motor has been deleted'}, status=200)
-        # except:
-        #     return JsonResponse({'message': 'Sorry! No Motor found.'}, status=500)
+        except:
+            return JsonResponse({'message': 'Sorry! No Motor found.'}, status=500)
 
     @staticmethod
     def GetActiveMotorHistoryList(request):
@@ -1079,13 +1079,28 @@ class MpmController:
     def AddLotIds(request):
         try:
             modal = organization_lot_ids()
-            modal.organization = request['organization']
-            modal.lot_id_number = request['lot_id_number']
-            modal.save()
+            if request['id'] == '0':
+                modal.organization = request['organization']
+                modal.lot_id_number = request['lot_id_number']
+                modal.save()
+            else:
+                get_lot = organization_lot_ids.objects.filter(id=id).first()
+                if get_lot is not None:
+                    get_lot.organization = request['organization']
+                    get_lot.lot_id_number = request['lot_id_number']
+                    get_lot.save()
             return JsonResponse({'status': 'true', "message": "Record Added"}, status=200)
         except Exception as e:
             return JsonResponse({'status': 'False', "message": "Data Not Saved"}, status=500)
-
+    @staticmethod
+    def DeleteLotId(request):
+        try:
+            lotId = request.query_params['id']
+            motor = organization_lot_ids.objects.get(id=lotId)
+            motor.delete()
+            return JsonResponse({'message': 'Lot has been deleted'}, status=200)
+        except:
+            return JsonResponse({'message': 'Sorry! No Lot found.'}, status=500)
     @staticmethod
     def GetLots(request, self=None):
         try:

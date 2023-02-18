@@ -13,6 +13,8 @@ urlpatterns = [
         path('getexcel/', GetActiveMotorExcelAPIVIEW.as_view(), name='getexcel'),
         path('addlotids/', AddLotIdsAPIVIEW.as_view(), name='addlotids'),
         path('getLot/', GetLotAPIVIEW.as_view(), name='getLot'),
+        path('editlotids/', AddLotIdsAPIVIEW.as_view(), name='editlotids'),
+        path('deletelotids/', DeleteLotIdAPIVIEW.as_view(), name='deletelotids'),
 
         path('gethistory/', GetActiveMotorHistoryAPIVIEW.as_view(), name='gethistory'),
 
