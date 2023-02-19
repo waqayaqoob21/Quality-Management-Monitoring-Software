@@ -22,7 +22,7 @@ class MpmController:
             motorModel = ActiveMotors()
             if id == 0 or id == '0':
                 motorModel.system_type = request['system_type']
-                motorModel.system_name = request['system_Name']
+                motorModel.system_name = request['system_name']
                 motorModel.organization = request['organization']
                 motorModel.testing_type = request['testing_type']
                 motorModel.testing_date = request['testing_date']
@@ -366,7 +366,7 @@ class MpmController:
                         MotorHistory.save()
 
                     get_motor.system_type = request['system_type']
-                    get_motor.system_name = request['system_Name']
+                    get_motor.system_name = request['system_name']
                     get_motor.organization = request['organization']
                     get_motor.testing_type = request['testing_type']
                     get_motor.testing_date = request['testing_date']
@@ -1079,16 +1079,16 @@ class MpmController:
     def AddLotIds(request):
         try:
             modal = organization_lot_ids()
-            if request['id'] == '0':
+            id = request['id']
+            if id == '0':
                 modal.organization = request['organization']
                 modal.lot_id_number = request['lot_id_number']
                 modal.save()
             else:
                 get_lot = organization_lot_ids.objects.filter(id=id).first()
-                if get_lot is not None:
-                    get_lot.organization = request['organization']
-                    get_lot.lot_id_number = request['lot_id_number']
-                    get_lot.save()
+                get_lot.organization = request['organization']
+                get_lot.lot_id_number = request['lot_id_number']
+                get_lot.save()
             return JsonResponse({'status': 'true', "message": "Record Added"}, status=200)
         except Exception as e:
             return JsonResponse({'status': 'False', "message": "Data Not Saved"}, status=500)
@@ -1102,9 +1102,9 @@ class MpmController:
         except:
             return JsonResponse({'message': 'Sorry! No Lot found.'}, status=500)
     @staticmethod
-    def GetLots(request, self=None):
+    def GetLots(request):
         try:
-            data = organization_lot_ids.objects.all()
+            data = organization_lot_ids.objects.all().order_by('-id')
             serializers = LotIdsSerialzer(data,many=True)
             return JsonResponse({'status': 'True', 'data': serializers.data},
                                 status=200)
