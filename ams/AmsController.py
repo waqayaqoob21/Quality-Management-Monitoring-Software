@@ -163,9 +163,17 @@ class AmsController:
                 current_over_due_filter &= get_filter(
                     'status', 'equal',
                     'Task in-process')
-                data = TaskSummary.objects.filter(current_over_due_filter, task_date__gt=F('target_date'),
+                data = TaskSummary.objects.filter(current_over_due_filter,
                                                   assigned_date__year=selected_year)
-                serializer = TaskSummarySerialzer(data, many=True)
+                result = []
+                if data is not None:
+                    for item in data:
+                        if item.task_date is None:
+                            item.task_date = datetime.today() + timedelta(hours=5)
+                            item.task_date = item.task_date.date()
+                        if item.target_date < item.task_date:
+                            result.append(item)
+                serializer = TaskSummarySerialzer(result, many=True)
                 return JsonResponse({'message': 'true', 'data': serializer.data}, status=200)
 
             if status == 'total_current_year':
@@ -223,6 +231,18 @@ class AmsController:
                 data = TaskSummary.objects.filter(assigned_to=selected_group,
                                                   assigned_date__year=selected_year,
                                                   status=status)
+            if status =='Task in-process':
+                result =[]
+                if data is not None:
+                    for item in data:
+                        if item.task_date is None:
+                            item.task_date = datetime.today() + timedelta(hours=5)
+                            item.task_date = item.task_date.date()
+                        if item.task_date < item.target_date:
+                            result.append(item)
+                    serializer = TaskSummarySerialzer(result, many=True)
+                    return JsonResponse({'message': 'true', 'data': serializer.data}, status=200)
+
 
             serializer = TaskSummarySerialzer(data, many=True)
             return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
