@@ -240,7 +240,7 @@ class QmsController:
                     filter_objects &= get_filter(
                         'audit_status', 'equal', current_status)
 
-            if current_status == 'Certified' or current_status == 'Decertified' or current_status == 'Internal Accreditation' \
+            if current_status == 'Certified' or current_status == 'Expired' or current_status == 'Accredited' \
                     or current_status == 'Un-Certified'or current_status == 'Un-Accredited'or current_status == 'Certified by CeSP'or current_status == 'To be Certified':
                 filter_objects &= get_filter(
                     'certification_status', 'equal',
@@ -489,10 +489,10 @@ class QmsController:
                                                                      audit_status='Planned').count()
 
                     currYearCertified = QmsAudit.objects.filter(certification_status='Certified',planned_date__year=selected_year).count()
-                    currYearDeCertified = QmsAudit.objects.filter(certification_status='Decertified',
+                    currYearDeCertified = QmsAudit.objects.filter(certification_status='Expired',
                                                                       planned_date__year=selected_year).count()
 
-                    currYearAccredited = QmsAudit.objects.filter(certification_status='Internal Accreditation',
+                    currYearAccredited = QmsAudit.objects.filter(certification_status='Accredited',
                                                                      planned_date__year=selected_year).count()
                     currYearUncertified = QmsAudit.objects.filter(certification_status='Un-Certified',
                                                                       planned_date__year=selected_year).count()
@@ -537,10 +537,10 @@ class QmsController:
                                                                        audit_status='Planned').count()
                         tot_currYearCertified = QmsAudit.objects.filter(certification_status='Certified',Organization = selected_org,setup=set,
                                                                     planned_date__year=selected_year).count()
-                        tot_currYearDeCertified = QmsAudit.objects.filter(certification_status='Decertified',Organization = selected_org,setup=set,
+                        tot_currYearDeCertified = QmsAudit.objects.filter(certification_status='Expired',Organization = selected_org,setup=set,
                                                                     planned_date__year=selected_year).count()
 
-                        tot_currYearAccredited = QmsAudit.objects.filter(certification_status='Internal Accreditation',Organization = selected_org,setup=set,
+                        tot_currYearAccredited = QmsAudit.objects.filter(certification_status='Accredited',Organization = selected_org,setup=set,
                                                                     planned_date__year=selected_year).count()
                         tot_currYearUncertified = QmsAudit.objects.filter(certification_status='Un-Certified',Organization = selected_org,setup=set,
                                                                     planned_date__year=selected_year).count()
@@ -599,10 +599,10 @@ class QmsController:
                                                                        audit_status='Planned').count()
                         tot_currYearCertified = QmsAudit.objects.filter(certification_status='Certified',standard=stand,
                                                                     planned_date__year=selected_year).count()
-                        tot_currYearDeCertified = QmsAudit.objects.filter(certification_status='Decertified',standard=stand,
+                        tot_currYearDeCertified = QmsAudit.objects.filter(certification_status='Expired',standard=stand,
                                                                     planned_date__year=selected_year).count()
 
-                        tot_currYearAccredited = QmsAudit.objects.filter(certification_status='Internal Accreditation',standard=stand,
+                        tot_currYearAccredited = QmsAudit.objects.filter(certification_status='Accredited',standard=stand,
                                                                     planned_date__year=selected_year).count()
                         tot_currYearUncertified = QmsAudit.objects.filter(certification_status='Un-Certified',standard=stand,
                                                                     planned_date__year=selected_year).count()
@@ -662,9 +662,9 @@ class QmsController:
                                                                   setup=set,audit_status='Planned').count()
                         tot_currYearCertified = QmsAudit.objects.filter(certification_status='Certified',Organization=selected_org, standard=stand,
                                                                   setup=set,planned_date__year=selected_year).count()
-                        tot_currYearDeCertified = QmsAudit.objects.filter(certification_status='Decertified',Organization=selected_org, standard=stand,
+                        tot_currYearDeCertified = QmsAudit.objects.filter(certification_status='Expired',Organization=selected_org, standard=stand,
                                                                   setup=set,planned_date__year=selected_year).count()
-                        tot_currYearAccredited = QmsAudit.objects.filter(certification_status='Internal Accreditation',Organization=selected_org, standard=stand,
+                        tot_currYearAccredited = QmsAudit.objects.filter(certification_status='Accredited',Organization=selected_org, standard=stand,
                                                                   setup=set,planned_date__year=selected_year).count()
                         tot_currYearUncertified = QmsAudit.objects.filter(certification_status='Un-Certified',Organization=selected_org, standard=stand,
                                                                   setup=set,planned_date__year=selected_year).count()
