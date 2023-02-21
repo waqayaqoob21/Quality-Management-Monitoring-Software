@@ -35,7 +35,6 @@ class AmsController:
                 taskModel.status = request['status']
                 taskModel.remarks = request['remarks']
                 taskModel.follow_up = request['follow_up']
-                taskModel.tracking_id = request['tracking_id']
                 taskModel.save()
                 return JsonResponse({'Success': "Task Created Successfully"}, status=200)
             else:
@@ -59,7 +58,6 @@ class AmsController:
                         taskHistoryModal.status = get_task.status
                         taskHistoryModal.remarks = get_task.remarks
                         taskHistoryModal.follow_up = get_task.follow_up
-                        taskHistoryModal.tracking_id = get_task.tracking_id
                         taskHistoryModal.save()
                 task = TaskSummary.objects.get(id=request['id'])
                 task.task_name = request['task_name']
@@ -74,7 +72,6 @@ class AmsController:
                 task.status = request['status']
                 task.remarks = request['remarks']
                 task.follow_up = request['follow_up']
-                task.tracking_id = request['tracking_id']
                 task.save()
                 return JsonResponse({'Success': 'Task Updated Successfully!'}, status=200)
         except Exception as e:
