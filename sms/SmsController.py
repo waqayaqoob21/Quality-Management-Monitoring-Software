@@ -579,7 +579,7 @@ class SmsController:
                         ListItems = dataList.filter(enduser_status = ChildStatus)
                     else:
                         for data  in dataList:
-                            if data.enduser_status == 'Ok' or data.enduser_status=='Observation(Same Stage)' or data.enduser_status=='Halt':
+                            if data.enduser_status == 'Ok' or data.enduser_status=='Observation' or data.enduser_status=='Halt':
                                 ListItems.append(data)
 
                 serializer = ProductionSystemSerialzer(ListItems, many=True)
@@ -1325,7 +1325,7 @@ class SmsController:
                     ListItems = dataList.filter(launchact_status=ChildStatus)
                 else:
                     for data in dataList:
-                        if data.launchact_status == 'Ok' or data.launchact_status == 'Observation(Same Stage)' or data.launchact_status == 'Halt':
+                        if data.launchact_status == 'Ok' or data.launchact_status == 'Observation' or data.launchact_status == 'Halt':
                             ListItems.append(data)
 
             serializer = FlightSystemSerialzer(ListItems, many=True)
@@ -2024,10 +2024,10 @@ class SmsController:
                         ListItems = dataList.filter(enduser_status=ChildStatus)
                     else:
                         for data in dataList:
-                            if data.enduser_status == 'Ok' or data.enduser_status == 'Observation(Same Stage)' or data.enduser_status == 'Halt':
+                            if data.enduser_status == 'Ok' or data.enduser_status == 'Observation' or data.enduser_status == 'Halt':
                                 ListItems.append(data)
 
-                serializer = ProductionSystemSerialzer(ListItems, many=True)
+                serializer = RelifingSystemSerialzer(ListItems, many=True)
                 return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
             serializer = RelifingSystemSerialzer(dataList, many=True)
             return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
@@ -2353,7 +2353,7 @@ class SmsController:
             prod_enduser_oklistNext = ProductionSystemStatus.objects.filter(filter_objects,
                                                                             enduser_status='OK(next stage)')
             prod_enduser_observationlist = ProductionSystemStatus.objects.filter(filter_objects,
-                                                                                 enduser_status='Observation(same stage)')
+                                                                                 enduser_status='Observation')
             prod_enduser_observationlistNext = ProductionSystemStatus.objects.filter(filter_objects,
                                                                                      enduser_status='Observation(next stage)')
             prod_enduser_uplist = ProductionSystemStatus.objects.filter(filter_objects,
@@ -2563,7 +2563,7 @@ class SmsController:
             flight_launch_oklistNext = FlightSystemStatus.objects.filter(filter_objects,
                                                                          launchact_status='OK(next stage)')
             flight_launch_observationlist = FlightSystemStatus.objects.filter(filter_objects,
-                                                                              launchact_status='Observation(same stage)')
+                                                                              launchact_status='Observation')
             flight_launch_observationlistNext = FlightSystemStatus.objects.filter(filter_objects,
                                                                                   launchact_status='Observation(next stage)')
             flight_launch_uplist = FlightSystemStatus.objects.filter(filter_objects,
@@ -2782,7 +2782,7 @@ class SmsController:
             relifing_enduser_oklistNext = RelifingSystemStatus.objects.filter(filter_objects,
                                                                               enduser_status='OK(next stage)')
             relifing_enduser_observationlist = RelifingSystemStatus.objects.filter(filter_objects,
-                                                                                   enduser_status='Observation(same stage)')
+                                                                                   enduser_status='Observation')
             relifing_enduser_observationlistNext = RelifingSystemStatus.objects.filter(filter_objects,
                                                                                        enduser_status='Observation(next stage)')
             relifing_enduser_uplist = RelifingSystemStatus.objects.filter(filter_objects,
