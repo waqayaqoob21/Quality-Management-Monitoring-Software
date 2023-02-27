@@ -84,6 +84,42 @@ class ActiveMotorSerializer(Serializer):
     mass_liner_insulation_propellant_srm_date = DateTimeField()
     mass_liner_insulation_propellant_srm_remarks = CharField()
 
+    conditioning_of_lining = CharField()
+    conditioning_of_lining_date = CharField()
+    conditioning_of_lining_remarks = CharField()
+
+    mechanical_properties_liner = CharField()
+    mechanical_properties_liner_date = CharField()
+    mechanical_properties_liner_remarks = CharField()
+
+    mechanical_properties_propellant = CharField()
+    mechanical_properties_propellant_date = CharField()
+    mechanical_properties_propellant_remarks = CharField()
+
+    mass_liner = CharField()
+    mass_liner_date = CharField()
+    mass_liner_remarks = CharField()
+
+    mass_insulation = CharField()
+    mass_insulation_date = CharField()
+    mass_insulation_remarks = CharField()
+
+    mass_propellant = CharField()
+    mass_propellant_date = CharField()
+    mass_propellant_remarks = CharField()
+
+    overall_qualification_status = CharField()
+    overall_qualification_date = CharField()
+    overall_qualification_remarks = CharField()
+
+    bhd_status = CharField()
+    bhd_date = CharField()
+    bhd_remarks = CharField()
+
+    qm_certification_status = CharField()
+    qm_certification_date = CharField()
+    qm_certification_remarks = CharField()
+
     ut_endoscopy_rt_grain =  CharField()
     ut_endoscopy_rt_grain_date = DateTimeField()
     ut_endoscopy_rt_grain_remarks = CharField()

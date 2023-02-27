@@ -103,9 +103,48 @@ class MpmController:
                 motorModel.mass_liner_insulation_propellant_srm_date = request['mass_liner_insulation_propellant_srm_date']
                 motorModel.mass_liner_insulation_propellant_srm_remarks = request[
                     'mass_liner_insulation_propellant_srm_remarks']
+
                 motorModel.ut_endoscopy_rt_grain = request['ut_endoscopy_rt_grain']
                 motorModel.ut_endoscopy_rt_grain_date = request['ut_endoscopy_rt_grain_date']
                 motorModel.ut_endoscopy_rt_grain_remarks = request['ut_endoscopy_rt_grain_remarks']
+
+                motorModel.conditioning_of_lining = request['conditioning_of_lining']
+                motorModel.conditioning_of_lining_date = request['conditioning_of_lining_date']
+                motorModel.conditioning_of_lining_remarks = request['conditioning_of_lining_remarks']
+
+                motorModel.mechanical_properties_liner = request['mechanical_properties_liner']
+                motorModel.mechanical_properties_liner_date = request['mechanical_properties_liner_date']
+                motorModel.mechanical_properties_liner_remarks = request['mechanical_properties_liner_remarks']
+
+                motorModel.mechanical_properties_propellant = request['mechanical_properties_propellant']
+                motorModel.mechanical_properties_propellant_date = request['mechanical_properties_propellant_date']
+                motorModel.mechanical_properties_propellant_remarks = request['mechanical_properties_propellant_remarks']
+
+                motorModel.mass_liner = request['mass_liner']
+                motorModel.mass_liner_date = request['mass_liner_date']
+                motorModel.mass_liner_remarks = request['mass_liner_remarks']
+
+                motorModel.mass_insulation = request['mass_insulation']
+                motorModel.mass_insulation_date = request['mass_insulation_date']
+                motorModel.mass_insulation_remarks = request['mass_insulation_remarks']
+
+                motorModel.mass_propellant = request['mass_propellant']
+                motorModel.mass_propellant_date = request['mass_propellant_date']
+                motorModel.mass_propellant_remarks = request['mass_propellant_remarks']
+
+                motorModel.overall_qualification_status = request['overall_qualification_status']
+                motorModel.overall_qualification_date = request['overall_qualification_date']
+                motorModel.overall_qualification_remarks = request['overall_qualification_remarks']
+
+                motorModel.bhd_status = request['bhd_status']
+                motorModel.bhd_date = request['bhd_date']
+                motorModel.bhd_remarks = request['bhd_remarks']
+
+                motorModel.qm_certification_status = request['qm_certification_status']
+                motorModel.qm_certification_date = request['qm_certification_date']
+                motorModel.qm_certification_remarks = request['qm_certification_remarks']
+
+
 
                 motorModel.battery_type = request['battery_type']
                 motorModel.tb_type = request['tb_type']
@@ -251,6 +290,10 @@ class MpmController:
                         MotorHistory.conditioning_raw_materials_date = get_motor.conditioning_raw_materials_date
                         MotorHistory.conditioning_raw_materials_remarks = get_motor.conditioning_raw_materials_remarks
 
+                        MotorHistory.conditioning_of_lining = get_motor.conditioning_of_lining
+                        MotorHistory.conditioning_of_lining_date = get_motor.conditioning_of_lining_date
+                        MotorHistory.conditioning_of_lining_remarks = get_motor.conditioning_of_lining_remarks
+
                         MotorHistory.lining = get_motor.lining
                         MotorHistory.lining_date = get_motor.lining_date
                         MotorHistory.lining_remarks = get_motor.lining_remarks
@@ -266,6 +309,14 @@ class MpmController:
                         MotorHistory.liner_mechanical_properties = get_motor.liner_mechanical_properties
                         MotorHistory.liner_mechanical_properties_date = get_motor.liner_mechanical_properties_date
                         MotorHistory.liner_mechanical_properties_remarks = get_motor.liner_mechanical_properties_remarks
+
+                        MotorHistory.mechanical_properties_liner = get_motor.mechanical_properties_liner
+                        MotorHistory.mechanical_properties_liner_date = get_motor.mechanical_properties_liner_date
+                        MotorHistory.mechanical_properties_liner_remarks = get_motor.mechanical_properties_liner_remarks
+
+                        MotorHistory.mechanical_properties_propellant = get_motor.mechanical_properties_propellant
+                        MotorHistory.mechanical_properties_propellant_date = get_motor.mechanical_properties_propellant_date
+                        MotorHistory.mechanical_properties_propellant_remarks = get_motor.mechanical_properties_propellant_remarks
 
                         MotorHistory.propellant_mechanical_properties = get_motor.propellant_mechanical_properties
                         MotorHistory.propellant_mechanical_properties_date = get_motor.propellant_mechanical_properties_date
@@ -286,6 +337,31 @@ class MpmController:
                         MotorHistory.mass_liner_insulation_propellant_srm = get_motor.mass_liner_insulation_propellant_srm
                         MotorHistory.mass_liner_insulation_propellant_srm_date = get_motor.mass_liner_insulation_propellant_srm_date
                         MotorHistory.mass_liner_insulation_propellant_srm_remarks = get_motor.mass_liner_insulation_propellant_srm_remarks
+
+                        MotorHistory.mass_liner = get_motor.mass_liner
+                        MotorHistory.mass_liner_date = get_motor.mass_liner_date
+                        MotorHistory.mass_liner_remarks = get_motor.mass_liner_remarks
+
+                        MotorHistory.mass_insulation = get_motor.mass_insulation
+                        MotorHistory.mass_insulation_date = get_motor.mass_insulation_date
+                        MotorHistory.mass_insulation_remarks = get_motor.mass_insulation_remarks
+
+                        MotorHistory.mass_propellant = get_motor.mass_propellant
+                        MotorHistory.mass_propellant_date = get_motor.mass_propellant_date
+                        MotorHistory.mass_propellant_remarks = get_motor.mass_propellant_remarks
+
+                        MotorHistory.overall_qualification_status = get_motor.overall_qualification_status
+                        MotorHistory.overall_qualification_date = get_motor.overall_qualification_date
+                        MotorHistory.overall_qualification_remarks = get_motor.overall_qualification_remarks
+
+                        MotorHistory.bhd_status = get_motor.bhd_status
+                        MotorHistory.bhd_date = get_motor.bhd_date
+                        MotorHistory.bhd_remarks = get_motor.bhd_remarks
+
+                        MotorHistory.qm_certification_status = get_motor.qm_certification_status
+                        MotorHistory.qm_certification_date = get_motor.qm_certification_date
+                        MotorHistory.qm_certification_remarks = get_motor.qm_certification_remarks
+                        
                         MotorHistory.ut_endoscopy_rt_grain = get_motor.ut_endoscopy_rt_grain
                         MotorHistory.ut_endoscopy_rt_grain_date = get_motor.ut_endoscopy_rt_grain_date
                         MotorHistory.ut_endoscopy_rt_grain_remarks = get_motor.ut_endoscopy_rt_grain_remarks
@@ -454,6 +530,43 @@ class MpmController:
                     get_motor.ut_endoscopy_rt_grain_date = request['ut_endoscopy_rt_grain_date']
                     get_motor.ut_endoscopy_rt_grain_remarks = request['ut_endoscopy_rt_grain_remarks']
 
+                    get_motor.conditioning_of_lining = request['conditioning_of_lining']
+                    get_motor.conditioning_of_lining_date = request['conditioning_of_lining_date']
+                    get_motor.conditioning_of_lining_remarks = request['conditioning_of_lining_remarks']
+
+                    get_motor.mechanical_properties_liner = request['mechanical_properties_liner']
+                    get_motor.mechanical_properties_liner_date = request['mechanical_properties_liner_date']
+                    get_motor.mechanical_properties_liner_remarks = request['mechanical_properties_liner_remarks']
+
+                    get_motor.mechanical_properties_propellant = request['mechanical_properties_propellant']
+                    get_motor.mechanical_properties_propellant_date = request['mechanical_properties_propellant_date']
+                    get_motor.mechanical_properties_propellant_remarks = request[
+                        'mechanical_properties_propellant_remarks']
+
+                    get_motor.mass_liner = request['mass_liner']
+                    get_motor.mass_liner_date = request['mass_liner_date']
+                    get_motor.mass_liner_remarks = request['mass_liner_remarks']
+
+                    get_motor.mass_insulation = request['mass_insulation']
+                    get_motor.mass_insulation_date = request['mass_insulation_date']
+                    get_motor.mass_insulation_remarks = request['mass_insulation_remarks']
+
+                    get_motor.mass_propellant = request['mass_propellant']
+                    get_motor.mass_propellant_date = request['mass_propellant_date']
+                    get_motor.mass_propellant_remarks = request['mass_propellant_remarks']
+
+                    get_motor.overall_qualification_status = request['overall_qualification_status']
+                    get_motor.overall_qualification_date = request['overall_qualification_date']
+                    get_motor.overall_qualification_remarks = request['overall_qualification_remarks']
+
+                    get_motor.bhd_status = request['bhd_status']
+                    get_motor.bhd_date = request['bhd_date']
+                    get_motor.bhd_remarks = request['bhd_remarks']
+
+                    get_motor.qm_certification_status = request['qm_certification_status']
+                    get_motor.qm_certification_date = request['qm_certification_date']
+                    get_motor.qm_certification_remarks = request['qm_certification_remarks']
+
                     get_motor.battery_type = request['battery_type']
                     get_motor.tb_type = request['tb_type']
                     get_motor.battery_id = request['battery_id']
@@ -544,6 +657,8 @@ class MpmController:
             current_bat = request.query_params.get('selected_battery')
             current_lot = request.query_params.get('selected_lot_id')
             system_type = request.query_params.get('selected_system_type')
+            pd_type = request.query_params.get('selected_pdType')
+
 
             ParentStatus = request.query_params['parent_status']
             ChildStatus = request.query_params['child_status']
@@ -621,6 +736,10 @@ class MpmController:
                 filter_objects &= get_filter(
                     'component_type', 'equal',
                     current_comp)
+            if pd_type !='':
+                filter_objects &= get_filter(
+                    'pd_type', 'equal',
+                    pd_type)
 
             dataList = ActiveMotors.objects.filter(filter_objects).order_by('-id')
             if ParentStatus != '':
@@ -632,7 +751,21 @@ class MpmController:
                         for data in dataList:
                             if data.qualification_insulation_lining_propellant_rm == 'Under process' or data.qualification_insulation_lining_propellant_rm == 'Observation(same stage)' or data.qualification_insulation_lining_propellant_rm == 'Halt':
                                 ListItems.append(data)
-                elif ParentStatus == 'Acceptance of casing':
+                elif ParentStatus == 'Qualification of Lining':
+                    if ChildStatus != 'Current Count':
+                        ListItems = dataList.filter(lining=ChildStatus)
+                    if ChildStatus == 'Current Count':
+                        for data in dataList:
+                            if data.lining == 'Under process' or data.lining == 'Observation(same stage)' or data.lining == 'Halt':
+                                ListItems.append(data)
+                elif ParentStatus == 'Qualification of Propellant':
+                    if ChildStatus != 'Current Count':
+                        ListItems = dataList.filter(propellant_mechanical_properties=ChildStatus)
+                    if ChildStatus == 'Current Count':
+                        for data in dataList:
+                            if data.propellant_mechanical_properties == 'Under process' or data.propellant_mechanical_properties == 'Observation(same stage)' or data.propellant_mechanical_properties == 'Halt':
+                                ListItems.append(data)
+                elif ParentStatus == 'Acceptance of casting':
                     if ChildStatus != 'Current Count':
                         ListItems = dataList.filter(acceptance_casting=ChildStatus)
                     if ChildStatus == 'Current Count':
@@ -688,12 +821,12 @@ class MpmController:
                         for data in dataList:
                             if data.conditioning_raw_materials == 'Under process' or data.conditioning_raw_materials == 'Observation(same stage)' or data.conditioning_raw_materials == 'Halt':
                                 ListItems.append(data)
-                elif ParentStatus == 'Lining':
+                elif ParentStatus == 'Conditioning of Lining':
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(lining=ChildStatus)
+                        ListItems = dataList.filter(conditioning_of_lining=ChildStatus)
                     if ChildStatus == 'Current Count':
                         for data in dataList:
-                            if data.lining == 'Under process' or data.lining == 'Observation(same stage)' or data.lining == 'Halt':
+                            if data.conditioning_of_lining == 'Under process' or data.conditioning_of_lining == 'Observation(same stage)' or data.conditioning_of_lining == 'Halt':
                                 ListItems.append(data)
                 elif ParentStatus == 'Casing':
                     if ChildStatus != 'Current Count':
@@ -709,19 +842,27 @@ class MpmController:
                         for data in dataList:
                             if data.curing == 'Under process' or data.curing == 'Observation(same stage)' or data.curing == 'Halt':
                                 ListItems.append(data)
-                elif ParentStatus == 'Liner Mechanical Properties':
+                elif ParentStatus == 'UT, endoscopy and RT of grain':
+                    if ChildStatus != 'Current Count':
+                        ListItems = dataList.filter(ut_endoscopy_rt_grain=ChildStatus)
+                    if ChildStatus == 'Current Count':
+                        for data in dataList:
+                            if data.ut_endoscopy_rt_grain == 'Under process' or data.ut_endoscopy_rt_grain == 'Observation(same stage)' or data.ut_endoscopy_rt_grain == 'Halt':
+                                ListItems.append(data)
+
+                elif ParentStatus == 'Mechanical Properties of Liner':
                     if ChildStatus != 'Current Count':
                         ListItems = dataList.filter(liner_mechanical_properties=ChildStatus)
                     if ChildStatus == 'Current Count':
                         for data in dataList:
                             if data.liner_mechanical_properties == 'Under process' or data.liner_mechanical_properties == 'Observation(same stage)' or data.liner_mechanical_properties == 'Halt':
                                 ListItems.append(data)
-                elif ParentStatus == 'Propellant Mechanical Properties':
+                elif ParentStatus == 'Mechanical Properties of Propellant':
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(propellant_mechanical_properties=ChildStatus)
+                        ListItems = dataList.filter(mechanical_properties_propellant=ChildStatus)
                     if ChildStatus == 'Current Count':
                         for data in dataList:
-                            if data.propellant_mechanical_properties == 'Under process' or data.propellant_mechanical_properties == 'Observation(same stage)' or data.propellant_mechanical_properties == 'Halt':
+                            if data.mechanical_properties_propellant == 'Under process' or data.mechanical_properties_propellant == 'Observation(same stage)' or data.mechanical_properties_propellant == 'Halt':
                                 ListItems.append(data)
                 elif ParentStatus == 'Interface bond strength':
                     if ChildStatus != 'Current Count':
@@ -751,13 +892,30 @@ class MpmController:
                         for data in dataList:
                             if data.mass_liner_insulation_propellant_srm == 'Under process' or data.mass_liner_insulation_propellant_srm == 'Observation(same stage)' or data.mass_liner_insulation_propellant_srm == 'Halt':
                                 ListItems.append(data)
-                elif ParentStatus == 'UT, endoscopy and RT of grain':
+                elif ParentStatus == 'Mass of Insulation':
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(ut_endoscopy_rt_grain=ChildStatus)
+                        ListItems = dataList.filter(mass_insulation=ChildStatus)
                     if ChildStatus == 'Current Count':
                         for data in dataList:
-                            if data.ut_endoscopy_rt_grain == 'Under process' or data.ut_endoscopy_rt_grain == 'Observation(same stage)' or data.ut_endoscopy_rt_grain == 'Halt':
+                            if data.mass_insulation == 'Under process' or data.mass_insulation == 'Observation(same stage)' or data.mass_insulation == 'Halt':
                                 ListItems.append(data)
+                elif ParentStatus == 'Mass of Propellant':
+                    if ChildStatus != 'Current Count':
+                        ListItems = dataList.filter(mass_propellant=ChildStatus)
+                    if ChildStatus == 'Current Count':
+                        for data in dataList:
+                            if data.mass_propellant == 'Under process' or data.mass_propellant == 'Observation(same stage)' or data.mass_propellant == 'Halt':
+                                ListItems.append(data)
+                elif ParentStatus == 'BHD Status':
+                        ListItems = dataList.filter(bhd_status=ChildStatus)
+
+                elif ParentStatus == 'QM Certification Status':
+                        ListItems = dataList.filter(qm_certification_status=ChildStatus)
+
+                elif ParentStatus == 'Overall Qualification':
+                        ListItems = dataList.filter(overall_qualification_status=ChildStatus)
+
+
                 elif ParentStatus == 'Material Qualified':
                     if ChildStatus != 'Current Count':
                         ListItems = dataList.filter(matiral_qualified_status=ChildStatus)
@@ -1298,7 +1456,7 @@ class MpmController:
             current_lot = request.query_params.get('selected_lot_id')
             system_type = request.query_params.get('selected_system_type')
             system = request.query_params['selected_system']
-
+            pd_type = request.query_params['selected_pdType']
             # create dynamic filter
             if year != '':
                 filter_objects &= get_filter(
@@ -1317,6 +1475,10 @@ class MpmController:
                 filter_objects &= get_filter(
                     'system_name', 'equal',
                     system)
+            if pd_type != '':
+                filter_objects &= get_filter(
+                    'pd_type', 'equal',
+                    pd_type)
             if current_org !='':
                 filter_objects &= get_filter(
                     'organization', 'equal', current_org)
@@ -1495,6 +1657,85 @@ class MpmController:
                                                                                     ut_endoscopy_rt_grain='Observation(next stage)')
             ut_endoscopy_rt_grain_Up = ActiveMotors.objects.filter(filter_objects, ut_endoscopy_rt_grain='Under process')
             ut_endoscopy_rt_grain_Hlt = ActiveMotors.objects.filter(filter_objects, ut_endoscopy_rt_grain='Halt')
+
+            conditioning_of_lining_Ok = ActiveMotors.objects.filter(filter_objects, conditioning_of_lining='Ok')
+            conditioning_of_lining_ObsSame = ActiveMotors.objects.filter(filter_objects,
+                                                                        conditioning_of_lining='Observation(same stage)')
+            conditioning_of_lining_ObsNext = ActiveMotors.objects.filter(filter_objects,
+                                                                        conditioning_of_lining='Observation(next stage)')
+            conditioning_of_lining_Up = ActiveMotors.objects.filter(filter_objects, conditioning_of_lining='Under process')
+            conditioning_of_lining_Hlt = ActiveMotors.objects.filter(filter_objects, conditioning_of_lining='Halt')
+
+
+            mechanical_properties_liner_Ok = ActiveMotors.objects.filter(filter_objects, mechanical_properties_liner='Ok')
+            mechanical_properties_liner_ObsSame = ActiveMotors.objects.filter(filter_objects,
+                                                                         mechanical_properties_liner='Observation(same stage)')
+            mechanical_properties_liner_ObsNext = ActiveMotors.objects.filter(filter_objects,
+                                                                         mechanical_properties_liner='Observation(next stage)')
+            mechanical_properties_liner_Up = ActiveMotors.objects.filter(filter_objects, mechanical_properties_liner='Under process')
+            mechanical_properties_liner_Hlt = ActiveMotors.objects.filter(filter_objects, mechanical_properties_liner='Halt')
+
+
+            mechanical_properties_propellant_Ok = ActiveMotors.objects.filter(filter_objects, mechanical_properties_propellant='Ok')
+            mechanical_properties_propellant_ObsSame = ActiveMotors.objects.filter(filter_objects,
+                                                                              mechanical_properties_propellant='Observation(same stage)')
+            mechanical_properties_propellant_ObsNext = ActiveMotors.objects.filter(filter_objects,
+                                                                              mechanical_properties_propellant='Observation(next stage)')
+            mechanical_properties_propellant_Up = ActiveMotors.objects.filter(filter_objects,
+                                                                         mechanical_properties_propellant='Under process')
+            mechanical_properties_propellant_Hlt = ActiveMotors.objects.filter(filter_objects, mechanical_properties_propellant='Halt')
+
+
+            mass_liner_Ok = ActiveMotors.objects.filter(filter_objects, mass_liner='Ok')
+            mass_liner_ObsSame = ActiveMotors.objects.filter(filter_objects,
+                                                                              mass_liner='Observation(same stage)')
+            mass_liner_ObsNext = ActiveMotors.objects.filter(filter_objects,
+                                                                              mass_liner='Observation(next stage)')
+            mass_liner_Up = ActiveMotors.objects.filter(filter_objects,
+                                                                         mass_liner='Under process')
+            mass_liner_Hlt = ActiveMotors.objects.filter(filter_objects, mass_liner='Halt')
+
+
+            mass_insulation_Ok = ActiveMotors.objects.filter(filter_objects, mass_insulation='Ok')
+            mass_insulation_ObsSame = ActiveMotors.objects.filter(filter_objects,
+                                                                              mass_insulation='Observation(same stage)')
+            mass_insulation_ObsNext = ActiveMotors.objects.filter(filter_objects,
+                                                                              mass_insulation='Observation(next stage)')
+            mass_insulation_Up = ActiveMotors.objects.filter(filter_objects,
+                                                                         mass_insulation='Under process')
+            mass_insulation_Hlt = ActiveMotors.objects.filter(filter_objects, mass_insulation='Halt')
+
+
+            mass_propellant_Ok = ActiveMotors.objects.filter(filter_objects, mass_propellant='Ok')
+            mass_propellant_ObsSame = ActiveMotors.objects.filter(filter_objects,
+                                                                              mass_propellant='Observation(same stage)')
+            mass_propellant_ObsNext = ActiveMotors.objects.filter(filter_objects,
+                                                                              mass_propellant='Observation(next stage)')
+            mass_propellant_Up = ActiveMotors.objects.filter(filter_objects,
+                                                                         mass_propellant='Under process')
+            mass_propellant_Hlt = ActiveMotors.objects.filter(filter_objects, mass_propellant='Halt')
+
+
+            overall_qualification_status_ObsNcr = ActiveMotors.objects.filter(filter_objects,
+                                                                              overall_qualification_status='Observation/NCR')
+            overall_qualification_status_Inprocess = ActiveMotors.objects.filter(filter_objects,
+                                                                              overall_qualification_status='in-process')
+
+
+
+            bhd_status_Ok = ActiveMotors.objects.filter(filter_objects, bhd_status='Ok')
+            bhd_status_NotSubmit = ActiveMotors.objects.filter(filter_objects, bhd_status='Not Submitted')
+            bhd_status_ObsForwarded = ActiveMotors.objects.filter(filter_objects,
+                                                                              bhd_status='QM Observations Forwarded')
+            bhd_status_Inprocess = ActiveMotors.objects.filter(filter_objects,
+                                                                              bhd_status='Audit in-process')
+
+
+            qm_certification_status_Issued = ActiveMotors.objects.filter(filter_objects, qm_certification_status='QM certificate issued')
+            qm_certification_status_ObsForwarded = ActiveMotors.objects.filter(filter_objects,
+                                                                              qm_certification_status='QM Observations Forwarded')
+            qm_certification_status_Inprocess = ActiveMotors.objects.filter(filter_objects,
+                                                                              qm_certification_status='Audit in-process')
 
 
             matiral_qualified_status_Ok = ActiveMotors.objects.filter(filter_objects, matiral_qualified_status='Ok')
@@ -1784,14 +2025,59 @@ class MpmController:
                 'ut_endoscopy_rt_grain_Up' : ut_endoscopy_rt_grain_Up.count(),
                 'ut_endoscopy_rt_grain_Hlt' : ut_endoscopy_rt_grain_Hlt.count(),
 
+                'conditioning_of_lining_Ok' : conditioning_of_lining_Ok.count(),
+                'conditioning_of_lining_ObsSame' : conditioning_of_lining_ObsSame.count(),
+                'conditioning_of_lining_ObsNext' : conditioning_of_lining_ObsNext.count(),
+                'conditioning_of_lining_Up' : conditioning_of_lining_Up.count(),
+                'conditioning_of_lining_Hlt' : conditioning_of_lining_Hlt.count(),
 
-                'matiral_qualified_status_Ok' : matiral_qualified_status_Ok.count(),
-                'matiral_qualified_status_ObsSame' : matiral_qualified_status_ObsSame.count(),
-                'matiral_qualified_status_ObsNext' : matiral_qualified_status_ObsNext.count(),
-                'matiral_qualified_status_Up' : matiral_qualified_status_Up.count(),
-                'matiral_qualified_status_Hlt' : matiral_qualified_status_Hlt.count(),
+                'mechanical_properties_liner_Ok' : mechanical_properties_liner_Ok.count(),
+                'mechanical_properties_liner_ObsSame' : mechanical_properties_liner_ObsSame.count(),
+                'mechanical_properties_liner_ObsNext' : mechanical_properties_liner_ObsNext.count(),
+                'mechanical_properties_liner_Up' : mechanical_properties_liner_Up.count(),
+                'mechanical_properties_liner_Hlt' : mechanical_properties_liner_Hlt.count(),
 
+                'mechanical_properties_propellant_Ok' : mechanical_properties_propellant_Ok.count(),
+                'mechanical_properties_propellant_ObsSame' : mechanical_properties_propellant_ObsSame.count(),
+                'mechanical_properties_propellant_ObsNext' : mechanical_properties_propellant_ObsNext.count(),
+                'mechanical_properties_propellant_Up' : mechanical_properties_propellant_Up.count(),
+                'mechanical_properties_propellant_Hlt' : mechanical_properties_propellant_Hlt.count(),
 
+                'mass_liner_Ok' : mass_liner_Ok.count(),
+                'mass_liner_ObsSame' : mass_liner_ObsSame.count(),
+                'mass_liner_ObsNext' : mass_liner_ObsNext.count(),
+                'mass_liner_Up' : mass_liner_Up.count(),
+                'mass_liner_Hlt' : mass_liner_Hlt.count(),
+
+                'mass_insulation_Ok' : mass_insulation_Ok.count(),
+                'mass_insulation_ObsSame' : mass_insulation_ObsSame.count(),
+                'mass_insulation_ObsNext' : mass_insulation_ObsNext.count(),
+                'mass_insulation_Up' : mass_insulation_Up.count(),
+                'mass_insulation_Hlt' : mass_insulation_Hlt.count(),
+
+                'mass_propellant_Ok' : mass_propellant_Ok.count(),
+                'mass_propellant_ObsSame' : mass_propellant_ObsSame.count(),
+                'mass_propellant_ObsNext' : mass_propellant_ObsNext.count(),
+                'mass_propellant_Up' : mass_propellant_Up.count(),
+                'mass_propellant_Hlt' : mass_propellant_Hlt.count(),
+
+                'overall_qualification_status_ObsNcr' : overall_qualification_status_ObsNcr.count(),
+                'overall_qualification_status_Inprocess' : overall_qualification_status_Inprocess.count(),
+
+                'bhd_status_Ok' : bhd_status_Ok.count(),
+                'bhd_status_NotSubmit' : bhd_status_NotSubmit.count(),
+                'bhd_status_ObsForwarded' : bhd_status_ObsForwarded.count(),
+                'bhd_status_Inprocess' : bhd_status_Inprocess.count(),
+
+                'qm_certification_status_Issued' : qm_certification_status_Issued.count(),
+                'qm_certification_status_ObsForwarded' : qm_certification_status_ObsForwarded.count(),
+                'qm_certification_status_Inprocess' : qm_certification_status_Inprocess.count(),
+
+                'matiral_qualified_status_Ok': matiral_qualified_status_Ok.count(),
+                'matiral_qualified_status_ObsSame': matiral_qualified_status_ObsSame.count(),
+                'matiral_qualified_status_ObsNext': matiral_qualified_status_ObsNext.count(),
+                'matiral_qualified_status_Up': matiral_qualified_status_Up.count(),
+                'matiral_qualified_status_Hlt': matiral_qualified_status_Hlt.count(),
 
                 'compo_manufacturing_status_Ok' : compo_manufacturing_status_Ok.count(),
                 'compo_manufacturing_status_ObsSame' : compo_manufacturing_status_ObsSame.count(),
