@@ -1788,6 +1788,10 @@ class DocController:
             current_over_due_filter &= get_filter(
                 'status', 'equal',
                 'Task in-process')
+            if selected_group != '':
+                current_over_due_filter &= get_filter(
+                    'assigned_to', 'equal',
+                    selected_group)
             current_year_task = TaskSummary.objects.filter(all_filter_objects,
                                                            assigned_date__year=selected_year).count()
             doc_not_completedList = TaskSummary.objects.filter(total_filter_objects).count()

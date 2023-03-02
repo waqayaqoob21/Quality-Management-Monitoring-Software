@@ -160,6 +160,10 @@ class AmsController:
                 current_over_due_filter &= get_filter(
                     'status', 'equal',
                     'Task in-process')
+                if selected_group != '':
+                    current_over_due_filter &= get_filter(
+                        'assigned_to', 'equal',
+                        selected_group)
                 data = TaskSummary.objects.filter(current_over_due_filter,
                                                   assigned_date__year=selected_year)
                 result = []
