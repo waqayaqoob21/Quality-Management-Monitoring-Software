@@ -1312,13 +1312,13 @@ class SmsController:
                             ListItems.append(data)
 
             if ParentStatus == 'QM Certification Status':
-                if ChildStatus != 'Current Count':
-                    ListItems = dataList.filter(qm_certification_status=ChildStatus)
+                # if ChildStatus != 'Current Count':
+                ListItems = dataList.filter(qm_certification_status=ChildStatus)
 
-                if ChildStatus == 'Current Count':
-                    for data in dataList:
-                        if data.qm_certification_status == 'QM certificate issued' or data.qm_certification_status == 'QM Observations Forwarded)':
-                            ListItems.append(data)
+                # if ChildStatus == 'Current Count':
+                #     for data in dataList:
+                #         if data.qm_certification_status == 'QM certificate issued' or data.qm_certification_status == 'QM Observations Forwarded)':
+                #             ListItems.append(data)
 
             if ParentStatus == 'Launch/ End User':
                 if ChildStatus != 'Current Count':

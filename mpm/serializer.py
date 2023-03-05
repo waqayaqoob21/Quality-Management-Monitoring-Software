@@ -8,6 +8,7 @@ class ActiveMotorSerializer(Serializer):
     system_type = CharField()
     system_name = CharField()
     organization = CharField()
+    creation_date = CharField()
     testing_date = CharField()
     testing_type = CharField()
     motor_id = CharField()

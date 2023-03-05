@@ -8,6 +8,8 @@ class ActiveMotors(models.Model):
 
     system_name = models.CharField(max_length=300)
     organization = models.CharField(max_length=300,null=True)
+    creation_date = models.DateTimeField(auto_now_add=False, null=True)
+
     testing_type = models.CharField(max_length=300, null=True)
     testing_date = models.DateTimeField(auto_now_add=False, null=True)
     component_type = models.CharField(max_length=300, null=True)

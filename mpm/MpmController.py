@@ -25,6 +25,7 @@ class MpmController:
                 motorModel.system_name = request['system_name']
                 motorModel.organization = request['organization']
                 motorModel.testing_type = request['testing_type']
+                motorModel.creation_date = request['creation_date']
                 motorModel.testing_date = request['testing_date']
                 motorModel.motor_id = request['motor_id']
                 motorModel.component_type = request['component_type']
@@ -445,6 +446,7 @@ class MpmController:
                     get_motor.system_name = request['system_name']
                     get_motor.organization = request['organization']
                     get_motor.testing_type = request['testing_type']
+                    get_motor.creation_date = request['creation_date']
                     get_motor.testing_date = request['testing_date']
                     get_motor.component_type = request['component_type']
                     get_motor.motor_id = request['motor_id']
@@ -712,7 +714,7 @@ class MpmController:
 
             if current_year !='':
                 filter_objects &= get_filter(
-                    'testing_date__year', 'equal',
+                    'creation_date__year', 'equal',
                     current_year)
 
             if system_type !='':
@@ -751,7 +753,7 @@ class MpmController:
                         for data in dataList:
                             if data.qualification_insulation_lining_propellant_rm == 'Under process' or data.qualification_insulation_lining_propellant_rm == 'Observation(same stage)' or data.qualification_insulation_lining_propellant_rm == 'Halt':
                                 ListItems.append(data)
-                elif ParentStatus == 'Qualification of Lining':
+                elif ParentStatus == 'Lining':
                     if ChildStatus != 'Current Count':
                         ListItems = dataList.filter(lining=ChildStatus)
                     if ChildStatus == 'Current Count':
@@ -1460,7 +1462,7 @@ class MpmController:
             # create dynamic filter
             if year != '':
                 filter_objects &= get_filter(
-                    'testing_date__year', 'equal',
+                    'creation_date__year', 'equal',
                     year)
 
             if component != '':
