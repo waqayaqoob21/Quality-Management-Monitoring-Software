@@ -191,8 +191,17 @@ class AmsController:
                 current_over_due_filter &= get_filter(
                     'status', 'equal',
                     'Task in-process')
-                data = TaskSummary.objects.filter(current_over_due_filter, task_date__gt=F('target_date'))
-                serializer = TaskSummarySerialzer(data, many=True)
+
+                data = TaskSummary.objects.filter(current_over_due_filter)
+                result = []
+                if data is not None:
+                    for item in data:
+                        if item.task_date is None:
+                            item.task_date = datetime.today() + timedelta(hours=5)
+                            item.task_date = item.task_date.date()
+                        if item.task_date > item.target_date:
+                            result.append(item)
+                serializer = TaskSummarySerialzer(result, many=True)
                 return JsonResponse({'message': 'true', 'data': serializer.data}, status=200)
             if status == 'all_tasks':
                 data = TaskSummary.objects.filter(all_filter_objects)
@@ -214,7 +223,15 @@ class AmsController:
                     'status', 'not_equal',
                     'Task Completed')
                 data = TaskSummary.objects.filter(all_filter_objects)
-                serializer = TaskSummarySerialzer(data, many=True)
+                result = []
+                if data is not None:
+                    for item in data:
+                        if item.task_date is None:
+                            item.task_date = datetime.today() + timedelta(hours=5)
+                            item.task_date = item.task_date.date()
+                        if item.task_date < item.target_date:
+                            result.append(item)
+                serializer = TaskSummarySerialzer(result, many=True)
                 return JsonResponse({'message': 'true', 'data': serializer.data}, status=200)
 
             if status == 'all' and selected_year is not '':

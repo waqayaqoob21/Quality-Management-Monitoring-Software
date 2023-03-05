@@ -1795,9 +1795,9 @@ class DocController:
             current_year_task = TaskSummary.objects.filter(all_filter_objects,
                                                            assigned_date__year=selected_year).count()
             doc_not_completedList = TaskSummary.objects.filter(total_filter_objects).count()
-            total_task_inprocess = TaskSummary.objects.filter(all_filter_objects, status='Task in-process').count()
+            total_task_inprocess = TaskSummary.objects.filter(all_filter_objects, status='Task in-process')
             total_task_follow_up = TaskSummary.objects.filter(all_filter_objects, status='Task follow-up').count()
-            total_over_due = TaskSummary.objects.filter(current_over_due_filter, task_date__gt=F('target_date')).count()
+            total_over_due = TaskSummary.objects.filter(current_over_due_filter)
             current_over_due = TaskSummary.objects.filter(current_over_due_filter,
                                                           assigned_date__year=selected_year)
 
@@ -1836,7 +1836,14 @@ class DocController:
                         item.task_date = item.task_date.date()
                     if item.task_date < item.target_date:
                         task_inprocess_count = task_inprocess_count + 1
-
+            total_task_inprocess_count = 0
+            if total_task_inprocess is not None:
+                for item in total_task_inprocess:
+                    if item.task_date is None:
+                        item.task_date = datetime.today() + timedelta(hours=5)
+                        item.task_date = item.task_date.date()
+                    if item.task_date < item.target_date:
+                        total_task_inprocess_count = total_task_inprocess_count + 1
             current_over_due_count = 0
             if current_over_due is not None:
                 for item in current_over_due:
@@ -1845,17 +1852,26 @@ class DocController:
                         item.task_date = item.task_date.date()
                     if item.target_date < item.task_date:
                         current_over_due_count = current_over_due_count + 1
+
+            total_over_due_count = 0
+            if total_over_due is not None:
+                for item in total_over_due:
+                    if item.task_date is None:
+                        item.task_date = datetime.today() + timedelta(hours=5)
+                        item.task_date = item.task_date.date()
+                    if item.target_date < item.task_date:
+                        total_over_due_count = total_over_due_count + 1
             dist = {
                 'task_completed': task_completed,
                 'task_inprocess': task_inprocess_count,
                 'task_follow_up': task_follow_up,
-                'total_over_due': total_over_due,
+                'total_over_due': total_over_due_count,
                 'total_tasks': total_tasks,
                 'total_current_year': current_year_task,
                 'total_task_completed': total_task_completed,
-                'total_task_inprocess': total_task_inprocess,
+                'total_task_inprocess': total_task_inprocess_count,
                 'total_task_follow_up': total_task_follow_up,
-                'doc_not_completedList': doc_not_completedList,
+                'doc_not_completedList': total_task_inprocess_count,
                 'current_over_due': current_over_due_count
             }
 
