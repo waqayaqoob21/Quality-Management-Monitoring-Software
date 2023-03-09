@@ -712,10 +712,10 @@ class MpmController:
             typeQuery = Q()
             filter_objects = Q()
 
-            if current_year !='':
-                filter_objects &= get_filter(
-                    'creation_date__year', 'equal',
-                    current_year)
+            # if current_year !='':
+            #     filter_objects &= get_filter(
+            #         'creation_date__year', 'equal',
+            #         current_year)
 
             if system_type !='':
                 filter_objects &= get_filter(
@@ -748,282 +748,282 @@ class MpmController:
                 ListItems = []
                 if ParentStatus == 'Qualification of raw material of insulation':
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(qualification_insulation_lining_propellant_rm=ChildStatus)
+                        ListItems = dataList.filter(qualification_insulation_lining_propellant_rm_date__year = current_year, qualification_insulation_lining_propellant_rm=ChildStatus)
                     if ChildStatus == 'Current Count':
                         for data in dataList:
-                            if data.qualification_insulation_lining_propellant_rm == 'Under process' or data.qualification_insulation_lining_propellant_rm == 'Observation(same stage)' or data.qualification_insulation_lining_propellant_rm == 'Halt':
+                            if data.qualification_insulation_lining_propellant_rm_date.strftime("%Y") == current_year and (data.qualification_insulation_lining_propellant_rm == 'Under process' or data.qualification_insulation_lining_propellant_rm == 'Observation(same stage)' or data.qualification_insulation_lining_propellant_rm == 'Halt'):
                                 ListItems.append(data)
                 elif ParentStatus == 'Lining':
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(lining=ChildStatus)
+                        ListItems = dataList.filter(lining_date__year = current_year, lining=ChildStatus)
                     if ChildStatus == 'Current Count':
                         for data in dataList:
-                            if data.lining == 'Under process' or data.lining == 'Observation(same stage)' or data.lining == 'Halt':
+                            if data.lining_date.strftime("%Y") == current_year and (data.lining == 'Under process' or data.lining == 'Observation(same stage)' or data.lining == 'Halt'):
                                 ListItems.append(data)
                 elif ParentStatus == 'Qualification of Propellant':
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(propellant_mechanical_properties=ChildStatus)
+                        ListItems = dataList.filter(propellant_mechanical_properties_date__year = current_year, propellant_mechanical_properties=ChildStatus)
                     if ChildStatus == 'Current Count':
                         for data in dataList:
-                            if data.propellant_mechanical_properties == 'Under process' or data.propellant_mechanical_properties == 'Observation(same stage)' or data.propellant_mechanical_properties == 'Halt':
+                            if data.propellant_mechanical_properties_date.strftime("%Y") == current_year and (data.propellant_mechanical_properties == 'Under process' or data.propellant_mechanical_properties == 'Observation(same stage)' or data.propellant_mechanical_properties == 'Halt'):
                                 ListItems.append(data)
                 elif ParentStatus == 'Acceptance of casting':
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(acceptance_casting=ChildStatus)
+                        ListItems = dataList.filter(acceptance_casting_date__year = current_year, acceptance_casting=ChildStatus)
                     if ChildStatus == 'Current Count':
                         for data in dataList:
-                            if data.acceptance_casting == 'Under process' or data.acceptance_casting == 'Observation(same stage)' or data.acceptance_casting == 'Halt':
+                            if data.acceptance_casting_date.strftime("%Y") == current_year and (data.acceptance_casting == 'Under process' or data.acceptance_casting == 'Observation(same stage)' or data.acceptance_casting == 'Halt'):
                                 ListItems.append(data)
                 elif ParentStatus == 'Sandblasting':
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(sandblasting=ChildStatus)
+                        ListItems = dataList.filter(sandblasting_date__year = current_year, sandblasting=ChildStatus)
                     if ChildStatus == 'Current Count':
                         for data in dataList:
-                            if data.sandblasting == 'Under process' or data.sandblasting == 'Observation(same stage)' or data.sandblasting == 'Halt':
+                            if data.sandblasting_date.strftime("%Y") == current_year and (data.sandblasting == 'Under process' or data.sandblasting == 'Observation(same stage)' or data.sandblasting == 'Halt'):
                                 ListItems.append(data)
                 elif ParentStatus == 'Insulation':
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(insulation=ChildStatus)
+                        ListItems = dataList.filter(insulation_date__year = current_year, insulation=ChildStatus)
                     if ChildStatus == 'Current Count':
                         for data in dataList:
-                            if data.insulation == 'Under process' or data.insulation == 'Observation(same stage)' or data.insulation == 'Halt':
+                            if data.insulation_date.strftime("%Y") == current_year and (data.insulation == 'Under process' or data.insulation == 'Observation(same stage)' or data.insulation == 'Halt'):
                                 ListItems.append(data)
                 elif ParentStatus == 'UT and RT of Insulated Case':
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(ut_rt_insulated_case=ChildStatus)
+                        ListItems = dataList.filter(ut_rt_insulated_case_date__year = current_year, ut_rt_insulated_case=ChildStatus)
                     if ChildStatus == 'Current Count':
                         for data in dataList:
-                            if data.ut_rt_insulated_case == 'Under process' or data.ut_rt_insulated_case == 'Observation(same stage)' or data.ut_rt_insulated_case == 'Halt':
+                            if data.ut_rt_insulated_case_date.strftime("%Y") == current_year and (data.ut_rt_insulated_case == 'Under process' or data.ut_rt_insulated_case == 'Observation(same stage)' or data.ut_rt_insulated_case == 'Halt'):
                                 ListItems.append(data)
                 elif ParentStatus == 'Acceptance of Sliver Material':
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(acceptance_silver_material=ChildStatus)
+                        ListItems = dataList.filter(acceptance_silver_material_date__year = current_year, acceptance_silver_material=ChildStatus)
                     if ChildStatus == 'Current Count':
                         for data in dataList:
-                            if data.acceptance_silver_material == 'Under process' or data.acceptance_silver_material == 'Observation(same stage)' or data.acceptance_silver_material == 'Halt':
+                            if data.acceptance_silver_material_date.strftime("%Y") == current_year and (data.acceptance_silver_material == 'Under process' or data.acceptance_silver_material == 'Observation(same stage)' or data.acceptance_silver_material == 'Halt'):
                                 ListItems.append(data)
                 elif ParentStatus == 'Silver Application':
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(silver_application=ChildStatus)
+                        ListItems = dataList.filter(silver_application_date__year = current_year, silver_application=ChildStatus)
                     if ChildStatus == 'Current Count':
                         for data in dataList:
-                            if data.silver_application == 'Under process' or data.silver_application == 'Observation(same stage)' or data.silver_application == 'Halt':
+                            if data.silver_application_date.strftime("%Y") == current_year and (data.silver_application == 'Under process' or data.silver_application == 'Observation(same stage)' or data.silver_application == 'Halt'):
                                 ListItems.append(data)
                 elif ParentStatus == 'Formulation tailoring':
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(formulation_tailoring_liner_propellant=ChildStatus)
+                        ListItems = dataList.filter(formulation_tailoring_liner_propellant_date__year = current_year, formulation_tailoring_liner_propellant=ChildStatus)
                     if ChildStatus == 'Current Count':
                         for data in dataList:
-                            if data.formulation_tailoring_liner_propellant == 'Under process' or data.formulation_tailoring_liner_propellant == 'Observation(same stage)' or data.formulation_tailoring_liner_propellant == 'Halt':
+                            if data.formulation_tailoring_liner_propellant_date.strftime("%Y") == current_year and (data.formulation_tailoring_liner_propellant == 'Under process' or data.formulation_tailoring_liner_propellant == 'Observation(same stage)' or data.formulation_tailoring_liner_propellant == 'Halt'):
                                 ListItems.append(data)
                 elif ParentStatus == 'Conditioning of Raw Material':
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(conditioning_raw_materials=ChildStatus)
+                        ListItems = dataList.filter(conditioning_raw_materials_date__year = current_year, conditioning_raw_materials=ChildStatus)
                     if ChildStatus == 'Current Count':
                         for data in dataList:
-                            if data.conditioning_raw_materials == 'Under process' or data.conditioning_raw_materials == 'Observation(same stage)' or data.conditioning_raw_materials == 'Halt':
+                            if data.conditioning_raw_materials_date.strftime("%Y") == current_year and (data.conditioning_raw_materials == 'Under process' or data.conditioning_raw_materials == 'Observation(same stage)' or data.conditioning_raw_materials == 'Halt'):
                                 ListItems.append(data)
                 elif ParentStatus == 'Conditioning of Lining':
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(conditioning_of_lining=ChildStatus)
+                        ListItems = dataList.filter(conditioning_of_lining_date__year = current_year,conditioning_of_lining=ChildStatus)
                     if ChildStatus == 'Current Count':
                         for data in dataList:
-                            if data.conditioning_of_lining == 'Under process' or data.conditioning_of_lining == 'Observation(same stage)' or data.conditioning_of_lining == 'Halt':
+                            if data.conditioning_of_lining_date.strftime("%Y") == current_year and  (data.conditioning_of_lining == 'Under process' or data.conditioning_of_lining == 'Observation(same stage)' or data.conditioning_of_lining == 'Halt'):
                                 ListItems.append(data)
                 elif ParentStatus == 'Casing':
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(casting=ChildStatus)
+                        ListItems = dataList.filter(casting_date__year = current_year, casting=ChildStatus)
                     if ChildStatus == 'Current Count':
                         for data in dataList:
-                            if data.casting == 'Under process' or data.casting == 'Observation(same stage)' or data.casting == 'Halt':
+                            if data.casting_date.strftime("%Y") == current_year and (data.casting == 'Under process' or data.casting == 'Observation(same stage)' or data.casting == 'Halt'):
                                 ListItems.append(data)
                 elif ParentStatus == 'Curing':
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(blt_status=ChildStatus)
+                        ListItems = dataList.filter(curing_date__year = current_year, curing=ChildStatus)
                     if ChildStatus == 'Current Count':
                         for data in dataList:
-                            if data.curing == 'Under process' or data.curing == 'Observation(same stage)' or data.curing == 'Halt':
+                            if data.curing_date.strftime("%Y") == current_year and (data.curing == 'Under process' or data.curing == 'Observation(same stage)' or data.curing == 'Halt'):
                                 ListItems.append(data)
                 elif ParentStatus == 'UT, endoscopy and RT of grain':
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(ut_endoscopy_rt_grain=ChildStatus)
+                        ListItems = dataList.filter(ut_endoscopy_rt_grain_date__year = current_year,ut_endoscopy_rt_grain=ChildStatus)
                     if ChildStatus == 'Current Count':
                         for data in dataList:
-                            if data.ut_endoscopy_rt_grain == 'Under process' or data.ut_endoscopy_rt_grain == 'Observation(same stage)' or data.ut_endoscopy_rt_grain == 'Halt':
+                            if data.ut_endoscopy_rt_grain_date.strftime("%Y") == current_year and (data.ut_endoscopy_rt_grain == 'Under process' or data.ut_endoscopy_rt_grain == 'Observation(same stage)' or data.ut_endoscopy_rt_grain == 'Halt'):
                                 ListItems.append(data)
 
                 elif ParentStatus == 'Mechanical Properties of Liner':
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(liner_mechanical_properties=ChildStatus)
+                        ListItems = dataList.filter(liner_mechanical_properties_date__year = current_year, liner_mechanical_properties=ChildStatus)
                     if ChildStatus == 'Current Count':
                         for data in dataList:
-                            if data.liner_mechanical_properties == 'Under process' or data.liner_mechanical_properties == 'Observation(same stage)' or data.liner_mechanical_properties == 'Halt':
+                            if data.liner_mechanical_properties_date.strftime("%Y") == current_year and (data.liner_mechanical_properties == 'Under process' or data.liner_mechanical_properties == 'Observation(same stage)' or data.liner_mechanical_properties == 'Halt'):
                                 ListItems.append(data)
                 elif ParentStatus == 'Mechanical Properties of Propellant':
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(mechanical_properties_propellant=ChildStatus)
+                        ListItems = dataList.filter(mechanical_properties_propellant_date__year = current_year, mechanical_properties_propellant=ChildStatus)
                     if ChildStatus == 'Current Count':
                         for data in dataList:
-                            if data.mechanical_properties_propellant == 'Under process' or data.mechanical_properties_propellant == 'Observation(same stage)' or data.mechanical_properties_propellant == 'Halt':
+                            if data.mechanical_properties_propellant_date.strftime("%Y") == current_year and (data.mechanical_properties_propellant == 'Under process' or data.mechanical_properties_propellant == 'Observation(same stage)' or data.mechanical_properties_propellant == 'Halt'):
                                 ListItems.append(data)
                 elif ParentStatus == 'Interface bond strength':
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(interface_bond_strength=ChildStatus)
+                        ListItems = dataList.filter(interface_bond_strength_date__year = current_year, interface_bond_strength=ChildStatus)
                     if ChildStatus == 'Current Count':
                         for data in dataList:
-                            if data.interface_bond_strength == 'Under process' or data.interface_bond_strength == 'Observation(same stage)' or data.interface_bond_strength == 'Halt':
+                            if data.interface_bond_strength_date.strftime("%Y") == current_year and (data.interface_bond_strength == 'Under process' or data.interface_bond_strength == 'Observation(same stage)' or data.interface_bond_strength == 'Halt'):
                                 ListItems.append(data)
                 elif ParentStatus == 'Propellant burn rate':
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(propellant_burn_rate=ChildStatus)
+                        ListItems = dataList.filter(propellant_burn_rate_date__year = current_year, propellant_burn_rate=ChildStatus)
                     if ChildStatus == 'Current Count':
                         for data in dataList:
-                            if data.propellant_burn_rate == 'Under process' or data.propellant_burn_rate == 'Observation(same stage)' or data.propellant_burn_rate == 'Halt':
+                            if data.propellant_burn_rate_date.strftime("%Y") == current_year and (data.propellant_burn_rate == 'Under process' or data.propellant_burn_rate == 'Observation(same stage)' or data.propellant_burn_rate == 'Halt'):
                                 ListItems.append(data)
                 elif ParentStatus == 'Trimming of propellant grain':
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(trimming_Propellant_grain=ChildStatus)
+                        ListItems = dataList.filter(trimming_Propellant_grain_date__year = current_year, trimming_Propellant_grain=ChildStatus)
                     if ChildStatus == 'Current Count':
                         for data in dataList:
-                            if data.trimming_Propellant_grain == 'Under process' or data.trimming_Propellant_grain == 'Observation(same stage)' or data.trimming_Propellant_grain == 'Halt':
+                            if data.trimming_Propellant_grain_date.strftime("%Y") == current_year and (data.trimming_Propellant_grain == 'Under process' or data.trimming_Propellant_grain == 'Observation(same stage)' or data.trimming_Propellant_grain == 'Halt'):
                                 ListItems.append(data)
                 elif ParentStatus == 'Mass of liner':
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(mass_liner_insulation_propellant_srm=ChildStatus)
+                        ListItems = dataList.filter(mass_liner_insulation_propellant_srm_date__year = current_year, mass_liner_insulation_propellant_srm=ChildStatus)
                     if ChildStatus == 'Current Count':
                         for data in dataList:
-                            if data.mass_liner_insulation_propellant_srm == 'Under process' or data.mass_liner_insulation_propellant_srm == 'Observation(same stage)' or data.mass_liner_insulation_propellant_srm == 'Halt':
+                            if data.mass_liner_insulation_propellant_srm_date.strftime("%Y") == current_year and (data.mass_liner_insulation_propellant_srm == 'Under process' or data.mass_liner_insulation_propellant_srm == 'Observation(same stage)' or data.mass_liner_insulation_propellant_srm == 'Halt'):
                                 ListItems.append(data)
                 elif ParentStatus == 'Mass of Insulation':
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(mass_insulation=ChildStatus)
+                        ListItems = dataList.filter(mass_insulation_date__year = current_year, mass_insulation=ChildStatus)
                     if ChildStatus == 'Current Count':
                         for data in dataList:
-                            if data.mass_insulation == 'Under process' or data.mass_insulation == 'Observation(same stage)' or data.mass_insulation == 'Halt':
+                            if data.mass_insulation_date.strftime("%Y") == current_year and (data.mass_insulation == 'Under process' or data.mass_insulation == 'Observation(same stage)' or data.mass_insulation == 'Halt'):
                                 ListItems.append(data)
                 elif ParentStatus == 'Mass of Propellant':
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(mass_propellant=ChildStatus)
+                        ListItems = dataList.filter(mass_propellant_date__year = current_year, mass_propellant=ChildStatus)
                     if ChildStatus == 'Current Count':
                         for data in dataList:
-                            if data.mass_propellant == 'Under process' or data.mass_propellant == 'Observation(same stage)' or data.mass_propellant == 'Halt':
+                            if data.mass_propellant_date.strftime("%Y") == current_year and (data.mass_propellant == 'Under process' or data.mass_propellant == 'Observation(same stage)' or data.mass_propellant == 'Halt'):
                                 ListItems.append(data)
                 elif ParentStatus == 'BHD Status':
-                        ListItems = dataList.filter(bhd_status=ChildStatus)
+                        ListItems = dataList.filter(bhd_date__year = current_year, bhd_status=ChildStatus)
 
                 elif ParentStatus == 'QM Certification Status':
-                        ListItems = dataList.filter(qm_certification_status=ChildStatus)
+                        ListItems = dataList.filter(qm_certification_date__year = current_year, qm_certification_status=ChildStatus)
 
                 elif ParentStatus == 'Overall Qualification':
-                        ListItems = dataList.filter(overall_qualification_status=ChildStatus)
+                        ListItems = dataList.filter(overall_qualification_date__year = current_year,overall_qualification_status=ChildStatus)
 
 
                 elif ParentStatus == 'Material Qualified':
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(matiral_qualified_status=ChildStatus)
+                        ListItems = dataList.filter(matiral_qualified_date__year = current_year,matiral_qualified_status=ChildStatus)
                     if ChildStatus == 'Current Count':
                         for data in dataList:
-                            if data.matiral_qualified_status == 'Under process' or data.matiral_qualified_status == 'Observation(same stage)' or data.matiral_qualified_status == 'Halt':
+                            if data.matiral_qualified_date.strftime("%Y") == current_year and (data.matiral_qualified_status == 'Under process' or data.matiral_qualified_status == 'Observation(same stage)' or data.matiral_qualified_status == 'Halt'):
                                 ListItems.append(data)
                 elif ParentStatus == 'Component Manufacturing':
                     if ChildStatus != 'Current Count':
                         # filter_objects &= get_filter('blt_status', 'equal', ChildStatus)
-                        ListItems = dataList.filter(compo_manufacturing_status=ChildStatus)
+                        ListItems = dataList.filter(compo_manufacturing_date__year = current_year, compo_manufacturing_status=ChildStatus)
                     if ChildStatus == 'Current Count':
                         for data in dataList:
-                            if data.compo_manufacturing_status == 'Under process' or data.compo_manufacturing_status == 'Observation(same stage)' or data.compo_manufacturing_status == 'Halt':
+                            if data.compo_manufacturing_date.strftime("%Y") == current_year and (data.compo_manufacturing_status == 'Under process' or data.compo_manufacturing_status == 'Observation(same stage)' or data.compo_manufacturing_status == 'Halt'):
                                 ListItems.append(data)
                 elif ParentStatus == 'Power Pack Assembly':
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(powerpack_assembly_status=ChildStatus)
+                        ListItems = dataList.filter(powerpack_assembly_date__year = current_year, powerpack_assembly_status=ChildStatus)
                     if ChildStatus == 'Current Count':
                         for data in dataList:
-                            if data.powerpack_assembly_status == 'Under process' or data.powerpack_assembly_status == 'Observation(same stage)' or data.powerpack_assembly_status == 'Halt':
+                            if data.powerpack_assembly_date.strftime("%Y") == current_year and (data.powerpack_assembly_status == 'Under process' or data.powerpack_assembly_status == 'Observation(same stage)' or data.powerpack_assembly_status == 'Halt'):
                                 ListItems.append(data)
                 elif ParentStatus == 'Power Pack Testing':
                     if ChildStatus != 'Current Count':
                         ListItems = dataList.filter(powerpack_testing_status=ChildStatus)
                     if ChildStatus == 'Current Count':
                         for data in dataList:
-                            if data.powerpack_testing_status == 'Under process' or data.powerpack_testing_status == 'Observation(same stage)' or data.powerpack_testing_status == 'Halt':
+                            if data.powerpack_testing_date.strftime("%Y") == current_year and (data.powerpack_testing_status == 'Under process' or data.powerpack_testing_status == 'Observation(same stage)' or data.powerpack_testing_status == 'Halt'):
                                 ListItems.append(data)
                 elif ParentStatus == 'Raw Material Inspection':
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(raw_material_inspection_status=ChildStatus)
+                        ListItems = dataList.filter(raw_material_inspection_date__year = current_year, raw_material_inspection_status=ChildStatus)
                     if ChildStatus == 'Current Count':
                         for data in dataList:
-                            if data.raw_material_inspection_status == 'Under process' or data.raw_material_inspection_status == 'Observation(same stage)' or data.raw_material_inspection_status == 'Halt':
+                            if data.raw_material_inspection_date.strftime("%Y") == current_year and (data.raw_material_inspection_status == 'Under process' or data.raw_material_inspection_status == 'Observation(same stage)' or data.raw_material_inspection_status == 'Halt'):
                                 ListItems.append(data)
                 elif ParentStatus == 'Pressing Electrode':
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(pressing_electrode_status=ChildStatus)
+                        ListItems = dataList.filter(pressing_electrode_date__year = current_year, pressing_electrode_status=ChildStatus)
                     if ChildStatus == 'Current Count':
                         for data in dataList:
-                            if data.pressing_electrode_status == 'Under process' or data.pressing_electrode_status == 'Observation(same stage)' or data.pressing_electrode_status == 'Halt':
+                            if data.pressing_electrode_date.strftime("%Y") == current_year and (data.pressing_electrode_status == 'Under process' or data.pressing_electrode_status == 'Observation(same stage)' or data.pressing_electrode_status == 'Halt'):
                                 ListItems.append(data)
                 elif ParentStatus == 'Formation Process':
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(formation_process_status=ChildStatus)
+                        ListItems = dataList.filter(formation_process_date__year = current_year, formation_process_status=ChildStatus)
                     if ChildStatus == 'Current Count':
                         for data in dataList:
-                            if data.formation_process_status == 'Under process' or data.formation_process_status == 'Observation(same stage)' or data.formation_process_status == 'Halt':
+                            if data.formation_process_date.strftime("%Y") == current_year and (data.formation_process_status == 'Under process' or data.formation_process_status == 'Observation(same stage)' or data.formation_process_status == 'Halt'):
                                 ListItems.append(data)
                 elif ParentStatus == 'Assembly Process':
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(assembly_process_status=ChildStatus)
+                        ListItems = dataList.filter(assembly_process_date__year = current_year, assembly_process_status=ChildStatus)
                     if ChildStatus == 'Current Count':
                         for data in dataList:
-                            if data.assembly_process_status == 'Under process' or data.assembly_process_status == 'Observation(same stage)' or data.assembly_process_status == 'Halt':
+                            if data.assembly_process_date.strftime("%Y") == current_year and (data.assembly_process_status == 'Under process' or data.assembly_process_status == 'Observation(same stage)' or data.assembly_process_status == 'Halt'):
                                 ListItems.append(data)
                 elif ParentStatus == 'Battery Testing':
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(battery_testing_status=ChildStatus)
+                        ListItems = dataList.filter(battery_testing_date__year = current_year, battery_testing_status=ChildStatus)
                     if ChildStatus == 'Current Count':
                         for data in dataList:
-                            if data.battery_testing_status == 'Under process' or data.battery_testing_status == 'Observation(same stage)' or data.battery_testing_status == 'Halt':
+                            if data.battery_testing_date.strftime("%Y") == current_year and (data.battery_testing_status == 'Under process' or data.battery_testing_status == 'Observation(same stage)' or data.battery_testing_status == 'Halt'):
                                 ListItems.append(data)
                 elif ParentStatus == 'Final Qualification':
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(final_qualification_status=ChildStatus)
+                        ListItems = dataList.filter(final_qualification_date__year = current_year, final_qualification_status=ChildStatus)
                     if ChildStatus == 'Current Count':
                         for data in dataList:
-                            if data.final_qualification_status == 'Under process' or data.final_qualification_status == 'Observation(same stage)' or data.final_qualification_status == 'Halt':
+                            if data.final_qualification_date.strftime("%Y") == current_year and (data.final_qualification_status == 'Under process' or data.final_qualification_status == 'Observation(same stage)' or data.final_qualification_status == 'Halt'):
                                 ListItems.append(data)
 
                 elif ParentStatus == 'Qualification of Raw Material':
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(qualification_raw_material_status=ChildStatus)
+                        ListItems = dataList.filter(qualification_raw_material_date__year =  current_year, qualification_raw_material_status=ChildStatus)
                     if ChildStatus == 'Current Count':
                         for data in dataList:
-                            if data.qualification_raw_material_status == 'Under process' or data.qualification_raw_material_status == 'Observation(same stage)' or data.qualification_raw_material_status == 'Halt':
+                            if data.qualification_raw_material_date.strftime("%Y") ==  current_year and (data.qualification_raw_material_status == 'Under process' or data.qualification_raw_material_status == 'Observation(same stage)' or data.qualification_raw_material_status == 'Halt'):
                                 ListItems.append(data)
                 elif ParentStatus == 'Filling':
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(filling_status=ChildStatus)
+                        ListItems = dataList.filter(filling_date__year = current_year, filling_status=ChildStatus)
                     if ChildStatus == 'Current Count':
                         for data in dataList:
-                            if data.filling_status == 'Under process' or data.filling_status == 'Observation(same stage)' or data.filling_status == 'Halt':
+                            if data.filling_date.strftime("%Y")== current_year and (data.filling_status == 'Under process' or data.filling_status == 'Observation(same stage)' or data.filling_status == 'Halt'):
                                 ListItems.append(data)
                 elif ParentStatus == 'Assembling/Integration':
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(assembling_integration_status=ChildStatus)
+                        ListItems = dataList.filter(assembling_integration_date__year = current_year, assembling_integration_status=ChildStatus)
                     if ChildStatus == 'Current Count':
                         for data in dataList:
-                            if data.assembling_integration_status == 'Under process' or data.assembling_integration_status == 'Observation(same stage)' or data.assembling_integration_status == 'Halt':
+                            if data.assembling_integration_date.strftime("%Y") == current_year and (data.assembling_integration_status == 'Under process' or data.assembling_integration_status == 'Observation(same stage)' or data.assembling_integration_status == 'Halt'):
                                 ListItems.append(data)
                 elif ParentStatus == 'Qualification Testing':
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(qualification_testing_status=ChildStatus)
+                        ListItems = dataList.filter(qualification_testing_date__year = current_year, qualification_testing_status=ChildStatus)
                     if ChildStatus == 'Current Count':
                         for data in dataList:
-                            if data.qualification_testing_status == 'Under process' or data.qualification_testing_status == 'Observation(same stage)' or data.qualification_testing_status == 'Halt':
+                            if data.qualification_testing_date.strftime("%Y") == current_year and (data.qualification_testing_status == 'Under process' or data.qualification_testing_status == 'Observation(same stage)' or data.qualification_testing_status == 'Halt'):
                                 ListItems.append(data)
                 elif ParentStatus == 'Performance Testing':
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(performance_testing_status=ChildStatus)
+                        ListItems = dataList.filter(performance_testing_date__year = current_year, performance_testing_status=ChildStatus)
                     if ChildStatus == 'Current Count':
                         for data in dataList:
-                            if data.performance_testing_status == 'Under process' or data.performance_testing_status == 'Observation(same stage)' or data.performance_testing_status == 'Halt':
+                            if data.performance_testing_date.strftime("%Y") == current_year and (data.performance_testing_status == 'Under process' or data.performance_testing_status == 'Observation(same stage)' or data.performance_testing_status == 'Halt'):
                                 ListItems.append(data)
                 elif ParentStatus == 'NCR':
                         ListItems = dataList.filter(ncr_status=ChildStatus)
@@ -1032,10 +1032,10 @@ class MpmController:
                         ListItems = dataList.filter(overall_status=ChildStatus)
 
                 serializer = ActiveMotorSerializer(ListItems, many=True)
-                return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
-            serializer = ActiveMotorSerializer(dataList, many=True)
-            return JsonResponse({'status': 'True', 'data': serializer.data},
-                                status=200)
+                return JsonResponse({'status': 'True', 'data': serializer.data}, status=200)
+            # serializer = ActiveMotorSerializer(dataList, many=True)
+            # return JsonResponse({'status': 'True', 'data': serializer.data},
+            #                     status=200)
         except Exception as e:
             print(e)
             return JsonResponse({'status': 'False', "message": "Internal Server Error"}, status=500)
@@ -1460,10 +1460,10 @@ class MpmController:
             system = request.query_params['selected_system']
             pd_type = request.query_params['selected_pdType']
             # create dynamic filter
-            if year != '':
-                filter_objects &= get_filter(
-                    'creation_date__year', 'equal',
-                    year)
+            # if year != '':
+            #     filter_objects &= get_filter(
+            #         'creation_date__year', 'equal',
+            #         year)
 
             if component != '':
                 filter_objects &= get_filter(
@@ -1491,395 +1491,395 @@ class MpmController:
                 filter_objects &= get_filter(
                     'lot_id', 'equal', current_lot)
             # production system count
-            qualification_insulation_lining_propellant_rm_OK = ActiveMotors.objects.filter(filter_objects, qualification_insulation_lining_propellant_rm='Ok')
+            qualification_insulation_lining_propellant_rm_OK = ActiveMotors.objects.filter(filter_objects, qualification_insulation_lining_propellant_rm_date__year = year,qualification_insulation_lining_propellant_rm='Ok')
             qualification_insulation_lining_propellant_rm_ObsSame = ActiveMotors.objects.filter(filter_objects,
-                                                                             qualification_insulation_lining_propellant_rm='Observation(same stage)')
+                                                                             qualification_insulation_lining_propellant_rm_date__year = year,qualification_insulation_lining_propellant_rm='Observation(same stage)')
             qualification_insulation_lining_propellant_rm_ObsNext = ActiveMotors.objects.filter(filter_objects,
-                                                                                    qualification_insulation_lining_propellant_rm='Observation(next stage)')
-            qualification_insulation_lining_propellant_rm_Up = ActiveMotors.objects.filter(filter_objects, qualification_insulation_lining_propellant_rm='Under process')
-            qualification_insulation_lining_propellant_rm_Hlt = ActiveMotors.objects.filter(filter_objects, qualification_insulation_lining_propellant_rm='Halt')
+                                                                                    qualification_insulation_lining_propellant_rm_date__year = year,qualification_insulation_lining_propellant_rm='Observation(next stage)')
+            qualification_insulation_lining_propellant_rm_Up = ActiveMotors.objects.filter(filter_objects, qualification_insulation_lining_propellant_rm_date__year = year,qualification_insulation_lining_propellant_rm='Under process')
+            qualification_insulation_lining_propellant_rm_Hlt = ActiveMotors.objects.filter(filter_objects, qualification_insulation_lining_propellant_rm_date__year = year,qualification_insulation_lining_propellant_rm='Halt')
 
-            acceptance_casting_Ok = ActiveMotors.objects.filter(filter_objects, acceptance_casting='Ok')
+            acceptance_casting_Ok = ActiveMotors.objects.filter(filter_objects, acceptance_casting_date__year= year,acceptance_casting='Ok')
             acceptance_casting_ObsSame = ActiveMotors.objects.filter(filter_objects,
-                                                                                acceptance_casting='Observation(same stage)')
+                                                                                acceptance_casting_date__year=year,acceptance_casting='Observation(same stage)')
             acceptance_casting_ObsNext = ActiveMotors.objects.filter(filter_objects,
-                                                                                    acceptance_casting='Observation(next stage)')
-            acceptance_casting_Up = ActiveMotors.objects.filter(filter_objects, acceptance_casting='Under process')
-            acceptance_casting_Hlt = ActiveMotors.objects.filter(filter_objects, acceptance_casting='Halt')
+                                                                                    acceptance_casting_date__year=year,acceptance_casting='Observation(next stage)')
+            acceptance_casting_Up = ActiveMotors.objects.filter(filter_objects, acceptance_casting_date__year=year,acceptance_casting='Under process')
+            acceptance_casting_Hlt = ActiveMotors.objects.filter(filter_objects, acceptance_casting_date__year=year,acceptance_casting='Halt')
 
 
 
-            sandblasting_Ok = ActiveMotors.objects.filter(filter_objects, sandblasting='Ok')
-            sandblasting_ObsSame = ActiveMotors.objects.filter(filter_objects,sandblasting='Observation(same stage)')
-            sandblasting_ObsNext = ActiveMotors.objects.filter(filter_objects,sandblasting='Observation(next stage)')
-            sandblasting_Up = ActiveMotors.objects.filter(filter_objects, sandblasting='Under process')
-            sandblasting_Hlt = ActiveMotors.objects.filter(filter_objects, sandblasting='Halt')
+            sandblasting_Ok = ActiveMotors.objects.filter(filter_objects,sandblasting_date__year = year, sandblasting='Ok')
+            sandblasting_ObsSame = ActiveMotors.objects.filter(filter_objects,sandblasting_date__year = year,sandblasting='Observation(same stage)')
+            sandblasting_ObsNext = ActiveMotors.objects.filter(filter_objects,sandblasting_date__year = year,sandblasting='Observation(next stage)')
+            sandblasting_Up = ActiveMotors.objects.filter(filter_objects,sandblasting_date__year = year, sandblasting='Under process')
+            sandblasting_Hlt = ActiveMotors.objects.filter(filter_objects,sandblasting_date__year = year, sandblasting='Halt')
 
 
 
-            insulation_Ok = ActiveMotors.objects.filter(filter_objects, insulation='Ok')
-            insulation_ObsSame = ActiveMotors.objects.filter(filter_objects,
+            insulation_Ok = ActiveMotors.objects.filter(filter_objects,insulation_date__year = year, insulation='Ok')
+            insulation_ObsSame = ActiveMotors.objects.filter(filter_objects,insulation_date__year = year,
                                                                                 insulation='Observation(same stage)')
-            insulation_ObsNext = ActiveMotors.objects.filter(filter_objects,
+            insulation_ObsNext = ActiveMotors.objects.filter(filter_objects,insulation_date__year = year,
                                                                                     insulation='Observation(next stage)')
-            insulation_Up = ActiveMotors.objects.filter(filter_objects, insulation='Under process')
-            insulation_Hlt = ActiveMotors.objects.filter(filter_objects, insulation='Halt')
+            insulation_Up = ActiveMotors.objects.filter(filter_objects,insulation_date__year = year, insulation='Under process')
+            insulation_Hlt = ActiveMotors.objects.filter(filter_objects,insulation_date__year = year, insulation='Halt')
 
 
-            ut_rt_insulated_case_Ok = ActiveMotors.objects.filter(filter_objects, ut_rt_insulated_case='Ok')
-            ut_rt_insulated_case_ObsSame = ActiveMotors.objects.filter(filter_objects,
+            ut_rt_insulated_case_Ok = ActiveMotors.objects.filter(filter_objects,ut_rt_insulated_case_date__year = year, ut_rt_insulated_case='Ok')
+            ut_rt_insulated_case_ObsSame = ActiveMotors.objects.filter(filter_objects,ut_rt_insulated_case_date__year = year,
                                                                                 ut_rt_insulated_case='Observation(same stage)')
-            ut_rt_insulated_case_ObsNext = ActiveMotors.objects.filter(filter_objects,
+            ut_rt_insulated_case_ObsNext = ActiveMotors.objects.filter(filter_objects,ut_rt_insulated_case_date__year = year,
                                                                                     ut_rt_insulated_case='Observation(next stage)')
-            ut_rt_insulated_case_Up = ActiveMotors.objects.filter(filter_objects, ut_rt_insulated_case='Under process')
-            ut_rt_insulated_case_Hlt = ActiveMotors.objects.filter(filter_objects, ut_rt_insulated_case='Halt')
+            ut_rt_insulated_case_Up = ActiveMotors.objects.filter(filter_objects,ut_rt_insulated_case_date__year = year, ut_rt_insulated_case='Under process')
+            ut_rt_insulated_case_Hlt = ActiveMotors.objects.filter(filter_objects,ut_rt_insulated_case_date__year = year, ut_rt_insulated_case='Halt')
 
 
-            acceptance_silver_material_Ok = ActiveMotors.objects.filter(filter_objects, acceptance_silver_material='Ok')
-            acceptance_silver_material_ObsSame = ActiveMotors.objects.filter(filter_objects,
+            acceptance_silver_material_Ok = ActiveMotors.objects.filter(filter_objects,acceptance_silver_material_date__year = year, acceptance_silver_material='Ok')
+            acceptance_silver_material_ObsSame = ActiveMotors.objects.filter(filter_objects,acceptance_silver_material_date__year = year,
                                                                                 acceptance_silver_material='Observation(same stage)')
-            acceptance_silver_material_ObsNext = ActiveMotors.objects.filter(filter_objects,
+            acceptance_silver_material_ObsNext = ActiveMotors.objects.filter(filter_objects,acceptance_silver_material_date__year = year,
                                                                                     acceptance_silver_material='Observation(next stage)')
-            acceptance_silver_material_Up = ActiveMotors.objects.filter(filter_objects, acceptance_silver_material='Under process')
-            acceptance_silver_material_Hlt = ActiveMotors.objects.filter(filter_objects, acceptance_silver_material='Halt')
+            acceptance_silver_material_Up = ActiveMotors.objects.filter(filter_objects,acceptance_silver_material_date__year = year, acceptance_silver_material='Under process')
+            acceptance_silver_material_Hlt = ActiveMotors.objects.filter(filter_objects,acceptance_silver_material_date__year = year, acceptance_silver_material='Halt')
 
 
-            silver_application_Ok = ActiveMotors.objects.filter(filter_objects, silver_application='Ok')
-            silver_application_ObsSame = ActiveMotors.objects.filter(filter_objects,
+            silver_application_Ok = ActiveMotors.objects.filter(filter_objects,silver_application_date__year = year, silver_application='Ok')
+            silver_application_ObsSame = ActiveMotors.objects.filter(filter_objects,silver_application_date__year = year,
                                                                                 silver_application='Observation(same stage)')
-            silver_application_ObsNext = ActiveMotors.objects.filter(filter_objects,
+            silver_application_ObsNext = ActiveMotors.objects.filter(filter_objects,silver_application_date__year = year,
                                                                                     silver_application='Observation(next stage)')
-            silver_application_Up = ActiveMotors.objects.filter(filter_objects, silver_application='Under process')
-            silver_application_Hlt = ActiveMotors.objects.filter(filter_objects, silver_application='Halt')
+            silver_application_Up = ActiveMotors.objects.filter(filter_objects,silver_application_date__year = year, silver_application='Under process')
+            silver_application_Hlt = ActiveMotors.objects.filter(filter_objects, silver_application_date__year = year,silver_application='Halt')
 
 
-            formulation_tailoring_liner_propellant_Ok = ActiveMotors.objects.filter(filter_objects, formulation_tailoring_liner_propellant='Ok')
-            formulation_tailoring_liner_propellant_ObsSame = ActiveMotors.objects.filter(filter_objects,
+            formulation_tailoring_liner_propellant_Ok = ActiveMotors.objects.filter(filter_objects,formulation_tailoring_liner_propellant_date__year = year, formulation_tailoring_liner_propellant='Ok')
+            formulation_tailoring_liner_propellant_ObsSame = ActiveMotors.objects.filter(filter_objects,formulation_tailoring_liner_propellant_date__year = year,
                                                                                 formulation_tailoring_liner_propellant='Observation(same stage)')
-            formulation_tailoring_liner_propellant_ObsNext = ActiveMotors.objects.filter(filter_objects,
+            formulation_tailoring_liner_propellant_ObsNext = ActiveMotors.objects.filter(filter_objects,formulation_tailoring_liner_propellant_date__year = year,
                                                                                     formulation_tailoring_liner_propellant='Observation(next stage)')
-            formulation_tailoring_liner_propellant_Up = ActiveMotors.objects.filter(filter_objects, formulation_tailoring_liner_propellant='Under process')
-            formulation_tailoring_liner_propellant_Hlt = ActiveMotors.objects.filter(filter_objects, formulation_tailoring_liner_propellant='Halt')
+            formulation_tailoring_liner_propellant_Up = ActiveMotors.objects.filter(filter_objects, formulation_tailoring_liner_propellant_date__year = year,formulation_tailoring_liner_propellant='Under process')
+            formulation_tailoring_liner_propellant_Hlt = ActiveMotors.objects.filter(filter_objects,formulation_tailoring_liner_propellant_date__year = year, formulation_tailoring_liner_propellant='Halt')
 
 
-            conditioning_raw_materials_Ok = ActiveMotors.objects.filter(filter_objects, conditioning_raw_materials='Ok')
-            conditioning_raw_materials_ObsSame = ActiveMotors.objects.filter(filter_objects,
+            conditioning_raw_materials_Ok = ActiveMotors.objects.filter(filter_objects,conditioning_raw_materials_date__year = year, conditioning_raw_materials='Ok')
+            conditioning_raw_materials_ObsSame = ActiveMotors.objects.filter(filter_objects,conditioning_raw_materials_date__year = year,
                                                                                 conditioning_raw_materials='Observation(same stage)')
-            conditioning_raw_materials_ObsNext = ActiveMotors.objects.filter(filter_objects,
+            conditioning_raw_materials_ObsNext = ActiveMotors.objects.filter(filter_objects,conditioning_raw_materials_date__year = year,
                                                                                     conditioning_raw_materials='Observation(next stage)')
-            conditioning_raw_materials_Up = ActiveMotors.objects.filter(filter_objects, conditioning_raw_materials='Under process')
-            conditioning_raw_materials_Hlt = ActiveMotors.objects.filter(filter_objects, conditioning_raw_materials='Halt')
+            conditioning_raw_materials_Up = ActiveMotors.objects.filter(filter_objects,conditioning_raw_materials_date__year = year, conditioning_raw_materials='Under process')
+            conditioning_raw_materials_Hlt = ActiveMotors.objects.filter(filter_objects,conditioning_raw_materials_date__year = year, conditioning_raw_materials='Halt')
 
 
-            lining_Ok = ActiveMotors.objects.filter(filter_objects, lining='Ok')
-            lining_ObsSame = ActiveMotors.objects.filter(filter_objects,
+            lining_Ok = ActiveMotors.objects.filter(filter_objects,lining_date__year = year, lining='Ok')
+            lining_ObsSame = ActiveMotors.objects.filter(filter_objects,lining_date__year = year,
                                                                                 lining='Observation(same stage)')
-            lining_ObsNext = ActiveMotors.objects.filter(filter_objects,
+            lining_ObsNext = ActiveMotors.objects.filter(filter_objects,lining_date__year = year,
                                                                                     lining='Observation(next stage)')
-            lining_Up = ActiveMotors.objects.filter(filter_objects, lining='Under process')
-            lining_Hlt = ActiveMotors.objects.filter(filter_objects, lining='Halt')
+            lining_Up = ActiveMotors.objects.filter(filter_objects,lining_date__year = year,  lining='Under process')
+            lining_Hlt = ActiveMotors.objects.filter(filter_objects,lining_date__year = year,  lining='Halt')
 
 
-            casting_Ok = ActiveMotors.objects.filter(filter_objects, casting='Ok')
-            casting_ObsSame = ActiveMotors.objects.filter(filter_objects,
+            casting_Ok = ActiveMotors.objects.filter(filter_objects,casting_date__year = year, casting='Ok')
+            casting_ObsSame = ActiveMotors.objects.filter(filter_objects,casting_date__year = year,
                                                                                 casting='Observation(same stage)')
-            casting_ObsNext = ActiveMotors.objects.filter(filter_objects,
+            casting_ObsNext = ActiveMotors.objects.filter(filter_objects,casting_date__year = year,
                                                                                     casting='Observation(next stage)')
-            casting_Up = ActiveMotors.objects.filter(filter_objects, casting='Under process')
-            casting_Hlt = ActiveMotors.objects.filter(filter_objects, casting='Halt')
+            casting_Up = ActiveMotors.objects.filter(filter_objects, casting_date__year = year,casting='Under process')
+            casting_Hlt = ActiveMotors.objects.filter(filter_objects, casting_date__year = year,casting='Halt')
 
 
-            curing_Ok = ActiveMotors.objects.filter(filter_objects, curing='Ok')
-            curing_ObsSame = ActiveMotors.objects.filter(filter_objects,
+            curing_Ok = ActiveMotors.objects.filter(filter_objects,curing_date__year = year, curing='Ok')
+            curing_ObsSame = ActiveMotors.objects.filter(filter_objects,curing_date__year = year,
                                                                                 curing='Observation(same stage)')
-            curing_ObsNext = ActiveMotors.objects.filter(filter_objects,
+            curing_ObsNext = ActiveMotors.objects.filter(filter_objects,curing_date__year = year,
                                                                                     curing='Observation(next stage)')
-            curing_Up = ActiveMotors.objects.filter(filter_objects, curing='Under process')
-            curing_Hlt = ActiveMotors.objects.filter(filter_objects, curing='Halt')
+            curing_Up = ActiveMotors.objects.filter(filter_objects,curing_date__year = year, curing='Under process')
+            curing_Hlt = ActiveMotors.objects.filter(filter_objects,curing_date__year = year, curing='Halt')
 
 
-            liner_mechanical_properties_Ok = ActiveMotors.objects.filter(filter_objects, liner_mechanical_properties='Ok')
-            liner_mechanical_properties_ObsSame = ActiveMotors.objects.filter(filter_objects,
+            liner_mechanical_properties_Ok = ActiveMotors.objects.filter(filter_objects,liner_mechanical_properties_date__year= year, liner_mechanical_properties='Ok')
+            liner_mechanical_properties_ObsSame = ActiveMotors.objects.filter(filter_objects,liner_mechanical_properties_date__year= year,
                                                                                 liner_mechanical_properties='Observation(same stage)')
-            liner_mechanical_properties_ObsNext = ActiveMotors.objects.filter(filter_objects,
+            liner_mechanical_properties_ObsNext = ActiveMotors.objects.filter(filter_objects,liner_mechanical_properties_date__year= year,
                                                                                     liner_mechanical_properties='Observation(next stage)')
-            liner_mechanical_properties_Up = ActiveMotors.objects.filter(filter_objects, liner_mechanical_properties='Under process')
-            liner_mechanical_properties_Hlt = ActiveMotors.objects.filter(filter_objects, liner_mechanical_properties='Halt')
+            liner_mechanical_properties_Up = ActiveMotors.objects.filter(filter_objects,liner_mechanical_properties_date__year= year, liner_mechanical_properties='Under process')
+            liner_mechanical_properties_Hlt = ActiveMotors.objects.filter(filter_objects,liner_mechanical_properties_date__year= year, liner_mechanical_properties='Halt')
 
 
-            propellant_mechanical_properties_Ok = ActiveMotors.objects.filter(filter_objects, propellant_mechanical_properties='Ok')
-            propellant_mechanical_properties_ObsSame = ActiveMotors.objects.filter(filter_objects,
+            propellant_mechanical_properties_Ok = ActiveMotors.objects.filter(filter_objects,propellant_mechanical_properties_date__year=year, propellant_mechanical_properties='Ok')
+            propellant_mechanical_properties_ObsSame = ActiveMotors.objects.filter(filter_objects,propellant_mechanical_properties_date__year=year,
                                                                                 propellant_mechanical_properties='Observation(same stage)')
-            propellant_mechanical_properties_ObsNext = ActiveMotors.objects.filter(filter_objects,
+            propellant_mechanical_properties_ObsNext = ActiveMotors.objects.filter(filter_objects,propellant_mechanical_properties_date__year=year,
                                                                                     propellant_mechanical_properties='Observation(next stage)')
-            propellant_mechanical_properties_Up = ActiveMotors.objects.filter(filter_objects, propellant_mechanical_properties='Under process')
-            propellant_mechanical_properties_Hlt = ActiveMotors.objects.filter(filter_objects, propellant_mechanical_properties='Halt')
+            propellant_mechanical_properties_Up = ActiveMotors.objects.filter(filter_objects,propellant_mechanical_properties_date__year=year, propellant_mechanical_properties='Under process')
+            propellant_mechanical_properties_Hlt = ActiveMotors.objects.filter(filter_objects,propellant_mechanical_properties_date__year=year, propellant_mechanical_properties='Halt')
 
 
-            interface_bond_strength_Ok = ActiveMotors.objects.filter(filter_objects, interface_bond_strength='Ok')
-            interface_bond_strength_ObsSame = ActiveMotors.objects.filter(filter_objects,
+            interface_bond_strength_Ok = ActiveMotors.objects.filter(filter_objects,interface_bond_strength_date__year = year, interface_bond_strength='Ok')
+            interface_bond_strength_ObsSame = ActiveMotors.objects.filter(filter_objects,interface_bond_strength_date__year = year,
                                                                                 interface_bond_strength='Observation(same stage)')
-            interface_bond_strength_ObsNext = ActiveMotors.objects.filter(filter_objects,
+            interface_bond_strength_ObsNext = ActiveMotors.objects.filter(filter_objects,interface_bond_strength_date__year = year,
                                                                                     interface_bond_strength='Observation(next stage)')
-            interface_bond_strength_Up = ActiveMotors.objects.filter(filter_objects, interface_bond_strength='Under process')
-            interface_bond_strength_Hlt = ActiveMotors.objects.filter(filter_objects, interface_bond_strength='Halt')
+            interface_bond_strength_Up = ActiveMotors.objects.filter(filter_objects,interface_bond_strength_date__year = year, interface_bond_strength='Under process')
+            interface_bond_strength_Hlt = ActiveMotors.objects.filter(filter_objects,interface_bond_strength_date__year = year, interface_bond_strength='Halt')
 
 
-            propellant_burn_rate_Ok = ActiveMotors.objects.filter(filter_objects, propellant_burn_rate='Ok')
-            propellant_burn_rate_ObsSame = ActiveMotors.objects.filter(filter_objects,
+            propellant_burn_rate_Ok = ActiveMotors.objects.filter(filter_objects,propellant_burn_rate_date__year=year, propellant_burn_rate='Ok')
+            propellant_burn_rate_ObsSame = ActiveMotors.objects.filter(filter_objects,propellant_burn_rate_date__year=year,
                                                                                 propellant_burn_rate='Observation(same stage)')
-            propellant_burn_rate_ObsNext = ActiveMotors.objects.filter(filter_objects,
+            propellant_burn_rate_ObsNext = ActiveMotors.objects.filter(filter_objects,propellant_burn_rate_date__year=year,
                                                                                     propellant_burn_rate='Observation(next stage)')
-            propellant_burn_rate_Up = ActiveMotors.objects.filter(filter_objects, propellant_burn_rate='Under process')
-            propellant_burn_rate_Hlt = ActiveMotors.objects.filter(filter_objects, propellant_burn_rate='Halt')
+            propellant_burn_rate_Up = ActiveMotors.objects.filter(filter_objects, propellant_burn_rate_date__year=year, propellant_burn_rate='Under process')
+            propellant_burn_rate_Hlt = ActiveMotors.objects.filter(filter_objects,propellant_burn_rate_date__year=year,  propellant_burn_rate='Halt')
 
 
-            trimming_Propellant_grain_Ok = ActiveMotors.objects.filter(filter_objects, trimming_Propellant_grain='Ok')
-            trimming_Propellant_grain_ObsSame = ActiveMotors.objects.filter(filter_objects,
+            trimming_Propellant_grain_Ok = ActiveMotors.objects.filter(filter_objects,trimming_Propellant_grain_date__year=year, trimming_Propellant_grain='Ok')
+            trimming_Propellant_grain_ObsSame = ActiveMotors.objects.filter(filter_objects,trimming_Propellant_grain_date__year=year,
                                                                                 trimming_Propellant_grain='Observation(same stage)')
-            trimming_Propellant_grain_ObsNext = ActiveMotors.objects.filter(filter_objects,
+            trimming_Propellant_grain_ObsNext = ActiveMotors.objects.filter(filter_objects,trimming_Propellant_grain_date__year=year,
                                                                                     trimming_Propellant_grain='Observation(next stage)')
-            trimming_Propellant_grain_Up = ActiveMotors.objects.filter(filter_objects, trimming_Propellant_grain='Under process')
-            trimming_Propellant_grain_Hlt = ActiveMotors.objects.filter(filter_objects, trimming_Propellant_grain='Halt')
+            trimming_Propellant_grain_Up = ActiveMotors.objects.filter(filter_objects,trimming_Propellant_grain_date__year=year, trimming_Propellant_grain='Under process')
+            trimming_Propellant_grain_Hlt = ActiveMotors.objects.filter(filter_objects,trimming_Propellant_grain_date__year=year, trimming_Propellant_grain='Halt')
 
 
-            mass_liner_insulation_propellant_srm_Ok = ActiveMotors.objects.filter(filter_objects, mass_liner_insulation_propellant_srm='Ok')
-            mass_liner_insulation_propellant_srm_ObsSame = ActiveMotors.objects.filter(filter_objects,
+            mass_liner_insulation_propellant_srm_Ok = ActiveMotors.objects.filter(filter_objects,mass_liner_insulation_propellant_srm_date__year=year, mass_liner_insulation_propellant_srm='Ok')
+            mass_liner_insulation_propellant_srm_ObsSame = ActiveMotors.objects.filter(filter_objects,mass_liner_insulation_propellant_srm_date__year=year,
                                                                                 mass_liner_insulation_propellant_srm='Observation(same stage)')
-            mass_liner_insulation_propellant_srm_ObsNext = ActiveMotors.objects.filter(filter_objects,
+            mass_liner_insulation_propellant_srm_ObsNext = ActiveMotors.objects.filter(filter_objects,mass_liner_insulation_propellant_srm_date__year=year,
                                                                                     mass_liner_insulation_propellant_srm='Observation(next stage)')
-            mass_liner_insulation_propellant_srm_Up = ActiveMotors.objects.filter(filter_objects, mass_liner_insulation_propellant_srm='Under process')
-            mass_liner_insulation_propellant_srm_Hlt = ActiveMotors.objects.filter(filter_objects, mass_liner_insulation_propellant_srm='Halt')
+            mass_liner_insulation_propellant_srm_Up = ActiveMotors.objects.filter(filter_objects,mass_liner_insulation_propellant_srm_date__year=year, mass_liner_insulation_propellant_srm='Under process')
+            mass_liner_insulation_propellant_srm_Hlt = ActiveMotors.objects.filter(filter_objects,mass_liner_insulation_propellant_srm_date__year=year, mass_liner_insulation_propellant_srm='Halt')
 
 
-            ut_endoscopy_rt_grain_Ok = ActiveMotors.objects.filter(filter_objects, ut_endoscopy_rt_grain='Ok')
-            ut_endoscopy_rt_grain_ObsSame = ActiveMotors.objects.filter(filter_objects,
+            ut_endoscopy_rt_grain_Ok = ActiveMotors.objects.filter(filter_objects,ut_endoscopy_rt_grain_date__year = year, ut_endoscopy_rt_grain='Ok')
+            ut_endoscopy_rt_grain_ObsSame = ActiveMotors.objects.filter(filter_objects,ut_endoscopy_rt_grain_date__year = year,
                                                                                 ut_endoscopy_rt_grain='Observation(same stage)')
-            ut_endoscopy_rt_grain_ObsNext = ActiveMotors.objects.filter(filter_objects,
+            ut_endoscopy_rt_grain_ObsNext = ActiveMotors.objects.filter(filter_objects,ut_endoscopy_rt_grain_date__year = year,
                                                                                     ut_endoscopy_rt_grain='Observation(next stage)')
-            ut_endoscopy_rt_grain_Up = ActiveMotors.objects.filter(filter_objects, ut_endoscopy_rt_grain='Under process')
-            ut_endoscopy_rt_grain_Hlt = ActiveMotors.objects.filter(filter_objects, ut_endoscopy_rt_grain='Halt')
+            ut_endoscopy_rt_grain_Up = ActiveMotors.objects.filter(filter_objects,ut_endoscopy_rt_grain_date__year = year, ut_endoscopy_rt_grain='Under process')
+            ut_endoscopy_rt_grain_Hlt = ActiveMotors.objects.filter(filter_objects,ut_endoscopy_rt_grain_date__year = year, ut_endoscopy_rt_grain='Halt')
 
-            conditioning_of_lining_Ok = ActiveMotors.objects.filter(filter_objects, conditioning_of_lining='Ok')
-            conditioning_of_lining_ObsSame = ActiveMotors.objects.filter(filter_objects,
+            conditioning_of_lining_Ok = ActiveMotors.objects.filter(filter_objects, conditioning_of_lining_date__year = year, conditioning_of_lining='Ok')
+            conditioning_of_lining_ObsSame = ActiveMotors.objects.filter(filter_objects,conditioning_of_lining_date__year = year,
                                                                         conditioning_of_lining='Observation(same stage)')
-            conditioning_of_lining_ObsNext = ActiveMotors.objects.filter(filter_objects,
+            conditioning_of_lining_ObsNext = ActiveMotors.objects.filter(filter_objects,conditioning_of_lining_date__year = year,
                                                                         conditioning_of_lining='Observation(next stage)')
-            conditioning_of_lining_Up = ActiveMotors.objects.filter(filter_objects, conditioning_of_lining='Under process')
-            conditioning_of_lining_Hlt = ActiveMotors.objects.filter(filter_objects, conditioning_of_lining='Halt')
+            conditioning_of_lining_Up = ActiveMotors.objects.filter(filter_objects,conditioning_of_lining_date__year = year, conditioning_of_lining='Under process')
+            conditioning_of_lining_Hlt = ActiveMotors.objects.filter(filter_objects,conditioning_of_lining_date__year = year, conditioning_of_lining='Halt')
 
 
-            mechanical_properties_liner_Ok = ActiveMotors.objects.filter(filter_objects, mechanical_properties_liner='Ok')
-            mechanical_properties_liner_ObsSame = ActiveMotors.objects.filter(filter_objects,
+            mechanical_properties_liner_Ok = ActiveMotors.objects.filter(filter_objects,mechanical_properties_liner_date__year = year, mechanical_properties_liner='Ok')
+            mechanical_properties_liner_ObsSame = ActiveMotors.objects.filter(filter_objects,mechanical_properties_liner_date__year = year,
                                                                          mechanical_properties_liner='Observation(same stage)')
-            mechanical_properties_liner_ObsNext = ActiveMotors.objects.filter(filter_objects,
+            mechanical_properties_liner_ObsNext = ActiveMotors.objects.filter(filter_objects,mechanical_properties_liner_date__year = year,
                                                                          mechanical_properties_liner='Observation(next stage)')
-            mechanical_properties_liner_Up = ActiveMotors.objects.filter(filter_objects, mechanical_properties_liner='Under process')
-            mechanical_properties_liner_Hlt = ActiveMotors.objects.filter(filter_objects, mechanical_properties_liner='Halt')
+            mechanical_properties_liner_Up = ActiveMotors.objects.filter(filter_objects,mechanical_properties_liner_date__year = year, mechanical_properties_liner='Under process')
+            mechanical_properties_liner_Hlt = ActiveMotors.objects.filter(filter_objects,mechanical_properties_liner_date__year = year, mechanical_properties_liner='Halt')
 
 
-            mechanical_properties_propellant_Ok = ActiveMotors.objects.filter(filter_objects, mechanical_properties_propellant='Ok')
-            mechanical_properties_propellant_ObsSame = ActiveMotors.objects.filter(filter_objects,
+            mechanical_properties_propellant_Ok = ActiveMotors.objects.filter(filter_objects,mechanical_properties_propellant_date__year=year, mechanical_properties_propellant='Ok')
+            mechanical_properties_propellant_ObsSame = ActiveMotors.objects.filter(filter_objects,mechanical_properties_propellant_date__year=year,
                                                                               mechanical_properties_propellant='Observation(same stage)')
-            mechanical_properties_propellant_ObsNext = ActiveMotors.objects.filter(filter_objects,
+            mechanical_properties_propellant_ObsNext = ActiveMotors.objects.filter(filter_objects,mechanical_properties_propellant_date__year=year,
                                                                               mechanical_properties_propellant='Observation(next stage)')
-            mechanical_properties_propellant_Up = ActiveMotors.objects.filter(filter_objects,
+            mechanical_properties_propellant_Up = ActiveMotors.objects.filter(filter_objects,mechanical_properties_propellant_date__year=year,
                                                                          mechanical_properties_propellant='Under process')
-            mechanical_properties_propellant_Hlt = ActiveMotors.objects.filter(filter_objects, mechanical_properties_propellant='Halt')
+            mechanical_properties_propellant_Hlt = ActiveMotors.objects.filter(filter_objects,mechanical_properties_propellant_date__year=year, mechanical_properties_propellant='Halt')
 
 
-            mass_liner_Ok = ActiveMotors.objects.filter(filter_objects, mass_liner='Ok')
-            mass_liner_ObsSame = ActiveMotors.objects.filter(filter_objects,
+            mass_liner_Ok = ActiveMotors.objects.filter(filter_objects,mass_liner_date__year = year, mass_liner='Ok')
+            mass_liner_ObsSame = ActiveMotors.objects.filter(filter_objects,mass_liner_date__year = year,
                                                                               mass_liner='Observation(same stage)')
-            mass_liner_ObsNext = ActiveMotors.objects.filter(filter_objects,
+            mass_liner_ObsNext = ActiveMotors.objects.filter(filter_objects,mass_liner_date__year = year,
                                                                               mass_liner='Observation(next stage)')
-            mass_liner_Up = ActiveMotors.objects.filter(filter_objects,
+            mass_liner_Up = ActiveMotors.objects.filter(filter_objects,mass_liner_date__year = year,
                                                                          mass_liner='Under process')
-            mass_liner_Hlt = ActiveMotors.objects.filter(filter_objects, mass_liner='Halt')
+            mass_liner_Hlt = ActiveMotors.objects.filter(filter_objects,mass_liner_date__year = year, mass_liner='Halt')
 
 
-            mass_insulation_Ok = ActiveMotors.objects.filter(filter_objects, mass_insulation='Ok')
-            mass_insulation_ObsSame = ActiveMotors.objects.filter(filter_objects,
+            mass_insulation_Ok = ActiveMotors.objects.filter(filter_objects,mass_insulation_date__year = year, mass_insulation='Ok')
+            mass_insulation_ObsSame = ActiveMotors.objects.filter(filter_objects,mass_insulation_date__year = year,
                                                                               mass_insulation='Observation(same stage)')
-            mass_insulation_ObsNext = ActiveMotors.objects.filter(filter_objects,
+            mass_insulation_ObsNext = ActiveMotors.objects.filter(filter_objects,mass_insulation_date__year = year,
                                                                               mass_insulation='Observation(next stage)')
-            mass_insulation_Up = ActiveMotors.objects.filter(filter_objects,
+            mass_insulation_Up = ActiveMotors.objects.filter(filter_objects,mass_insulation_date__year = year,
                                                                          mass_insulation='Under process')
-            mass_insulation_Hlt = ActiveMotors.objects.filter(filter_objects, mass_insulation='Halt')
+            mass_insulation_Hlt = ActiveMotors.objects.filter(filter_objects,mass_insulation_date__year = year, mass_insulation='Halt')
 
 
-            mass_propellant_Ok = ActiveMotors.objects.filter(filter_objects, mass_propellant='Ok')
-            mass_propellant_ObsSame = ActiveMotors.objects.filter(filter_objects,
+            mass_propellant_Ok = ActiveMotors.objects.filter(filter_objects,mass_propellant_date__year = year, mass_propellant='Ok')
+            mass_propellant_ObsSame = ActiveMotors.objects.filter(filter_objects,mass_propellant_date__year = year,
                                                                               mass_propellant='Observation(same stage)')
-            mass_propellant_ObsNext = ActiveMotors.objects.filter(filter_objects,
+            mass_propellant_ObsNext = ActiveMotors.objects.filter(filter_objects,mass_propellant_date__year = year,
                                                                               mass_propellant='Observation(next stage)')
-            mass_propellant_Up = ActiveMotors.objects.filter(filter_objects,
+            mass_propellant_Up = ActiveMotors.objects.filter(filter_objects,mass_propellant_date__year = year,
                                                                          mass_propellant='Under process')
-            mass_propellant_Hlt = ActiveMotors.objects.filter(filter_objects, mass_propellant='Halt')
+            mass_propellant_Hlt = ActiveMotors.objects.filter(filter_objects,mass_propellant_date__year = year, mass_propellant='Halt')
 
 
-            overall_qualification_status_ObsNcr = ActiveMotors.objects.filter(filter_objects,
+            overall_qualification_status_ObsNcr = ActiveMotors.objects.filter(filter_objects,overall_qualification_date__year=year,
                                                                               overall_qualification_status='Observation/NCR')
-            overall_qualification_status_Inprocess = ActiveMotors.objects.filter(filter_objects,
+            overall_qualification_status_Inprocess = ActiveMotors.objects.filter(filter_objects,overall_qualification_date__year=year,
                                                                               overall_qualification_status='in-process')
 
 
 
-            bhd_status_Ok = ActiveMotors.objects.filter(filter_objects, bhd_status='Ok')
-            bhd_status_NotSubmit = ActiveMotors.objects.filter(filter_objects, bhd_status='Not Submitted')
-            bhd_status_ObsForwarded = ActiveMotors.objects.filter(filter_objects,
+            bhd_status_Ok = ActiveMotors.objects.filter(filter_objects,bhd_date__year = year, bhd_status='Ok')
+            bhd_status_NotSubmit = ActiveMotors.objects.filter(filter_objects,bhd_date__year = year, bhd_status='Not Submitted')
+            bhd_status_ObsForwarded = ActiveMotors.objects.filter(filter_objects,bhd_date__year = year,
                                                                               bhd_status='QM Observations Forwarded')
-            bhd_status_Inprocess = ActiveMotors.objects.filter(filter_objects,
+            bhd_status_Inprocess = ActiveMotors.objects.filter(filter_objects,bhd_date__year = year,
                                                                               bhd_status='Audit in-process')
 
 
-            qm_certification_status_Issued = ActiveMotors.objects.filter(filter_objects, qm_certification_status='QM certificate issued')
-            qm_certification_status_ObsForwarded = ActiveMotors.objects.filter(filter_objects,
+            qm_certification_status_Issued = ActiveMotors.objects.filter(filter_objects,qm_certification_date__year=year, qm_certification_status='QM certificate issued')
+            qm_certification_status_ObsForwarded = ActiveMotors.objects.filter(filter_objects,qm_certification_date__year=year,
                                                                               qm_certification_status='QM Observations Forwarded')
-            qm_certification_status_Inprocess = ActiveMotors.objects.filter(filter_objects,
+            qm_certification_status_Inprocess = ActiveMotors.objects.filter(filter_objects,qm_certification_date__year=year,
                                                                               qm_certification_status='Audit in-process')
 
 
-            matiral_qualified_status_Ok = ActiveMotors.objects.filter(filter_objects, matiral_qualified_status='Ok')
-            matiral_qualified_status_ObsSame = ActiveMotors.objects.filter(filter_objects,
+            matiral_qualified_status_Ok = ActiveMotors.objects.filter(filter_objects,matiral_qualified_date__year = year, matiral_qualified_status='Ok')
+            matiral_qualified_status_ObsSame = ActiveMotors.objects.filter(filter_objects,matiral_qualified_date__year = year,
                                                                                 matiral_qualified_status='Observation(same stage)')
-            matiral_qualified_status_ObsNext = ActiveMotors.objects.filter(filter_objects,
+            matiral_qualified_status_ObsNext = ActiveMotors.objects.filter(filter_objects,matiral_qualified_date__year = year,
                                                                                     matiral_qualified_status='Observation(next stage)')
-            matiral_qualified_status_Up = ActiveMotors.objects.filter(filter_objects, matiral_qualified_status='Under process')
-            matiral_qualified_status_Hlt = ActiveMotors.objects.filter(filter_objects, matiral_qualified_status='Halt')
+            matiral_qualified_status_Up = ActiveMotors.objects.filter(filter_objects,matiral_qualified_date__year = year, matiral_qualified_status='Under process')
+            matiral_qualified_status_Hlt = ActiveMotors.objects.filter(filter_objects,matiral_qualified_date__year = year, matiral_qualified_status='Halt')
 
 
-            compo_manufacturing_status_Ok = ActiveMotors.objects.filter(filter_objects, compo_manufacturing_status='Ok')
-            compo_manufacturing_status_ObsSame = ActiveMotors.objects.filter(filter_objects,
+            compo_manufacturing_status_Ok = ActiveMotors.objects.filter(filter_objects,compo_manufacturing_date__year = year, compo_manufacturing_status='Ok')
+            compo_manufacturing_status_ObsSame = ActiveMotors.objects.filter(filter_objects,compo_manufacturing_date__year = year,
                                                                                 compo_manufacturing_status='Observation(same stage)')
-            compo_manufacturing_status_ObsNext = ActiveMotors.objects.filter(filter_objects,
+            compo_manufacturing_status_ObsNext = ActiveMotors.objects.filter(filter_objects,compo_manufacturing_date__year = year,
                                                                                     compo_manufacturing_status='Observation(next stage)')
-            compo_manufacturing_status_Up = ActiveMotors.objects.filter(filter_objects, compo_manufacturing_status='Under process')
-            compo_manufacturing_status_Hlt = ActiveMotors.objects.filter(filter_objects, compo_manufacturing_status='Halt')
+            compo_manufacturing_status_Up = ActiveMotors.objects.filter(filter_objects,compo_manufacturing_date__year = year, compo_manufacturing_status='Under process')
+            compo_manufacturing_status_Hlt = ActiveMotors.objects.filter(filter_objects,compo_manufacturing_date__year = year, compo_manufacturing_status='Halt')
 
 
-            powerpack_assembly_status_Ok = ActiveMotors.objects.filter(filter_objects, powerpack_assembly_status='Ok')
-            powerpack_assembly_status_ObsSame = ActiveMotors.objects.filter(filter_objects,
+            powerpack_assembly_status_Ok = ActiveMotors.objects.filter(filter_objects,powerpack_assembly_date__year = year, powerpack_assembly_status='Ok')
+            powerpack_assembly_status_ObsSame = ActiveMotors.objects.filter(filter_objects,powerpack_assembly_date__year = year,
                                                                                 powerpack_assembly_status='Observation(same stage)')
-            powerpack_assembly_status_ObsNext = ActiveMotors.objects.filter(filter_objects,
+            powerpack_assembly_status_ObsNext = ActiveMotors.objects.filter(filter_objects,powerpack_assembly_date__year = year,
                                                                                     powerpack_assembly_status='Observation(next stage)')
-            powerpack_assembly_status_Up = ActiveMotors.objects.filter(filter_objects, powerpack_assembly_status='Under process')
-            powerpack_assembly_status_Hlt = ActiveMotors.objects.filter(filter_objects, powerpack_assembly_status='Halt')
+            powerpack_assembly_status_Up = ActiveMotors.objects.filter(filter_objects,powerpack_assembly_date__year = year, powerpack_assembly_status='Under process')
+            powerpack_assembly_status_Hlt = ActiveMotors.objects.filter(filter_objects,powerpack_assembly_date__year = year, powerpack_assembly_status='Halt')
 
 
-            powerpack_testing_status_Ok = ActiveMotors.objects.filter(filter_objects, powerpack_testing_status='Ok')
-            powerpack_testing_status_ObsSame = ActiveMotors.objects.filter(filter_objects,
+            powerpack_testing_status_Ok = ActiveMotors.objects.filter(filter_objects,powerpack_testing_date__year = year, powerpack_testing_status='Ok')
+            powerpack_testing_status_ObsSame = ActiveMotors.objects.filter(filter_objects,powerpack_testing_date__year = year,
                                                                                 powerpack_testing_status='Observation(same stage)')
-            powerpack_testing_status_ObsNext = ActiveMotors.objects.filter(filter_objects,
+            powerpack_testing_status_ObsNext = ActiveMotors.objects.filter(filter_objects,powerpack_testing_date__year = year,
                                                                                     powerpack_testing_status='Observation(next stage)')
-            powerpack_testing_status_Up = ActiveMotors.objects.filter(filter_objects, powerpack_testing_status='Under process')
-            powerpack_testing_status_Hlt = ActiveMotors.objects.filter(filter_objects, powerpack_testing_status='Halt')
+            powerpack_testing_status_Up = ActiveMotors.objects.filter(filter_objects,powerpack_testing_date__year = year, powerpack_testing_status='Under process')
+            powerpack_testing_status_Hlt = ActiveMotors.objects.filter(filter_objects,powerpack_testing_date__year = year, powerpack_testing_status='Halt')
 
 
 
-            raw_material_inspection_status_Ok = ActiveMotors.objects.filter(filter_objects, raw_material_inspection_status='Ok')
-            raw_material_inspection_status_ObsSame = ActiveMotors.objects.filter(filter_objects,
+            raw_material_inspection_status_Ok = ActiveMotors.objects.filter(filter_objects,raw_material_inspection_date__year = year, raw_material_inspection_status='Ok')
+            raw_material_inspection_status_ObsSame = ActiveMotors.objects.filter(filter_objects,raw_material_inspection_date__year = year,
                                                                                 raw_material_inspection_status='Observation(same stage)')
-            raw_material_inspection_status_ObsNext = ActiveMotors.objects.filter(filter_objects,
+            raw_material_inspection_status_ObsNext = ActiveMotors.objects.filter(filter_objects,raw_material_inspection_date__year = year,
                                                                                     raw_material_inspection_status='Observation(next stage)')
-            raw_material_inspection_status_Up = ActiveMotors.objects.filter(filter_objects, raw_material_inspection_status='Under process')
-            raw_material_inspection_status_Hlt = ActiveMotors.objects.filter(filter_objects, raw_material_inspection_status='Halt')
+            raw_material_inspection_status_Up = ActiveMotors.objects.filter(filter_objects,raw_material_inspection_date__year = year, raw_material_inspection_status='Under process')
+            raw_material_inspection_status_Hlt = ActiveMotors.objects.filter(filter_objects,raw_material_inspection_date__year = year, raw_material_inspection_status='Halt')
 
 
 
-            pressing_electrode_status_Ok = ActiveMotors.objects.filter(filter_objects, pressing_electrode_status='Ok')
-            pressing_electrode_status_ObsSame = ActiveMotors.objects.filter(filter_objects,
+            pressing_electrode_status_Ok = ActiveMotors.objects.filter(filter_objects,pressing_electrode_date__year = year, pressing_electrode_status='Ok')
+            pressing_electrode_status_ObsSame = ActiveMotors.objects.filter(filter_objects,pressing_electrode_date__year = year,
                                                                                 pressing_electrode_status='Observation(same stage)')
-            pressing_electrode_status_ObsNext = ActiveMotors.objects.filter(filter_objects,
+            pressing_electrode_status_ObsNext = ActiveMotors.objects.filter(filter_objects,pressing_electrode_date__year = year,
                                                                                     pressing_electrode_status='Observation(next stage)')
-            pressing_electrode_status_Up = ActiveMotors.objects.filter(filter_objects, pressing_electrode_status='Under process')
-            pressing_electrode_status_Hlt = ActiveMotors.objects.filter(filter_objects, pressing_electrode_status='Halt')
+            pressing_electrode_status_Up = ActiveMotors.objects.filter(filter_objects,pressing_electrode_date__year = year, pressing_electrode_status='Under process')
+            pressing_electrode_status_Hlt = ActiveMotors.objects.filter(filter_objects,pressing_electrode_date__year = year, pressing_electrode_status='Halt')
 
 
 
-            formation_process_status_Ok = ActiveMotors.objects.filter(filter_objects, formation_process_status='Ok')
-            formation_process_status_ObsSame = ActiveMotors.objects.filter(filter_objects,
+            formation_process_status_Ok = ActiveMotors.objects.filter(filter_objects,formation_process_date__year = year, formation_process_status='Ok')
+            formation_process_status_ObsSame = ActiveMotors.objects.filter(filter_objects,formation_process_date__year = year,
                                                                                 formation_process_status='Observation(same stage)')
-            formation_process_status_ObsNext = ActiveMotors.objects.filter(filter_objects,
+            formation_process_status_ObsNext = ActiveMotors.objects.filter(filter_objects,formation_process_date__year = year,
                                                                                     formation_process_status='Observation(next stage)')
-            formation_process_status_Up = ActiveMotors.objects.filter(filter_objects, formation_process_status='Under process')
-            formation_process_status_Hlt = ActiveMotors.objects.filter(filter_objects, formation_process_status='Halt')
+            formation_process_status_Up = ActiveMotors.objects.filter(filter_objects,formation_process_date__year = year, formation_process_status='Under process')
+            formation_process_status_Hlt = ActiveMotors.objects.filter(filter_objects,formation_process_date__year = year, formation_process_status='Halt')
 
 
 
-            assembly_process_status_Ok = ActiveMotors.objects.filter(filter_objects, assembly_process_status='Ok')
-            assembly_process_status_ObsSame = ActiveMotors.objects.filter(filter_objects,
+            assembly_process_status_Ok = ActiveMotors.objects.filter(filter_objects,assembly_process_date__year = year, assembly_process_status='Ok')
+            assembly_process_status_ObsSame = ActiveMotors.objects.filter(filter_objects,assembly_process_date__year = year,
                                                                                 assembly_process_status='Observation(same stage)')
-            assembly_process_status_ObsNext = ActiveMotors.objects.filter(filter_objects,
+            assembly_process_status_ObsNext = ActiveMotors.objects.filter(filter_objects,assembly_process_date__year = year,
                                                                                     assembly_process_status='Observation(next stage)')
-            assembly_process_status_Up = ActiveMotors.objects.filter(filter_objects, assembly_process_status='Under process')
-            assembly_process_status_Hlt = ActiveMotors.objects.filter(filter_objects, assembly_process_status='Halt')
+            assembly_process_status_Up = ActiveMotors.objects.filter(filter_objects,assembly_process_date__year = year, assembly_process_status='Under process')
+            assembly_process_status_Hlt = ActiveMotors.objects.filter(filter_objects,assembly_process_date__year = year, assembly_process_status='Halt')
 
 
-            battery_testing_status_Ok = ActiveMotors.objects.filter(filter_objects, battery_testing_status='Ok')
-            battery_testing_status_ObsSame = ActiveMotors.objects.filter(filter_objects,
+            battery_testing_status_Ok = ActiveMotors.objects.filter(filter_objects,battery_testing_date__year = year, battery_testing_status='Ok')
+            battery_testing_status_ObsSame = ActiveMotors.objects.filter(filter_objects,battery_testing_date__year = year,
                                                                                 battery_testing_status='Observation(same stage)')
-            battery_testing_status_ObsNext = ActiveMotors.objects.filter(filter_objects,
+            battery_testing_status_ObsNext = ActiveMotors.objects.filter(filter_objects,battery_testing_date__year = year,
                                                                                     battery_testing_status='Observation(next stage)')
-            battery_testing_status_Up = ActiveMotors.objects.filter(filter_objects, battery_testing_status='Under process')
-            battery_testing_status_Hlt = ActiveMotors.objects.filter(filter_objects, battery_testing_status='Halt')
+            battery_testing_status_Up = ActiveMotors.objects.filter(filter_objects,battery_testing_date__year = year, battery_testing_status='Under process')
+            battery_testing_status_Hlt = ActiveMotors.objects.filter(filter_objects,battery_testing_date__year = year, battery_testing_status='Halt')
 
 
 
-            final_qualification_status_Ok = ActiveMotors.objects.filter(filter_objects, final_qualification_status='Ok')
-            final_qualification_status_ObsSame = ActiveMotors.objects.filter(filter_objects,
+            final_qualification_status_Ok = ActiveMotors.objects.filter(filter_objects,final_qualification_date__year = year, final_qualification_status='Ok')
+            final_qualification_status_ObsSame = ActiveMotors.objects.filter(filter_objects,final_qualification_date__year = year,
                                                                                 final_qualification_status='Observation(same stage)')
-            final_qualification_status_ObsNext = ActiveMotors.objects.filter(filter_objects,
+            final_qualification_status_ObsNext = ActiveMotors.objects.filter(filter_objects,final_qualification_date__year = year,
                                                                                     final_qualification_status='Observation(next stage)')
-            final_qualification_status_Up = ActiveMotors.objects.filter(filter_objects, final_qualification_status='Under process')
-            final_qualification_status_Hlt = ActiveMotors.objects.filter(filter_objects, final_qualification_status='Halt')
+            final_qualification_status_Up = ActiveMotors.objects.filter(filter_objects,final_qualification_date__year = year, final_qualification_status='Under process')
+            final_qualification_status_Hlt = ActiveMotors.objects.filter(filter_objects,final_qualification_date__year = year, final_qualification_status='Halt')
 
 # ==========================Pyro Devices ==========================
-            qualification_raw_material_status_Ok = ActiveMotors.objects.filter(filter_objects, qualification_raw_material_status='Ok')
-            qualification_raw_material_status_ObsSame = ActiveMotors.objects.filter(filter_objects,
+            qualification_raw_material_status_Ok = ActiveMotors.objects.filter(filter_objects,qualification_raw_material_date__year = year, qualification_raw_material_status='Ok')
+            qualification_raw_material_status_ObsSame = ActiveMotors.objects.filter(filter_objects,qualification_raw_material_date__year = year,
                                                                             qualification_raw_material_status='Observation(same stage)')
-            qualification_raw_material_status_ObsNext = ActiveMotors.objects.filter(filter_objects,
+            qualification_raw_material_status_ObsNext = ActiveMotors.objects.filter(filter_objects,qualification_raw_material_date__year = year,
                                                                             qualification_raw_material_status='Observation(next stage)')
-            qualification_raw_material_status_Up = ActiveMotors.objects.filter(filter_objects,
+            qualification_raw_material_status_Up = ActiveMotors.objects.filter(filter_objects,qualification_raw_material_date__year = year,
                                                                        qualification_raw_material_status='Under process')
-            qualification_raw_material_status_Hlt = ActiveMotors.objects.filter(filter_objects, qualification_raw_material_status='Halt')
+            qualification_raw_material_status_Hlt = ActiveMotors.objects.filter(filter_objects,qualification_raw_material_date__year = year, qualification_raw_material_status='Halt')
 
 
-            filling_status_Ok = ActiveMotors.objects.filter(filter_objects, filling_status='Ok')
-            filling_status_ObsSame = ActiveMotors.objects.filter(filter_objects,
+            filling_status_Ok = ActiveMotors.objects.filter(filter_objects,filling_date__year = year, filling_status='Ok')
+            filling_status_ObsSame = ActiveMotors.objects.filter(filter_objects,filling_date__year = year,
                                                                            filling_status='Observation(same stage)')
-            filling_status_ObsNext = ActiveMotors.objects.filter(filter_objects,
+            filling_status_ObsNext = ActiveMotors.objects.filter(filter_objects,filling_date__year = year,
                                                                            filling_status='Observation(next stage)')
-            filling_status_Up = ActiveMotors.objects.filter(filter_objects, filling_status='Under process')
-            filling_status_Hlt = ActiveMotors.objects.filter(filter_objects, filling_status='Halt')
+            filling_status_Up = ActiveMotors.objects.filter(filter_objects,filling_date__year = year, filling_status='Under process')
+            filling_status_Hlt = ActiveMotors.objects.filter(filter_objects,filling_date__year = year, filling_status='Halt')
 
 
-            assembling_integration_status_Ok = ActiveMotors.objects.filter(filter_objects, assembling_integration_status='Ok')
-            assembling_integration_status_ObsSame = ActiveMotors.objects.filter(filter_objects,
+            assembling_integration_status_Ok = ActiveMotors.objects.filter(filter_objects,assembling_integration_date__year = year, assembling_integration_status='Ok')
+            assembling_integration_status_ObsSame = ActiveMotors.objects.filter(filter_objects,assembling_integration_date__year = year,
                                                                           assembling_integration_status='Observation(same stage)')
-            assembling_integration_status_ObsNext = ActiveMotors.objects.filter(filter_objects,
+            assembling_integration_status_ObsNext = ActiveMotors.objects.filter(filter_objects,assembling_integration_date__year = year,
                                                                           assembling_integration_status='Observation(next stage)')
-            assembling_integration_status_Up = ActiveMotors.objects.filter(filter_objects, assembling_integration_status='Under process')
-            assembling_integration_status_Hlt = ActiveMotors.objects.filter(filter_objects, assembling_integration_status='Halt')
+            assembling_integration_status_Up = ActiveMotors.objects.filter(filter_objects,assembling_integration_date__year = year, assembling_integration_status='Under process')
+            assembling_integration_status_Hlt = ActiveMotors.objects.filter(filter_objects,assembling_integration_date__year = year, assembling_integration_status='Halt')
 
 
-            qualification_testing_status_Ok = ActiveMotors.objects.filter(filter_objects, qualification_testing_status='Ok')
-            qualification_testing_status_ObsSame = ActiveMotors.objects.filter(filter_objects,
+            qualification_testing_status_Ok = ActiveMotors.objects.filter(filter_objects,qualification_testing_date__year = year, qualification_testing_status='Ok')
+            qualification_testing_status_ObsSame = ActiveMotors.objects.filter(filter_objects,qualification_testing_date__year = year,
                                                                          qualification_testing_status='Observation(same stage)')
-            qualification_testing_status_ObsNext = ActiveMotors.objects.filter(filter_objects,
+            qualification_testing_status_ObsNext = ActiveMotors.objects.filter(filter_objects,qualification_testing_date__year = year,
                                                                          qualification_testing_status='Observation(next stage)')
-            qualification_testing_status_Up = ActiveMotors.objects.filter(filter_objects, qualification_testing_status='Under process')
-            qualification_testing_status_Hlt = ActiveMotors.objects.filter(filter_objects, qualification_testing_status='Halt')
+            qualification_testing_status_Up = ActiveMotors.objects.filter(filter_objects,qualification_testing_date__year = year, qualification_testing_status='Under process')
+            qualification_testing_status_Hlt = ActiveMotors.objects.filter(filter_objects,qualification_testing_date__year = year, qualification_testing_status='Halt')
 
 
-            performance_testing_status_Ok = ActiveMotors.objects.filter(filter_objects, performance_testing_status='Ok')
-            performance_testing_status_ObsSame = ActiveMotors.objects.filter(filter_objects,
+            performance_testing_status_Ok = ActiveMotors.objects.filter(filter_objects,performance_testing_date__year = year, performance_testing_status='Ok')
+            performance_testing_status_ObsSame = ActiveMotors.objects.filter(filter_objects,performance_testing_date__year = year,
                                                                              performance_testing_status='Observation(same stage)')
-            performance_testing_status_ObsNext = ActiveMotors.objects.filter(filter_objects,
+            performance_testing_status_ObsNext = ActiveMotors.objects.filter(filter_objects,performance_testing_date__year = year,
                                                                              performance_testing_status='Observation(next stage)')
-            performance_testing_status_Up = ActiveMotors.objects.filter(filter_objects,
+            performance_testing_status_Up = ActiveMotors.objects.filter(filter_objects,performance_testing_date__year = year,
                                                                         performance_testing_status='Under process')
-            performance_testing_status_Hlt = ActiveMotors.objects.filter(filter_objects, performance_testing_status='Halt')
+            performance_testing_status_Hlt = ActiveMotors.objects.filter(filter_objects,performance_testing_date__year = year, performance_testing_status='Halt')
 
 
             # ncr_ok = ActiveMotors.objects.filter(filter_objects,ncr_status='Ok')

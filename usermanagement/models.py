@@ -1,8 +1,16 @@
 from django.db import models
 
 
-# Create your models here.
 
+
+# Create User models here.
+class UserRoles(models.Model):
+    id = models.AutoField(primary_key=True)
+    prod_roles = models.CharField(max_length=555)
+    relif_roles = models.CharField(max_length=555)
+    flight_roles = models.CharField(max_length=555, unique= True)
+    motor_roles = models.CharField(max_length=555)
+    user_id = models.CharField(max_length=555)
 
 class doctracking(models.Model):
     id = models.AutoField(primary_key=True)

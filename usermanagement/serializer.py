@@ -1,5 +1,18 @@
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework import serializers
+from .models import *
+from django.contrib.auth.models import User
+
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta(object):
+        model = User
+        fields = ['id', 'first_name','last_name','username','password','email','last_login']
+class UserRolesSerializer(serializers.ModelSerializer):
+    class Meta(object):
+        model = UserRoles
+        fields = ['id','prod_roles','relif_roles','flight_roles','motor_roles','user_id']
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):

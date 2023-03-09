@@ -1,17 +1,33 @@
-from django.http import JsonResponse
-from django.shortcuts import render
-
-# Create your views here.
-
-
 # Login API
 from rest_framework_simplejwt.views import TokenObtainPairView
-
 from usermanagement.serializer import MyTokenObtainPairSerializer
+from rest_framework.permissions import AllowAny
+from rest_framework.views import APIView
+
+from usermanagement.UserController import *
+user_obj = UserController()
+
+class AddUserAPIView(APIView):
+    permission_classes = [AllowAny]
+    def post(self, request):
+        result = user_obj.AddUser(request.data)
+        return result
+
+class GetUserListAPIVIEW(APIView):
+    permission_classes = [AllowAny]
+    def get(self, request):
+        result = user_obj.GetUserList(request)
+        return result
 
 
+
+
+
+
+  # ================================== User Login===============================================
 class UserLoginApiView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
+
 
     def post(self, request, *args, **kwargs):
 
