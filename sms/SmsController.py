@@ -353,10 +353,10 @@ class SmsController:
                     return ~Q(**kwargs)
 
             # create dynamic filter
-            if year != '':
-                filter_objects &= get_filter(
-                    'testing_date__year', 'equal',
-                    year)
+            # if year != '':
+            #     filter_objects &= get_filter(
+            #         'testing_date__year', 'equal',
+            #         year)
             if org != '':
                 filter_objects &= get_filter(
                     'organization', 'equal',
@@ -378,215 +378,215 @@ class SmsController:
                 if ParentStatus == 'BLT':
                     if ChildStatus != 'Current Count':
                         # filter_objects &= get_filter('blt_status', 'equal', ChildStatus)
-                        ListItems = dataList.filter(blt_status = ChildStatus)
+                        ListItems = dataList.filter(blt_date__year = year,blt_status = ChildStatus)
                     if ChildStatus == 'Current Count':
                         for data  in dataList:
-                            if data.blt_status == 'Under process' or data.blt_status=='Observation(same stage)' or data.blt_status=='Halt':
+                            if data.blt_date.strftime("%Y") == year and (data.blt_status == 'Under process' or data.blt_status=='Observation(same stage)' or data.blt_status=='Halt'):
                                 ListItems.append(data)
 
                 if ParentStatus == 'EMP Proofing':
                     if ChildStatus != 'Current Count':
                         # filter_objects &= get_filter('emp_proofing', 'equal', ChildStatus)
-                        ListItems = dataList.filter(emp_proofing = ChildStatus)
+                        ListItems = dataList.filter(emp_proofing_date__year = year,emp_proofing = ChildStatus)
 
                     if ChildStatus == 'Current Count':
                         for data  in dataList:
-                            if data.emp_proofing == 'Under process' or data.emp_proofing=='Observation(same stage)' or data.emp_proofing=='Halt':
+                            if data.emp_proofing_date.strftime("%Y") == year and  (data.emp_proofing == 'Under process' or data.emp_proofing=='Observation(same stage)' or data.emp_proofing=='Halt'):
                                 ListItems.append(data)
 
                 if ParentStatus == 'Functional Test W/O Dummy Bird':
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(func_tst = ChildStatus)
+                        ListItems = dataList.filter(func_tst_date__year = year, func_tst = ChildStatus)
 
                     if ChildStatus == 'Current Count':
                         for data  in dataList:
-                            if data.func_tst == 'Under process' or data.func_tst=='Observation(same stage)' or data.func_tst=='Halt':
+                            if data.func_tst_date.strftime("%Y") == year and (data.func_tst == 'Under process' or data.func_tst=='Observation(same stage)' or data.func_tst=='Halt'):
                                 ListItems.append(data)
 
                 if ParentStatus == 'Functional Test With Dummy Bird':
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(func_tst_dummy_bird = ChildStatus)
+                        ListItems = dataList.filter(func_tst_dummy_bird_date__year = year, func_tst_dummy_bird = ChildStatus)
 
                     if ChildStatus == 'Current Count':
                         for data  in dataList:
-                            if data.func_tst_dummy_bird == 'Under process' or data.func_tst_dummy_bird=='Observation(same stage)' or data.func_tst_dummy_bird=='Halt':
+                            if data.func_tst_dummy_bird_date.strftime("%Y") == year and (data.func_tst_dummy_bird == 'Under process' or data.func_tst_dummy_bird=='Observation(same stage)' or data.func_tst_dummy_bird=='Halt'):
                                 ListItems.append(data)
 
                 if ParentStatus == 'Road Test':
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(road_test = ChildStatus)
+                        ListItems = dataList.filter(road_test_date__year = year, road_test = ChildStatus)
 
                     if ChildStatus == 'Current Count':
                         for data  in dataList:
-                            if data.road_test == 'Under process' or data.road_test=='Observation(same stage)' or data.road_test=='Halt':
+                            if data.oad_test_date.strftime("%Y") == year and (data.road_test == 'Under process' or data.road_test=='Observation(same stage)' or data.road_test=='Halt'):
                                 ListItems.append(data)
 
                 if ParentStatus == 'Post Road Test':
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(post_road_test = ChildStatus)
+                        ListItems = dataList.filter(post_road_test_date__year = year, post_road_test = ChildStatus)
 
                     if ChildStatus == 'Current Count':
                         for data  in dataList:
-                            if data.post_road_test == 'Under process' or data.post_road_test=='Observation(same stage)' or data.post_road_test=='Halt':
+                            if data.post_road_test_date.strftime("%Y") == year and (data.post_road_test == 'Under process' or data.post_road_test=='Observation(same stage)' or data.post_road_test=='Halt'):
                                 ListItems.append(data)
 
                 if ParentStatus == 'Integrated Operation':
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(integrated_operation = ChildStatus)
+                        ListItems = dataList.filter(integrated_operation_date__year = year, integrated_operation = ChildStatus)
 
                     if ChildStatus == 'Current Count':
                         for data  in dataList:
-                            if data.integrated_operation == 'Under process' or data.integrated_operation=='Observation(same stage)' or data.integrated_operation=='Halt':
+                            if data.integrated_operation_date.strftime("%Y") == year and (data.integrated_operation == 'Under process' or data.integrated_operation=='Observation(same stage)' or data.integrated_operation=='Halt'):
                                 ListItems.append(data)
 
                 if ParentStatus == 'Rain Test':
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(rain_test = ChildStatus)
+                        ListItems = dataList.filter(rain_test_date__year = year, rain_test = ChildStatus)
 
                     if ChildStatus == 'Current Count':
                         for data  in dataList:
-                            if data.rain_test == 'Under process' or data.rain_test=='Observation(same stage)' or data.rain_test=='Halt':
+                            if data.rain_test_date.strftime("%Y") == year and (data.rain_test == 'Under process' or data.rain_test=='Observation(same stage)' or data.rain_test=='Halt'):
                                 ListItems.append(data)
 
                 if ParentStatus == 'Pre User Inspection':
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(pre_user_inspection = ChildStatus)
+                        ListItems = dataList.filter(pre_user_inspection_date__year = year, pre_user_inspection = ChildStatus)
 
                     if ChildStatus == 'Current Count':
                         for data  in dataList:
-                            if data.pre_user_inspection == 'Under process' or data.pre_user_inspection=='Observation(same stage)' or data.pre_user_inspection=='Halt':
+                            if data.pre_user_inspection_date.strftime("%Y") == year and (data.pre_user_inspection == 'Under process' or data.pre_user_inspection=='Observation(same stage)' or data.pre_user_inspection=='Halt'):
                                 ListItems.append(data)
 
                 if ParentStatus == 'Final Integration':
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(final_integration_status = ChildStatus)
+                        ListItems = dataList.filter(final_integration_date__year = year, final_integration_status = ChildStatus)
 
                     if ChildStatus == 'Current Count':
                         for data  in dataList:
-                            if data.final_integration_status == 'Under process' or data.final_integration_status=='Observation(same stage)' or data.final_integration_status=='Halt':
+                            if data.final_integration_date.strftime("%Y") == year and (data.final_integration_status == 'Under process' or data.final_integration_status=='Observation(same stage)' or data.final_integration_status=='Halt'):
                                 ListItems.append(data)
 
                 if ParentStatus == 'Loading/Unloading on MLV/HLF':
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(load_unload_on_mlv_hlf = ChildStatus)
+                        ListItems = dataList.filter(load_unload_on_mlv_hlf_date__year = year, load_unload_on_mlv_hlf = ChildStatus)
 
                     if ChildStatus == 'Current Count':
                         for data  in dataList:
-                            if data.load_unload_on_mlv_hlf == 'Under process' or data.load_unload_on_mlv_hlf=='Observation(same stage)' or data.load_unload_on_mlv_hlf=='Halt':
+                            if data.load_unload_on_mlv_hlf_date.strftime("%Y") == year and (data.load_unload_on_mlv_hlf == 'Under process' or data.load_unload_on_mlv_hlf=='Observation(same stage)' or data.load_unload_on_mlv_hlf=='Halt'):
                                 ListItems.append(data)
 
                 if ParentStatus == 'Pre-HIL':
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(pre_hil_status = ChildStatus)
+                        ListItems = dataList.filter(pre_hil_date__year = year, pre_hil_status = ChildStatus)
 
                     if ChildStatus == 'Current Count':
                         for data  in dataList:
-                            if data.pre_hil_status == 'Under process' or data.pre_hil_status=='Observation(same stage)' or data.pre_hil_status=='Halt':
+                            if data.pre_hil_date.strftime("%Y") == year and (data.pre_hil_status == 'Under process' or data.pre_hil_status=='Observation(same stage)' or data.pre_hil_status=='Halt'):
                                 ListItems.append(data)
 
                 if ParentStatus == 'Vibration':
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(vibaration_status = ChildStatus)
+                        ListItems = dataList.filter(vibaration_date__year = year, vibaration_status = ChildStatus)
 
                     if ChildStatus == 'Current Count':
                         for data  in dataList:
-                            if data.vibaration_status == 'Under process' or data.vibaration_status=='Observation(same stage)' or data.vibaration_status=='Halt':
+                            if data.vibaration_date.strftime("%Y") == year and (data.vibaration_status == 'Under process' or data.vibaration_status=='Observation(same stage)' or data.vibaration_status=='Halt'):
                                 ListItems.append(data)
 
                 if ParentStatus == 'CG Balancing':
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(cgbalancing_date_status = ChildStatus)
+                        ListItems = dataList.filter(cgbalancing_date__year = year, cgbalancing_date_status = ChildStatus)
 
                     if ChildStatus == 'Current Count':
                         for data  in dataList:
-                            if data.cgbalancing_date_status == 'Under process' or data.cgbalancing_date_status=='Observation(same stage)' or data.cgbalancing_date_status=='Halt':
+                            if data.cgbalancing_date.strftime("%Y") == year and (data.cgbalancing_date_status == 'Under process' or data.cgbalancing_date_status=='Observation(same stage)' or data.cgbalancing_date_status=='Halt'):
                                 ListItems.append(data)
 
                 if ParentStatus == 'Post-HIL':
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(post_hil_status = ChildStatus)
+                        ListItems = dataList.filter(post_hil_date__year = year, post_hil_status = ChildStatus)
 
                     if ChildStatus == 'Current Count':
                         for data  in dataList:
-                            if data.post_hil_status == 'Under process' or data.post_hil_status=='Observation(same stage)' or data.post_hil_status=='Halt':
+                            if data.post_hil_date.strftime("%Y") == year and (data.post_hil_status == 'Under process' or data.post_hil_status=='Observation(same stage)' or data.post_hil_status=='Halt'):
                                 ListItems.append(data)
 
                 if ParentStatus == 'System Alignment':
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(sys_align_status = ChildStatus)
+                        ListItems = dataList.filter(sys_align_Date__year = year, sys_align_status = ChildStatus)
 
                     if ChildStatus == 'Current Count':
                         for data  in dataList:
-                            if data.sys_align_status == 'Under process' or data.sys_align_status=='Observation(same stage)' or data.sys_align_status=='Halt':
+                            if data.sys_align_Date.strftime("%Y") == year and (data.sys_align_status == 'Under process' or data.sys_align_status=='Observation(same stage)' or data.sys_align_status=='Halt'):
                                 ListItems.append(data)
 
                 if ParentStatus == 'Incapsulation':
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(incapsulation_status = ChildStatus)
+                        ListItems = dataList.filter(incapsulation_date__year = year, incapsulation_status = ChildStatus)
 
                     if ChildStatus == 'Current Count':
                         for data  in dataList:
-                            if data.incapsulation_status == 'Under process' or data.incapsulation_status=='Observation(same stage)' or data.incapsulation_status=='Halt':
+                            if data.incapsulation_date.strftime("%Y") == year and (data.incapsulation_status == 'Under process' or data.incapsulation_status=='Observation(same stage)' or data.incapsulation_status=='Halt'):
                                 ListItems.append(data)
 
                 if ParentStatus == 'Final Integrated Testing':
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(final_integration_status = ChildStatus)
+                        ListItems = dataList.filter(final_integration_date__year = year, final_integration_status = ChildStatus)
 
                     if ChildStatus == 'Current Count':
                         for data  in dataList:
-                            if data.final_integration_status == 'Under process' or data.final_integration_status=='Observation(same stage)' or data.final_integration_status=='Halt':
+                            if data.final_integration_date.strftime("%Y") == year and (data.final_integration_status == 'Under process' or data.final_integration_status=='Observation(same stage)' or data.final_integration_status=='Halt'):
                                 ListItems.append(data)
 
                 if ParentStatus == 'FGT Status':
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(fgt_status = ChildStatus)
+                        ListItems = dataList.filter(fgt_date__year = year, fgt_status = ChildStatus)
 
                     if ChildStatus == 'Current Count':
                         for data  in dataList:
-                            if data.fgt_status == 'Under process' or data.fgt_status=='Observation(same stage)' or data.fgt_status=='Halt':
+                            if data.fgt_date.strftime("%Y") == year and (data.fgt_status == 'Under process' or data.fgt_status=='Observation(same stage)' or data.fgt_status=='Halt'):
                                 ListItems.append(data)
 
                 if ParentStatus == 'BHD Status':
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(bhd_status = ChildStatus)
+                        ListItems = dataList.filter(bhd_date__year = year, bhd_status = ChildStatus)
 
                     if ChildStatus == 'Current Count':
                         for data  in dataList:
-                            if data.bhd_status == 'Ok' or data.bhd_status=='Not Submitted)' or data.bhd_status=='QM Observations Forwarded':
+                            if data.bhd_date.strftime("%Y") == year and (data.bhd_status == 'Ok' or data.bhd_status=='Not Submitted)' or data.bhd_status=='QM Observations Forwarded'):
                                 ListItems.append(data)
 
                 if ParentStatus == 'FQM Status':
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(fqm_status = ChildStatus)
+                        ListItems = dataList.filter(fqm_date__year = year, fqm_status = ChildStatus)
 
                     if ChildStatus == 'Current Count':
                         for data  in dataList:
-                            if data.fqm_status=='Not Conducted)':
+                            if data.fqm_date.strftime("%Y") == year and (data.fqm_status=='Not Conducted)'):
                                 ListItems.append(data)
 
                 if ParentStatus == 'QM Certification Status':
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(qm_certification_status = ChildStatus)
+                        ListItems = dataList.filter(qm_certification_date__year = year, qm_certification_status = ChildStatus)
 
                     if ChildStatus == 'Current Count':
                         for data  in dataList:
-                            if data.qm_certification_status == 'QM certificate issued' or data.qm_certification_status=='QM Observations Forwarded)':
+                            if data.qm_certification_date.strftime("%Y") == year and (data.qm_certification_status == 'QM certificate issued' or data.qm_certification_status=='QM Observations Forwarded)'):
                                 ListItems.append(data)
 
                 if ParentStatus == 'Launch/ End User':
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(enduser_status = ChildStatus)
+                        ListItems = dataList.filter(enduser_date__year = year, enduser_status = ChildStatus)
                     else:
                         for data  in dataList:
-                            if data.enduser_status == 'Ok' or data.enduser_status=='Observation' or data.enduser_status=='Halt':
+                            if data.enduser_date.strftime("%Y") == year and (data.enduser_status == 'Ok' or data.enduser_status=='Observation' or data.enduser_status=='Halt'):
                                 ListItems.append(data)
 
                 serializer = ProductionSystemSerialzer(ListItems, many=True)
                 return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
-            serializer = ProductionSystemSerialzer(dataList, many=True)
-            print(serializer.data)
-            return JsonResponse({'status': 'true', 'data': serializer.data}, status=200)
+            # serializer = ProductionSystemSerialzer(dataList, many=True)
+            # print(serializer.data)
+            # return JsonResponse({'status': 'true', 'data': serializer.data}, status=200)
         except Exception as e:
             print(e)
             return JsonResponse({'status': 'false'}, status=200)
@@ -1054,289 +1054,311 @@ class SmsController:
 
     @staticmethod
     def GetFlightList(request):
-        # try:
-        org = request.query_params['selected_org']
-        year = request.query_params['selected_year']
-        type = request.query_params['selected_type']
-        system = request.query_params['selected_system']
-        ParentStatus = request.query_params['selected_status']
-        ChildStatus = request.query_params['child_status']
-        # print(ParentStatus)
-        # print(ChildStatus)
-        filter_objects = Q()
+        try:
+            org = request.query_params['selected_org']
+            year = request.query_params['selected_year']
+            type = request.query_params['selected_type']
+            system = request.query_params['selected_system']
+            ParentStatus = request.query_params['selected_status']
+            ChildStatus = request.query_params['child_status']
+            # print(ParentStatus)
+            # print(ChildStatus)
+            filter_objects = Q()
 
-        def get_filter(field_name, filter_condition, filter_value):
-            # thanks to the below post
-            # https://stackoverflow.com/questions/310732/in-django-how-does-one-filter-a-queryset-with-dynamic-field-lookups
-            # the idea to this below logic is very similar to that in the above mentioned post
-            if filter_condition.strip() == "contains":
-                kwargs = {
-                    '{0}__icontains'.format(field_name): filter_value
-                }
-                return Q(**kwargs)
+            def get_filter(field_name, filter_condition, filter_value):
+                # thanks to the below post
+                # https://stackoverflow.com/questions/310732/in-django-how-does-one-filter-a-queryset-with-dynamic-field-lookups
+                # the idea to this below logic is very similar to that in the above mentioned post
+                if filter_condition.strip() == "contains":
+                    kwargs = {
+                        '{0}__icontains'.format(field_name): filter_value
+                    }
+                    return Q(**kwargs)
 
-            if filter_condition.strip() == "not_equal":
-                kwargs = {
-                    '{0}__iexact'.format(field_name): filter_value
-                }
-                return ~Q(**kwargs)
+                if filter_condition.strip() == "not_equal":
+                    kwargs = {
+                        '{0}__iexact'.format(field_name): filter_value
+                    }
+                    return ~Q(**kwargs)
 
-            if filter_condition.strip() == "starts_with":
-                kwargs = {
-                    '{0}__istartswith'.format(field_name): filter_value
-                }
-                return Q(**kwargs)
-            if filter_condition.strip() == "equal":
-                kwargs = {
-                    '{0}__iexact'.format(field_name): filter_value
-                }
-                return Q(**kwargs)
+                if filter_condition.strip() == "starts_with":
+                    kwargs = {
+                        '{0}__istartswith'.format(field_name): filter_value
+                    }
+                    return Q(**kwargs)
+                if filter_condition.strip() == "equal":
+                    kwargs = {
+                        '{0}__iexact'.format(field_name): filter_value
+                    }
+                    return Q(**kwargs)
 
-            if filter_condition.strip() == "not_equal":
-                kwargs = {
-                    '{0}__iexact'.format(field_name): filter_value
-                }
+                if filter_condition.strip() == "not_equal":
+                    kwargs = {
+                        '{0}__iexact'.format(field_name): filter_value
+                    }
 
-                return ~Q(**kwargs)
+                    return ~Q(**kwargs)
 
-        # create dynamic filter
-        if year != '':
-            filter_objects &= get_filter(
-                'testing_date__year', 'equal',
-                year)
-        if org != '':
-            filter_objects &= get_filter(
-                'organization', 'equal',
-                org)
-        if type != '':
-            filter_objects &= get_filter(
-                'sys_type', 'equal',
-                type)
-        if system != '':
-            filter_objects &= get_filter(
-                'system', 'equal',
-                system)
-
-
-        dataList = FlightSystemStatus.objects.filter(filter_objects)
-        if ParentStatus != '':
-            ListItems = []
-            if ParentStatus == 'BLT':
-                if ChildStatus != 'Current Count':
-                    # filter_objects &= get_filter('blt_status', 'equal', ChildStatus)
-                    ListItems = dataList.filter(blt_status=ChildStatus)
-                if ChildStatus == 'Current Count':
-                    for data in dataList:
-                        if data.blt_status == 'Under process' or data.blt_status == 'Observation(same stage)' or data.blt_status == 'Halt':
-                            ListItems.append(data)
-
-            if ParentStatus == 'EMP Proofing':
-                if ChildStatus != 'Current Count':
-                    # filter_objects &= get_filter('emp_proofing', 'equal', ChildStatus)
-                    ListItems = dataList.filter(emp_proofing=ChildStatus)
-
-                if ChildStatus == 'Current Count':
-                    for data in dataList:
-                        if data.emp_proofing == 'Under process' or data.emp_proofing == 'Observation(same stage)' or data.emp_proofing == 'Halt':
-                            ListItems.append(data)
-
-            if ParentStatus == 'Functional Test W/O Dummy Bird':
-                if ChildStatus != 'Current Count':
-                    ListItems = dataList.filter(func_tst=ChildStatus)
-
-                if ChildStatus == 'Current Count':
-                    for data in dataList:
-                        if data.func_tst == 'Under process' or data.func_tst == 'Observation(same stage)' or data.func_tst == 'Halt':
-                            ListItems.append(data)
-
-            if ParentStatus == 'Functional Test With Dummy Bird':
-                if ChildStatus != 'Current Count':
-                    ListItems = dataList.filter(func_tst_dummy_bird=ChildStatus)
-
-                if ChildStatus == 'Current Count':
-                    for data in dataList:
-                        if data.func_tst_dummy_bird == 'Under process' or data.func_tst_dummy_bird == 'Observation(same stage)' or data.func_tst_dummy_bird == 'Halt':
-                            ListItems.append(data)
-
-            if ParentStatus == 'Road Test':
-                if ChildStatus != 'Current Count':
-                    ListItems = dataList.filter(road_test=ChildStatus)
-
-                if ChildStatus == 'Current Count':
-                    for data in dataList:
-                        if data.road_test == 'Under process' or data.road_test == 'Observation(same stage)' or data.road_test == 'Halt':
-                            ListItems.append(data)
-
-            if ParentStatus == 'Post Road Test':
-                if ChildStatus != 'Current Count':
-                    ListItems = dataList.filter(post_road_test=ChildStatus)
-
-                if ChildStatus == 'Current Count':
-                    for data in dataList:
-                        if data.post_road_test == 'Under process' or data.post_road_test == 'Observation(same stage)' or data.post_road_test == 'Halt':
-                            ListItems.append(data)
-
-            if ParentStatus == 'Integrated Operation':
-                if ChildStatus != 'Current Count':
-                    ListItems = dataList.filter(integrated_operation=ChildStatus)
-
-                if ChildStatus == 'Current Count':
-                    for data in dataList:
-                        if data.integrated_operation == 'Under process' or data.integrated_operation == 'Observation(same stage)' or data.integrated_operation == 'Halt':
-                            ListItems.append(data)
-
-            if ParentStatus == 'Rain Test':
-                if ChildStatus != 'Current Count':
-                    ListItems = dataList.filter(rain_test=ChildStatus)
-
-                if ChildStatus == 'Current Count':
-                    for data in dataList:
-                        if data.rain_test == 'Under process' or data.rain_test == 'Observation(same stage)' or data.rain_test == 'Halt':
-                            ListItems.append(data)
-
-            if ParentStatus == 'Pre User Inspection':
-                if ChildStatus != 'Current Count':
-                    ListItems = dataList.filter(pre_user_inspection=ChildStatus)
-
-                if ChildStatus == 'Current Count':
-                    for data in dataList:
-                        if data.pre_user_inspection == 'Under process' or data.pre_user_inspection == 'Observation(same stage)' or data.pre_user_inspection == 'Halt':
-                            ListItems.append(data)
-
-            if ParentStatus == 'Final Integration':
-                if ChildStatus != 'Current Count':
-                    ListItems = dataList.filter(final_integration_status=ChildStatus)
-
-                if ChildStatus == 'Current Count':
-                    for data in dataList:
-                        if data.final_integration_status == 'Under process' or data.final_integration_status == 'Observation(same stage)' or data.final_integration_status == 'Halt':
-                            ListItems.append(data)
-
-            if ParentStatus == 'Loading/Unloading on MLV/HLF':
-                if ChildStatus != 'Current Count':
-                    ListItems = dataList.filter(load_unload_on_mlv_hlf=ChildStatus)
-
-                if ChildStatus == 'Current Count':
-                    for data in dataList:
-                        if data.load_unload_on_mlv_hlf == 'Under process' or data.load_unload_on_mlv_hlf == 'Observation(same stage)' or data.load_unload_on_mlv_hlf == 'Halt':
-                            ListItems.append(data)
-
-            if ParentStatus == 'Pre-HIL':
-                if ChildStatus != 'Current Count':
-                    ListItems = dataList.filter(pre_hil_status=ChildStatus)
-
-                if ChildStatus == 'Current Count':
-                    for data in dataList:
-                        if data.pre_hil_status == 'Under process' or data.pre_hil_status == 'Observation(same stage)' or data.pre_hil_status == 'Halt':
-                            ListItems.append(data)
-
-            if ParentStatus == 'Vibration':
-                if ChildStatus != 'Current Count':
-                    ListItems = dataList.filter(vibaration_status=ChildStatus)
-
-                if ChildStatus == 'Current Count':
-                    for data in dataList:
-                        if data.vibaration_status == 'Under process' or data.vibaration_status == 'Observation(same stage)' or data.vibaration_status == 'Halt':
-                            ListItems.append(data)
-
-            if ParentStatus == 'CG Balancing':
-                if ChildStatus != 'Current Count':
-                    ListItems = dataList.filter(cgbalancing_date_status=ChildStatus)
-
-                if ChildStatus == 'Current Count':
-                    for data in dataList:
-                        if data.cgbalancing_date_status == 'Under process' or data.cgbalancing_date_status == 'Observation(same stage)' or data.cgbalancing_date_status == 'Halt':
-                            ListItems.append(data)
-
-            if ParentStatus == 'Post-HIL':
-                if ChildStatus != 'Current Count':
-                    ListItems = dataList.filter(post_hil_status=ChildStatus)
-
-                if ChildStatus == 'Current Count':
-                    for data in dataList:
-                        if data.post_hil_status == 'Under process' or data.post_hil_status == 'Observation(same stage)' or data.post_hil_status == 'Halt':
-                            ListItems.append(data)
-
-            if ParentStatus == 'System Alignment':
-                if ChildStatus != 'Current Count':
-                    ListItems = dataList.filter(sys_align_status=ChildStatus)
-
-                if ChildStatus == 'Current Count':
-                    for data in dataList:
-                        if data.sys_align_status == 'Under process' or data.sys_align_status == 'Observation(same stage)' or data.sys_align_status == 'Halt':
-                            ListItems.append(data)
-
-            if ParentStatus == 'Incapsulation':
-                if ChildStatus != 'Current Count':
-                    ListItems = dataList.filter(incapsulation_status=ChildStatus)
-
-                if ChildStatus == 'Current Count':
-                    for data in dataList:
-                        if data.incapsulation_status == 'Under process' or data.incapsulation_status == 'Observation(same stage)' or data.incapsulation_status == 'Halt':
-                            ListItems.append(data)
-
-            if ParentStatus == 'Final Integrated Testing':
-                if ChildStatus != 'Current Count':
-                    ListItems = dataList.filter(final_integration_status=ChildStatus)
-
-                if ChildStatus == 'Current Count':
-                    for data in dataList:
-                        if data.final_integration_status == 'Under process' or data.final_integration_status == 'Observation(same stage)' or data.final_integration_status == 'Halt':
-                            ListItems.append(data)
-
-            if ParentStatus == 'FGT Status':
-                if ChildStatus != 'Current Count':
-                    ListItems = dataList.filter(fgt_status=ChildStatus)
-
-                if ChildStatus == 'Current Count':
-                    for data in dataList:
-                        if data.fgt_status == 'Under process' or data.fgt_status == 'Observation(same stage)' or data.fgt_status == 'Halt':
-                            ListItems.append(data)
-
-            if ParentStatus == 'BHD Status':
-                if ChildStatus != 'Current Count':
-                    ListItems = dataList.filter(bhd_status=ChildStatus)
-
-                if ChildStatus == 'Current Count':
-                    for data in dataList:
-                        if data.bhd_status == 'Ok' or data.bhd_status == 'Not Submitted)' or data.bhd_status == 'QM Observations Forwarded':
-                            ListItems.append(data)
-
-            if ParentStatus == 'FQM Status':
-                if ChildStatus != 'Current Count':
-                    ListItems = dataList.filter(fqm_status=ChildStatus)
-
-                if ChildStatus == 'Current Count':
-                    for data in dataList:
-                        if data.fqm_status == 'Not Conducted)':
-                            ListItems.append(data)
-
-            if ParentStatus == 'QM Certification Status':
-                # if ChildStatus != 'Current Count':
-                ListItems = dataList.filter(qm_certification_status=ChildStatus)
-
-                # if ChildStatus == 'Current Count':
-                #     for data in dataList:
-                #         if data.qm_certification_status == 'QM certificate issued' or data.qm_certification_status == 'QM Observations Forwarded)':
-                #             ListItems.append(data)
-
-            if ParentStatus == 'Launch/ End User':
-                if ChildStatus != 'Current Count':
-                    ListItems = dataList.filter(launchact_status=ChildStatus)
-                else:
-                    for data in dataList:
-                        if data.launchact_status == 'Ok' or data.launchact_status == 'Observation' or data.launchact_status == 'Halt':
-                            ListItems.append(data)
-
-            serializer = FlightSystemSerialzer(ListItems, many=True)
-            return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+            # create dynamic filter
+            # if year != '':
+            #     filter_objects &= get_filter(
+            #         'testing_date__year', 'equal',
+            #         year)
+            if org != '':
+                filter_objects &= get_filter(
+                    'organization', 'equal',
+                    org)
+            if type != '':
+                filter_objects &= get_filter(
+                    'sys_type', 'equal',
+                    type)
+            if system != '':
+                filter_objects &= get_filter(
+                    'system', 'equal',
+                    system)
 
 
-        serializer = FlightSystemSerialzer(dataList, many=True)
-        return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+            dataList = FlightSystemStatus.objects.filter(filter_objects)
+            if ParentStatus != '':
+                ListItems = []
+                if ParentStatus == 'BLT':
+                    if ChildStatus != 'Current Count':
+                        # filter_objects &= get_filter('blt_status', 'equal', ChildStatus)
+                        ListItems = dataList.filter(blt_date__year=year, blt_status=ChildStatus)
+                    if ChildStatus == 'Current Count':
+                        for data in dataList:
+                            if data.blt_date.strftime("%Y") == year and (
+                                    data.blt_status == 'Under process' or data.blt_status == 'Observation(same stage)' or data.blt_status == 'Halt'):
+                                ListItems.append(data)
 
-    # except:
-    #     return JsonResponse({'message': 'Sorry! No Task found.'}, status=500)
+                if ParentStatus == 'EMP Proofing':
+                    if ChildStatus != 'Current Count':
+                        # filter_objects &= get_filter('emp_proofing', 'equal', ChildStatus)
+                        ListItems = dataList.filter(emp_proofing_date__year=year, emp_proofing=ChildStatus)
+
+                    if ChildStatus == 'Current Count':
+                        for data in dataList:
+                            if data.emp_proofing_date.strftime("%Y") == year and (
+                                    data.emp_proofing == 'Under process' or data.emp_proofing == 'Observation(same stage)' or data.emp_proofing == 'Halt'):
+                                ListItems.append(data)
+
+                if ParentStatus == 'Functional Test W/O Dummy Bird':
+                    if ChildStatus != 'Current Count':
+                        ListItems = dataList.filter(func_tst_date__year=year, func_tst=ChildStatus)
+
+                    if ChildStatus == 'Current Count':
+                        for data in dataList:
+                            if data.func_tst_date.strftime("%Y") == year and (
+                                    data.func_tst == 'Under process' or data.func_tst == 'Observation(same stage)' or data.func_tst == 'Halt'):
+                                ListItems.append(data)
+
+                if ParentStatus == 'Functional Test With Dummy Bird':
+                    if ChildStatus != 'Current Count':
+                        ListItems = dataList.filter(func_tst_dummy_bird_date__year=year, func_tst_dummy_bird=ChildStatus)
+
+                    if ChildStatus == 'Current Count':
+                        for data in dataList:
+                            if data.func_tst_dummy_bird_date.strftime("%Y") == year and (
+                                    data.func_tst_dummy_bird == 'Under process' or data.func_tst_dummy_bird == 'Observation(same stage)' or data.func_tst_dummy_bird == 'Halt'):
+                                ListItems.append(data)
+
+                if ParentStatus == 'Road Test':
+                    if ChildStatus != 'Current Count':
+                        ListItems = dataList.filter(road_test_date__year=year, road_test=ChildStatus)
+
+                    if ChildStatus == 'Current Count':
+                        for data in dataList:
+                            if data.oad_test_date.strftime("%Y") == year and (
+                                    data.road_test == 'Under process' or data.road_test == 'Observation(same stage)' or data.road_test == 'Halt'):
+                                ListItems.append(data)
+
+                if ParentStatus == 'Post Road Test':
+                    if ChildStatus != 'Current Count':
+                        ListItems = dataList.filter(post_road_test_date__year=year, post_road_test=ChildStatus)
+
+                    if ChildStatus == 'Current Count':
+                        for data in dataList:
+                            if data.post_road_test_date.strftime("%Y") == year and (
+                                    data.post_road_test == 'Under process' or data.post_road_test == 'Observation(same stage)' or data.post_road_test == 'Halt'):
+                                ListItems.append(data)
+
+                if ParentStatus == 'Integrated Operation':
+                    if ChildStatus != 'Current Count':
+                        ListItems = dataList.filter(integrated_operation_date__year=year, integrated_operation=ChildStatus)
+
+                    if ChildStatus == 'Current Count':
+                        for data in dataList:
+                            if data.integrated_operation_date.strftime("%Y") == year and (
+                                    data.integrated_operation == 'Under process' or data.integrated_operation == 'Observation(same stage)' or data.integrated_operation == 'Halt'):
+                                ListItems.append(data)
+
+                if ParentStatus == 'Rain Test':
+                    if ChildStatus != 'Current Count':
+                        ListItems = dataList.filter(rain_test_date__year=year, rain_test=ChildStatus)
+
+                    if ChildStatus == 'Current Count':
+                        for data in dataList:
+                            if data.rain_test_date.strftime("%Y") == year and (
+                                    data.rain_test == 'Under process' or data.rain_test == 'Observation(same stage)' or data.rain_test == 'Halt'):
+                                ListItems.append(data)
+
+                if ParentStatus == 'Pre User Inspection':
+                    if ChildStatus != 'Current Count':
+                        ListItems = dataList.filter(pre_user_inspection_date__year=year, pre_user_inspection=ChildStatus)
+
+                    if ChildStatus == 'Current Count':
+                        for data in dataList:
+                            if data.pre_user_inspection_date.strftime("%Y") == year and (
+                                    data.pre_user_inspection == 'Under process' or data.pre_user_inspection == 'Observation(same stage)' or data.pre_user_inspection == 'Halt'):
+                                ListItems.append(data)
+
+                if ParentStatus == 'Final Integration':
+                    if ChildStatus != 'Current Count':
+                        ListItems = dataList.filter(final_integration_date__year=year, final_integration_status=ChildStatus)
+
+                    if ChildStatus == 'Current Count':
+                        for data in dataList:
+                            if data.final_integration_date.strftime("%Y") == year and (
+                                    data.final_integration_status == 'Under process' or data.final_integration_status == 'Observation(same stage)' or data.final_integration_status == 'Halt'):
+                                ListItems.append(data)
+
+                if ParentStatus == 'Loading/Unloading on MLV/HLF':
+                    if ChildStatus != 'Current Count':
+                        ListItems = dataList.filter(load_unload_on_mlv_hlf_date__year=year,
+                                                    load_unload_on_mlv_hlf=ChildStatus)
+
+                    if ChildStatus == 'Current Count':
+                        for data in dataList:
+                            if data.load_unload_on_mlv_hlf_date.strftime("%Y") == year and (
+                                    data.load_unload_on_mlv_hlf == 'Under process' or data.load_unload_on_mlv_hlf == 'Observation(same stage)' or data.load_unload_on_mlv_hlf == 'Halt'):
+                                ListItems.append(data)
+
+                if ParentStatus == 'Pre-HIL':
+                    if ChildStatus != 'Current Count':
+                        ListItems = dataList.filter(pre_hil_date__year=year, pre_hil_status=ChildStatus)
+
+                    if ChildStatus == 'Current Count':
+                        for data in dataList:
+                            if data.pre_hil_date.strftime("%Y") == year and (
+                                    data.pre_hil_status == 'Under process' or data.pre_hil_status == 'Observation(same stage)' or data.pre_hil_status == 'Halt'):
+                                ListItems.append(data)
+
+                if ParentStatus == 'Vibration':
+                    if ChildStatus != 'Current Count':
+                        ListItems = dataList.filter(vibaration_date__year=year, vibaration_status=ChildStatus)
+
+                    if ChildStatus == 'Current Count':
+                        for data in dataList:
+                            if data.vibaration_date.strftime("%Y") == year and (
+                                    data.vibaration_status == 'Under process' or data.vibaration_status == 'Observation(same stage)' or data.vibaration_status == 'Halt'):
+                                ListItems.append(data)
+
+                if ParentStatus == 'CG Balancing':
+                    if ChildStatus != 'Current Count':
+                        ListItems = dataList.filter(cgbalancing_date__year=year, cgbalancing_date_status=ChildStatus)
+
+                    if ChildStatus == 'Current Count':
+                        for data in dataList:
+                            if data.cgbalancing_date.strftime("%Y") == year and (
+                                    data.cgbalancing_date_status == 'Under process' or data.cgbalancing_date_status == 'Observation(same stage)' or data.cgbalancing_date_status == 'Halt'):
+                                ListItems.append(data)
+
+                if ParentStatus == 'Post-HIL':
+                    if ChildStatus != 'Current Count':
+                        ListItems = dataList.filter(post_hil_date__year=year, post_hil_status=ChildStatus)
+
+                    if ChildStatus == 'Current Count':
+                        for data in dataList:
+                            if data.post_hil_date.strftime("%Y") == year and (
+                                    data.post_hil_status == 'Under process' or data.post_hil_status == 'Observation(same stage)' or data.post_hil_status == 'Halt'):
+                                ListItems.append(data)
+
+                if ParentStatus == 'System Alignment':
+                    if ChildStatus != 'Current Count':
+                        ListItems = dataList.filter(sys_align_Date__year=year, sys_align_status=ChildStatus)
+
+                    if ChildStatus == 'Current Count':
+                        for data in dataList:
+                            if data.sys_align_Date.strftime("%Y") == year and (
+                                    data.sys_align_status == 'Under process' or data.sys_align_status == 'Observation(same stage)' or data.sys_align_status == 'Halt'):
+                                ListItems.append(data)
+
+                if ParentStatus == 'Incapsulation':
+                    if ChildStatus != 'Current Count':
+                        ListItems = dataList.filter(incapsulation_date__year=year, incapsulation_status=ChildStatus)
+
+                    if ChildStatus == 'Current Count':
+                        for data in dataList:
+                            if data.incapsulation_date.strftime("%Y") == year and (
+                                    data.incapsulation_status == 'Under process' or data.incapsulation_status == 'Observation(same stage)' or data.incapsulation_status == 'Halt'):
+                                ListItems.append(data)
+
+                if ParentStatus == 'Final Integrated Testing':
+                    if ChildStatus != 'Current Count':
+                        ListItems = dataList.filter(final_integration_date__year=year, final_integration_status=ChildStatus)
+
+                    if ChildStatus == 'Current Count':
+                        for data in dataList:
+                            if data.final_integration_date.strftime("%Y") == year and (
+                                    data.final_integration_status == 'Under process' or data.final_integration_status == 'Observation(same stage)' or data.final_integration_status == 'Halt'):
+                                ListItems.append(data)
+
+                if ParentStatus == 'FGT Status':
+                    if ChildStatus != 'Current Count':
+                        ListItems = dataList.filter(fgt_date__year=year, fgt_status=ChildStatus)
+
+                    if ChildStatus == 'Current Count':
+                        for data in dataList:
+                            if data.fgt_date.strftime("%Y") == year and (
+                                    data.fgt_status == 'Under process' or data.fgt_status == 'Observation(same stage)' or data.fgt_status == 'Halt'):
+                                ListItems.append(data)
+
+                if ParentStatus == 'BHD Status':
+                    if ChildStatus != 'Current Count':
+                        ListItems = dataList.filter(bhd_date__year=year, bhd_status=ChildStatus)
+
+                    if ChildStatus == 'Current Count':
+                        for data in dataList:
+                            if data.bhd_date.strftime("%Y") == year and (
+                                    data.bhd_status == 'Ok' or data.bhd_status == 'Not Submitted)' or data.bhd_status == 'QM Observations Forwarded'):
+                                ListItems.append(data)
+
+                if ParentStatus == 'FQM Status':
+                    if ChildStatus != 'Current Count':
+                        ListItems = dataList.filter(fqm_date__year=year, fqm_status=ChildStatus)
+
+                    if ChildStatus == 'Current Count':
+                        for data in dataList:
+                            if data.fqm_date.strftime("%Y") == year and (data.fqm_status == 'Not Conducted)'):
+                                ListItems.append(data)
+
+                if ParentStatus == 'QM Certification Status':
+                    if ChildStatus != 'Current Count':
+                        ListItems = dataList.filter(qm_certification_date__year=year, qm_certification_status=ChildStatus)
+
+                    if ChildStatus == 'Current Count':
+                        for data in dataList:
+                            if data.qm_certification_date.strftime("%Y") == year and (
+                                    data.qm_certification_status == 'QM certificate issued' or data.qm_certification_status == 'QM Observations Forwarded)'):
+                                ListItems.append(data)
+
+                if ParentStatus == 'Launch/ End User':
+                    if ChildStatus != 'Current Count':
+                        ListItems = dataList.filter(launchact_date__year = year, launchact_status=ChildStatus)
+                    else:
+                        for data in dataList:
+                            if data.launchact_date.strftime("%Y") == year and (data.launchact_status == 'Ok' or data.launchact_status == 'Observation' or data.launchact_status == 'Halt'):
+                                ListItems.append(data)
+
+                serializer = FlightSystemSerialzer(ListItems, many=True)
+                return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+
+
+        # serializer = FlightSystemSerialzer(dataList, many=True)
+        # return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+
+        except:
+            return JsonResponse({'message': 'Sorry! No Task found.'}, status=500)
 
     # API for PDF generator with table and Text_wraping
 
@@ -1800,10 +1822,10 @@ class SmsController:
                     return ~Q(**kwargs)
 
             # create dynamic filter
-            if year != '':
-                filter_objects &= get_filter(
-                    'testing_date__year', 'equal',
-                    year)
+            # if year != '':
+            #     filter_objects &= get_filter(
+            #         'testing_date__year', 'equal',
+            #         year)
             if org != '':
                 filter_objects &= get_filter(
                     'organization', 'equal',
@@ -1823,214 +1845,214 @@ class SmsController:
                 if ParentStatus == 'BLT':
                     if ChildStatus != 'Current Count':
                         # filter_objects &= get_filter('blt_status', 'equal', ChildStatus)
-                        ListItems = dataList.filter(blt_status=ChildStatus)
+                        ListItems = dataList.filter(blt_date__year = year,blt_status = ChildStatus)
                     if ChildStatus == 'Current Count':
-                        for data in dataList:
-                            if data.blt_status == 'Under process' or data.blt_status == 'Observation(same stage)' or data.blt_status == 'Halt':
+                        for data  in dataList:
+                            if data.blt_date.strftime("%Y") == year and (data.blt_status == 'Under process' or data.blt_status=='Observation(same stage)' or data.blt_status=='Halt'):
                                 ListItems.append(data)
 
                 if ParentStatus == 'EMP Proofing':
                     if ChildStatus != 'Current Count':
                         # filter_objects &= get_filter('emp_proofing', 'equal', ChildStatus)
-                        ListItems = dataList.filter(emp_proofing=ChildStatus)
+                        ListItems = dataList.filter(emp_proofing_date__year = year,emp_proofing = ChildStatus)
 
                     if ChildStatus == 'Current Count':
-                        for data in dataList:
-                            if data.emp_proofing == 'Under process' or data.emp_proofing == 'Observation(same stage)' or data.emp_proofing == 'Halt':
+                        for data  in dataList:
+                            if data.emp_proofing_date.strftime("%Y") == year and  (data.emp_proofing == 'Under process' or data.emp_proofing=='Observation(same stage)' or data.emp_proofing=='Halt'):
                                 ListItems.append(data)
 
                 if ParentStatus == 'Functional Test W/O Dummy Bird':
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(func_tst=ChildStatus)
+                        ListItems = dataList.filter(func_tst_date__year = year, func_tst = ChildStatus)
 
                     if ChildStatus == 'Current Count':
-                        for data in dataList:
-                            if data.func_tst == 'Under process' or data.func_tst == 'Observation(same stage)' or data.func_tst == 'Halt':
+                        for data  in dataList:
+                            if data.func_tst_date.strftime("%Y") == year and (data.func_tst == 'Under process' or data.func_tst=='Observation(same stage)' or data.func_tst=='Halt'):
                                 ListItems.append(data)
 
                 if ParentStatus == 'Functional Test With Dummy Bird':
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(func_tst_dummy_bird=ChildStatus)
+                        ListItems = dataList.filter(func_tst_dummy_bird_date__year = year, func_tst_dummy_bird = ChildStatus)
 
                     if ChildStatus == 'Current Count':
-                        for data in dataList:
-                            if data.func_tst_dummy_bird == 'Under process' or data.func_tst_dummy_bird == 'Observation(same stage)' or data.func_tst_dummy_bird == 'Halt':
+                        for data  in dataList:
+                            if data.func_tst_dummy_bird_date.strftime("%Y") == year and (data.func_tst_dummy_bird == 'Under process' or data.func_tst_dummy_bird=='Observation(same stage)' or data.func_tst_dummy_bird=='Halt'):
                                 ListItems.append(data)
 
                 if ParentStatus == 'Road Test':
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(road_test=ChildStatus)
+                        ListItems = dataList.filter(road_test_date__year = year, road_test = ChildStatus)
 
                     if ChildStatus == 'Current Count':
-                        for data in dataList:
-                            if data.road_test == 'Under process' or data.road_test == 'Observation(same stage)' or data.road_test == 'Halt':
+                        for data  in dataList:
+                            if data.oad_test_date.strftime("%Y") == year and (data.road_test == 'Under process' or data.road_test=='Observation(same stage)' or data.road_test=='Halt'):
                                 ListItems.append(data)
 
                 if ParentStatus == 'Post Road Test':
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(post_road_test=ChildStatus)
+                        ListItems = dataList.filter(post_road_test_date__year = year, post_road_test = ChildStatus)
 
                     if ChildStatus == 'Current Count':
-                        for data in dataList:
-                            if data.post_road_test == 'Under process' or data.post_road_test == 'Observation(same stage)' or data.post_road_test == 'Halt':
+                        for data  in dataList:
+                            if data.post_road_test_date.strftime("%Y") == year and (data.post_road_test == 'Under process' or data.post_road_test=='Observation(same stage)' or data.post_road_test=='Halt'):
                                 ListItems.append(data)
 
                 if ParentStatus == 'Integrated Operation':
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(integrated_operation=ChildStatus)
+                        ListItems = dataList.filter(integrated_operation_date__year = year, integrated_operation = ChildStatus)
 
                     if ChildStatus == 'Current Count':
-                        for data in dataList:
-                            if data.integrated_operation == 'Under process' or data.integrated_operation == 'Observation(same stage)' or data.integrated_operation == 'Halt':
+                        for data  in dataList:
+                            if data.integrated_operation_date.strftime("%Y") == year and (data.integrated_operation == 'Under process' or data.integrated_operation=='Observation(same stage)' or data.integrated_operation=='Halt'):
                                 ListItems.append(data)
 
                 if ParentStatus == 'Rain Test':
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(rain_test=ChildStatus)
+                        ListItems = dataList.filter(rain_test_date__year = year, rain_test = ChildStatus)
 
                     if ChildStatus == 'Current Count':
-                        for data in dataList:
-                            if data.rain_test == 'Under process' or data.rain_test == 'Observation(same stage)' or data.rain_test == 'Halt':
+                        for data  in dataList:
+                            if data.rain_test_date.strftime("%Y") == year and (data.rain_test == 'Under process' or data.rain_test=='Observation(same stage)' or data.rain_test=='Halt'):
                                 ListItems.append(data)
 
                 if ParentStatus == 'Pre User Inspection':
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(pre_user_inspection=ChildStatus)
+                        ListItems = dataList.filter(pre_user_inspection_date__year = year, pre_user_inspection = ChildStatus)
 
                     if ChildStatus == 'Current Count':
-                        for data in dataList:
-                            if data.pre_user_inspection == 'Under process' or data.pre_user_inspection == 'Observation(same stage)' or data.pre_user_inspection == 'Halt':
+                        for data  in dataList:
+                            if data.pre_user_inspection_date.strftime("%Y") == year and (data.pre_user_inspection == 'Under process' or data.pre_user_inspection=='Observation(same stage)' or data.pre_user_inspection=='Halt'):
                                 ListItems.append(data)
 
                 if ParentStatus == 'Final Integration':
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(final_integration_status=ChildStatus)
+                        ListItems = dataList.filter(final_integration_date__year = year, final_integration_status = ChildStatus)
 
                     if ChildStatus == 'Current Count':
-                        for data in dataList:
-                            if data.final_integration_status == 'Under process' or data.final_integration_status == 'Observation(same stage)' or data.final_integration_status == 'Halt':
+                        for data  in dataList:
+                            if data.final_integration_date.strftime("%Y") == year and (data.final_integration_status == 'Under process' or data.final_integration_status=='Observation(same stage)' or data.final_integration_status=='Halt'):
                                 ListItems.append(data)
 
                 if ParentStatus == 'Loading/Unloading on MLV/HLF':
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(load_unload_on_mlv_hlf=ChildStatus)
+                        ListItems = dataList.filter(load_unload_on_mlv_hlf_date__year = year, load_unload_on_mlv_hlf = ChildStatus)
 
                     if ChildStatus == 'Current Count':
-                        for data in dataList:
-                            if data.load_unload_on_mlv_hlf == 'Under process' or data.load_unload_on_mlv_hlf == 'Observation(same stage)' or data.load_unload_on_mlv_hlf == 'Halt':
+                        for data  in dataList:
+                            if data.load_unload_on_mlv_hlf_date.strftime("%Y") == year and (data.load_unload_on_mlv_hlf == 'Under process' or data.load_unload_on_mlv_hlf=='Observation(same stage)' or data.load_unload_on_mlv_hlf=='Halt'):
                                 ListItems.append(data)
 
                 if ParentStatus == 'Pre-HIL':
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(pre_hil_status=ChildStatus)
+                        ListItems = dataList.filter(pre_hil_date__year = year, pre_hil_status = ChildStatus)
 
                     if ChildStatus == 'Current Count':
-                        for data in dataList:
-                            if data.pre_hil_status == 'Under process' or data.pre_hil_status == 'Observation(same stage)' or data.pre_hil_status == 'Halt':
+                        for data  in dataList:
+                            if data.pre_hil_date.strftime("%Y") == year and (data.pre_hil_status == 'Under process' or data.pre_hil_status=='Observation(same stage)' or data.pre_hil_status=='Halt'):
                                 ListItems.append(data)
 
                 if ParentStatus == 'Vibration':
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(vibaration_status=ChildStatus)
+                        ListItems = dataList.filter(vibaration_date__year = year, vibaration_status = ChildStatus)
 
                     if ChildStatus == 'Current Count':
-                        for data in dataList:
-                            if data.vibaration_status == 'Under process' or data.vibaration_status == 'Observation(same stage)' or data.vibaration_status == 'Halt':
+                        for data  in dataList:
+                            if data.vibaration_date.strftime("%Y") == year and (data.vibaration_status == 'Under process' or data.vibaration_status=='Observation(same stage)' or data.vibaration_status=='Halt'):
                                 ListItems.append(data)
 
                 if ParentStatus == 'CG Balancing':
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(cgbalancing_date_status=ChildStatus)
+                        ListItems = dataList.filter(cgbalancing_date__year = year, cgbalancing_date_status = ChildStatus)
 
                     if ChildStatus == 'Current Count':
-                        for data in dataList:
-                            if data.cgbalancing_date_status == 'Under process' or data.cgbalancing_date_status == 'Observation(same stage)' or data.cgbalancing_date_status == 'Halt':
+                        for data  in dataList:
+                            if data.cgbalancing_date.strftime("%Y") == year and (data.cgbalancing_date_status == 'Under process' or data.cgbalancing_date_status=='Observation(same stage)' or data.cgbalancing_date_status=='Halt'):
                                 ListItems.append(data)
 
                 if ParentStatus == 'Post-HIL':
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(post_hil_status=ChildStatus)
+                        ListItems = dataList.filter(post_hil_date__year = year, post_hil_status = ChildStatus)
 
                     if ChildStatus == 'Current Count':
-                        for data in dataList:
-                            if data.post_hil_status == 'Under process' or data.post_hil_status == 'Observation(same stage)' or data.post_hil_status == 'Halt':
+                        for data  in dataList:
+                            if data.post_hil_date.strftime("%Y") == year and (data.post_hil_status == 'Under process' or data.post_hil_status=='Observation(same stage)' or data.post_hil_status=='Halt'):
                                 ListItems.append(data)
 
                 if ParentStatus == 'System Alignment':
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(sys_align_status=ChildStatus)
+                        ListItems = dataList.filter(sys_align_Date__year = year, sys_align_status = ChildStatus)
 
                     if ChildStatus == 'Current Count':
-                        for data in dataList:
-                            if data.sys_align_status == 'Under process' or data.sys_align_status == 'Observation(same stage)' or data.sys_align_status == 'Halt':
+                        for data  in dataList:
+                            if data.sys_align_Date.strftime("%Y") == year and (data.sys_align_status == 'Under process' or data.sys_align_status=='Observation(same stage)' or data.sys_align_status=='Halt'):
                                 ListItems.append(data)
 
                 if ParentStatus == 'Incapsulation':
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(incapsulation_status=ChildStatus)
+                        ListItems = dataList.filter(incapsulation_date__year = year, incapsulation_status = ChildStatus)
 
                     if ChildStatus == 'Current Count':
-                        for data in dataList:
-                            if data.incapsulation_status == 'Under process' or data.incapsulation_status == 'Observation(same stage)' or data.incapsulation_status == 'Halt':
+                        for data  in dataList:
+                            if data.incapsulation_date.strftime("%Y") == year and (data.incapsulation_status == 'Under process' or data.incapsulation_status=='Observation(same stage)' or data.incapsulation_status=='Halt'):
                                 ListItems.append(data)
 
                 if ParentStatus == 'Final Integrated Testing':
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(final_integration_status=ChildStatus)
+                        ListItems = dataList.filter(final_integration_date__year = year, final_integration_status = ChildStatus)
 
                     if ChildStatus == 'Current Count':
-                        for data in dataList:
-                            if data.final_integration_status == 'Under process' or data.final_integration_status == 'Observation(same stage)' or data.final_integration_status == 'Halt':
+                        for data  in dataList:
+                            if data.final_integration_date.strftime("%Y") == year and (data.final_integration_status == 'Under process' or data.final_integration_status=='Observation(same stage)' or data.final_integration_status=='Halt'):
                                 ListItems.append(data)
 
                 if ParentStatus == 'FGT Status':
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(fgt_status=ChildStatus)
+                        ListItems = dataList.filter(fgt_date__year = year, fgt_status = ChildStatus)
 
                     if ChildStatus == 'Current Count':
-                        for data in dataList:
-                            if data.fgt_status == 'Under process' or data.fgt_status == 'Observation(same stage)' or data.fgt_status == 'Halt':
+                        for data  in dataList:
+                            if data.fgt_date.strftime("%Y") == year and (data.fgt_status == 'Under process' or data.fgt_status=='Observation(same stage)' or data.fgt_status=='Halt'):
                                 ListItems.append(data)
 
                 if ParentStatus == 'BHD Status':
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(bhd_status=ChildStatus)
+                        ListItems = dataList.filter(bhd_date__year = year, bhd_status = ChildStatus)
 
                     if ChildStatus == 'Current Count':
-                        for data in dataList:
-                            if data.bhd_status == 'Ok' or data.bhd_status == 'Not Submitted)' or data.bhd_status == 'QM Observations Forwarded':
+                        for data  in dataList:
+                            if data.bhd_date.strftime("%Y") == year and (data.bhd_status == 'Ok' or data.bhd_status=='Not Submitted)' or data.bhd_status=='QM Observations Forwarded'):
                                 ListItems.append(data)
 
                 if ParentStatus == 'FQM Status':
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(fqm_status=ChildStatus)
+                        ListItems = dataList.filter(fqm_date__year = year, fqm_status = ChildStatus)
 
                     if ChildStatus == 'Current Count':
-                        for data in dataList:
-                            if data.fqm_status == 'Not Conducted)':
+                        for data  in dataList:
+                            if data.fqm_date.strftime("%Y") == year and (data.fqm_status=='Not Conducted)'):
                                 ListItems.append(data)
 
                 if ParentStatus == 'QM Certification Status':
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(qm_certification_status=ChildStatus)
+                        ListItems = dataList.filter(qm_certification_date__year = year, qm_certification_status = ChildStatus)
 
                     if ChildStatus == 'Current Count':
-                        for data in dataList:
-                            if data.qm_certification_status == 'QM certificate issued' or data.qm_certification_status == 'QM Observations Forwarded)':
+                        for data  in dataList:
+                            if data.qm_certification_date.strftime("%Y") == year and (data.qm_certification_status == 'QM certificate issued' or data.qm_certification_status=='QM Observations Forwarded)'):
                                 ListItems.append(data)
 
                 if ParentStatus == 'Launch/ End User':
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(enduser_status=ChildStatus)
+                        ListItems = dataList.filter(enduser_date__year = year, enduser_status = ChildStatus)
                     else:
-                        for data in dataList:
-                            if data.enduser_status == 'Ok' or data.enduser_status == 'Observation' or data.enduser_status == 'Halt':
+                        for data  in dataList:
+                            if data.enduser_date.strftime("%Y") == year and (data.enduser_status == 'Ok' or data.enduser_status=='Observation' or data.enduser_status=='Halt'):
                                 ListItems.append(data)
 
                 serializer = RelifingSystemSerialzer(ListItems, many=True)
                 return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
-            serializer = RelifingSystemSerialzer(dataList, many=True)
-            return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+            # serializer = RelifingSystemSerialzer(dataList, many=True)
+            # return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
         except:
             return JsonResponse({'message': 'Sorry! No Task found.'}, status=200)
 
@@ -2222,10 +2244,10 @@ class SmsController:
             system = request.query_params['selected_system']
 
             # create dynamic filter
-            if year != '':
-                filter_objects &= get_filter(
-                    'testing_date__year', 'equal',
-                    year)
+            # if year != '':
+            #     filter_objects &= get_filter(
+            #         'testing_date__year', 'equal',
+            #         year)
             if org != '':
                 filter_objects &= get_filter(
                     'organization', 'equal',
@@ -2240,650 +2262,650 @@ class SmsController:
                     system)
 
             # production system count
-            prod_blt_oklist = ProductionSystemStatus.objects.filter(filter_objects, blt_status='Ok')
-            prod_blt_oklistNext = ProductionSystemStatus.objects.filter(filter_objects, blt_status='OK(next stage)')
+            prod_blt_oklist = ProductionSystemStatus.objects.filter(filter_objects, blt_date__year=year,blt_status='Ok')
+            prod_blt_oklistNext = ProductionSystemStatus.objects.filter(filter_objects, blt_date__year=year,blt_status='OK(next stage)')
             prod_blt_observationlist = ProductionSystemStatus.objects.filter(filter_objects,
-                                                                             blt_status='Observation(same stage)')
+                                                                             blt_date__year=year,blt_status='Observation(same stage)')
             prod_blt_observationlist_next = ProductionSystemStatus.objects.filter(filter_objects,
-                                                                                  blt_status='Observation(next stage)')
-            prod_blt_uplist = ProductionSystemStatus.objects.filter(filter_objects, blt_status='Under process')
+                                                                                  blt_date__year=year,blt_status='Observation(next stage)')
+            prod_blt_uplist = ProductionSystemStatus.objects.filter(filter_objects, blt_date__year=year,blt_status='Under process')
             prod_blt_haultlist = ProductionSystemStatus.objects.filter(filter_objects, blt_status='Halt')
 
-            prod_prehil_oklist = ProductionSystemStatus.objects.filter(filter_objects, pre_hil_status='Ok')
+            prod_prehil_oklist = ProductionSystemStatus.objects.filter(filter_objects, pre_hil_date__year=year,pre_hil_status='Ok')
             prod_prehil_oklistNext = ProductionSystemStatus.objects.filter(filter_objects,
-                                                                           pre_hil_status='OK(next stage)')
+                                                                           pre_hil_date__year=year,pre_hil_status='OK(next stage)')
             prod_prehil_observationlist = ProductionSystemStatus.objects.filter(filter_objects,
-                                                                                pre_hil_status='Observation(same stage)')
+                                                                                pre_hil_date__year=year,pre_hil_status='Observation(same stage)')
             prod_prehil_observationlistNext = ProductionSystemStatus.objects.filter(filter_objects,
-                                                                                    pre_hil_status='Observation(next stage)')
-            prod_prehil_uplist = ProductionSystemStatus.objects.filter(filter_objects, pre_hil_status='Under process')
-            prod_prehil_haultlist = ProductionSystemStatus.objects.filter(filter_objects, pre_hil_status='Halt')
+                                                                                    pre_hil_date__year=year,pre_hil_status='Observation(next stage)')
+            prod_prehil_uplist = ProductionSystemStatus.objects.filter(filter_objects, pre_hil_date__year=year,pre_hil_status='Under process')
+            prod_prehil_haultlist = ProductionSystemStatus.objects.filter(filter_objects, pre_hil_date__year=year,pre_hil_status='Halt')
 
             prod_posthil_oklist = ProductionSystemStatus.objects.filter(filter_objects,
-                                                                        post_hil_status='Ok')
+                                                                        post_hil_date__year=year,post_hil_status='Ok')
             prod_posthil_oklistNext = ProductionSystemStatus.objects.filter(filter_objects,
-                                                                            post_hil_status='OK(next stage)')
+                                                                            post_hil_date__year=year,post_hil_status='OK(next stage)')
             prod_posthil_observationlist = ProductionSystemStatus.objects.filter(filter_objects,
-                                                                                 post_hil_status='Observation(same stage)')
+                                                                                 post_hil_date__year=year,post_hil_status='Observation(same stage)')
             prod_posthil_observationlistNext = ProductionSystemStatus.objects.filter(filter_objects,
-                                                                                     post_hil_status='Observation(next stage)')
-            prod_posthil_uplist = ProductionSystemStatus.objects.filter(filter_objects, post_hil_status='Under process')
-            prod_posthil_haultlist = ProductionSystemStatus.objects.filter(filter_objects, post_hil_status='Halt')
+                                                                                     post_hil_date__year=year,post_hil_status='Observation(next stage)')
+            prod_posthil_uplist = ProductionSystemStatus.objects.filter(filter_objects, post_hil_date__year=year,post_hil_status='Under process')
+            prod_posthil_haultlist = ProductionSystemStatus.objects.filter(filter_objects, post_hil_date__year=year,post_hil_status='Halt')
 
             prod_finalintegration_oklist = ProductionSystemStatus.objects.filter(filter_objects,
-                                                                                 final_integration_status='Ok')
+                                                                                 final_integration_date__year=year,final_integration_status='Ok')
             prod_finalintegration_oklistNext = ProductionSystemStatus.objects.filter(filter_objects,
-                                                                                     final_integration_status='OK(next stage)')
+                                                                                     final_integration_date__year=year,final_integration_status='OK(next stage)')
 
             prod_finalintegration_observationlist = ProductionSystemStatus.objects.filter(filter_objects,
-                                                                                          final_integration_status='Observation(same stage)')
+                                                                                          final_integration_date__year=year,final_integration_status='Observation(same stage)')
 
             prod_finalintegration_observationlistNext = ProductionSystemStatus.objects.filter(filter_objects,
-                                                                                              final_integration_status='Observation(next stage)')
+                                                                                              final_integration_date__year=year,final_integration_status='Observation(next stage)')
 
             prod_finalintegration_completelist = ProductionSystemStatus.objects.filter(filter_objects,
-                                                                                       final_integration_status='Under process')
+                                                                                       final_integration_date__year=year,final_integration_status='Under process')
             prod_finalintegration_haultlist = ProductionSystemStatus.objects.filter(filter_objects,
-                                                                                    final_integration_status='Halt')
+                                                                                    final_integration_date__year=year,final_integration_status='Halt')
 
             prod_vibration_oklist = ProductionSystemStatus.objects.filter(filter_objects,
-                                                                          vibaration_status='Ok')
+                                                                          vibaration_date__year=year,vibaration_status='Ok')
             prod_vibration_oklistNext = ProductionSystemStatus.objects.filter(filter_objects,
-                                                                              vibaration_status='OK(next stage)')
+                                                                              vibaration_date__year=year,vibaration_status='OK(next stage)')
 
             prod_vibration_observationlist = ProductionSystemStatus.objects.filter(filter_objects,
-                                                                                   vibaration_status='Observation(same stage)')
+                                                                                   vibaration_date__year=year,vibaration_status='Observation(same stage)')
             prod_vibration_observationlistNext = ProductionSystemStatus.objects.filter(filter_objects,
-                                                                                       vibaration_status='Observation(next stage)')
+                                                                                       vibaration_date__year=year,vibaration_status='Observation(next stage)')
             prod_vibration_uplist = ProductionSystemStatus.objects.filter(filter_objects,
-                                                                          vibaration_status='Under process')
-            prod_vibration_haultlist = ProductionSystemStatus.objects.filter(filter_objects, vibaration_status='Halt')
+                                                                          vibaration_date__year=year,vibaration_status='Under process')
+            prod_vibration_haultlist = ProductionSystemStatus.objects.filter(filter_objects, vibaration_date__year=year,vibaration_status='Halt')
 
             prod_cg_oklist = ProductionSystemStatus.objects.filter(filter_objects,
-                                                                   cgbalancing_date_status='Ok')
+                                                                   cgbalancing_date__year=year,cgbalancing_date_status='Ok')
 
             prod_cg_oklistNext = ProductionSystemStatus.objects.filter(filter_objects,
-                                                                       cgbalancing_date_status='OK(next stage)')
+                                                                       cgbalancing_date__year=year,cgbalancing_date_status='OK(next stage)')
 
             prod_cg_observationlist = ProductionSystemStatus.objects.filter(filter_objects,
-                                                                            cgbalancing_date_status='Observation(same stage)')
+                                                                            cgbalancing_date__year=year,cgbalancing_date_status='Observation(same stage)')
             prod_cg_observationlistNext = ProductionSystemStatus.objects.filter(filter_objects,
-                                                                                cgbalancing_date_status='Observation(next stage)')
+                                                                                cgbalancing_date__year=year,cgbalancing_date_status='Observation(next stage)')
             prod_cg_uplist = ProductionSystemStatus.objects.filter(filter_objects,
-                                                                   cgbalancing_date_status='Under process')
-            prod_cg_haultlist = ProductionSystemStatus.objects.filter(filter_objects, cgbalancing_date_status='Halt')
+                                                                   cgbalancing_date__year=year,cgbalancing_date_status='Under process')
+            prod_cg_haultlist = ProductionSystemStatus.objects.filter(filter_objects, cgbalancing_date__year=year,cgbalancing_date_status='Halt')
 
-            prod_fgt_oklist = ProductionSystemStatus.objects.filter(filter_objects, fgt_status='Ok')
-            prod_fgt_oklistNext = ProductionSystemStatus.objects.filter(filter_objects, fgt_status='OK(next stage)')
+            prod_fgt_oklist = ProductionSystemStatus.objects.filter(filter_objects, fgt_date__year=year,fgt_status='Ok')
+            prod_fgt_oklistNext = ProductionSystemStatus.objects.filter(filter_objects, fgt_date__year=year,fgt_status='OK(next stage)')
             prod_fgt_observationlist = ProductionSystemStatus.objects.filter(filter_objects,
-                                                                             fgt_status='Observation(same stage)')
+                                                                             fgt_date__year=year,fgt_status='Observation(same stage)')
             prod_fgt_observationlistNext = ProductionSystemStatus.objects.filter(filter_objects,
-                                                                                 fgt_status='Observation(next stage)')
+                                                                                 fgt_date__year=year,fgt_status='Observation(next stage)')
             prod_fgt_uplist = ProductionSystemStatus.objects.filter(filter_objects,
-                                                                    fgt_status='Under process')
-            prod_fgt_haultlist = ProductionSystemStatus.objects.filter(filter_objects, fgt_status='Halt')
+                                                                    fgt_date__year=year,fgt_status='Under process')
+            prod_fgt_haultlist = ProductionSystemStatus.objects.filter(filter_objects, fgt_date__year=year,fgt_status='Halt')
 
             prod_bhd_ok = ProductionSystemStatus.objects.filter(filter_objects,
-                                                                       bhd_status='Ok')
+                                                                       bhd_date__year=year,bhd_status='Ok')
             prod_bhd_submitted = ProductionSystemStatus.objects.filter(filter_objects,
-                                                                       bhd_status='Submitted')
+                                                                       bhd_date__year=year,bhd_status='Submitted')
             prod_bhd_not_submitted = ProductionSystemStatus.objects.filter(filter_objects,
-                                                                       bhd_status='Not Submitted')
+                                                                       bhd_date__year=year,bhd_status='Not Submitted')
             prod_bhd_qm_forwarded = ProductionSystemStatus.objects.filter(filter_objects,
-                                                                         bhd_status='QM observations forwarded')
+                                                                         bhd_date__year=year,bhd_status='QM observations forwarded')
             prod_bhd_inprocess= ProductionSystemStatus.objects.filter(filter_objects,
-                                                                         bhd_status='Audit in-process')
+                                                                         bhd_date__year=year,bhd_status='Audit in-process')
 
 
             prod_fqm_planned = ProductionSystemStatus.objects.filter(filter_objects,
-                                                                     fqm_status='Planned')
+                                                                     fqm_date__year=year,fqm_status='Planned')
 
             prod_fqm_conducted = ProductionSystemStatus.objects.filter(filter_objects,
-                                                                       fqm_status='Conducted')
+                                                                       fqm_date__year=year,fqm_status='Conducted')
 
             prod_qmc_issued = ProductionSystemStatus.objects.filter(filter_objects,
-                                                                    qm_certification_status='QM certificate issued')
+                                                                    qm_certification_date__year=year,qm_certification_status='QM certificate issued')
 
             prod_qmc_in_process = ProductionSystemStatus.objects.filter(filter_objects,
-                                                                        qm_certification_status='Audit in-process')
+                                                                        qm_certification_date__year=year,qm_certification_status='Audit in-process')
             prod_qmc_obs_forwarded = ProductionSystemStatus.objects.filter(filter_objects,
-                                                                        qm_certification_status='QM Observations Forwarded')
+                                                                        qm_certification_date__year=year,qm_certification_status='QM Observations Forwarded')
 
-            prod_enduser_oklist = ProductionSystemStatus.objects.filter(filter_objects, enduser_status='Ok')
+            prod_enduser_oklist = ProductionSystemStatus.objects.filter(filter_objects, enduser_date__year=year,enduser_status='Ok')
             prod_enduser_oklistNext = ProductionSystemStatus.objects.filter(filter_objects,
-                                                                            enduser_status='OK(next stage)')
+                                                                            enduser_date__year=year,enduser_status='OK(next stage)')
             prod_enduser_observationlist = ProductionSystemStatus.objects.filter(filter_objects,
-                                                                                 enduser_status='Observation')
+                                                                                 enduser_date__year=year,enduser_status='Observation')
             prod_enduser_observationlistNext = ProductionSystemStatus.objects.filter(filter_objects,
-                                                                                     enduser_status='Observation(next stage)')
+                                                                                     enduser_date__year=year,enduser_status='Observation(next stage)')
             prod_enduser_uplist = ProductionSystemStatus.objects.filter(filter_objects,
-                                                                        enduser_status='Completed')
-            prod_enduser_haultlist = ProductionSystemStatus.objects.filter(filter_objects, enduser_status='Halt')
+                                                                        enduser_date__year=year,enduser_status='Completed')
+            prod_enduser_haultlist = ProductionSystemStatus.objects.filter(filter_objects, enduser_date__year=year,enduser_status='Halt')
 
 
-            prod_sys_align_oklist = ProductionSystemStatus.objects.filter(filter_objects, sys_align_status='Ok')
+            prod_sys_align_oklist = ProductionSystemStatus.objects.filter(filter_objects, sys_align_Date__year=year,sys_align_status='Ok')
             prod_sys_align_oklistNext = ProductionSystemStatus.objects.filter(filter_objects,
-                                                                            sys_align_status='OK(next stage)')
+                                                                            sys_align_Date__year=year,sys_align_status='OK(next stage)')
             prod_sys_align_observationlist = ProductionSystemStatus.objects.filter(filter_objects,
-                                                                                 sys_align_status='Observation(same stage)')
+                                                                                 sys_align_Date__year=year,sys_align_status='Observation(same stage)')
             prod_sys_align_observationlistNext = ProductionSystemStatus.objects.filter(filter_objects,
-                                                                                     sys_align_status='Observation(next stage)')
+                                                                                     sys_align_Date__year=year,sys_align_status='Observation(next stage)')
             prod_sys_align_uplist = ProductionSystemStatus.objects.filter(filter_objects,
-                                                                        sys_align_status='Under process')
-            prod_sys_align_haultlist = ProductionSystemStatus.objects.filter(filter_objects, sys_align_status='Halt')
+                                                                        sys_align_Date__year=year,sys_align_status='Under process')
+            prod_sys_align_haultlist = ProductionSystemStatus.objects.filter(filter_objects, sys_align_Date__year=year,sys_align_status='Halt')
 
 
-            prod_incapsulation_oklist = ProductionSystemStatus.objects.filter(filter_objects, incapsulation_status='Ok')
+            prod_incapsulation_oklist = ProductionSystemStatus.objects.filter(filter_objects, incapsulation_date__year=year,incapsulation_status='Ok')
             prod_incapsulation_oklistNext = ProductionSystemStatus.objects.filter(filter_objects,
-                                                                            incapsulation_status='OK(next stage)')
+                                                                            incapsulation_date__year=year,incapsulation_status='OK(next stage)')
             prod_incapsulation_observationlist = ProductionSystemStatus.objects.filter(filter_objects,
-                                                                                 incapsulation_status='Observation(same stage)')
+                                                                                 incapsulation_date__year=year,incapsulation_status='Observation(same stage)')
             prod_incapsulation_observationlistNext = ProductionSystemStatus.objects.filter(filter_objects,
-                                                                                     incapsulation_status='Observation(next stage)')
+                                                                                     incapsulation_date__year=year,incapsulation_status='Observation(next stage)')
             prod_incapsulation_uplist = ProductionSystemStatus.objects.filter(filter_objects,
-                                                                        incapsulation_status='Under process')
-            prod_incapsulation_haultlist = ProductionSystemStatus.objects.filter(filter_objects, incapsulation_status='Halt')
+                                                                        incapsulation_date__year=year,incapsulation_status='Under process')
+            prod_incapsulation_haultlist = ProductionSystemStatus.objects.filter(filter_objects, incapsulation_date__year=year,incapsulation_status='Halt')
 
-            prod_emp_proofing_oklist = ProductionSystemStatus.objects.filter(filter_objects, emp_proofing='Ok')
-            prod_emp_proofing_oklistNext= ProductionSystemStatus.objects.filter(filter_objects, emp_proofing='OK(next stage)')
-            prod_emp_proofing_observationlist  = ProductionSystemStatus.objects.filter(filter_objects, emp_proofing='Observation(same stage)')
-            prod_emp_proofing_observationlistNext = ProductionSystemStatus.objects.filter(filter_objects, emp_proofing='Observation(next stage)')
-            prod_emp_proofing_uplist = ProductionSystemStatus.objects.filter(filter_objects, emp_proofing='Under process')
-            prod_emp_proofing_haultlist = ProductionSystemStatus.objects.filter(filter_objects, emp_proofing='Halt')
+            prod_emp_proofing_oklist = ProductionSystemStatus.objects.filter(filter_objects, emp_proofing_date__year=year,emp_proofing='Ok')
+            prod_emp_proofing_oklistNext= ProductionSystemStatus.objects.filter(filter_objects,emp_proofing_date__year=year,emp_proofing='OK(next stage)')
+            prod_emp_proofing_observationlist  = ProductionSystemStatus.objects.filter(filter_objects,emp_proofing_date__year=year,emp_proofing='Observation(same stage)')
+            prod_emp_proofing_observationlistNext = ProductionSystemStatus.objects.filter(filter_objects,emp_proofing_date__year=year,emp_proofing='Observation(next stage)')
+            prod_emp_proofing_uplist = ProductionSystemStatus.objects.filter(filter_objects,emp_proofing_date__year=year,emp_proofing='Under process')
+            prod_emp_proofing_haultlist = ProductionSystemStatus.objects.filter(filter_objects,emp_proofing_date__year=year,emp_proofing='Halt')
 
-            prod_func_tst_oklistNext_oklist  = ProductionSystemStatus.objects.filter(filter_objects, func_tst='Ok')
-            prod_func_tst_oklistNext_oklistNext  = ProductionSystemStatus.objects.filter(filter_objects, func_tst='OK(next stage)')
-            prod_func_tst_oklistNext_observationlist   = ProductionSystemStatus.objects.filter(filter_objects, func_tst='Observation(same stage)')
-            prod_func_tst_oklistNext_observationlistNext  = ProductionSystemStatus.objects.filter(filter_objects, func_tst='Observation(next stage)')
-            prod_func_tst_oklistNext_uplist  = ProductionSystemStatus.objects.filter(filter_objects, func_tst='Under process')
-            prod_func_tst_oklistNext_haultlist  = ProductionSystemStatus.objects.filter(filter_objects, func_tst='Halt')
+            prod_func_tst_oklistNext_oklist  = ProductionSystemStatus.objects.filter(filter_objects,func_tst_date__year=year,func_tst='Ok')
+            prod_func_tst_oklistNext_oklistNext  = ProductionSystemStatus.objects.filter(filter_objects,func_tst_date__year=year,func_tst='OK(next stage)')
+            prod_func_tst_oklistNext_observationlist   = ProductionSystemStatus.objects.filter(filter_objects,func_tst_date__year=year,func_tst='Observation(same stage)')
+            prod_func_tst_oklistNext_observationlistNext  = ProductionSystemStatus.objects.filter(filter_objects,func_tst_date__year=year,func_tst='Observation(next stage)')
+            prod_func_tst_oklistNext_uplist  = ProductionSystemStatus.objects.filter(filter_objects,func_tst_date__year=year,func_tst='Under process')
+            prod_func_tst_oklistNext_haultlist  = ProductionSystemStatus.objects.filter(filter_objects,func_tst_date__year=year,func_tst='Halt')
 
-            prod_func_tst_dummy_bird_oklist = ProductionSystemStatus.objects.filter(filter_objects, func_tst_dummy_bird='Ok')
-            prod_func_tst_dummy_bird_oklistNext = ProductionSystemStatus.objects.filter(filter_objects, func_tst_dummy_bird='OK(next stage)')
-            prod_func_tst_dummy_bird_observationlist  = ProductionSystemStatus.objects.filter(filter_objects, func_tst_dummy_bird='Observation(same stage)')
-            prod_func_tst_dummy_bird_observationlistNext = ProductionSystemStatus.objects.filter(filter_objects, func_tst_dummy_bird='Observation(next stage)')
-            prod_func_tst_dummy_bird_uplist = ProductionSystemStatus.objects.filter(filter_objects, func_tst_dummy_bird='Under process')
-            prod_func_tst_dummy_bird_haultlist = ProductionSystemStatus.objects.filter(filter_objects, func_tst_dummy_bird='Halt')
+            prod_func_tst_dummy_bird_oklist = ProductionSystemStatus.objects.filter(filter_objects,func_tst_dummy_bird_date__year=year,func_tst_dummy_bird='Ok')
+            prod_func_tst_dummy_bird_oklistNext = ProductionSystemStatus.objects.filter(filter_objects,func_tst_dummy_bird_date__year=year,func_tst_dummy_bird='OK(next stage)')
+            prod_func_tst_dummy_bird_observationlist  = ProductionSystemStatus.objects.filter(filter_objects,func_tst_dummy_bird_date__year=year,func_tst_dummy_bird='Observation(same stage)')
+            prod_func_tst_dummy_bird_observationlistNext = ProductionSystemStatus.objects.filter(filter_objects,func_tst_dummy_bird_date__year=year,func_tst_dummy_bird='Observation(next stage)')
+            prod_func_tst_dummy_bird_uplist = ProductionSystemStatus.objects.filter(filter_objects,func_tst_dummy_bird_date__year=year,func_tst_dummy_bird='Under process')
+            prod_func_tst_dummy_bird_haultlist = ProductionSystemStatus.objects.filter(filter_objects,func_tst_dummy_bird_date__year=year,func_tst_dummy_bird='Halt')
 
-            prod_road_test_oklist = ProductionSystemStatus.objects.filter(filter_objects, road_test='Ok')
-            prod_road_test_oklistNext = ProductionSystemStatus.objects.filter(filter_objects, road_test='OK(next stage)')
-            prod_road_test_observationlist  = ProductionSystemStatus.objects.filter(filter_objects, road_test='Observation(same stage)')
-            prod_road_test_observationlistNext = ProductionSystemStatus.objects.filter(filter_objects, road_test='Observation(next stage)')
-            prod_road_test_uplist = ProductionSystemStatus.objects.filter(filter_objects, road_test='Under process')
-            prod_road_test_haultlist = ProductionSystemStatus.objects.filter(filter_objects, road_test='Halt')
+            prod_road_test_oklist = ProductionSystemStatus.objects.filter(filter_objects,road_test_date__year=year,road_test='Ok')
+            prod_road_test_oklistNext = ProductionSystemStatus.objects.filter(filter_objects,road_test_date__year=year,road_test='OK(next stage)')
+            prod_road_test_observationlist  = ProductionSystemStatus.objects.filter(filter_objects,road_test_date__year=year,road_test='Observation(same stage)')
+            prod_road_test_observationlistNext = ProductionSystemStatus.objects.filter(filter_objects,road_test_date__year=year,road_test='Observation(next stage)')
+            prod_road_test_uplist = ProductionSystemStatus.objects.filter(filter_objects,road_test_date__year=year,road_test='Under process')
+            prod_road_test_haultlist = ProductionSystemStatus.objects.filter(filter_objects,road_test_date__year=year,road_test='Halt')
 
-            prod_post_road_test_oklist = ProductionSystemStatus.objects.filter(filter_objects, post_road_test='Ok')
-            prod_post_road_test_oklistNext = ProductionSystemStatus.objects.filter(filter_objects, post_road_test='OK(next stage)')
-            prod_post_road_test_observationlist  = ProductionSystemStatus.objects.filter(filter_objects, post_road_test='Observation(same stage)')
-            prod_post_road_test_observationlistNext = ProductionSystemStatus.objects.filter(filter_objects, post_road_test='Observation(next stage)')
-            prod_post_road_test_uplist = ProductionSystemStatus.objects.filter(filter_objects, post_road_test='Under process')
-            prod_post_road_test_haultlist = ProductionSystemStatus.objects.filter(filter_objects, post_road_test='Halt')
+            prod_post_road_test_oklist = ProductionSystemStatus.objects.filter(filter_objects,post_road_test_date__year=year,post_road_test='Ok')
+            prod_post_road_test_oklistNext = ProductionSystemStatus.objects.filter(filter_objects,post_road_test_date__year=year,post_road_test='OK(next stage)')
+            prod_post_road_test_observationlist  = ProductionSystemStatus.objects.filter(filter_objects,post_road_test_date__year=year,post_road_test='Observation(same stage)')
+            prod_post_road_test_observationlistNext = ProductionSystemStatus.objects.filter(filter_objects,post_road_test_date__year=year,post_road_test='Observation(next stage)')
+            prod_post_road_test_uplist = ProductionSystemStatus.objects.filter(filter_objects,post_road_test_date__year=year,post_road_test='Under process')
+            prod_post_road_test_haultlist = ProductionSystemStatus.objects.filter(filter_objects,post_road_test_date__year=year,post_road_test='Halt')
 
-            prod_integrated_operation_oklist = ProductionSystemStatus.objects.filter(filter_objects, integrated_operation='Ok')
-            prod_integrated_operation_oklistNext = ProductionSystemStatus.objects.filter(filter_objects, integrated_operation='OK(next stage)')
-            prod_integrated_operation_observationlist  = ProductionSystemStatus.objects.filter(filter_objects, integrated_operation='Observation(same stage)')
-            prod_integrated_operation_observationlistNext = ProductionSystemStatus.objects.filter(filter_objects, integrated_operation='Observation(next stage)')
-            prod_integrated_operation_uplist = ProductionSystemStatus.objects.filter(filter_objects, integrated_operation='Under process')
-            prod_integrated_operation_haultlist = ProductionSystemStatus.objects.filter(filter_objects, integrated_operation='Halt')
+            prod_integrated_operation_oklist = ProductionSystemStatus.objects.filter(filter_objects,integrated_operation_date__year=year,integrated_operation='Ok')
+            prod_integrated_operation_oklistNext = ProductionSystemStatus.objects.filter(filter_objects,integrated_operation_date__year=year,integrated_operation='OK(next stage)')
+            prod_integrated_operation_observationlist  = ProductionSystemStatus.objects.filter(filter_objects,integrated_operation_date__year=year,integrated_operation='Observation(same stage)')
+            prod_integrated_operation_observationlistNext = ProductionSystemStatus.objects.filter(filter_objects,integrated_operation_date__year=year,integrated_operation='Observation(next stage)')
+            prod_integrated_operation_uplist = ProductionSystemStatus.objects.filter(filter_objects,integrated_operation_date__year=year,integrated_operation='Under process')
+            prod_integrated_operation_haultlist = ProductionSystemStatus.objects.filter(filter_objects,integrated_operation_date__year=year,integrated_operation='Halt')
 
-            prod_rain_test_oklist = ProductionSystemStatus.objects.filter(filter_objects, rain_test='Ok')
-            prod_rain_test_oklistNext = ProductionSystemStatus.objects.filter(filter_objects, rain_test='OK(next stage)')
-            prod_rain_test_observationlist  = ProductionSystemStatus.objects.filter(filter_objects, rain_test='Observation(same stage)')
-            prod_rain_test_observationlistNext = ProductionSystemStatus.objects.filter(filter_objects, rain_test='Observation(next stage)')
-            prod_rain_test_uplist = ProductionSystemStatus.objects.filter(filter_objects, rain_test='Under process')
-            prod_rain_test_haultlist = ProductionSystemStatus.objects.filter(filter_objects, rain_test='Halt')
+            prod_rain_test_oklist = ProductionSystemStatus.objects.filter(filter_objects,rain_test_date__year=year,rain_test='Ok')
+            prod_rain_test_oklistNext = ProductionSystemStatus.objects.filter(filter_objects,rain_test_date__year=year,rain_test='OK(next stage)')
+            prod_rain_test_observationlist  = ProductionSystemStatus.objects.filter(filter_objects,rain_test_date__year=year,rain_test='Observation(same stage)')
+            prod_rain_test_observationlistNext = ProductionSystemStatus.objects.filter(filter_objects,rain_test_date__year=year,rain_test='Observation(next stage)')
+            prod_rain_test_uplist = ProductionSystemStatus.objects.filter(filter_objects,rain_test_date__year=year,rain_test='Under process')
+            prod_rain_test_haultlist = ProductionSystemStatus.objects.filter(filter_objects,rain_test_date__year=year,rain_test='Halt')
 
-            prod_pre_user_inspection_oklist = ProductionSystemStatus.objects.filter(filter_objects, pre_user_inspection='Ok')
-            prod_pre_user_inspection_oklistNext = ProductionSystemStatus.objects.filter(filter_objects, pre_user_inspection='OK(next stage)')
-            prod_pre_user_inspection_observationlist  = ProductionSystemStatus.objects.filter(filter_objects, pre_user_inspection='Observation(same stage)')
-            prod_pre_user_inspection_observationlistNext = ProductionSystemStatus.objects.filter(filter_objects, pre_user_inspection='Observation(next stage)')
-            prod_pre_user_inspection_uplist = ProductionSystemStatus.objects.filter(filter_objects, pre_user_inspection='Under process')
-            prod_pre_user_inspection_haultlist = ProductionSystemStatus.objects.filter(filter_objects, pre_user_inspection='Halt')
+            prod_pre_user_inspection_oklist = ProductionSystemStatus.objects.filter(filter_objects,pre_user_inspection_date__year=year,pre_user_inspection='Ok')
+            prod_pre_user_inspection_oklistNext = ProductionSystemStatus.objects.filter(filter_objects,pre_user_inspection_date__year=year,pre_user_inspection='OK(next stage)')
+            prod_pre_user_inspection_observationlist  = ProductionSystemStatus.objects.filter(filter_objects,pre_user_inspection_date__year=year,pre_user_inspection='Observation(same stage)')
+            prod_pre_user_inspection_observationlistNext = ProductionSystemStatus.objects.filter(filter_objects,pre_user_inspection_date__year=year,pre_user_inspection='Observation(next stage)')
+            prod_pre_user_inspection_uplist = ProductionSystemStatus.objects.filter(filter_objects,pre_user_inspection_date__year=year,pre_user_inspection='Under process')
+            prod_pre_user_inspection_haultlist = ProductionSystemStatus.objects.filter(filter_objects,pre_user_inspection_date__year=year,pre_user_inspection='Halt')
 
-            prod_final_integrated_testing_oklist = ProductionSystemStatus.objects.filter(filter_objects, final_integrated_testing='Ok')
-            prod_final_integrated_testing_oklistNext = ProductionSystemStatus.objects.filter(filter_objects, final_integrated_testing='OK(next stage)')
-            prod_final_integrated_testing_observationlist  = ProductionSystemStatus.objects.filter(filter_objects, final_integrated_testing='Observation(same stage)')
-            prod_final_integrated_testing_observationlistNext = ProductionSystemStatus.objects.filter(filter_objects, final_integrated_testing='Observation(next stage)')
-            prod_final_integrated_testing_uplist = ProductionSystemStatus.objects.filter(filter_objects, final_integrated_testing='Under process')
-            prod_final_integrated_testing_haultlist = ProductionSystemStatus.objects.filter(filter_objects, final_integrated_testing='Halt')
+            prod_final_integrated_testing_oklist = ProductionSystemStatus.objects.filter(filter_objects,final_integrated_testing_date__year=year,final_integrated_testing='Ok')
+            prod_final_integrated_testing_oklistNext = ProductionSystemStatus.objects.filter(filter_objects,final_integrated_testing_date__year=year,final_integrated_testing='OK(next stage)')
+            prod_final_integrated_testing_observationlist  = ProductionSystemStatus.objects.filter(filter_objects,final_integrated_testing_date__year=year,final_integrated_testing='Observation(same stage)')
+            prod_final_integrated_testing_observationlistNext = ProductionSystemStatus.objects.filter(filter_objects,final_integrated_testing_date__year=year,final_integrated_testing='Observation(next stage)')
+            prod_final_integrated_testing_uplist = ProductionSystemStatus.objects.filter(filter_objects,final_integrated_testing_date__year=year,final_integrated_testing='Under process')
+            prod_final_integrated_testing_haultlist = ProductionSystemStatus.objects.filter(filter_objects,final_integrated_testing_date__year=year,final_integrated_testing='Halt')
 
-            prod_load_unload_on_mlv_hlf_oklist = ProductionSystemStatus.objects.filter(filter_objects, load_unload_on_mlv_hlf='Ok')
-            prod_load_unload_on_mlv_hlf_oklistNext = ProductionSystemStatus.objects.filter(filter_objects, load_unload_on_mlv_hlf='OK(next stage)')
-            prod_load_unload_on_mlv_hlf_observationlist  = ProductionSystemStatus.objects.filter(filter_objects, load_unload_on_mlv_hlf='Observation(same stage)')
-            prod_load_unload_on_mlv_hlf_observationlistNext = ProductionSystemStatus.objects.filter(filter_objects, load_unload_on_mlv_hlf='Observation(next stage)')
-            prod_load_unload_on_mlv_hlf_uplist = ProductionSystemStatus.objects.filter(filter_objects, load_unload_on_mlv_hlf='Under process')
-            prod_load_unload_on_mlv_hlf_haultlist = ProductionSystemStatus.objects.filter(filter_objects, load_unload_on_mlv_hlf='Halt')
+            prod_load_unload_on_mlv_hlf_oklist = ProductionSystemStatus.objects.filter(filter_objects,load_unload_on_mlv_hlf_date__year=year,load_unload_on_mlv_hlf='Ok')
+            prod_load_unload_on_mlv_hlf_oklistNext = ProductionSystemStatus.objects.filter(filter_objects,load_unload_on_mlv_hlf_date__year=year,load_unload_on_mlv_hlf='OK(next stage)')
+            prod_load_unload_on_mlv_hlf_observationlist  = ProductionSystemStatus.objects.filter(filter_objects,load_unload_on_mlv_hlf_date__year=year,load_unload_on_mlv_hlf='Observation(same stage)')
+            prod_load_unload_on_mlv_hlf_observationlistNext = ProductionSystemStatus.objects.filter(filter_objects,load_unload_on_mlv_hlf_date__year=year,load_unload_on_mlv_hlf='Observation(next stage)')
+            prod_load_unload_on_mlv_hlf_uplist = ProductionSystemStatus.objects.filter(filter_objects,load_unload_on_mlv_hlf_date__year=year,load_unload_on_mlv_hlf='Under process')
+            prod_load_unload_on_mlv_hlf_haultlist = ProductionSystemStatus.objects.filter(filter_objects,load_unload_on_mlv_hlf_date__year=year,load_unload_on_mlv_hlf='Halt')
 
 
             # flight system count
-            flight_blt_oklist = FlightSystemStatus.objects.filter(filter_objects, blt_status='Ok')
-            flight_blt_oklistNext = FlightSystemStatus.objects.filter(filter_objects, blt_status='OK(next stage)')
+            flight_blt_oklist = FlightSystemStatus.objects.filter(filter_objects, blt_date__year=year,blt_status='Ok')
+            flight_blt_oklistNext = FlightSystemStatus.objects.filter(filter_objects, blt_date__year=year,blt_status='OK(next stage)')
             flight_blt_observationlist = FlightSystemStatus.objects.filter(filter_objects,
-                                                                           blt_status='Observation(same stage)')
+                                                                           blt_date__year=year,blt_status='Observation(same stage)')
             flight_blt_observationlist_next = FlightSystemStatus.objects.filter(filter_objects,
-                                                                                blt_status='Observation(next stage)')
-            flight_blt_uplist = FlightSystemStatus.objects.filter(filter_objects, blt_status='Under process')
-            flight_blt_haultlist = FlightSystemStatus.objects.filter(filter_objects, blt_status='Halt')
+                                                                                blt_date__year=year,blt_status='Observation(next stage)')
+            flight_blt_uplist = FlightSystemStatus.objects.filter(filter_objects, blt_date__year=year,blt_status='Under process')
+            flight_blt_haultlist = FlightSystemStatus.objects.filter(filter_objects, blt_date__year=year,blt_status='Halt')
 
-            flight_prehil_oklist = FlightSystemStatus.objects.filter(filter_objects, pre_hil_status='Ok')
+            flight_prehil_oklist = FlightSystemStatus.objects.filter(filter_objects, pre_hil_date__year=year,pre_hil_status='Ok')
             flight_prehil_oklistNext = FlightSystemStatus.objects.filter(filter_objects,
-                                                                         pre_hil_status='OK(next stage)')
+                                                                         pre_hil_date__year=year,pre_hil_status='OK(next stage)')
             flight_prehil_observationlist = FlightSystemStatus.objects.filter(filter_objects,
-                                                                              pre_hil_status='Observation(same stage)')
+                                                                              pre_hil_date__year=year,pre_hil_status='Observation(same stage)')
             flight_prehil_observationlistNext = FlightSystemStatus.objects.filter(filter_objects,
-                                                                                  pre_hil_status='Observation(next stage)')
-            flight_prehil_uplist = FlightSystemStatus.objects.filter(filter_objects, pre_hil_status='Under process')
-            flight_prehil_haultlist = FlightSystemStatus.objects.filter(filter_objects, pre_hil_status='Halt')
+                                                                                  pre_hil_date__year=year,pre_hil_status='Observation(next stage)')
+            flight_prehil_uplist = FlightSystemStatus.objects.filter(filter_objects, pre_hil_date__year=year,pre_hil_status='Under process')
+            flight_prehil_haultlist = FlightSystemStatus.objects.filter(filter_objects, pre_hil_date__year=year,pre_hil_status='Halt')
 
-            flight_posthil_oklist = FlightSystemStatus.objects.filter(filter_objects, post_hil_status='Ok')
+            flight_posthil_oklist = FlightSystemStatus.objects.filter(filter_objects, post_hil_date__year=year,post_hil_status='Ok')
             flight_posthil_oklistNext = FlightSystemStatus.objects.filter(filter_objects,
-                                                                          post_hil_status='OK(next stage)')
+                                                                          post_hil_date__year=year,post_hil_status='OK(next stage)')
             flight_posthil_observationlist = FlightSystemStatus.objects.filter(filter_objects,
-                                                                               post_hil_status='Observation(same stage)')
+                                                                               post_hil_date__year=year,post_hil_status='Observation(same stage)')
             flight_posthil_observationlistNext = FlightSystemStatus.objects.filter(filter_objects,
-                                                                                   post_hil_status='Observation(next stage)')
-            flight_posthil_uplist = FlightSystemStatus.objects.filter(filter_objects, post_hil_status='Under process')
-            flight_posthil_haultlist = FlightSystemStatus.objects.filter(filter_objects, post_hil_status='Halt')
+                                                                                   post_hil_date__year=year,post_hil_status='Observation(next stage)')
+            flight_posthil_uplist = FlightSystemStatus.objects.filter(filter_objects, post_hil_date__year=year,post_hil_status='Under process')
+            flight_posthil_haultlist = FlightSystemStatus.objects.filter(filter_objects, post_hil_date__year=year,post_hil_status='Halt')
 
             flight_finalintegration_oklist = FlightSystemStatus.objects.filter(filter_objects,
-                                                                               final_integration_status='Ok')
+                                                                               final_integration_date__year=year,final_integration_status='Ok')
             flight_finalintegration_oklistNext = FlightSystemStatus.objects.filter(filter_objects,
-                                                                                   final_integration_status='OK(next stage)')
+                                                                                   final_integration_date__year=year,final_integration_status='OK(next stage)')
 
             flight_finalintegration_observationlist = FlightSystemStatus.objects.filter(filter_objects,
-                                                                                        final_integration_status='Observation(same stage)')
+                                                                                        final_integration_date__year=year,final_integration_status='Observation(same stage)')
             flight_finalintegration_observationlistNext = FlightSystemStatus.objects.filter(filter_objects,
-                                                                                            final_integration_status='Observation(next stage)')
+                                                                                            final_integration_date__year=year,final_integration_status='Observation(next stage)')
             flight_finalintegration_completelist = FlightSystemStatus.objects.filter(filter_objects,
-                                                                                     final_integration_status='Under process')
+                                                                                     final_integration_date__year=year,final_integration_status='Under process')
             flight_finalintegration_haultlist = FlightSystemStatus.objects.filter(filter_objects,
-                                                                                  final_integration_status='Halt')
+                                                                                  final_integration_date__year=year,final_integration_status='Halt')
 
             flight_vibration_oklist = FlightSystemStatus.objects.filter(filter_objects,
-                                                                        vibaration_status='Ok')
+                                                                        vibaration_date__year=year,vibaration_status='Ok')
             flight_vibration_oklistNext = FlightSystemStatus.objects.filter(filter_objects,
-                                                                            vibaration_status='OK(next stage)')
+                                                                            vibaration_date__year=year,vibaration_status='OK(next stage)')
             flight_vibration_observationlist = FlightSystemStatus.objects.filter(filter_objects,
-                                                                                 vibaration_status='Observation(same stage)')
+                                                                                 vibaration_date__year=year,vibaration_status='Observation(same stage)')
             flight_vibration_observationlistNext = FlightSystemStatus.objects.filter(filter_objects,
-                                                                                     vibaration_status='Observation(next stage)')
+                                                                                     vibaration_date__year=year,vibaration_status='Observation(next stage)')
             flight_vibration_uplist = FlightSystemStatus.objects.filter(filter_objects,
-                                                                        vibaration_status='Under process')
-            flight_vibration_haultlist = FlightSystemStatus.objects.filter(filter_objects, vibaration_status='Halt')
+                                                                        vibaration_date__year=year,vibaration_status='Under process')
+            flight_vibration_haultlist = FlightSystemStatus.objects.filter(filter_objects, vibaration_date__year=year,vibaration_status='Halt')
 
             flight_cg_oklist = FlightSystemStatus.objects.filter(filter_objects,
-                                                                 cgbalancing_date_status='Ok')
+                                                                 cgbalancing_date__year=year,cgbalancing_date_status='Ok')
             flight_cg_oklistNext = FlightSystemStatus.objects.filter(filter_objects,
-                                                                     cgbalancing_date_status='OK(next stage)')
+                                                                     cgbalancing_date__year=year,cgbalancing_date_status='OK(next stage)')
             flight_cg_observationlist = FlightSystemStatus.objects.filter(filter_objects,
-                                                                          cgbalancing_date_status='Observation(same stage)')
+                                                                          cgbalancing_date__year=year,cgbalancing_date_status='Observation(same stage)')
             flight_cg_observationlistNext = FlightSystemStatus.objects.filter(filter_objects,
-                                                                              cgbalancing_date_status='Observation(next stage)')
+                                                                              cgbalancing_date__year=year,cgbalancing_date_status='Observation(next stage)')
             flight_cg_uplist = FlightSystemStatus.objects.filter(filter_objects,
-                                                                 cgbalancing_date_status='Under process')
-            flight_cg_haultlist = FlightSystemStatus.objects.filter(filter_objects, cgbalancing_date_status='Halt')
+                                                                 cgbalancing_date__year=year,cgbalancing_date_status='Under process')
+            flight_cg_haultlist = FlightSystemStatus.objects.filter(filter_objects, cgbalancing_date__year=year,cgbalancing_date_status='Halt')
 
-            flight_fgt_oklist = FlightSystemStatus.objects.filter(filter_objects, fgt_status='Ok')
-            flight_fgt_oklistNext = FlightSystemStatus.objects.filter(filter_objects, fgt_status='OK(next stage)')
+            flight_fgt_oklist = FlightSystemStatus.objects.filter(filter_objects, fgt_date__year=year,fgt_status='Ok')
+            flight_fgt_oklistNext = FlightSystemStatus.objects.filter(filter_objects, fgt_date__year=year,fgt_status='OK(next stage)')
             flight_fgt_observationlist = FlightSystemStatus.objects.filter(filter_objects,
-                                                                           fgt_status='Observation(same stage)')
+                                                                           fgt_date__year=year,fgt_status='Observation(same stage)')
             flight_fgt_observationlistNext = FlightSystemStatus.objects.filter(filter_objects,
-                                                                               fgt_status='Observation(next stage)')
+                                                                               fgt_date__year=year,fgt_status='Observation(next stage)')
             flight_fgt_uplist = FlightSystemStatus.objects.filter(filter_objects,
-                                                                  fgt_status='Under process')
-            flight_fgt_haultlist = FlightSystemStatus.objects.filter(filter_objects, fgt_status='Halt')
+                                                                  fgt_date__year=year,fgt_status='Under process')
+            flight_fgt_haultlist = FlightSystemStatus.objects.filter(filter_objects, fgt_date__year=year,fgt_status='Halt')
 
             flight_bhd_not_submit = FlightSystemStatus.objects.filter(filter_objects,
-                                                                     bhd_status='Not Submitted')
+                                                                     bhd_date__year=year,bhd_status='Not Submitted')
             flight_bhd_inprocess = FlightSystemStatus.objects.filter(filter_objects,
-                                                                     bhd_status='Audit in-process')
+                                                                     bhd_date__year=year,bhd_status='Audit in-process')
             flight_bhd_qm_forwarded = FlightSystemStatus.objects.filter(filter_objects,
-                                                                       bhd_status='QM observations forwarded')
+                                                                       bhd_date__year=year,bhd_status='QM observations forwarded')
             flight_bhd_ok = FlightSystemStatus.objects.filter(filter_objects,
-                                                                       bhd_status='Ok')
+                                                                       bhd_date__year=year,bhd_status='Ok')
             flight_bhd_submitted = FlightSystemStatus.objects.filter(filter_objects,
-                                                                       bhd_status='Submitted')
+                                                                       bhd_date__year=year,bhd_status='Submitted')
 
 
             flight_fqm_planned = FlightSystemStatus.objects.filter(filter_objects,
-                                                                   fqm_status='Planned')
+                                                                   fqm_date__year=year,fqm_status='Planned')
 
             flight_fqm_conducted = FlightSystemStatus.objects.filter(filter_objects,
-                                                                     fqm_status='Conducted')
+                                                                     fqm_date__year=year,fqm_status='Conducted')
 
             flight_qmc_issued = FlightSystemStatus.objects.filter(filter_objects,
-                                                                  qm_certification_status='QM certificate issued')
+                                                                  qm_certification_date__year=year,qm_certification_status='QM certificate issued')
 
             flight_qmc_in_process = FlightSystemStatus.objects.filter(filter_objects,
-                                                                      qm_certification_status='Audit in-process')
+                                                                      qm_certification_date__year=year,qm_certification_status='Audit in-process')
             flight_qmc_obs_forwarded = FlightSystemStatus.objects.filter(filter_objects,
-                                                                        qm_certification_status='QM Observations Forwarded')
+                                                                        qm_certification_date__year=year,qm_certification_status='QM Observations Forwarded')
 
-            flight_launch_oklist = FlightSystemStatus.objects.filter(filter_objects, launchact_status='Ok')
+            flight_launch_oklist = FlightSystemStatus.objects.filter(filter_objects, launchact_date__year=year,launchact_status='Ok')
             flight_launch_oklistNext = FlightSystemStatus.objects.filter(filter_objects,
-                                                                         launchact_status='OK(next stage)')
+                                                                         launchact_date__year=year,launchact_status='OK(next stage)')
             flight_launch_observationlist = FlightSystemStatus.objects.filter(filter_objects,
-                                                                              launchact_status='Observation')
+                                                                              launchact_date__year=year,launchact_status='Observation')
             flight_launch_observationlistNext = FlightSystemStatus.objects.filter(filter_objects,
-                                                                                  launchact_status='Observation(next stage)')
+                                                                                  launchact_date__year=year,launchact_status='Observation(next stage)')
             flight_launch_uplist = FlightSystemStatus.objects.filter(filter_objects,
-                                                                     launchact_status='Completed')
-            flight_launch_haultlist = FlightSystemStatus.objects.filter(filter_objects, launchact_status='Halt')
+                                                                     launchact_date__year=year,launchact_status='Completed')
+            flight_launch_haultlist = FlightSystemStatus.objects.filter(filter_objects, launchact_date__year=year,launchact_status='Halt')
 
 
 
-            flight_sys_align_oklist = FlightSystemStatus.objects.filter(filter_objects, sys_align_status='Ok')
+            flight_sys_align_oklist = FlightSystemStatus.objects.filter(filter_objects, sys_align_Date__year=year,sys_align_status='Ok')
             flight_sys_align_oklistNext = FlightSystemStatus.objects.filter(filter_objects,
-                                                                         sys_align_status='OK(next stage)')
+                                                                         sys_align_Date__year=year,sys_align_status='OK(next stage)')
             flight_sys_align_observationlist = FlightSystemStatus.objects.filter(filter_objects,
-                                                                              sys_align_status='Observation(same stage)')
+                                                                              sys_align_Date__year=year,sys_align_status='Observation(same stage)')
             flight_sys_align_observationlistNext = FlightSystemStatus.objects.filter(filter_objects,
-                                                                                  sys_align_status='Observation(next stage)')
+                                                                                  sys_align_Date__year=year,sys_align_status='Observation(next stage)')
             flight_sys_align_uplist = FlightSystemStatus.objects.filter(filter_objects,
-                                                                     sys_align_status='Under process')
-            flight_sys_align_haultlist = FlightSystemStatus.objects.filter(filter_objects, sys_align_status='Halt')
+                                                                     sys_align_Date__year=year,sys_align_status='Under process')
+            flight_sys_align_haultlist = FlightSystemStatus.objects.filter(filter_objects, sys_align_Date__year=year,sys_align_status='Halt')
 
 
 
-            flight_incapsulation_oklist = FlightSystemStatus.objects.filter(filter_objects, incapsulation_status='Ok')
+            flight_incapsulation_oklist = FlightSystemStatus.objects.filter(filter_objects, incapsulation_date__year=year,incapsulation_status='Ok')
             flight_incapsulation_oklistNext = FlightSystemStatus.objects.filter(filter_objects,
-                                                                         incapsulation_status='OK(next stage)')
+                                                                         incapsulation_date__year=year,incapsulation_status='OK(next stage)')
             flight_incapsulation_observationlist = FlightSystemStatus.objects.filter(filter_objects,
-                                                                              incapsulation_status='Observation(same stage)')
+                                                                              incapsulation_date__year=year,incapsulation_status='Observation(same stage)')
             flight_incapsulation_observationlistNext = FlightSystemStatus.objects.filter(filter_objects,
-                                                                                  incapsulation_status='Observation(next stage)')
+                                                                                  incapsulation_date__year=year,incapsulation_status='Observation(next stage)')
             flight_incapsulation_uplist = FlightSystemStatus.objects.filter(filter_objects,
-                                                                     incapsulation_status='Under process')
-            flight_incapsulation_haultlist = FlightSystemStatus.objects.filter(filter_objects, incapsulation_status='Halt')
+                                                                     incapsulation_date__year=year,incapsulation_status='Under process')
+            flight_incapsulation_haultlist = FlightSystemStatus.objects.filter(filter_objects, incapsulation_date__year=year,incapsulation_status='Halt')
 
-            flight_emp_proofing_oklist = FlightSystemStatus.objects.filter(filter_objects, emp_proofing='Ok')
-            flight_emp_proofing_oklistNext= FlightSystemStatus.objects.filter(filter_objects, emp_proofing='OK(next stage)')
-            flight_emp_proofing_observationlist  = FlightSystemStatus.objects.filter(filter_objects, emp_proofing='Observation(same stage)')
-            flight_emp_proofing_observationlistNext = FlightSystemStatus.objects.filter(filter_objects, emp_proofing='Observation(next stage)')
-            flight_emp_proofing_uplist = FlightSystemStatus.objects.filter(filter_objects, emp_proofing='Under process')
-            flight_emp_proofing_haultlist = FlightSystemStatus.objects.filter(filter_objects, emp_proofing='Halt')
+            flight_emp_proofing_oklist = FlightSystemStatus.objects.filter(filter_objects,emp_proofing_date__year=year,emp_proofing='Ok')
+            flight_emp_proofing_oklistNext= FlightSystemStatus.objects.filter(filter_objects,emp_proofing_date__year=year,emp_proofing='OK(next stage)')
+            flight_emp_proofing_observationlist  = FlightSystemStatus.objects.filter(filter_objects,emp_proofing_date__year=year,emp_proofing='Observation(same stage)')
+            flight_emp_proofing_observationlistNext = FlightSystemStatus.objects.filter(filter_objects,emp_proofing_date__year=year,emp_proofing='Observation(next stage)')
+            flight_emp_proofing_uplist = FlightSystemStatus.objects.filter(filter_objects,emp_proofing_date__year=year,emp_proofing='Under process')
+            flight_emp_proofing_haultlist = FlightSystemStatus.objects.filter(filter_objects,emp_proofing_date__year=year,emp_proofing='Halt')
 
-            flight_func_tst_oklistNext_oklist  = FlightSystemStatus.objects.filter(filter_objects, func_tst='Ok')
-            flight_func_tst_oklistNext_oklistNext  = FlightSystemStatus.objects.filter(filter_objects, func_tst='OK(next stage)')
-            flight_func_tst_oklistNext_observationlist   = FlightSystemStatus.objects.filter(filter_objects, func_tst='Observation(same stage)')
-            flight_func_tst_oklistNext_observationlistNext  = FlightSystemStatus.objects.filter(filter_objects, func_tst='Observation(next stage)')
-            flight_func_tst_oklistNext_uplist  = FlightSystemStatus.objects.filter(filter_objects, func_tst='Under process')
-            flight_func_tst_oklistNext_haultlist  = FlightSystemStatus.objects.filter(filter_objects, func_tst='Halt')
+            flight_func_tst_oklistNext_oklist  = FlightSystemStatus.objects.filter(filter_objects,func_tst_date__year=year,func_tst='Ok')
+            flight_func_tst_oklistNext_oklistNext  = FlightSystemStatus.objects.filter(filter_objects,func_tst_date__year=year,func_tst='OK(next stage)')
+            flight_func_tst_oklistNext_observationlist   = FlightSystemStatus.objects.filter(filter_objects,func_tst_date__year=year,func_tst='Observation(same stage)')
+            flight_func_tst_oklistNext_observationlistNext  = FlightSystemStatus.objects.filter(filter_objects,func_tst_date__year=year,func_tst='Observation(next stage)')
+            flight_func_tst_oklistNext_uplist  = FlightSystemStatus.objects.filter(filter_objects,func_tst_date__year=year,func_tst='Under process')
+            flight_func_tst_oklistNext_haultlist  = FlightSystemStatus.objects.filter(filter_objects,func_tst_date__year=year,func_tst='Halt')
 
-            flight_func_tst_dummy_bird_oklist = FlightSystemStatus.objects.filter(filter_objects, func_tst_dummy_bird='Ok')
-            flight_func_tst_dummy_bird_oklistNext = FlightSystemStatus.objects.filter(filter_objects, func_tst_dummy_bird='OK(next stage)')
-            flight_func_tst_dummy_bird_observationlist  = FlightSystemStatus.objects.filter(filter_objects, func_tst_dummy_bird='Observation(same stage)')
-            flight_func_tst_dummy_bird_observationlistNext = FlightSystemStatus.objects.filter(filter_objects, func_tst_dummy_bird='Observation(next stage)')
-            flight_func_tst_dummy_bird_uplist = FlightSystemStatus.objects.filter(filter_objects, func_tst_dummy_bird='Under process')
-            flight_func_tst_dummy_bird_haultlist = FlightSystemStatus.objects.filter(filter_objects, func_tst_dummy_bird='Halt')
+            flight_func_tst_dummy_bird_oklist = FlightSystemStatus.objects.filter(filter_objects,func_tst_dummy_bird_date__year=year,func_tst_dummy_bird='Ok')
+            flight_func_tst_dummy_bird_oklistNext = FlightSystemStatus.objects.filter(filter_objects,func_tst_dummy_bird_date__year=year,func_tst_dummy_bird='OK(next stage)')
+            flight_func_tst_dummy_bird_observationlist  = FlightSystemStatus.objects.filter(filter_objects,func_tst_dummy_bird_date__year=year,func_tst_dummy_bird='Observation(same stage)')
+            flight_func_tst_dummy_bird_observationlistNext = FlightSystemStatus.objects.filter(filter_objects,func_tst_dummy_bird_date__year=year,func_tst_dummy_bird='Observation(next stage)')
+            flight_func_tst_dummy_bird_uplist = FlightSystemStatus.objects.filter(filter_objects,func_tst_dummy_bird_date__year=year,func_tst_dummy_bird='Under process')
+            flight_func_tst_dummy_bird_haultlist = FlightSystemStatus.objects.filter(filter_objects,func_tst_dummy_bird_date__year=year,func_tst_dummy_bird='Halt')
 
-            flight_road_test_oklist = FlightSystemStatus.objects.filter(filter_objects, road_test='Ok')
-            flight_road_test_oklistNext = FlightSystemStatus.objects.filter(filter_objects, road_test='OK(next stage)')
-            flight_road_test_observationlist  = FlightSystemStatus.objects.filter(filter_objects, road_test='Observation(same stage)')
-            flight_road_test_observationlistNext = FlightSystemStatus.objects.filter(filter_objects, road_test='Observation(next stage)')
-            flight_road_test_uplist = FlightSystemStatus.objects.filter(filter_objects, road_test='Under process')
-            flight_road_test_haultlist = FlightSystemStatus.objects.filter(filter_objects, road_test='Halt')
+            flight_road_test_oklist = FlightSystemStatus.objects.filter(filter_objects,road_test_date__year=year,road_test='Ok')
+            flight_road_test_oklistNext = FlightSystemStatus.objects.filter(filter_objects,road_test_date__year=year,road_test='OK(next stage)')
+            flight_road_test_observationlist  = FlightSystemStatus.objects.filter(filter_objects,road_test_date__year=year,road_test='Observation(same stage)')
+            flight_road_test_observationlistNext = FlightSystemStatus.objects.filter(filter_objects,road_test_date__year=year,road_test='Observation(next stage)')
+            flight_road_test_uplist = FlightSystemStatus.objects.filter(filter_objects,road_test_date__year=year,road_test='Under process')
+            flight_road_test_haultlist = FlightSystemStatus.objects.filter(filter_objects,road_test_date__year=year,road_test='Halt')
 
-            flight_post_road_test_oklist = FlightSystemStatus.objects.filter(filter_objects, post_road_test='Ok')
-            flight_post_road_test_oklistNext = FlightSystemStatus.objects.filter(filter_objects, post_road_test='OK(next stage)')
-            flight_post_road_test_observationlist  = FlightSystemStatus.objects.filter(filter_objects, post_road_test='Observation(same stage)')
-            flight_post_road_test_observationlistNext = FlightSystemStatus.objects.filter(filter_objects, post_road_test='Observation(next stage)')
-            flight_post_road_test_uplist = FlightSystemStatus.objects.filter(filter_objects, post_road_test='Under process')
-            flight_post_road_test_haultlist = FlightSystemStatus.objects.filter(filter_objects, post_road_test='Halt')
+            flight_post_road_test_oklist = FlightSystemStatus.objects.filter(filter_objects,post_road_test_date__year=year,post_road_test='Ok')
+            flight_post_road_test_oklistNext = FlightSystemStatus.objects.filter(filter_objects,post_road_test_date__year=year,post_road_test='OK(next stage)')
+            flight_post_road_test_observationlist  = FlightSystemStatus.objects.filter(filter_objects,post_road_test_date__year=year,post_road_test='Observation(same stage)')
+            flight_post_road_test_observationlistNext = FlightSystemStatus.objects.filter(filter_objects,post_road_test_date__year=year,post_road_test='Observation(next stage)')
+            flight_post_road_test_uplist = FlightSystemStatus.objects.filter(filter_objects,post_road_test_date__year=year,post_road_test='Under process')
+            flight_post_road_test_haultlist = FlightSystemStatus.objects.filter(filter_objects,post_road_test_date__year=year,post_road_test='Halt')
 
-            flight_integrated_operation_oklist = FlightSystemStatus.objects.filter(filter_objects, integrated_operation='Ok')
-            flight_integrated_operation_oklistNext = FlightSystemStatus.objects.filter(filter_objects, integrated_operation='OK(next stage)')
-            flight_integrated_operation_observationlist  = FlightSystemStatus.objects.filter(filter_objects, integrated_operation='Observation(same stage)')
-            flight_integrated_operation_observationlistNext = FlightSystemStatus.objects.filter(filter_objects, integrated_operation='Observation(next stage)')
-            flight_integrated_operation_uplist = FlightSystemStatus.objects.filter(filter_objects, integrated_operation='Under process')
-            flight_integrated_operation_haultlist = FlightSystemStatus.objects.filter(filter_objects, integrated_operation='Halt')
+            flight_integrated_operation_oklist = FlightSystemStatus.objects.filter(filter_objects,integrated_operation_date__year=year,integrated_operation='Ok')
+            flight_integrated_operation_oklistNext = FlightSystemStatus.objects.filter(filter_objects,integrated_operation_date__year=year,integrated_operation='OK(next stage)')
+            flight_integrated_operation_observationlist  = FlightSystemStatus.objects.filter(filter_objects,integrated_operation_date__year=year,integrated_operation='Observation(same stage)')
+            flight_integrated_operation_observationlistNext = FlightSystemStatus.objects.filter(filter_objects,integrated_operation_date__year=year,integrated_operation='Observation(next stage)')
+            flight_integrated_operation_uplist = FlightSystemStatus.objects.filter(filter_objects,integrated_operation_date__year=year,integrated_operation='Under process')
+            flight_integrated_operation_haultlist = FlightSystemStatus.objects.filter(filter_objects,integrated_operation_date__year=year,integrated_operation='Halt')
 
-            flight_rain_test_oklist = FlightSystemStatus.objects.filter(filter_objects, rain_test='Ok')
-            flight_rain_test_oklistNext = FlightSystemStatus.objects.filter(filter_objects, rain_test='OK(next stage)')
-            flight_rain_test_observationlist  = FlightSystemStatus.objects.filter(filter_objects, rain_test='Observation(same stage)')
-            flight_rain_test_observationlistNext = FlightSystemStatus.objects.filter(filter_objects, rain_test='Observation(next stage)')
-            flight_rain_test_uplist = FlightSystemStatus.objects.filter(filter_objects, rain_test='Under process')
-            flight_rain_test_haultlist = FlightSystemStatus.objects.filter(filter_objects, rain_test='Halt')
+            flight_rain_test_oklist = FlightSystemStatus.objects.filter(filter_objects,rain_test_date__year=year,rain_test='Ok')
+            flight_rain_test_oklistNext = FlightSystemStatus.objects.filter(filter_objects,rain_test_date__year=year,rain_test='OK(next stage)')
+            flight_rain_test_observationlist  = FlightSystemStatus.objects.filter(filter_objects,rain_test_date__year=year,rain_test='Observation(same stage)')
+            flight_rain_test_observationlistNext = FlightSystemStatus.objects.filter(filter_objects,rain_test_date__year=year,rain_test='Observation(next stage)')
+            flight_rain_test_uplist = FlightSystemStatus.objects.filter(filter_objects,rain_test_date__year=year,rain_test='Under process')
+            flight_rain_test_haultlist = FlightSystemStatus.objects.filter(filter_objects,rain_test_date__year=year,rain_test='Halt')
 
-            flight_pre_user_inspection_oklist = FlightSystemStatus.objects.filter(filter_objects, pre_user_inspection='Ok')
-            flight_pre_user_inspection_oklistNext = FlightSystemStatus.objects.filter(filter_objects, pre_user_inspection='OK(next stage)')
-            flight_pre_user_inspection_observationlist  = FlightSystemStatus.objects.filter(filter_objects, pre_user_inspection='Observation(same stage)')
-            flight_pre_user_inspection_observationlistNext = FlightSystemStatus.objects.filter(filter_objects, pre_user_inspection='Observation(next stage)')
-            flight_pre_user_inspection_uplist = FlightSystemStatus.objects.filter(filter_objects, pre_user_inspection='Under process')
-            flight_pre_user_inspection_haultlist = FlightSystemStatus.objects.filter(filter_objects, pre_user_inspection='Halt')
+            flight_pre_user_inspection_oklist = FlightSystemStatus.objects.filter(filter_objects,pre_user_inspection_date__year=year,pre_user_inspection='Ok')
+            flight_pre_user_inspection_oklistNext = FlightSystemStatus.objects.filter(filter_objects,pre_user_inspection_date__year=year,pre_user_inspection='OK(next stage)')
+            flight_pre_user_inspection_observationlist  = FlightSystemStatus.objects.filter(filter_objects,pre_user_inspection_date__year=year,pre_user_inspection='Observation(same stage)')
+            flight_pre_user_inspection_observationlistNext = FlightSystemStatus.objects.filter(filter_objects,pre_user_inspection_date__year=year,pre_user_inspection='Observation(next stage)')
+            flight_pre_user_inspection_uplist = FlightSystemStatus.objects.filter(filter_objects,pre_user_inspection_date__year=year,pre_user_inspection='Under process')
+            flight_pre_user_inspection_haultlist = FlightSystemStatus.objects.filter(filter_objects,pre_user_inspection_date__year=year,pre_user_inspection='Halt')
 
-            flight_final_integrated_testing_oklist = FlightSystemStatus.objects.filter(filter_objects, final_integrated_testing='Ok')
-            flight_final_integrated_testing_oklistNext = FlightSystemStatus.objects.filter(filter_objects, final_integrated_testing='OK(next stage)')
-            flight_final_integrated_testing_observationlist  = FlightSystemStatus.objects.filter(filter_objects, final_integrated_testing='Observation(same stage)')
-            flight_final_integrated_testing_observationlistNext = FlightSystemStatus.objects.filter(filter_objects, final_integrated_testing='Observation(next stage)')
-            flight_final_integrated_testing_uplist = FlightSystemStatus.objects.filter(filter_objects, final_integrated_testing='Under process')
-            flight_final_integrated_testing_haultlist = FlightSystemStatus.objects.filter(filter_objects, final_integrated_testing='Halt')
+            flight_final_integrated_testing_oklist = FlightSystemStatus.objects.filter(filter_objects,final_integrated_testing_date__year=year,final_integrated_testing='Ok')
+            flight_final_integrated_testing_oklistNext = FlightSystemStatus.objects.filter(filter_objects,final_integrated_testing_date__year=year,final_integrated_testing='OK(next stage)')
+            flight_final_integrated_testing_observationlist  = FlightSystemStatus.objects.filter(filter_objects,final_integrated_testing_date__year=year,final_integrated_testing='Observation(same stage)')
+            flight_final_integrated_testing_observationlistNext = FlightSystemStatus.objects.filter(filter_objects,final_integrated_testing_date__year=year,final_integrated_testing='Observation(next stage)')
+            flight_final_integrated_testing_uplist = FlightSystemStatus.objects.filter(filter_objects,final_integrated_testing_date__year=year,final_integrated_testing='Under process')
+            flight_final_integrated_testing_haultlist = FlightSystemStatus.objects.filter(filter_objects,final_integrated_testing_date__year=year,final_integrated_testing='Halt')
 
-            flight_load_unload_on_mlv_hlf_oklist = FlightSystemStatus.objects.filter(filter_objects, load_unload_on_mlv_hlf='Ok')
-            flight_load_unload_on_mlv_hlf_oklistNext = FlightSystemStatus.objects.filter(filter_objects, load_unload_on_mlv_hlf='OK(next stage)')
-            flight_load_unload_on_mlv_hlf_observationlist  = FlightSystemStatus.objects.filter(filter_objects, load_unload_on_mlv_hlf='Observation(same stage)')
-            flight_load_unload_on_mlv_hlf_observationlistNext = FlightSystemStatus.objects.filter(filter_objects, load_unload_on_mlv_hlf='Observation(next stage)')
-            flight_load_unload_on_mlv_hlf_uplist = FlightSystemStatus.objects.filter(filter_objects, load_unload_on_mlv_hlf='Under process')
-            flight_load_unload_on_mlv_hlf_haultlist = FlightSystemStatus.objects.filter(filter_objects, load_unload_on_mlv_hlf='Halt')
+            flight_load_unload_on_mlv_hlf_oklist = FlightSystemStatus.objects.filter(filter_objects,load_unload_on_mlv_hlf_date__year=year,load_unload_on_mlv_hlf='Ok')
+            flight_load_unload_on_mlv_hlf_oklistNext = FlightSystemStatus.objects.filter(filter_objects,load_unload_on_mlv_hlf_date__year=year,load_unload_on_mlv_hlf='OK(next stage)')
+            flight_load_unload_on_mlv_hlf_observationlist  = FlightSystemStatus.objects.filter(filter_objects,load_unload_on_mlv_hlf_date__year=year,load_unload_on_mlv_hlf='Observation(same stage)')
+            flight_load_unload_on_mlv_hlf_observationlistNext = FlightSystemStatus.objects.filter(filter_objects,load_unload_on_mlv_hlf_date__year=year,load_unload_on_mlv_hlf='Observation(next stage)')
+            flight_load_unload_on_mlv_hlf_uplist = FlightSystemStatus.objects.filter(filter_objects,load_unload_on_mlv_hlf_date__year=year,load_unload_on_mlv_hlf='Under process')
+            flight_load_unload_on_mlv_hlf_haultlist = FlightSystemStatus.objects.filter(filter_objects,load_unload_on_mlv_hlf_date__year=year,load_unload_on_mlv_hlf='Halt')
 
 
             # relifing system count
-            relifing_blt_oklist = RelifingSystemStatus.objects.filter(filter_objects, blt_status='Ok')
-            relifing_blt_oklistNext = RelifingSystemStatus.objects.filter(filter_objects, blt_status='OK(next stage)')
+            relifing_blt_oklist = RelifingSystemStatus.objects.filter(filter_objects, blt_date__year=year,blt_status='Ok')
+            relifing_blt_oklistNext = RelifingSystemStatus.objects.filter(filter_objects, blt_date__year=year,blt_status='OK(next stage)')
             relifing_blt_observationlist = RelifingSystemStatus.objects.filter(filter_objects,
-                                                                               blt_status='Observation(same stage)')
+                                                                               blt_date__year=year,blt_status='Observation(same stage)')
             relifing_blt_observationlistNext = RelifingSystemStatus.objects.filter(filter_objects,
-                                                                                   blt_status='Observation(next stage)')
-            relifing_blt_uplist = RelifingSystemStatus.objects.filter(filter_objects, blt_status='Under process')
-            relifing_blt_haultlist = RelifingSystemStatus.objects.filter(filter_objects, blt_status='Halt')
+                                                                                   blt_date__year=year,blt_status='Observation(next stage)')
+            relifing_blt_uplist = RelifingSystemStatus.objects.filter(filter_objects, blt_date__year=year,blt_status='Under process')
+            relifing_blt_haultlist = RelifingSystemStatus.objects.filter(filter_objects, blt_date__year=year,blt_status='Halt')
 
             relifing_prehil_oklist = RelifingSystemStatus.objects.filter(filter_objects,
-                                                                         pre_hil_status='Ok')
+                                                                         pre_hil_date__year=year,pre_hil_status='Ok')
             relifing_prehil_oklistNext = RelifingSystemStatus.objects.filter(filter_objects,
-                                                                             pre_hil_status='OK(next stage)')
+                                                                             pre_hil_date__year=year,pre_hil_status='OK(next stage)')
             relifing_prehil_observationlist = RelifingSystemStatus.objects.filter(filter_objects,
-                                                                                  pre_hil_status='Observation(same stage)')
+                                                                                  pre_hil_date__year=year,pre_hil_status='Observation(same stage)')
             relifing_prehil_observationlistNext = RelifingSystemStatus.objects.filter(filter_objects,
-                                                                                      pre_hil_status='Observation(next stage)')
-            relifing_prehil_uplist = RelifingSystemStatus.objects.filter(filter_objects, pre_hil_status='Under process')
-            relifing_prehil_haultlist = RelifingSystemStatus.objects.filter(filter_objects, pre_hil_status='Halt')
+                                                                                      pre_hil_date__year=year,pre_hil_status='Observation(next stage)')
+            relifing_prehil_uplist = RelifingSystemStatus.objects.filter(filter_objects, pre_hil_date__year=year,pre_hil_status='Under process')
+            relifing_prehil_haultlist = RelifingSystemStatus.objects.filter(filter_objects, pre_hil_date__year=year,pre_hil_status='Halt')
 
             relifing_posthil_oklist = RelifingSystemStatus.objects.filter(filter_objects,
-                                                                          post_hil_status='Ok')
+                                                                          post_hil_date__year=year,post_hil_status='Ok')
             relifing_posthil_oklistNext = RelifingSystemStatus.objects.filter(filter_objects,
-                                                                              post_hil_status='OK(next stage)')
+                                                                              post_hil_date__year=year,post_hil_status='OK(next stage)')
             relifing_posthil_observationlist = RelifingSystemStatus.objects.filter(filter_objects,
-                                                                                   post_hil_status='Observation(same stage)')
+                                                                                   post_hil_date__year=year,post_hil_status='Observation(same stage)')
             relifing_posthil_observationlistNext = RelifingSystemStatus.objects.filter(filter_objects,
-                                                                                       post_hil_status='Observation(next stage)')
+                                                                                       post_hil_date__year=year,post_hil_status='Observation(next stage)')
             relifing_posthil_uplist = RelifingSystemStatus.objects.filter(filter_objects,
-                                                                          post_hil_status='Under process')
-            relifing_posthil_haultlist = RelifingSystemStatus.objects.filter(filter_objects, post_hil_status='Halt')
+                                                                          post_hil_date__year=year,post_hil_status='Under process')
+            relifing_posthil_haultlist = RelifingSystemStatus.objects.filter(filter_objects, post_hil_date__year=year,post_hil_status='Halt')
 
 
 
             relifing_finalintegration_oklist = RelifingSystemStatus.objects.filter(filter_objects,
-                                                                                   final_integration_status='Ok')
+                                                                                   final_integration_date__year=year,final_integration_status='Ok')
             relifing_finalintegration_oklistNext = RelifingSystemStatus.objects.filter(filter_objects,
-                                                                                       final_integration_status='OK(next stage)')
+                                                                                       final_integration_date__year=year,final_integration_status='OK(next stage)')
             relifing_finalintegration_observationlist = RelifingSystemStatus.objects.filter(filter_objects,
-                                                                                            final_integration_status='Observation(same stage)')
+                                                                                            final_integration_date__year=year,final_integration_status='Observation(same stage)')
             relifing_finalintegration_observationlistNext = RelifingSystemStatus.objects.filter(filter_objects,
-                                                                                                final_integration_status='Observation(next stage)')
+                                                                                                final_integration_date__year=year,final_integration_status='Observation(next stage)')
             relifing_finalintegration_completelist = RelifingSystemStatus.objects.filter(filter_objects,
-                                                                                         final_integration_status='Under process')
+                                                                                         final_integration_date__year=year,final_integration_status='Under process')
             relifing_finalintegration_haultlist = RelifingSystemStatus.objects.filter(filter_objects,
-                                                                                      final_integration_status='Halt')
+                                                                                      final_integration_date__year=year,final_integration_status='Halt')
 
             relifing_vibration_oklist = RelifingSystemStatus.objects.filter(filter_objects,
-                                                                            vibaration_status='Ok')
+                                                                            vibaration_date__year=year,vibaration_status='Ok')
             relifing_vibration_oklistNext = RelifingSystemStatus.objects.filter(filter_objects,
-                                                                                vibaration_status='OK(next stage)')
+                                                                                vibaration_date__year=year,vibaration_status='OK(next stage)')
             relifing_vibration_observationlist = RelifingSystemStatus.objects.filter(filter_objects,
-                                                                                     vibaration_status='Observation(same stage)')
+                                                                                     vibaration_date__year=year,vibaration_status='Observation(same stage)')
             relifing_vibration_observationlistNext = RelifingSystemStatus.objects.filter(filter_objects,
-                                                                                         vibaration_status='Observation(next stage)')
+                                                                                         vibaration_date__year=year,vibaration_status='Observation(next stage)')
             relifing_vibration_uplist = RelifingSystemStatus.objects.filter(filter_objects,
-                                                                            vibaration_status='Under process')
-            relifing_vibration_haultlist = RelifingSystemStatus.objects.filter(filter_objects, vibaration_status='Halt')
+                                                                            vibaration_date__year=year,vibaration_status='Under process')
+            relifing_vibration_haultlist = RelifingSystemStatus.objects.filter(filter_objects, vibaration_date__year=year,vibaration_status='Halt')
 
             relifing_cg_oklist = RelifingSystemStatus.objects.filter(filter_objects,
-                                                                     cgbalancing_date_status='Ok')
+                                                                     cgbalancing_date__year=year,cgbalancing_date_status='Ok')
             relifing_cg_oklistNext = RelifingSystemStatus.objects.filter(filter_objects,
-                                                                         cgbalancing_date_status='OK(next stage)')
+                                                                         cgbalancing_date__year=year,cgbalancing_date_status='OK(next stage)')
             relifing_cg_observationlist = RelifingSystemStatus.objects.filter(filter_objects,
-                                                                              cgbalancing_date_status='Observation(same stage)')
+                                                                              cgbalancing_date__year=year,cgbalancing_date_status='Observation(same stage)')
             relifing_cg_observationlistNext = RelifingSystemStatus.objects.filter(filter_objects,
-                                                                                  cgbalancing_date_status='Observation(next stage)')
+                                                                                  cgbalancing_date__year=year,cgbalancing_date_status='Observation(next stage)')
             relifing_cg_uplist = RelifingSystemStatus.objects.filter(filter_objects,
-                                                                     cgbalancing_date_status='Under process')
-            relifing_cg_haultlist = RelifingSystemStatus.objects.filter(filter_objects, cgbalancing_date_status='Halt')
+                                                                     cgbalancing_date__year=year,cgbalancing_date_status='Under process')
+            relifing_cg_haultlist = RelifingSystemStatus.objects.filter(filter_objects, cgbalancing_date__year=year,cgbalancing_date_status='Halt')
 
-            relifing_fgt_oklist = RelifingSystemStatus.objects.filter(filter_objects, fgt_status='Ok')
-            relifing_fgt_oklistNext = RelifingSystemStatus.objects.filter(filter_objects, fgt_status='OK(next stage)')
+            relifing_fgt_oklist = RelifingSystemStatus.objects.filter(filter_objects, fgt_date__year=year,fgt_status='Ok')
+            relifing_fgt_oklistNext = RelifingSystemStatus.objects.filter(filter_objects, fgt_date__year=year,fgt_status='OK(next stage)')
             relifing_fgt_observationlist = RelifingSystemStatus.objects.filter(filter_objects,
-                                                                               fgt_status='Observation(same stage)')
+                                                                               fgt_date__year=year,fgt_status='Observation(same stage)')
             relifing_fgt_observationlistNext = RelifingSystemStatus.objects.filter(filter_objects,
-                                                                                   fgt_status='Observation(next stage)')
+                                                                                   fgt_date__year=year,fgt_status='Observation(next stage)')
             relifing_fgt_uplist = RelifingSystemStatus.objects.filter(filter_objects,
-                                                                      fgt_status='Under process')
-            relifing_fgt_haultlist = RelifingSystemStatus.objects.filter(filter_objects, fgt_status='Halt')
+                                                                      fgt_date__year=year,fgt_status='Under process')
+            relifing_fgt_haultlist = RelifingSystemStatus.objects.filter(filter_objects, fgt_date__year=year,fgt_status='Halt')
 
             relifing_bhd_not_submit = RelifingSystemStatus.objects.filter(filter_objects,
-                                                                         bhd_status='Not Submitted')
+                                                                         bhd_date__year=year,bhd_status='Not Submitted')
             relifing_bhd_inprocess = RelifingSystemStatus.objects.filter(filter_objects,
-                                                                         bhd_status='Audit in-process')
+                                                                         bhd_date__year=year,bhd_status='Audit in-process')
             relifing_bhd_qm_forwarded = RelifingSystemStatus.objects.filter(filter_objects,
-                                                                           bhd_status='QM observations forwarded')
+                                                                           bhd_date__year=year,bhd_status='QM observations forwarded')
             relifing_bhd_ok = RelifingSystemStatus.objects.filter(filter_objects,
-                                                                       bhd_status='Ok')
+                                                                       bhd_date__year=year,bhd_status='Ok')
             relifing_bhd_submitted = RelifingSystemStatus.objects.filter(filter_objects,
-                                                                       bhd_status='Submitted')
+                                                                       bhd_date__year=year,bhd_status='Submitted')
 
             relifing_fqm_planned = RelifingSystemStatus.objects.filter(filter_objects,
-                                                                       fqm_status='Planned')
+                                                                       fqm_date__year=year,fqm_status='Planned')
 
             relifing_fqm_conducted = RelifingSystemStatus.objects.filter(filter_objects,
-                                                                         fqm_status='Conducted')
+                                                                         fqm_date__year=year,fqm_status='Conducted')
 
 
             relifing_qmc_issued = RelifingSystemStatus.objects.filter(filter_objects,
-                                                                  qm_certification_status='QM certificate issued')
+                                                                  qm_certification_date__year=year,qm_certification_status='QM certificate issued')
 
             relifing_qmc_in_process = RelifingSystemStatus.objects.filter(filter_objects,
-                                                                      qm_certification_status='Audit in-process')
+                                                                      qm_certification_date__year=year,qm_certification_status='Audit in-process')
             relifing_qmc_obs_forwarded = RelifingSystemStatus.objects.filter(filter_objects,
-                                                                        qm_certification_status='QM Observations Forwarded')
+                                                                        qm_certification_date__year=year,qm_certification_status='QM Observations Forwarded')
 
 
 
             relifing_enduser_oklist = RelifingSystemStatus.objects.filter(filter_objects,
-                                                                          enduser_status='Ok')
+                                                                          enduser_date__year=year,enduser_status='Ok')
             relifing_enduser_oklistNext = RelifingSystemStatus.objects.filter(filter_objects,
-                                                                              enduser_status='OK(next stage)')
+                                                                              enduser_date__year=year,enduser_status='OK(next stage)')
             relifing_enduser_observationlist = RelifingSystemStatus.objects.filter(filter_objects,
-                                                                                   enduser_status='Observation')
+                                                                                   enduser_date__year=year,enduser_status='Observation')
             relifing_enduser_observationlistNext = RelifingSystemStatus.objects.filter(filter_objects,
-                                                                                       enduser_status='Observation(next stage)')
+                                                                                       enduser_date__year=year,enduser_status='Observation(next stage)')
             relifing_enduser_uplist = RelifingSystemStatus.objects.filter(filter_objects,
-                                                                          enduser_status='Completed')
-            relifing_enduser_haultlist = RelifingSystemStatus.objects.filter(filter_objects, enduser_status='Halt')
+                                                                          enduser_date__year=year,enduser_status='Completed')
+            relifing_enduser_haultlist = RelifingSystemStatus.objects.filter(filter_objects, enduser_date__year=year,enduser_status='Halt')
 
 
             relifing_sys_align_oklist = RelifingSystemStatus.objects.filter(filter_objects,
-                                                                          sys_align_status='Ok')
+                                                                          sys_align_Date__year=year,sys_align_status='Ok')
             relifing_sys_align_oklistNext = RelifingSystemStatus.objects.filter(filter_objects,
-                                                                              sys_align_status='OK(next stage)')
+                                                                              sys_align_Date__year=year,sys_align_status='OK(next stage)')
             relifing_sys_align_observationlist = RelifingSystemStatus.objects.filter(filter_objects,
-                                                                                   sys_align_status='Observation(same stage)')
+                                                                                   sys_align_Date__year=year,sys_align_status='Observation(same stage)')
             relifing_sys_align_observationlistNext = RelifingSystemStatus.objects.filter(filter_objects,
-                                                                                       sys_align_status='Observation(next stage)')
+                                                                                       sys_align_Date__year=year,sys_align_status='Observation(next stage)')
             relifing_sys_align_uplist = RelifingSystemStatus.objects.filter(filter_objects,
-                                                                          sys_align_status='Under process')
-            relifing_sys_align_haultlist = RelifingSystemStatus.objects.filter(filter_objects, sys_align_status='Halt')
+                                                                          sys_align_Date__year=year,sys_align_status='Under process')
+            relifing_sys_align_haultlist = RelifingSystemStatus.objects.filter(filter_objects, sys_align_Date__year=year,sys_align_status='Halt')
 
 
             relifing_incapsulation_oklist = RelifingSystemStatus.objects.filter(filter_objects,
-                                                                          incapsulation_status='Ok')
+                                                                          incapsulation_date__year=year,incapsulation_status='Ok')
             relifing_incapsulation_oklistNext = RelifingSystemStatus.objects.filter(filter_objects,
-                                                                              incapsulation_status='OK(next stage)')
+                                                                              incapsulation_date__year=year,incapsulation_status='OK(next stage)')
             relifing_incapsulation_observationlist = RelifingSystemStatus.objects.filter(filter_objects,
-                                                                                   incapsulation_status='Observation(same stage)')
+                                                                                   incapsulation_date__year=year,incapsulation_status='Observation(same stage)')
             relifing_incapsulation_observationlistNext = RelifingSystemStatus.objects.filter(filter_objects,
-                                                                                       incapsulation_status='Observation(next stage)')
+                                                                                       incapsulation_date__year=year,incapsulation_status='Observation(next stage)')
             relifing_incapsulation_uplist = RelifingSystemStatus.objects.filter(filter_objects,
-                                                                          incapsulation_status='Under process')
-            relifing_incapsulation_haultlist = RelifingSystemStatus.objects.filter(filter_objects, incapsulation_status='Halt')
+                                                                          incapsulation_date__year=year,incapsulation_status='Under process')
+            relifing_incapsulation_haultlist = RelifingSystemStatus.objects.filter(filter_objects, incapsulation_date__year=year,incapsulation_status='Halt')
 
-            relifing_emp_proofing_oklist = RelifingSystemStatus.objects.filter(filter_objects, emp_proofing='Ok')
-            relifing_emp_proofing_oklistNext= RelifingSystemStatus.objects.filter(filter_objects, emp_proofing='OK(next stage)')
-            relifing_emp_proofing_observationlist  = RelifingSystemStatus.objects.filter(filter_objects, emp_proofing='Observation(same stage)')
-            relifing_emp_proofing_observationlistNext = RelifingSystemStatus.objects.filter(filter_objects, emp_proofing='Observation(next stage)')
-            relifing_emp_proofing_uplist = RelifingSystemStatus.objects.filter(filter_objects, emp_proofing='Under process')
-            relifing_emp_proofing_haultlist = RelifingSystemStatus.objects.filter(filter_objects, emp_proofing='Halt')
+            relifing_emp_proofing_oklist = RelifingSystemStatus.objects.filter(filter_objects,emp_proofing_date__year=year,emp_proofing='Ok')
+            relifing_emp_proofing_oklistNext= RelifingSystemStatus.objects.filter(filter_objects,emp_proofing_date__year=year,emp_proofing='OK(next stage)')
+            relifing_emp_proofing_observationlist  = RelifingSystemStatus.objects.filter(filter_objects,emp_proofing_date__year=year,emp_proofing='Observation(same stage)')
+            relifing_emp_proofing_observationlistNext = RelifingSystemStatus.objects.filter(filter_objects,emp_proofing_date__year=year,emp_proofing='Observation(next stage)')
+            relifing_emp_proofing_uplist = RelifingSystemStatus.objects.filter(filter_objects,emp_proofing_date__year=year,emp_proofing='Under process')
+            relifing_emp_proofing_haultlist = RelifingSystemStatus.objects.filter(filter_objects,emp_proofing_date__year=year,emp_proofing='Halt')
 
-            relifing_func_tst_oklistNext_oklist  = RelifingSystemStatus.objects.filter(filter_objects, func_tst='Ok')
-            relifing_func_tst_oklistNext_oklistNext  = RelifingSystemStatus.objects.filter(filter_objects, func_tst='OK(next stage)')
-            relifing_func_tst_oklistNext_observationlist   = RelifingSystemStatus.objects.filter(filter_objects, func_tst='Observation(same stage)')
-            relifing_func_tst_oklistNext_observationlistNext  = RelifingSystemStatus.objects.filter(filter_objects, func_tst='Observation(next stage)')
-            relifing_func_tst_oklistNext_uplist  = RelifingSystemStatus.objects.filter(filter_objects, func_tst='Under process')
-            relifing_func_tst_oklistNext_haultlist  = RelifingSystemStatus.objects.filter(filter_objects, func_tst='Halt')
+            relifing_func_tst_oklistNext_oklist  = RelifingSystemStatus.objects.filter(filter_objects,func_tst_date__year=year,func_tst='Ok')
+            relifing_func_tst_oklistNext_oklistNext  = RelifingSystemStatus.objects.filter(filter_objects,func_tst_date__year=year,func_tst='OK(next stage)')
+            relifing_func_tst_oklistNext_observationlist   = RelifingSystemStatus.objects.filter(filter_objects,func_tst_date__year=year,func_tst='Observation(same stage)')
+            relifing_func_tst_oklistNext_observationlistNext  = RelifingSystemStatus.objects.filter(filter_objects,func_tst_date__year=year,func_tst='Observation(next stage)')
+            relifing_func_tst_oklistNext_uplist  = RelifingSystemStatus.objects.filter(filter_objects,func_tst_date__year=year,func_tst='Under process')
+            relifing_func_tst_oklistNext_haultlist  = RelifingSystemStatus.objects.filter(filter_objects,func_tst_date__year=year,func_tst='Halt')
 
-            relifing_func_tst_dummy_bird_oklist = RelifingSystemStatus.objects.filter(filter_objects, func_tst_dummy_bird='Ok')
-            relifing_func_tst_dummy_bird_oklistNext = RelifingSystemStatus.objects.filter(filter_objects, func_tst_dummy_bird='OK(next stage)')
-            relifing_func_tst_dummy_bird_observationlist  = RelifingSystemStatus.objects.filter(filter_objects, func_tst_dummy_bird='Observation(same stage)')
-            relifing_func_tst_dummy_bird_observationlistNext = RelifingSystemStatus.objects.filter(filter_objects, func_tst_dummy_bird='Observation(next stage)')
-            relifing_func_tst_dummy_bird_uplist = RelifingSystemStatus.objects.filter(filter_objects, func_tst_dummy_bird='Under process')
-            relifing_func_tst_dummy_bird_haultlist = RelifingSystemStatus.objects.filter(filter_objects, func_tst_dummy_bird='Halt')
+            relifing_func_tst_dummy_bird_oklist = RelifingSystemStatus.objects.filter(filter_objects,func_tst_dummy_bird_date__year=year,func_tst_dummy_bird='Ok')
+            relifing_func_tst_dummy_bird_oklistNext = RelifingSystemStatus.objects.filter(filter_objects,func_tst_dummy_bird_date__year=year,func_tst_dummy_bird='OK(next stage)')
+            relifing_func_tst_dummy_bird_observationlist  = RelifingSystemStatus.objects.filter(filter_objects,func_tst_dummy_bird_date__year=year,func_tst_dummy_bird='Observation(same stage)')
+            relifing_func_tst_dummy_bird_observationlistNext = RelifingSystemStatus.objects.filter(filter_objects,func_tst_dummy_bird_date__year=year,func_tst_dummy_bird='Observation(next stage)')
+            relifing_func_tst_dummy_bird_uplist = RelifingSystemStatus.objects.filter(filter_objects,func_tst_dummy_bird_date__year=year,func_tst_dummy_bird='Under process')
+            relifing_func_tst_dummy_bird_haultlist = RelifingSystemStatus.objects.filter(filter_objects,func_tst_dummy_bird_date__year=year,func_tst_dummy_bird='Halt')
 
-            relifing_road_test_oklist = RelifingSystemStatus.objects.filter(filter_objects, road_test='Ok')
-            relifing_road_test_oklistNext = RelifingSystemStatus.objects.filter(filter_objects, road_test='OK(next stage)')
-            relifing_road_test_observationlist  = RelifingSystemStatus.objects.filter(filter_objects, road_test='Observation(same stage)')
-            relifing_road_test_observationlistNext = RelifingSystemStatus.objects.filter(filter_objects, road_test='Observation(next stage)')
-            relifing_road_test_uplist = RelifingSystemStatus.objects.filter(filter_objects, road_test='Under process')
-            relifing_road_test_haultlist = RelifingSystemStatus.objects.filter(filter_objects, road_test='Halt')
+            relifing_road_test_oklist = RelifingSystemStatus.objects.filter(filter_objects,road_test_date__year=year,road_test='Ok')
+            relifing_road_test_oklistNext = RelifingSystemStatus.objects.filter(filter_objects,road_test_date__year=year,road_test='OK(next stage)')
+            relifing_road_test_observationlist  = RelifingSystemStatus.objects.filter(filter_objects,road_test_date__year=year,road_test='Observation(same stage)')
+            relifing_road_test_observationlistNext = RelifingSystemStatus.objects.filter(filter_objects,road_test_date__year=year,road_test='Observation(next stage)')
+            relifing_road_test_uplist = RelifingSystemStatus.objects.filter(filter_objects,road_test_date__year=year,road_test='Under process')
+            relifing_road_test_haultlist = RelifingSystemStatus.objects.filter(filter_objects,road_test_date__year=year,road_test='Halt')
 
-            relifing_post_road_test_oklist = RelifingSystemStatus.objects.filter(filter_objects, post_road_test='Ok')
-            relifing_post_road_test_oklistNext = RelifingSystemStatus.objects.filter(filter_objects, post_road_test='OK(next stage)')
-            relifing_post_road_test_observationlist  = RelifingSystemStatus.objects.filter(filter_objects, post_road_test='Observation(same stage)')
-            relifing_post_road_test_observationlistNext = RelifingSystemStatus.objects.filter(filter_objects, post_road_test='Observation(next stage)')
-            relifing_post_road_test_uplist = RelifingSystemStatus.objects.filter(filter_objects, post_road_test='Under process')
-            relifing_post_road_test_haultlist = RelifingSystemStatus.objects.filter(filter_objects, post_road_test='Halt')
+            relifing_post_road_test_oklist = RelifingSystemStatus.objects.filter(filter_objects,post_road_test_date__year=year,post_road_test='Ok')
+            relifing_post_road_test_oklistNext = RelifingSystemStatus.objects.filter(filter_objects,post_road_test_date__year=year,post_road_test='OK(next stage)')
+            relifing_post_road_test_observationlist  = RelifingSystemStatus.objects.filter(filter_objects,post_road_test_date__year=year,post_road_test='Observation(same stage)')
+            relifing_post_road_test_observationlistNext = RelifingSystemStatus.objects.filter(filter_objects,post_road_test_date__year=year,post_road_test='Observation(next stage)')
+            relifing_post_road_test_uplist = RelifingSystemStatus.objects.filter(filter_objects,post_road_test_date__year=year,post_road_test='Under process')
+            relifing_post_road_test_haultlist = RelifingSystemStatus.objects.filter(filter_objects,post_road_test_date__year=year,post_road_test='Halt')
 
-            relifing_integrated_operation_oklist = RelifingSystemStatus.objects.filter(filter_objects, integrated_operation='Ok')
-            relifing_integrated_operation_oklistNext = RelifingSystemStatus.objects.filter(filter_objects, integrated_operation='OK(next stage)')
-            relifing_integrated_operation_observationlist  = RelifingSystemStatus.objects.filter(filter_objects, integrated_operation='Observation(same stage)')
-            relifing_integrated_operation_observationlistNext = RelifingSystemStatus.objects.filter(filter_objects, integrated_operation='Observation(next stage)')
-            relifing_integrated_operation_uplist = RelifingSystemStatus.objects.filter(filter_objects, integrated_operation='Under process')
-            relifing_integrated_operation_haultlist = RelifingSystemStatus.objects.filter(filter_objects, integrated_operation='Halt')
+            relifing_integrated_operation_oklist = RelifingSystemStatus.objects.filter(filter_objects,integrated_operation_date__year=year,integrated_operation='Ok')
+            relifing_integrated_operation_oklistNext = RelifingSystemStatus.objects.filter(filter_objects,integrated_operation_date__year=year,integrated_operation='OK(next stage)')
+            relifing_integrated_operation_observationlist  = RelifingSystemStatus.objects.filter(filter_objects,integrated_operation_date__year=year,integrated_operation='Observation(same stage)')
+            relifing_integrated_operation_observationlistNext = RelifingSystemStatus.objects.filter(filter_objects,integrated_operation_date__year=year,integrated_operation='Observation(next stage)')
+            relifing_integrated_operation_uplist = RelifingSystemStatus.objects.filter(filter_objects,integrated_operation_date__year=year,integrated_operation='Under process')
+            relifing_integrated_operation_haultlist = RelifingSystemStatus.objects.filter(filter_objects,integrated_operation_date__year=year,integrated_operation='Halt')
 
-            relifing_rain_test_oklist = RelifingSystemStatus.objects.filter(filter_objects, rain_test='Ok')
-            relifing_rain_test_oklistNext = RelifingSystemStatus.objects.filter(filter_objects, rain_test='OK(next stage)')
-            relifing_rain_test_observationlist  = RelifingSystemStatus.objects.filter(filter_objects, rain_test='Observation(same stage)')
-            relifing_rain_test_observationlistNext = RelifingSystemStatus.objects.filter(filter_objects, rain_test='Observation(next stage)')
-            relifing_rain_test_uplist = RelifingSystemStatus.objects.filter(filter_objects, rain_test='Under process')
-            relifing_rain_test_haultlist = RelifingSystemStatus.objects.filter(filter_objects, rain_test='Halt')
+            relifing_rain_test_oklist = RelifingSystemStatus.objects.filter(filter_objects,rain_test_date__year=year,rain_test='Ok')
+            relifing_rain_test_oklistNext = RelifingSystemStatus.objects.filter(filter_objects,rain_test_date__year=year,rain_test='OK(next stage)')
+            relifing_rain_test_observationlist  = RelifingSystemStatus.objects.filter(filter_objects,rain_test_date__year=year,rain_test='Observation(same stage)')
+            relifing_rain_test_observationlistNext = RelifingSystemStatus.objects.filter(filter_objects,rain_test_date__year=year,rain_test='Observation(next stage)')
+            relifing_rain_test_uplist = RelifingSystemStatus.objects.filter(filter_objects,rain_test_date__year=year,rain_test='Under process')
+            relifing_rain_test_haultlist = RelifingSystemStatus.objects.filter(filter_objects,rain_test_date__year=year,rain_test='Halt')
 
-            relifing_pre_user_inspection_oklist = RelifingSystemStatus.objects.filter(filter_objects, pre_user_inspection='Ok')
-            relifing_pre_user_inspection_oklistNext = RelifingSystemStatus.objects.filter(filter_objects, pre_user_inspection='OK(next stage)')
-            relifing_pre_user_inspection_observationlist  = RelifingSystemStatus.objects.filter(filter_objects, pre_user_inspection='Observation(same stage)')
-            relifing_pre_user_inspection_observationlistNext = RelifingSystemStatus.objects.filter(filter_objects, pre_user_inspection='Observation(next stage)')
-            relifing_pre_user_inspection_uplist = RelifingSystemStatus.objects.filter(filter_objects, pre_user_inspection='Under process')
-            relifing_pre_user_inspection_haultlist = RelifingSystemStatus.objects.filter(filter_objects, pre_user_inspection='Halt')
+            relifing_pre_user_inspection_oklist = RelifingSystemStatus.objects.filter(filter_objects,pre_user_inspection_date__year=year,pre_user_inspection='Ok')
+            relifing_pre_user_inspection_oklistNext = RelifingSystemStatus.objects.filter(filter_objects,pre_user_inspection_date__year=year,pre_user_inspection='OK(next stage)')
+            relifing_pre_user_inspection_observationlist  = RelifingSystemStatus.objects.filter(filter_objects,pre_user_inspection_date__year=year,pre_user_inspection='Observation(same stage)')
+            relifing_pre_user_inspection_observationlistNext = RelifingSystemStatus.objects.filter(filter_objects,pre_user_inspection_date__year=year,pre_user_inspection='Observation(next stage)')
+            relifing_pre_user_inspection_uplist = RelifingSystemStatus.objects.filter(filter_objects,pre_user_inspection_date__year=year,pre_user_inspection='Under process')
+            relifing_pre_user_inspection_haultlist = RelifingSystemStatus.objects.filter(filter_objects,pre_user_inspection_date__year=year,pre_user_inspection='Halt')
 
-            relifing_final_integrated_testing_oklist = RelifingSystemStatus.objects.filter(filter_objects, final_integrated_testing='Ok')
-            relifing_final_integrated_testing_oklistNext = RelifingSystemStatus.objects.filter(filter_objects, final_integrated_testing='OK(next stage)')
-            relifing_final_integrated_testing_observationlist  = RelifingSystemStatus.objects.filter(filter_objects, final_integrated_testing='Observation(same stage)')
-            relifing_final_integrated_testing_observationlistNext = RelifingSystemStatus.objects.filter(filter_objects, final_integrated_testing='Observation(next stage)')
-            relifing_final_integrated_testing_uplist = RelifingSystemStatus.objects.filter(filter_objects, final_integrated_testing='Under process')
-            relifing_final_integrated_testing_haultlist = RelifingSystemStatus.objects.filter(filter_objects, final_integrated_testing='Halt')
+            relifing_final_integrated_testing_oklist = RelifingSystemStatus.objects.filter(filter_objects,final_integrated_testing_date__year=year,final_integrated_testing='Ok')
+            relifing_final_integrated_testing_oklistNext = RelifingSystemStatus.objects.filter(filter_objects,final_integrated_testing_date__year=year,final_integrated_testing='OK(next stage)')
+            relifing_final_integrated_testing_observationlist  = RelifingSystemStatus.objects.filter(filter_objects,final_integrated_testing_date__year=year,final_integrated_testing='Observation(same stage)')
+            relifing_final_integrated_testing_observationlistNext = RelifingSystemStatus.objects.filter(filter_objects,final_integrated_testing_date__year=year,final_integrated_testing='Observation(next stage)')
+            relifing_final_integrated_testing_uplist = RelifingSystemStatus.objects.filter(filter_objects,final_integrated_testing_date__year=year,final_integrated_testing='Under process')
+            relifing_final_integrated_testing_haultlist = RelifingSystemStatus.objects.filter(filter_objects,final_integrated_testing_date__year=year,final_integrated_testing='Halt')
 
-            relifing_load_unload_on_mlv_hlf_oklist = RelifingSystemStatus.objects.filter(filter_objects, load_unload_on_mlv_hlf='Ok')
-            relifing_load_unload_on_mlv_hlf_oklistNext = RelifingSystemStatus.objects.filter(filter_objects, load_unload_on_mlv_hlf='OK(next stage)')
-            relifing_load_unload_on_mlv_hlf_observationlist  = RelifingSystemStatus.objects.filter(filter_objects, load_unload_on_mlv_hlf='Observation(same stage)')
-            relifing_load_unload_on_mlv_hlf_observationlistNext = RelifingSystemStatus.objects.filter(filter_objects, load_unload_on_mlv_hlf='Observation(next stage)')
-            relifing_load_unload_on_mlv_hlf_uplist = RelifingSystemStatus.objects.filter(filter_objects, load_unload_on_mlv_hlf='Under process')
-            relifing_load_unload_on_mlv_hlf_haultlist = RelifingSystemStatus.objects.filter(filter_objects, load_unload_on_mlv_hlf='Halt')
+            relifing_load_unload_on_mlv_hlf_oklist = RelifingSystemStatus.objects.filter(filter_objects,load_unload_on_mlv_hlf_date__year=year,load_unload_on_mlv_hlf='Ok')
+            relifing_load_unload_on_mlv_hlf_oklistNext = RelifingSystemStatus.objects.filter(filter_objects,load_unload_on_mlv_hlf_date__year=year,load_unload_on_mlv_hlf='OK(next stage)')
+            relifing_load_unload_on_mlv_hlf_observationlist  = RelifingSystemStatus.objects.filter(filter_objects,load_unload_on_mlv_hlf_date__year=year,load_unload_on_mlv_hlf='Observation(same stage)')
+            relifing_load_unload_on_mlv_hlf_observationlistNext = RelifingSystemStatus.objects.filter(filter_objects,load_unload_on_mlv_hlf_date__year=year,load_unload_on_mlv_hlf='Observation(next stage)')
+            relifing_load_unload_on_mlv_hlf_uplist = RelifingSystemStatus.objects.filter(filter_objects,load_unload_on_mlv_hlf_date__year=year,load_unload_on_mlv_hlf='Under process')
+            relifing_load_unload_on_mlv_hlf_haultlist = RelifingSystemStatus.objects.filter(filter_objects,load_unload_on_mlv_hlf_date__year=year,load_unload_on_mlv_hlf='Halt')
             dist = {
                 'prod_blt_ok': prod_blt_oklist.count(),
                 'prod_blt_ok_next': prod_blt_oklistNext.count(),
