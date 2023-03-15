@@ -1337,17 +1337,17 @@ class QmsController:
             if current_status == 'Certified' or current_status == 'New Client' or current_status == 'Suspended' or current_status == 'Widthdrawl':
                 filter_objects &= get_filter('certification_status', 'equal',current_status)
 
-            dataList = CespAudit.objects.filter(filter_objects)
+            dataList = CespAudit.objects.filter(filter_objects).order_by('-planned_date')
             if current_status == 'Total CeSP Under Process':
-                dataList = CespAudit.objects.filter(~Q(audit_status = 'Completed'))
+                dataList = CespAudit.objects.filter(~Q(audit_status = 'Completed')).order_by('-planned_date')
             if current_status == 'Total CeSP Completed':
-                dataList = CespAudit.objects.filter(audit_status = 'Completed')
+                dataList = CespAudit.objects.filter(audit_status = 'Completed').order_by('-planned_date')
             if current_status == 'Total CeSP Overdue':
-                dataList = CespAudit.objects.filter(audit_start_date__gt=F('planned_date'))
+                dataList = CespAudit.objects.filter(audit_start_date__gt=F('planned_date')).order_by('-planned_date')
             if current_status == 'Overdue':
-                dataList = dataList.filter(audit_start_date__gt=F('planned_date'))
+                dataList = dataList.filter(audit_start_date__gt=F('planned_date')).order_by('-planned_date')
             if current_status == 'Total CeSP Audits':
-                dataList = CespAudit.objects.all().order_by('-id')
+                dataList = CespAudit.objects.all().order_by('-planned_date')
             if current_status == 'Current Year Audits':
                 dataList = dataList.filter(planned_date__year = current_year)
 
