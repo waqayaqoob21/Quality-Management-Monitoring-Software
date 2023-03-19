@@ -442,64 +442,64 @@ class DocController:
                 return JsonResponse({'status': 'True', 'data': serializer.data},
                                     status=200)
 
-
             # filter end
 
-                # current obs over due count
+            # current obs over due count
 
             if current_status == 'currentoverdue_obs':
 
                 if current_type == 'document' or current_type == '':
+                    total_filter_objects &= get_filter(
+                        'status', 'equal',
+                        'QM Observations Forwarded')
+                    total_filter_objects |= get_filter(
+                        'status', 'equal',
+                        'QM Observations Repeated')
+                    total_filter_objects |= get_filter(
+                        'status', 'equal',
+                        'Approved')
+                    if current_org != '' and current_org != 'All':
                         total_filter_objects &= get_filter(
-                            'status', 'equal',
-                            'QM Observations Forwarded')
-                        total_filter_objects |= get_filter(
-                            'status', 'equal',
-                            'QM Observations Repeated')
-                        total_filter_objects |= get_filter(
-                            'status', 'equal',
-                            'Approved')
-                        if current_org != '' and current_org != 'All':
-                            total_filter_objects &= get_filter(
-                                'sender', 'equal',
-                                current_org)
+                            'sender', 'equal',
+                            current_org)
                 else:
+                    total_filter_objects &= get_filter(
+                        'status', 'equal',
+                        'QM Observations Forwarded')
+                    total_filter_objects |= get_filter(
+                        'status', 'equal',
+                        'QM Observations Repeated')
+                    total_filter_objects |= get_filter(
+                        'status', 'equal',
+                        'QM Certificate issued')
+                    if current_org != '' and current_org != 'All':
                         total_filter_objects &= get_filter(
-                            'status', 'equal',
-                            'QM Observations Forwarded')
-                        total_filter_objects |= get_filter(
-                            'status', 'equal',
-                            'QM Observations Repeated')
-                        total_filter_objects |= get_filter(
-                            'status', 'equal',
-                            'QM Certificate issued')
-                        if current_org != '' and current_org != 'All':
-                            total_filter_objects &= get_filter(
-                                'sender', 'equal',
-                                current_org)
+                            'sender', 'equal',
+                            current_org)
                 total_doc_type_objects = Q()
                 if current_type == 'document' or current_type == '':
-                        total_doc_type_objects &= get_filter(
-                            'doc_type', 'not_equal',
-                            'BHD')
+                    total_doc_type_objects &= get_filter(
+                        'doc_type', 'not_equal',
+                        'BHD')
                 else:
-                        total_doc_type_objects &= get_filter(
-                            'doc_type', 'equal',
-                            'BHD')
-                docList = doctracking.objects.filter(total_filter_objects, receive_date__year=current_year).order_by('-id')
+                    total_doc_type_objects &= get_filter(
+                        'doc_type', 'equal',
+                        'BHD')
+                docList = doctracking.objects.filter(total_filter_objects, receive_date__year=current_year).order_by(
+                    '-id')
                 docList = docList.filter(total_doc_type_objects)
                 list = []
                 if docList is not None:
-                        for item in docList:
-                            if item.task_date is None:
-                                item.task_date = datetime.today() + timedelta(hours=5)
-                            if item.due_date.date() < item.task_date.date():
-                                list.append(item)
+                    for item in docList:
+                        if item.task_date is None:
+                            item.task_date = datetime.today() + timedelta(hours=5)
+                        if item.due_date.date() < item.task_date.date():
+                            list.append(item)
 
                 docList_obs = list
                 serializer = DocListSerializer(docList_obs, many=True)
                 return JsonResponse({'status': 'True', 'data': serializer.data},
-                                        status=200)
+                                    status=200)
 
                 # filter end
 
@@ -521,12 +521,12 @@ class DocController:
                         current_org)
 
                 else:
-                    current_filter_objects &= get_filter(
-                        'doc_type', 'equal',
-                        'BHD')
-                    current_filter_objects &= get_filter(
-                        'status', 'not_equal',
-                        'Approved')
+                    # current_filter_objects &= get_filter(
+                    #     'doc_type', 'equal',
+                    #     'BHD')
+                    # current_filter_objects &= get_filter(
+                    #     'status', 'not_equal',
+                    #     'Approved')
                     if current_org != '' and current_org != 'All':
                         current_filter_objects &= get_filter(
                             'sender', 'equal',
@@ -536,6 +536,181 @@ class DocController:
                 serializer = DocListSerializer(docList, many=True)
                 return JsonResponse({'status': 'True', 'data': serializer.data},
                                     status=200)
+            if current_status == 'current_doc_qac':
+
+                if current_type == 'document' or current_type == '':
+                    current_filter_objects &= get_filter(
+                        'status', 'equal',
+                        'Approved')
+                    current_filter_objects &= get_filter(
+                        'doc_type', 'equal',
+                        'Qualification & Acceptance Criteria')
+                if current_org != '' and current_org != 'All':
+                    current_filter_objects &= get_filter(
+                        'sender', 'equal',
+                        current_org)
+
+                else:
+                    if current_org != '' and current_org != 'All':
+                        current_filter_objects &= get_filter(
+                            'sender', 'equal',
+                            current_org)
+                docList = doctracking.objects.filter(current_filter_objects, receive_date__year=current_year).order_by(
+                    '-id')
+                serializer = DocListSerializer(docList, many=True)
+                return JsonResponse({'status': 'True', 'data': serializer.data},
+                                    status=200)
+
+            if current_status == 'current_doc_atp':
+
+                if current_type == 'document' or current_type == '':
+                    current_filter_objects &= get_filter(
+                        'status', 'equal',
+                        'Approved')
+                    current_filter_objects &= get_filter(
+                        'doc_type', 'equal',
+                        'ATP')
+                if current_org != '' and current_org != 'All':
+                    current_filter_objects &= get_filter(
+                        'sender', 'equal',
+                        current_org)
+
+                else:
+                    if current_org != '' and current_org != 'All':
+                        current_filter_objects &= get_filter(
+                            'sender', 'equal',
+                            current_org)
+                docList = doctracking.objects.filter(current_filter_objects, receive_date__year=current_year).order_by(
+                    '-id')
+                serializer = DocListSerializer(docList, many=True)
+                return JsonResponse({'status': 'True', 'data': serializer.data},
+                                    status=200)
+
+            if current_status == 'current_doc_qftp':
+
+                if current_type == 'document' or current_type == '':
+                    current_filter_objects &= get_filter(
+                        'status', 'equal',
+                        'Approved')
+                    current_filter_objects &= get_filter(
+                        'doc_type', 'equal',
+                        'QFTP')
+                if current_org != '' and current_org != 'All':
+                    current_filter_objects &= get_filter(
+                        'sender', 'equal',
+                        current_org)
+
+                else:
+                    if current_org != '' and current_org != 'All':
+                        current_filter_objects &= get_filter(
+                            'sender', 'equal',
+                            current_org)
+                docList = doctracking.objects.filter(current_filter_objects, receive_date__year=current_year).order_by(
+                    '-id')
+                serializer = DocListSerializer(docList, many=True)
+                return JsonResponse({'status': 'True', 'data': serializer.data},
+                                    status=200)
+
+            if current_status == 'current_doc_tdp':
+
+                if current_type == 'document' or current_type == '':
+                    current_filter_objects &= get_filter(
+                        'status', 'equal',
+                        'Approved')
+                    current_filter_objects &= get_filter(
+                        'doc_type', 'equal',
+                        'TDP')
+                if current_org != '' and current_org != 'All':
+                    current_filter_objects &= get_filter(
+                        'sender', 'equal',
+                        current_org)
+
+                else:
+                    if current_org != '' and current_org != 'All':
+                        current_filter_objects &= get_filter(
+                            'sender', 'equal',
+                            current_org)
+                docList = doctracking.objects.filter(current_filter_objects, receive_date__year=current_year).order_by(
+                    '-id')
+                serializer = DocListSerializer(docList, many=True)
+                return JsonResponse({'status': 'True', 'data': serializer.data},
+                                    status=200)
+
+            if current_status == 'current_doc_sop':
+
+                if current_type == 'document' or current_type == '':
+                    current_filter_objects &= get_filter(
+                        'status', 'equal',
+                        'Approved')
+                    current_filter_objects &= get_filter(
+                        'doc_type', 'equal',
+                        'SOP')
+                if current_org != '' and current_org != 'All':
+                    current_filter_objects &= get_filter(
+                        'sender', 'equal',
+                        current_org)
+
+                else:
+                    if current_org != '' and current_org != 'All':
+                        current_filter_objects &= get_filter(
+                            'sender', 'equal',
+                            current_org)
+                docList = doctracking.objects.filter(current_filter_objects, receive_date__year=current_year).order_by(
+                    '-id')
+                serializer = DocListSerializer(docList, many=True)
+                return JsonResponse({'status': 'True', 'data': serializer.data},
+                                    status=200)
+
+            if current_status == 'current_doc_guide':
+
+                if current_type == 'document' or current_type == '':
+                    current_filter_objects &= get_filter(
+                        'status', 'equal',
+                        'Approved')
+                    current_filter_objects &= get_filter(
+                        'doc_type', 'equal',
+                        'Guidelines')
+                if current_org != '' and current_org != 'All':
+                    current_filter_objects &= get_filter(
+                        'sender', 'equal',
+                        current_org)
+
+                else:
+                    if current_org != '' and current_org != 'All':
+                        current_filter_objects &= get_filter(
+                            'sender', 'equal',
+                            current_org)
+                docList = doctracking.objects.filter(current_filter_objects, receive_date__year=current_year).order_by(
+                    '-id')
+                serializer = DocListSerializer(docList, many=True)
+                return JsonResponse({'status': 'True', 'data': serializer.data},
+                                    status=200)
+
+            if current_status == 'current_doc_others':
+
+                if current_type == 'document' or current_type == '':
+                    current_filter_objects &= get_filter(
+                        'status', 'equal',
+                        'Approved')
+                    current_filter_objects &= get_filter(
+                        'doc_type', 'equal',
+                        'Others')
+                if current_org != '' and current_org != 'All':
+                    current_filter_objects &= get_filter(
+                        'sender', 'equal',
+                        current_org)
+
+                else:
+                    if current_org != '' and current_org != 'All':
+                        current_filter_objects &= get_filter(
+                            'sender', 'equal',
+                            current_org)
+                docList = doctracking.objects.filter(current_filter_objects, receive_date__year=current_year).order_by(
+                    '-id')
+                serializer = DocListSerializer(docList, many=True)
+                return JsonResponse({'status': 'True', 'data': serializer.data},
+                                    status=200)
+
             if current_status == 'current_doc_total':
                 if current_type == 'document' or current_type == '':
                     current_filter_objects &= get_filter(
@@ -630,7 +805,16 @@ class DocController:
                         'Audit in-process')
                 docList = doctracking.objects.filter(current_filter_objects, receive_date__year=current_year).order_by(
                     '-id')
-                serializer = DocListSerializer(docList, many=True)
+
+                list = []
+                if docList is not None:
+                    for item in docList:
+                        if item.task_date is None:
+                            item.task_date = datetime.today() + timedelta(hours=5)
+                        if item.due_date.date() > item.task_date.date():
+                            list.append(item)
+                #docList = list
+                serializer = DocListSerializer(list, many=True)
                 return JsonResponse({'status': 'True', 'data': serializer.data},
                                     status=200)
             else:
@@ -1080,7 +1264,6 @@ class DocController:
                     'doc_type', 'equal',
                     'BHD')
 
-
             total_filter_bhd_app_obs = Q()
             total_filter_bhd_app_obs &= get_filter(
                 'status', 'equal',
@@ -1307,7 +1490,8 @@ class DocController:
 
             # current obs count
 
-            current_doc_app_obsList = doctracking.objects.filter(total_filter_doc_app_obs, receive_date__year=selected_year)
+            current_doc_app_obsList = doctracking.objects.filter(total_filter_doc_app_obs,
+                                                                 receive_date__year=selected_year)
             current_count_doc_app_obs = 0
             if current_doc_app_obsList is not None:
                 for item in current_doc_app_obsList:
@@ -1317,7 +1501,8 @@ class DocController:
                         current_count_doc_app_obs = current_count_doc_app_obs + 1
             current_doc_app_obs = current_count_doc_app_obs
 
-            current_bhd_app_obsList = doctracking.objects.filter(total_filter_bhd_app_obs, receive_date__year=selected_year)
+            current_bhd_app_obsList = doctracking.objects.filter(total_filter_bhd_app_obs,
+                                                                 receive_date__year=selected_year)
             current_count_bhd_app_obs = 0
             if current_bhd_app_obsList is not None:
                 for item in current_bhd_app_obsList:
@@ -1326,7 +1511,6 @@ class DocController:
                     if item.due_date.date() < item.task_date.date():
                         current_count_bhd_app_obs = current_count_bhd_app_obs + 1
             current_bhd_app_obs = current_count_bhd_app_obs
-
 
             # current obs filter
             total_bhd_count_filter = Q()
@@ -1660,10 +1844,33 @@ class DocController:
             total_TDP_count = total_doc_approvedList.filter(doc_type='TDP').count()
             total_SOP_count = total_doc_approvedList.filter(doc_type='SOP').count()
             total_Guidelines_count = total_doc_approvedList.filter(doc_type='Guidelines').count()
-            total_others_count = total_doc_approvedList.filter(doc_type='Others/Misc').count()
+            total_others_count = total_doc_approvedList.filter(doc_type='Others').count()
 
             # SST_count = doc_approvedList.filter(doc_type='Structural Strength Testing(SST)').count()
             # TDP_count = doc_approvedList.filter(doc_type='Technical Data Pack (TDP)').count()
+            current_filter_objects_process = Q()
+            if selected_type == 'document' or selected_type == '':
+                current_filter_objects_process &= get_filter(
+                    'doc_type', 'not_equal',
+                    'BHD')
+            else:
+                current_filter_objects_process &= get_filter(
+                    'doc_type', 'equal',
+                    'BHD')
+            current_filter_objects_process &= get_filter(
+                'status', 'equal',
+                'Audit in-process')
+
+            count_current_audit_in_process = 0
+
+            current_current_audit_in_process = doctracking.objects.filter(current_filter_objects_process, receive_date__year=selected_year)
+            if current_current_audit_in_process is not None:
+                for item in current_current_audit_in_process:
+                    if item.task_date is None:
+                        item.task_date = datetime.today() + timedelta(hours=5)
+                    if item.due_date.date() > item.task_date.date():
+                        count_current_audit_in_process = count_current_audit_in_process + 1
+            audit_inProcess = count_current_audit_in_process
             dist = {
                 'current_doc_app_obs': current_doc_app_obs,
                 'current_bhd_app_obs': current_bhd_app_obs,
