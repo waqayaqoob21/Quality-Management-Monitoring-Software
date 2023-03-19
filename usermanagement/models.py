@@ -8,7 +8,7 @@ class UserRoles(models.Model):
     id = models.AutoField(primary_key=True)
     prod_roles = models.CharField(max_length=555)
     relif_roles = models.CharField(max_length=555)
-    flight_roles = models.CharField(max_length=555, unique= True)
+    flight_roles = models.CharField(max_length=555)
     motor_roles = models.CharField(max_length=555)
     user_id = models.CharField(max_length=555)
 
