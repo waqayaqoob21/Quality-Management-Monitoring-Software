@@ -31,118 +31,146 @@ class MpmController:
                 motorModel.component_type = request['component_type']
                 motorModel.qualification_insulation_lining_propellant_rm = request[
                     'qualification_insulation_lining_propellant_rm']
-                motorModel.qualification_insulation_lining_propellant_rm_date = request[
+                if request['qualification_insulation_lining_propellant_rm_date'] != '':
+                    motorModel.qualification_insulation_lining_propellant_rm_date = request[
                     'qualification_insulation_lining_propellant_rm_date']
                 motorModel.qualification_insulation_lining_propellant_rm_remarks = request[
                     'qualification_insulation_lining_propellant_remarks']
                 motorModel.acceptance_casting = request['Acceptance_of_casting']
-                motorModel.acceptance_casting_date = request['Acceptance_of_casting_date']
+                if request['Acceptance_of_casting_date'] != '':
+                    motorModel.acceptance_casting_date = request['Acceptance_of_casting_date']
                 motorModel.acceptance_casting_remarks = request['Acceptance_of_casting_remarks']
                 motorModel.sandblasting = request['Sand_blasting']
-                motorModel.sandblasting_date = request['Sand_blasting_date']
+                if request['Sand_blasting_date'] != '':
+                    motorModel.sandblasting_date = request['Sand_blasting_date']
                 motorModel.sandblasting_remarks = request['Sand_blasting_remarks']
 
                 motorModel.insulation = request['motor_Insulation']
-                motorModel.insulation_date = request['motor_Insulation_date']
+                if request['motor_Insulation_date'] != '':
+                    motorModel.insulation_date = request['motor_Insulation_date']
                 motorModel.insulation_remarks = request['motor_Insulation_remarks']
 
                 motorModel.ut_rt_insulated_case = request['UTandRTofInsulated_Case']
-                motorModel.ut_rt_insulated_case_date = request['UTandRTofInsulated_Case_date']
+                if request['UTandRTofInsulated_Case_date'] != '':
+                    motorModel.ut_rt_insulated_case_date = request['UTandRTofInsulated_Case_date']
                 motorModel.ut_rt_insulated_case_remarks = request['UTandRTofInsulated_Case_Remarks']
 
                 motorModel.acceptance_silver_material = request['AcceptanceofSilver_Material']
-                motorModel.acceptance_silver_material_date = request['AcceptanceofSilver_Material_date']
+                if request['AcceptanceofSilver_Material_date'] != '':
+                    motorModel.acceptance_silver_material_date = request['AcceptanceofSilver_Material_date']
                 motorModel.acceptance_silver_material_remarks = request['AcceptanceofSilver_Material_Remarks']
 
                 motorModel.silver_application = request['Silver_Application']
-                motorModel.silver_application_date = request['Silver_Application_date']
+                if request['Silver_Application_date'] != '':
+                    motorModel.silver_application_date = request['Silver_Application_date']
                 motorModel.silver_application_remarks = request['Silver_Application_Remarks']
 
                 motorModel.formulation_tailoring_liner_propellant = request['Formulationtailoringoflinerand_propellant']
-                motorModel.formulation_tailoring_liner_propellant_date = request['Formulationtailoringoflinerand_propellant_date']
+                if request['Formulationtailoringoflinerand_propellant_date'] != '':
+                    motorModel.formulation_tailoring_liner_propellant_date = request['Formulationtailoringoflinerand_propellant_date']
                 motorModel.formulation_tailoring_liner_propellant_remarks = request[
                     'Formulationtailoringoflinerand_propellant_remarks']
 
                 motorModel.conditioning_raw_materials = request['ConditioningofRaw_Material']
-                motorModel.conditioning_raw_materials_date = request['ConditioningofRaw_Material_date']
+                if request['ConditioningofRaw_Material_date'] != '':
+                    motorModel.conditioning_raw_materials_date = request['ConditioningofRaw_Material_date']
                 motorModel.conditioning_raw_materials_remarks = request['ConditioningofRaw_Material_remarks']
 
                 motorModel.lining = request['Lining_motor']
-                motorModel.lining_date = request['Lining_motor_date']
+                if request['Lining_motor_date'] != '':
+                    motorModel.lining_date = request['Lining_motor_date']
                 motorModel.lining_remarks = request['Lining_motor_remarks']
 
                 motorModel.casting = request['Casting_motor']
-                motorModel.casting_date = request['Casting_motor_date']
+                if request['Casting_motor_date'] != '':
+                    motorModel.casting_date = request['Casting_motor_date']
                 motorModel.casting_remarks = request['Casting_motor_remarks']
 
                 motorModel.curing = request['Curing_motor']
-                motorModel.curing_date = request['Curing_motor_date']
+                if request['Curing_motor_date'] != '':
+                    motorModel.curing_date = request['Curing_motor_date']
                 motorModel.curing_remarks = request['Curing_motor_remarks']
 
                 motorModel.liner_mechanical_properties = request['Liner_Mechanical_Properties']
-                motorModel.liner_mechanical_properties_date = request['Liner_Mechanical_Properties_date']
+                if request['Liner_Mechanical_Properties_date'] != '':
+                    motorModel.liner_mechanical_properties_date = request['Liner_Mechanical_Properties_date']
                 motorModel.liner_mechanical_properties_remarks = request['Liner_Mechanical_Properties_Remarks']
 
                 motorModel.propellant_mechanical_properties = request['Propellant_Mechanical_Properties']
-                motorModel.propellant_mechanical_properties_date = request['Propellant_Mechanical_Properties_date']
+                if request['Propellant_Mechanical_Properties_date'] != '':
+                    motorModel.propellant_mechanical_properties_date = request['Propellant_Mechanical_Properties_date']
                 motorModel.propellant_mechanical_properties_remarks = request[
                     'Propellant_Mechanical_Properties_Remarks']
 
                 motorModel.interface_bond_strength = request['Interfacebond_strength']
-                motorModel.interface_bond_strength_date = request['Interfacebond_strength_date']
+                if request['Interfacebond_strength_date'] != '':
+                    motorModel.interface_bond_strength_date = request['Interfacebond_strength_date']
                 motorModel.interface_bond_strength_remarks = request['Interfacebond_strength_Remarks']
 
                 motorModel.propellant_burn_rate = request['Propellant_burn_rate']
-                motorModel.propellant_burn_rate_date = request['Propellant_burn_rate_date']
+                if request['Propellant_burn_rate_date'] != '':
+                    motorModel.propellant_burn_rate_date = request['Propellant_burn_rate_date']
                 motorModel.propellant_burn_rate_remarks = request['Propellant_burn_rate_Remarks']
 
                 motorModel.trimming_Propellant_grain = request['Trimming_of_propellant_grain']
-                motorModel.trimming_Propellant_grain_date = request['Trimming_of_propellant_grain_date']
+                if request['Trimming_of_propellant_grain_date'] != '':
+                    motorModel.trimming_Propellant_grain_date = request['Trimming_of_propellant_grain_date']
                 motorModel.trimming_Propellant_grain_remarks = request['Trimming_of_propellant_grain_remarks']
 
                 motorModel.mass_liner_insulation_propellant_srm = request['mass_liner_insulation_propellant_srm']
-                motorModel.mass_liner_insulation_propellant_srm_date = request['mass_liner_insulation_propellant_srm_date']
+                if request['mass_liner_insulation_propellant_srm_date'] != '':
+                    motorModel.mass_liner_insulation_propellant_srm_date = request['mass_liner_insulation_propellant_srm_date']
                 motorModel.mass_liner_insulation_propellant_srm_remarks = request[
                     'mass_liner_insulation_propellant_srm_remarks']
 
                 motorModel.ut_endoscopy_rt_grain = request['ut_endoscopy_rt_grain']
-                motorModel.ut_endoscopy_rt_grain_date = request['ut_endoscopy_rt_grain_date']
+                if request['ut_endoscopy_rt_grain_date'] != '':
+                    motorModel.ut_endoscopy_rt_grain_date = request['ut_endoscopy_rt_grain_date']
                 motorModel.ut_endoscopy_rt_grain_remarks = request['ut_endoscopy_rt_grain_remarks']
 
                 motorModel.conditioning_of_lining = request['conditioning_of_lining']
-                motorModel.conditioning_of_lining_date = request['conditioning_of_lining_date']
+                if request['conditioning_of_lining_date'] != '':
+                    motorModel.conditioning_of_lining_date = request['conditioning_of_lining_date']
                 motorModel.conditioning_of_lining_remarks = request['conditioning_of_lining_remarks']
 
                 motorModel.mechanical_properties_liner = request['mechanical_properties_liner']
-                motorModel.mechanical_properties_liner_date = request['mechanical_properties_liner_date']
+                if request['mechanical_properties_liner_date'] != '':
+                    motorModel.mechanical_properties_liner_date = request['mechanical_properties_liner_date']
                 motorModel.mechanical_properties_liner_remarks = request['mechanical_properties_liner_remarks']
 
                 motorModel.mechanical_properties_propellant = request['mechanical_properties_propellant']
-                motorModel.mechanical_properties_propellant_date = request['mechanical_properties_propellant_date']
+                if request['mechanical_properties_propellant_date'] != '':
+                    motorModel.mechanical_properties_propellant_date = request['mechanical_properties_propellant_date']
                 motorModel.mechanical_properties_propellant_remarks = request['mechanical_properties_propellant_remarks']
 
                 motorModel.mass_liner = request['mass_liner']
-                motorModel.mass_liner_date = request['mass_liner_date']
+                if request['mass_liner_date'] != '':
+                    motorModel.mass_liner_date = request['mass_liner_date']
                 motorModel.mass_liner_remarks = request['mass_liner_remarks']
 
                 motorModel.mass_insulation = request['mass_insulation']
-                motorModel.mass_insulation_date = request['mass_insulation_date']
+                if request['mass_insulation_date'] != '':
+                    motorModel.mass_insulation_date = request['mass_insulation_date']
                 motorModel.mass_insulation_remarks = request['mass_insulation_remarks']
 
                 motorModel.mass_propellant = request['mass_propellant']
-                motorModel.mass_propellant_date = request['mass_propellant_date']
+                if request['mass_propellant_date'] != '':
+                    motorModel.mass_propellant_date = request['mass_propellant_date']
                 motorModel.mass_propellant_remarks = request['mass_propellant_remarks']
 
                 motorModel.overall_qualification_status = request['overall_qualification_status']
-                motorModel.overall_qualification_date = request['overall_qualification_date']
+                if request['overall_qualification_date'] != '':
+                    motorModel.overall_qualification_date = request['overall_qualification_date']
                 motorModel.overall_qualification_remarks = request['overall_qualification_remarks']
 
                 motorModel.bhd_status = request['bhd_status']
-                motorModel.bhd_date = request['bhd_date']
+                if request['bhd_date'] != '':
+                    motorModel.bhd_date = request['bhd_date']
                 motorModel.bhd_remarks = request['bhd_remarks']
 
                 motorModel.qm_certification_status = request['qm_certification_status']
-                motorModel.qm_certification_date = request['qm_certification_date']
+                if request['qm_certification_date'] != '':
+                    motorModel.qm_certification_date = request['qm_certification_date']
                 motorModel.qm_certification_remarks = request['qm_certification_remarks']
 
 
@@ -152,66 +180,81 @@ class MpmController:
                 motorModel.battery_id = request['battery_id']
                 motorModel.lot_id = request['lot_id']
 
-                motorModel.matiral_qualified_date = request['matiral_qualified_date']
+                if request['matiral_qualified_date'] != '':
+                    motorModel.matiral_qualified_date = request['matiral_qualified_date']
                 motorModel.matiral_qualified_status = request['matiral_qualified_status']
                 motorModel.matiral_qualified_remarks = request['matiral_qualified_remarks']
 
-                motorModel.compo_manufacturing_date = request['compo_manufacturing_date']
+                if request['compo_manufacturing_date'] != '':
+                    motorModel.compo_manufacturing_date = request['compo_manufacturing_date']
                 motorModel.compo_manufacturing_status = request['compo_manufacturing_status']
                 motorModel.compo_manufacturing_remarks = request['compo_manufacturing_remarks']
 
-                motorModel.powerpack_assembly_date = request['powerpack_assembly_date']
+                if request['powerpack_assembly_date'] != '':
+                    motorModel.powerpack_assembly_date = request['powerpack_assembly_date']
                 motorModel.powerpack_assembly_status = request['powerpack_assembly_status']
                 motorModel.powerpack_assembly_remarks = request['powerpack_assembly_remarks']
 
-                motorModel.powerpack_testing_date = request['powerpack_testing_date']
+                if request['powerpack_testing_date'] != '':
+                    motorModel.powerpack_testing_date = request['powerpack_testing_date']
                 motorModel.powerpack_testing_status = request['powerpack_testing_status']
                 motorModel.powerpack_testing_remarks = request['powerpack_testing_remarks']
 
-                motorModel.raw_material_inspection_date = request['raw_material_inspection_date']
+                if request['raw_material_inspection_date'] != '':
+                    motorModel.raw_material_inspection_date = request['raw_material_inspection_date']
                 motorModel.raw_material_inspection_status = request['raw_material_inspection_status']
                 motorModel.raw_material_inspection_remarks = request['raw_material_inspection_remarks']
 
-                motorModel.pressing_electrode_date = request['pressing_electrode_date']
+                if request['pressing_electrode_date'] != '':
+                    motorModel.pressing_electrode_date = request['pressing_electrode_date']
                 motorModel.pressing_electrode_status = request['pressing_electrode_status']
                 motorModel.pressing_electrode_remarks = request['pressing_electrode_remarks']
 
-                motorModel.formation_process_date = request['formation_process_date']
+                if request['formation_process_date'] != '':
+                    motorModel.formation_process_date = request['formation_process_date']
                 motorModel.formation_process_status = request['formation_process_status']
                 motorModel.formation_process_remarks = request['formation_process_remarks']
 
-                motorModel.assembly_process_date = request['assembly_process_date']
+                if request['assembly_process_date'] != '':
+                    motorModel.assembly_process_date = request['assembly_process_date']
                 motorModel.assembly_process_status = request['assembly_process_status']
                 motorModel.assembly_process_remarks = request['assembly_process_remarks']
 
-                motorModel.battery_testing_date = request['battery_testing_date']
+                if request['battery_testing_date'] != '':
+                    motorModel.battery_testing_date = request['battery_testing_date']
                 motorModel.battery_testing_status = request['battery_testing_status']
                 motorModel.battery_testing_remarks = request['battery_testing_remarks']
 
-                motorModel.final_qualification_date = request['final_qualification_date']
+                if request['final_qualification_date'] != '':
+                    motorModel.final_qualification_date = request['final_qualification_date']
                 motorModel.final_qualification_status = request['final_qualification_status']
                 motorModel.final_qualification_remarks = request['final_qualification_remarks']
 
                 motorModel.pd_type = request['pd_type']
                 motorModel.pd_id = request['pd_id']
 
-                motorModel.qualification_raw_material_date = request['qualification_raw_material_date']
+                if request['qualification_raw_material_date'] != '':
+                    motorModel.qualification_raw_material_date = request['qualification_raw_material_date']
                 motorModel.qualification_raw_material_status = request['qualification_raw_material_status']
                 motorModel.qualification_raw_material_remarks = request['qualification_raw_material_remarks']
 
-                motorModel.filling_date = request['filling_date']
+                if request['filling_date'] != '':
+                    motorModel.filling_date = request['filling_date']
                 motorModel.filling_status = request['filling_status']
                 motorModel.filling_remarks = request['filling_remarks']
 
-                motorModel.assembling_integration_date = request['assembling_integration_date']
+                if request['assembling_integration_date'] != '':
+                    motorModel.assembling_integration_date = request['assembling_integration_date']
                 motorModel.assembling_integration_status = request['assembling_integration_status']
                 motorModel.assembling_integration_remarks = request['assembling_integration_remarks']
 
-                motorModel.qualification_testing_date = request['qualification_testing_date']
+                if request['qualification_testing_date'] != '':
+                    motorModel.qualification_testing_date = request['qualification_testing_date']
                 motorModel.qualification_testing_status = request['qualification_testing_status']
                 motorModel.qualification_testing_remarks = request['qualification_testing_remarks']
 
-                motorModel.performance_testing_date = request['performance_testing_date']
+                if request['performance_testing_date'] != '':
+                    motorModel.performance_testing_date = request['performance_testing_date']
                 motorModel.performance_testing_status = request['performance_testing_status']
                 motorModel.performance_testing_remarks = request['performance_testing_remarks']
 
@@ -219,6 +262,7 @@ class MpmController:
                 motorModel.ncr_status_remarks = request['ncr_status_ramarks']
                 motorModel.overall_status = request['overall_status']
                 motorModel.overall_remarks = request['overall_status_ramarks']
+                motorModel.user_id = request['user_id']
 
                 if request['base64File'] != '':
                     motorModel.attachments = request['base64File']
@@ -641,6 +685,7 @@ class MpmController:
                     get_motor.ncr_status_remarks = request['ncr_status_ramarks']
                     get_motor.overall_status = request['overall_status']
                     get_motor.overall_remarks = request['overall_status_ramarks']
+                    get_motor.user_id = request['user_id']
                     if request['base64File'] != '':
                         get_motor.attachments = request['base64File']
                     get_motor.save()

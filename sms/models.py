@@ -84,6 +84,7 @@ class ProductionSystemStatus(models.Model):
     final_integrated_testing_remarks = models.TextField(null=True)
     load_unload_on_mlv_hlf_date = models.DateTimeField(auto_now_add=False, null=True)
     load_unload_on_mlv_hlf_remarks = models.TextField(null=True)
+    user_id = models.IntegerField(null=True)
 
 
 class ProductionSystemStatusHistory(models.Model):
@@ -212,7 +213,7 @@ class FlightSystemStatus(models.Model):
     cgbalancing_date_remarks = models.TextField(null=True)
     launchact_date = models.DateTimeField(auto_now_add=False, null=True)
     launchact_status = models.CharField(max_length=300, null=True)
-    launchact_remarks = models.CharField(max_length=20000, null=True)
+    launchact_remarks = models.TextField(null=True)
     incapsulation_date = models.DateTimeField(auto_now_add=False, null=True)
     incapsulation_status = models.CharField(max_length=300, null=True)
     incapsulation_remarks = models.TextField(null=True)
@@ -236,7 +237,7 @@ class FlightSystemStatus(models.Model):
     func_tst_date = models.DateTimeField(auto_now_add=False, null=True)
     func_tst_remarks = models.TextField(null=True)
     func_tst_dummy_bird_date = models.DateTimeField(auto_now_add=False, null=True)
-    func_tst_dummy_bird_remarks = models.CharField(max_length=20000, null=True)
+    func_tst_dummy_bird_remarks = models.TextField(null=True)
     road_test_date = models.DateTimeField(auto_now_add=False, null=True)
     road_test_remarks = models.TextField(null=True)
     post_road_test_date = models.DateTimeField(auto_now_add=False, null=True)
@@ -251,6 +252,7 @@ class FlightSystemStatus(models.Model):
     final_integrated_testing_remarks = models.TextField(null=True)
     load_unload_on_mlv_hlf_date = models.DateTimeField(auto_now_add=False, null=True)
     load_unload_on_mlv_hlf_remarks = models.TextField(null=True)
+    user_id = models.IntegerField(null=True)
 
 
 
@@ -322,7 +324,7 @@ class FlightSystemStatusHistory(models.Model):
     func_tst_date = models.DateTimeField(auto_now_add=False, null=True)
     func_tst_remarks = models.TextField(null=True)
     func_tst_dummy_bird_date = models.DateTimeField(auto_now_add=False, null=True)
-    func_tst_dummy_bird_remarks = models.CharField(max_length=20000, null=True)
+    func_tst_dummy_bird_remarks = models.TextField(null=True)
     road_test_date = models.DateTimeField(auto_now_add=False, null=True)
     road_test_remarks = models.TextField(null=True)
     post_road_test_date = models.DateTimeField(auto_now_add=False, null=True)
@@ -403,7 +405,7 @@ class RelifingSystemStatus(models.Model):
     func_tst_date = models.DateTimeField(auto_now_add=False, null=True)
     func_tst_remarks = models.TextField(null=True)
     func_tst_dummy_bird_date = models.DateTimeField(auto_now_add=False, null=True)
-    func_tst_dummy_bird_remarks = models.CharField(max_length=20000, null=True)
+    func_tst_dummy_bird_remarks = models.TextField(null=True)
     road_test_date = models.DateTimeField(auto_now_add=False, null=True)
     road_test_remarks = models.TextField(null=True)
     post_road_test_date = models.DateTimeField(auto_now_add=False, null=True)
@@ -418,6 +420,7 @@ class RelifingSystemStatus(models.Model):
     final_integrated_testing_remarks = models.TextField(null=True)
     load_unload_on_mlv_hlf_date = models.DateTimeField(auto_now_add=False, null=True)
     load_unload_on_mlv_hlf_remarks = models.TextField(null=True)
+    user_id = models.IntegerField(null=True)
 
 
 class RelifingSystemStatusHistory(models.Model):
@@ -487,7 +490,7 @@ class RelifingSystemStatusHistory(models.Model):
     func_tst_date = models.DateTimeField(auto_now_add=False, null=True)
     func_tst_remarks = models.TextField(null=True)
     func_tst_dummy_bird_date = models.DateTimeField(auto_now_add=False, null=True)
-    func_tst_dummy_bird_remarks = models.CharField(max_length=20000, null=True)
+    func_tst_dummy_bird_remarks = models.TextField(null=True)
     road_test_date = models.DateTimeField(auto_now_add=False, null=True)
     road_test_remarks = models.TextField(null=True)
     post_road_test_date = models.DateTimeField(auto_now_add=False, null=True)

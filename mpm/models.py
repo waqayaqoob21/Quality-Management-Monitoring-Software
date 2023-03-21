@@ -205,6 +205,7 @@ class ActiveMotors(models.Model):
     overall_status = models.CharField(max_length=300)
     overall_remarks = models.TextField()
     attachments = models.TextField()
+    user_id = models.IntegerField(null=True)
     Created_at = models.DateTimeField(auto_now_add=True)
 
 class ActiveMotorsHistory(models.Model):
@@ -409,6 +410,7 @@ class ActiveMotorsHistory(models.Model):
     overall_status = models.CharField(max_length=300)
     overall_remarks = models.TextField()
     attachments = models.TextField()
+    user_id = models.IntegerField(null=True)
     Created_at = models.DateTimeField(auto_now_add=True)
 
 class organization_lot_ids(models.Model):

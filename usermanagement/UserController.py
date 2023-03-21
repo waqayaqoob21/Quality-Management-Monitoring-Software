@@ -4,7 +4,10 @@ from datetime import date
 from usermanagement.serializer import *
 from django.db import connection
 from django.contrib.auth.hashers import make_password, check_password
-
+from sms.models import  *
+from sms.serializers import *
+from mpm.models import *
+from mpm.serializer import *
 
 class UserController:
 
@@ -43,8 +46,8 @@ class UserController:
                 userModel.last_name = request['last_name']
                 userModel.username = request['username']
                 userModel.email = 'nescom@nescom.com'
-                encryptedpassword = make_password(request['password'])
-                userModel.password = encryptedpassword
+                # encryptedpassword = make_password(request['password'])
+                # userModel.password = encryptedpassword
                 userModel.is_superuser = 'False'
                 userModel.last_login = date.today()
                 userModel.is_active = 'True'
@@ -75,7 +78,7 @@ class UserController:
                     "ur.prod_roles,ur.flight_roles,ur.relif_roles,ur.motor_roles  " \
                     "FROM public.auth_user au " \
                     "FULL OUTER JOIN "\
-                    "public.usermanagement_userroles ur ON CAST(ur.user_id AS INTEGER) = au.id;"
+                    "public.usermanagement_userroles ur ON CAST(ur.user_id AS INTEGER) = au.id ORDER BY au.id DESC;"
 
             cursor.execute(query)
             col_names = [col[0] for col in cursor.description]
@@ -87,3 +90,62 @@ class UserController:
                                 status=200)
         except:
             return JsonResponse({'massage', 'No record found!'}, status=201)
+    @staticmethod
+    def DeleteUser(request):
+        try:
+            userId = request.query_params['id']
+            user = User.objects.get(id=userId)
+            user.delete()
+            role = UserRoles.objects.get(user_id = userId).first()
+            role.delete()
+            return JsonResponse({'message': 'User has been deleted'}, status=200)
+        except:
+            return JsonResponse({'message': 'Sorry! No Audit found.'}, status=500)
+
+    @staticmethod
+    def getUserMotorList(request):
+        try:
+            userId = request.query_params['id']
+            print(userId)
+            data = ActiveMotors.objects.filter(user_id=userId)
+            serializer = ActiveMotorSerializer(data, many=True)
+            print(serializer.data)
+            return JsonResponse({'status': 'True', 'data': serializer.data},
+                                status=200)
+        except:
+            return JsonResponse({'message': 'Sorry! No Audit found.'}, status=500)
+    @staticmethod
+    def getUserProductionList(request):
+        try:
+            userId = request.query_params['id']
+            data = ProductionSystemStatus.objects.filter(user_id=userId)
+            serializer = ProductionSystemSerialzer(data, many=True)
+            print(serializer.data)
+            return JsonResponse({'status': 'True', 'data': serializer.data},
+                                status=200)
+        except:
+            return JsonResponse({'message': 'Sorry! No Audit found.'}, status=500)
+
+    @staticmethod
+    def getUserRelifingList(request):
+        try:
+            userId = request.query_params['id']
+            data = RelifingSystemStatus.objects.filter(user_id=userId)
+            serializer = RelifingSystemSerialzer(data, many=True)
+            print(serializer.data)
+            return JsonResponse({'status': 'True', 'data': serializer.data},
+                                status=200)
+        except:
+            return JsonResponse({'message': 'Sorry! No Audit found.'}, status=500)
+
+    @staticmethod
+    def getUserFlightList(request):
+        try:
+            userId = request.query_params['id']
+            data = FlightSystemStatus.objects.filter(user_id=userId)
+            serializer = FlightSystemSerialzer(data, many=True)
+            print(serializer.data)
+            return JsonResponse({'status': 'True', 'data': serializer.data},
+                                status=200)
+        except:
+            return JsonResponse({'message': 'Sorry! No Audit found.'}, status=500)

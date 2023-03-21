@@ -25,5 +25,10 @@ urlpatterns = [
     path('adduser/', AddUserAPIView.as_view(), name='adduser'),
     path('updateuser/', AddUserAPIView.as_view(), name='updateuser'),
     path('getuser/', GetUserListAPIVIEW.as_view(), name='getuser'),
+    path('deleteuser/', DeleteUserAPIVIEW.as_view(), name='deleteuser'),
+    path('usermotor/', GetUserMotorListAPIVIEW.as_view(), name='usermotor'),
+    path('userprod/', GetUserProductionListAPIVIEW.as_view(), name='userprod'),
+    path('userrelif/', GetUserRelifingListAPIVIEW.as_view(), name='userrelif'),
+    path('userflight/', GetUserFlightListAPIVIEW.as_view(), name='userflight'),
 
 ]

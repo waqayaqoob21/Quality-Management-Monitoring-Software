@@ -30,57 +30,70 @@ class SmsController:
 
     @staticmethod
     def AddProductionStatus(request):
-        is_active = 0
-        prodModel = ProductionSystemStatus()
-        if request['is_active'] == 'true':
-            is_active = 1
-        try:
+            is_active = 0
+            prodModel = ProductionSystemStatus()
+            if request['is_active'] == 'true':
+                is_active = 1
+        # try:
             id = request['id']
             if id == '0':
                 prodModel.system = request['system']
                 prodModel.organization = request['organization']
                 prodModel.set_id = request['set_id']
-                prodModel.blt_date = request['blt_date']
+                if request['blt_date'] != '':
+                    prodModel.blt_date = request['blt_date']
                 prodModel.testing_date = request['testing_date']
                 prodModel.sys_type = request['sys_type']
                 prodModel.blt_status = request['blt_status']
                 prodModel.blt_remarks = request['blt_remarks']
-                prodModel.pre_hil_date = request['pre_hil_date']
+                if request['pre_hil_date'] != '':
+                    prodModel.pre_hil_date = request['pre_hil_date']
                 prodModel.pre_hil_status = request['pre_hil_status']
                 prodModel.pre_hil_remarks = request['pre_hil_remarks']
-                prodModel.vibaration_date = request['vibaration_date']
+                if request['vibaration_date'] != '':
+                    prodModel.vibaration_date = request['vibaration_date']
                 prodModel.vibaration_status = request['vibaration_status']
                 prodModel.vibaration_remarks = request['vibaration_remarks']
-                prodModel.post_hil_date = request['post_hil_date']
+                if request['post_hil_date'] != '':
+                    prodModel.post_hil_date = request['post_hil_date']
                 prodModel.post_hil_status = request['post_hil_status']
                 prodModel.post_hil_remarks = request['post_hil_remarks']
-                prodModel.fgt_date = request['fgt_date']
+                if request['fgt_date'] != '':
+                    prodModel.fgt_date = request['fgt_date']
                 prodModel.fgt_status = request['fgt_status']
                 prodModel.fgt_remarks = request['fgt_remarks']
-                prodModel.final_integration_date = request['final_integration_date']
+                if request['final_integration_date'] != '':
+                    prodModel.final_integration_date = request['final_integration_date']
                 prodModel.final_integration_status = request['final_integration_status']
                 prodModel.final_integration_remarks = request['final_integration_remarks']
-                prodModel.bhd_date = request['bhd_date']
+                if request['bhd_date'] != '':
+                    prodModel.bhd_date = request['bhd_date']
                 prodModel.bhd_status = request['bhd_status']
                 prodModel.bhd_remarks = request['bhd_remarks']
-                prodModel.fqm_date = request['fqm_date']
+                if request['fqm_date'] != '':
+                    prodModel.fqm_date = request['fqm_date']
                 prodModel.fqm_status = request['fqm_status']
                 prodModel.fqm_remarks = request['fqm_remarks']
-                prodModel.qm_certification_date = request['qm_certification_date']
+                if request['qm_certification_date'] != '':
+                    prodModel.qm_certification_date = request['qm_certification_date']
                 prodModel.qm_certification_status = request['qm_certification_status']
                 prodModel.qm_certification_remarks = request['qm_certification_remarks']
                 prodModel.attachment = request['attachment']
                 prodModel.remarks = request['remarks']
-                prodModel.cgbalancing_date = request['cgbalancing_date']
+                if request['cgbalancing_date'] != '':
+                    prodModel.cgbalancing_date = request['cgbalancing_date']
                 prodModel.cgbalancing_date_status = request['cgbalancing_date_status']
                 prodModel.cgbalancing_date_remarks = request['cgbalancing_date_remarks']
-                prodModel.enduser_date = request['enduser_date']
+                if request['enduser_date'] != '':
+                    prodModel.enduser_date = request['enduser_date']
                 prodModel.enduser_status = request['enduser_status']
                 prodModel.enduser_remarks = request['enduser_remarks']
-                prodModel.incapsulation_date = request['incapsulation_date']
+                if request['incapsulation_date'] != '':
+                    prodModel.incapsulation_date = request['incapsulation_date']
                 prodModel.incapsulation_status = request['incapsulation_status']
                 prodModel.incapsulation_remarks = request['incapsulation_remarks']
-                prodModel.sys_align_Date = request['sys_align_Date']
+                if request['sys_align_Date'] != '':
+                    prodModel.sys_align_Date = request['sys_align_Date']
                 prodModel.sys_align_status = request['sys_align_status']
                 prodModel.sys_align_remarks = request['sys_align_remarks']
                 prodModel.testing_type = request['testing_type']
@@ -95,26 +108,40 @@ class SmsController:
                 prodModel.final_integrated_testing = request['final_integrated_testing']
                 prodModel.load_unload_on_mlv_hlf = request['load_unload_on_mlv_hlf']
 
-                prodModel.emp_proofing_date = request['emp_proofing_date']
+                if request['emp_proofing_date'] != '':
+                    prodModel.emp_proofing_date = request['emp_proofing_date']
                 prodModel.emp_proofing_remarks = request['emp_proofing_remarks']
-                prodModel.func_tst_date = request['func_tst_date']
+                if request['func_tst_date'] != '':
+                    prodModel.func_tst_date = request['func_tst_date']
                 prodModel.func_tst_remarks = request['func_tst_remarks']
-                prodModel.func_tst_dummy_bird_date = request['func_tst_dummy_bird_date']
+                if request['func_tst_dummy_bird_date'] != '':
+                    prodModel.func_tst_dummy_bird_date = request['func_tst_dummy_bird_date']
                 prodModel.func_tst_dummy_bird_remarks = request['func_tst_dummy_bird_remarks']
-                prodModel.road_test_date = request['road_test_date']
+                if request['road_test_date'] != '':
+                    prodModel.road_test_date = request['road_test_date']
                 prodModel.road_test_remarks = request['road_test_remarks']
-                prodModel.post_road_test_date = request['post_road_test_date']
+                if request['post_road_test_date'] != '':
+                    prodModel.post_road_test_date = request['post_road_test_date']
                 prodModel.post_road_test_remarks = request['post_road_test_remarks']
-                prodModel.integrated_operation_date = request['integrated_operation_date']
+                if request['integrated_operation_date'] != '':
+                    prodModel.integrated_operation_date = request['integrated_operation_date']
                 prodModel.integrated_operation_remarks = request['integrated_operation_remarks']
-                prodModel.rain_test_date = request['rain_test_date']
+                if request['rain_test_date'] != '':
+                    prodModel.rain_test_date = request['rain_test_date']
                 prodModel.rain_test_remarks = request['rain_test_remarks']
-                prodModel.pre_user_inspection_date = request['pre_user_inspection_date']
+                if request['pre_user_inspection_date'] != '':
+                    prodModel.pre_user_inspection_date = request['pre_user_inspection_date']
                 prodModel.pre_user_inspection_remarks = request['pre_user_inspection_remarks']
-                prodModel.final_integrated_testing_date = request['final_integrated_testing_date']
+                if request['final_integrated_testing_date'] != '':
+                    prodModel.final_integrated_testing_date = request['final_integrated_testing_date']
                 prodModel.final_integrated_testing_remarks = request['final_integrated_testing_remarks']
-                prodModel.load_unload_on_mlv_hlf_date = request['load_unload_on_mlv_hlf_date']
+                if request['load_unload_on_mlv_hlf_date'] != '':
+                    prodModel.load_unload_on_mlv_hlf_date = request['load_unload_on_mlv_hlf_date']
                 prodModel.load_unload_on_mlv_hlf_remarks = request['load_unload_on_mlv_hlf_remarks']
+                if request['user_id'] != '':
+                    prodModel.user_id = request['user_id']
+                else:
+                    prodModel.user_id = None
                 prodModel.isActive = is_active
                 prodModel.save()
                 return JsonResponse({'status': 'True', 'message': "Production Status Added Successfully!"},
@@ -132,54 +159,66 @@ class SmsController:
                         'qm_certification_status'] != get_prod.qm_certification_status or \
                             request['incapsulation_status'] != get_prod.incapsulation_status or \
                             request['sys_align_status'] != get_prod.sys_align_status:
-                        print("add data in production history")
                         ProdHistoryModal = ProductionSystemStatusHistory()
                         ProdHistoryModal.prod_id = get_prod.id
                         ProdHistoryModal.system = get_prod.system
                         ProdHistoryModal.organization = get_prod.organization
                         ProdHistoryModal.set_id = get_prod.set_id
-                        ProdHistoryModal.blt_date = get_prod.blt_date
+                        if request['blt_date'] != '':
+                            ProdHistoryModal.blt_date = get_prod.blt_date
                         ProdHistoryModal.blt_status = get_prod.blt_status
                         ProdHistoryModal.blt_remarks = get_prod.blt_remarks
                         ProdHistoryModal.testing_date = get_prod.testing_date
                         ProdHistoryModal.sys_type = get_prod.sys_type
-                        ProdHistoryModal.pre_hil_date = get_prod.pre_hil_date
+                        if request['pre_hil_date'] != '':
+                            ProdHistoryModal.pre_hil_date = get_prod.pre_hil_date
                         ProdHistoryModal.pre_hil_status = get_prod.pre_hil_status
                         ProdHistoryModal.pre_hil_remarks = get_prod.pre_hil_remarks
-                        ProdHistoryModal.vibaration_date = get_prod.vibaration_date
+                        if request['vibaration_date'] != '':
+                            ProdHistoryModal.vibaration_date = get_prod.vibaration_date
                         ProdHistoryModal.vibaration_status = get_prod.vibaration_status
                         ProdHistoryModal.vibaration_remarks = get_prod.vibaration_remarks
-                        ProdHistoryModal.post_hil_date = get_prod.post_hil_date
+                        if request['post_hil_date'] != '':
+                            ProdHistoryModal.post_hil_date = get_prod.post_hil_date
                         ProdHistoryModal.post_hil_status = get_prod.post_hil_status
                         ProdHistoryModal.post_hil_remarks = get_prod.post_hil_remarks
-                        ProdHistoryModal.fgt_date = get_prod.fgt_date
+                        if request['fgt_date'] != '':
+                            ProdHistoryModal.fgt_date = get_prod.fgt_date
                         ProdHistoryModal.fgt_status = get_prod.fgt_status
                         ProdHistoryModal.fgt_remarks = get_prod.fgt_remarks
-                        ProdHistoryModal.final_integration_date = get_prod.final_integration_date
+                        if request['final_integration_date'] != '':
+                            ProdHistoryModal.final_integration_date = get_prod.final_integration_date
                         ProdHistoryModal.final_integration_status = get_prod.final_integration_status
                         ProdHistoryModal.final_integration_remarks = get_prod.final_integration_remarks
-                        ProdHistoryModal.bhd_date = get_prod.bhd_date
+                        if request['bhd_date'] != '':
+                            ProdHistoryModal.bhd_date = get_prod.bhd_date
                         ProdHistoryModal.bhd_status = get_prod.bhd_status
                         ProdHistoryModal.bhd_remarks = get_prod.bhd_remarks
-                        ProdHistoryModal.fqm_date = get_prod.fqm_date
+                        if request['fqm_date'] != '':
+                            ProdHistoryModal.fqm_date = get_prod.fqm_date
                         ProdHistoryModal.fqm_status = get_prod.fqm_status
                         ProdHistoryModal.fqm_remarks = get_prod.fqm_remarks
-                        ProdHistoryModal.qm_certification_date = get_prod.qm_certification_date
+                        if request['qm_certification_date'] != '':
+                            ProdHistoryModal.qm_certification_date = get_prod.qm_certification_date
                         ProdHistoryModal.qm_certification_status = get_prod.qm_certification_status
                         ProdHistoryModal.qm_certification_remarks = get_prod.qm_certification_remarks
                         ProdHistoryModal.attachment = get_prod.attachment
                         ProdHistoryModal.remarks = get_prod.remarks
                         ProdHistoryModal.isActive = get_prod.isActive
-                        ProdHistoryModal.cgbalancing_date = get_prod.cgbalancing_date
+                        if request['cgbalancing_date'] != '':
+                            ProdHistoryModal.cgbalancing_date = get_prod.cgbalancing_date
                         ProdHistoryModal.cgbalancing_date_status = get_prod.cgbalancing_date_status
                         ProdHistoryModal.cgbalancing_date_remarks = get_prod.cgbalancing_date_remarks
-                        ProdHistoryModal.enduser_date = get_prod.enduser_date
+                        if request['enduser_date'] != '':
+                            ProdHistoryModal.enduser_date = get_prod.enduser_date
                         ProdHistoryModal.enduser_status = get_prod.enduser_status
                         ProdHistoryModal.enduser_remarks = get_prod.enduser_remarks
-                        ProdHistoryModal.incapsulation_date = get_prod.incapsulation_date
+                        if request['incapsulation_date'] != '':
+                            ProdHistoryModal.incapsulation_date = get_prod.incapsulation_date
                         ProdHistoryModal.incapsulation_status = get_prod.incapsulation_status
                         ProdHistoryModal.incapsulation_remarks = get_prod.incapsulation_remarks
-                        ProdHistoryModal.sys_align_Date = get_prod.sys_align_Date
+                        if request['sys_align_Date'] != '':
+                            ProdHistoryModal.sys_align_Date = get_prod.sys_align_Date
                         ProdHistoryModal.sys_align_status = get_prod.sys_align_status
                         ProdHistoryModal.sys_align_remarks = get_prod.sys_align_remarks
                         ProdHistoryModal.testing_type = get_prod.testing_type
@@ -193,26 +232,35 @@ class SmsController:
                         ProdHistoryModal.pre_user_inspection = get_prod.pre_user_inspection
                         ProdHistoryModal.final_integrated_testing = get_prod.final_integrated_testing
                         ProdHistoryModal.load_unload_on_mlv_hlf = get_prod.load_unload_on_mlv_hlf
-
-                        ProdHistoryModal.emp_proofing_date = get_prod.emp_proofing_date
+                        if request['emp_proofing_date'] != '':
+                            ProdHistoryModal.emp_proofing_date = get_prod.emp_proofing_date
                         ProdHistoryModal.emp_proofing_remarks = get_prod.emp_proofing_remarks
-                        ProdHistoryModal.func_tst_date = get_prod.func_tst_date
+                        if request['func_tst_date'] != '':
+                            ProdHistoryModal.func_tst_date = get_prod.func_tst_date
                         ProdHistoryModal.func_tst_remarks = get_prod.func_tst_remarks
-                        ProdHistoryModal.func_tst_dummy_bird_date = get_prod.func_tst_dummy_bird_date
+                        if request['func_tst_dummy_bird_date'] != '':
+                            ProdHistoryModal.func_tst_dummy_bird_date = get_prod.func_tst_dummy_bird_date
                         ProdHistoryModal.func_tst_dummy_bird_remarks = get_prod.func_tst_dummy_bird_remarks
-                        ProdHistoryModal.road_test_date = get_prod.road_test_date
+                        if request['road_test_date'] != '':
+                            ProdHistoryModal.road_test_date = get_prod.road_test_date
                         ProdHistoryModal.road_test_remarks = get_prod.road_test_remarks
-                        ProdHistoryModal.post_road_test_date = get_prod.post_road_test_date
+                        if request['post_road_test_date'] != '':
+                            ProdHistoryModal.post_road_test_date = get_prod.post_road_test_date
                         ProdHistoryModal.post_road_test_remarks = get_prod.post_road_test_remarks
-                        ProdHistoryModal.integrated_operation_date = get_prod.integrated_operation_date
+                        if request['integrated_operation_date'] != '':
+                            ProdHistoryModal.integrated_operation_date = get_prod.integrated_operation_date
                         ProdHistoryModal.integrated_operation_remarks = get_prod.integrated_operation_remarks
-                        ProdHistoryModal.rain_test_date = get_prod.rain_test_date
+                        if request['rain_test_date'] != '':
+                            ProdHistoryModal.rain_test_date = get_prod.rain_test_date
                         ProdHistoryModal.rain_test_remarks = get_prod.rain_test_remarks
-                        ProdHistoryModal.pre_user_inspection_date = get_prod.pre_user_inspection_date
+                        if request['pre_user_inspection_date'] != '':
+                            ProdHistoryModal.pre_user_inspection_date = get_prod.pre_user_inspection_date
                         ProdHistoryModal.pre_user_inspection_remarks = get_prod.pre_user_inspection_remarks
-                        ProdHistoryModal.final_integrated_testing_date = get_prod.final_integrated_testing_date
+                        if request['final_integrated_testing_date'] != '':
+                            ProdHistoryModal.final_integrated_testing_date = get_prod.final_integrated_testing_date
                         ProdHistoryModal.final_integrated_testing_remarks = get_prod.final_integrated_testing_remarks
-                        ProdHistoryModal.load_unload_on_mlv_hlf_date = get_prod.load_unload_on_mlv_hlf_date
+                        if request['load_unload_on_mlv_hlf_date'] != '':
+                            ProdHistoryModal.load_unload_on_mlv_hlf_date = get_prod.load_unload_on_mlv_hlf_date
                         ProdHistoryModal.load_unload_on_mlv_hlf_remarks = get_prod.load_unload_on_mlv_hlf_remarks
 
                         ProdHistoryModal.save()
@@ -221,49 +269,60 @@ class SmsController:
                     get_prod.system = request['system']
                     get_prod.organization = request['organization']
                     get_prod.set_id = request['set_id']
-                    get_prod.blt_date = request['blt_date']
-                    get_prod.blt_status = request['blt_status']
-                    get_prod.blt_remarks = request['blt_remarks']
+                    if request['blt_date'] != '':
+                        get_prod.blt_date = request['blt_date']
                     get_prod.testing_date = request['testing_date']
                     get_prod.sys_type = request['sys_type']
-                    get_prod.pre_hil_date = request['pre_hil_date']
+                    get_prod.blt_status = request['blt_status']
+                    get_prod.blt_remarks = request['blt_remarks']
+                    if request['pre_hil_date'] != '':
+                        get_prod.pre_hil_date = request['pre_hil_date']
                     get_prod.pre_hil_status = request['pre_hil_status']
                     get_prod.pre_hil_remarks = request['pre_hil_remarks']
-                    get_prod.vibaration_date = request['vibaration_date']
+                    if request['vibaration_date'] != '':
+                        get_prod.vibaration_date = request['vibaration_date']
                     get_prod.vibaration_status = request['vibaration_status']
                     get_prod.vibaration_remarks = request['vibaration_remarks']
-                    get_prod.post_hil_date = request['post_hil_date']
+                    if request['post_hil_date'] != '':
+                        get_prod.post_hil_date = request['post_hil_date']
                     get_prod.post_hil_status = request['post_hil_status']
                     get_prod.post_hil_remarks = request['post_hil_remarks']
-                    get_prod.fgt_date = request['fgt_date']
+                    if request['fgt_date'] != '':
+                        get_prod.fgt_date = request['fgt_date']
                     get_prod.fgt_status = request['fgt_status']
                     get_prod.fgt_remarks = request['fgt_remarks']
-                    get_prod.final_integration_date = request['final_integration_date']
+                    if request['final_integration_date'] != '':
+                        get_prod.final_integration_date = request['final_integration_date']
                     get_prod.final_integration_status = request['final_integration_status']
                     get_prod.final_integration_remarks = request['final_integration_remarks']
-                    get_prod.bhd_date = request['bhd_date']
+                    if request['bhd_date'] != '':
+                        get_prod.bhd_date = request['bhd_date']
                     get_prod.bhd_status = request['bhd_status']
                     get_prod.bhd_remarks = request['bhd_remarks']
-                    get_prod.fqm_date = request['fqm_date']
+                    if request['fqm_date'] != '':
+                        get_prod.fqm_date = request['fqm_date']
                     get_prod.fqm_status = request['fqm_status']
                     get_prod.fqm_remarks = request['fqm_remarks']
-                    get_prod.qm_certification_date = request['qm_certification_date']
+                    if request['qm_certification_date'] != '':
+                        get_prod.qm_certification_date = request['qm_certification_date']
                     get_prod.qm_certification_status = request['qm_certification_status']
                     get_prod.qm_certification_remarks = request['qm_certification_remarks']
-                    if request['attachment'] != '':
-                        get_prod.attachment = request['attachment']
+                    get_prod.attachment = request['attachment']
                     get_prod.remarks = request['remarks']
-                    get_prod.isActive = is_active
-                    get_prod.cgbalancing_date = request['cgbalancing_date']
+                    if request['cgbalancing_date'] != '':
+                        get_prod.cgbalancing_date = request['cgbalancing_date']
                     get_prod.cgbalancing_date_status = request['cgbalancing_date_status']
                     get_prod.cgbalancing_date_remarks = request['cgbalancing_date_remarks']
-                    get_prod.enduser_date = request['enduser_date']
+                    if request['enduser_date'] != '':
+                        get_prod.enduser_date = request['enduser_date']
                     get_prod.enduser_status = request['enduser_status']
                     get_prod.enduser_remarks = request['enduser_remarks']
-                    get_prod.incapsulation_date = request['incapsulation_date']
+                    if request['incapsulation_date'] != '':
+                        get_prod.incapsulation_date = request['incapsulation_date']
                     get_prod.incapsulation_status = request['incapsulation_status']
                     get_prod.incapsulation_remarks = request['incapsulation_remarks']
-                    get_prod.sys_align_Date = request['sys_align_Date']
+                    if request['sys_align_Date'] != '':
+                        get_prod.sys_align_Date = request['sys_align_Date']
                     get_prod.sys_align_status = request['sys_align_status']
                     get_prod.sys_align_remarks = request['sys_align_remarks']
                     get_prod.testing_type = request['testing_type']
@@ -278,32 +337,46 @@ class SmsController:
                     get_prod.final_integrated_testing = request['final_integrated_testing']
                     get_prod.load_unload_on_mlv_hlf = request['load_unload_on_mlv_hlf']
 
-                    get_prod.emp_proofing_date = request['emp_proofing_date']
+                    if request['emp_proofing_date'] != '':
+                        get_prod.emp_proofing_date = request['emp_proofing_date']
                     get_prod.emp_proofing_remarks = request['emp_proofing_remarks']
-                    get_prod.func_tst_date = request['func_tst_date']
+                    if request['func_tst_date'] != '':
+                        get_prod.func_tst_date = request['func_tst_date']
                     get_prod.func_tst_remarks = request['func_tst_remarks']
-                    get_prod.func_tst_dummy_bird_date = request['func_tst_dummy_bird_date']
+                    if request['func_tst_dummy_bird_date'] != '':
+                        get_prod.func_tst_dummy_bird_date = request['func_tst_dummy_bird_date']
                     get_prod.func_tst_dummy_bird_remarks = request['func_tst_dummy_bird_remarks']
-                    get_prod.road_test_date = request['road_test_date']
+                    if request['road_test_date'] != '':
+                        get_prod.road_test_date = request['road_test_date']
                     get_prod.road_test_remarks = request['road_test_remarks']
-                    get_prod.post_road_test_date = request['post_road_test_date']
+                    if request['post_road_test_date'] != '':
+                        get_prod.post_road_test_date = request['post_road_test_date']
                     get_prod.post_road_test_remarks = request['post_road_test_remarks']
-                    get_prod.integrated_operation_date = request['integrated_operation_date']
+                    if request['integrated_operation_date'] != '':
+                        get_prod.integrated_operation_date = request['integrated_operation_date']
                     get_prod.integrated_operation_remarks = request['integrated_operation_remarks']
-                    get_prod.rain_test_date = request['rain_test_date']
+                    if request['rain_test_date'] != '':
+                        get_prod.rain_test_date = request['rain_test_date']
                     get_prod.rain_test_remarks = request['rain_test_remarks']
-                    get_prod.pre_user_inspection_date = request['pre_user_inspection_date']
+                    if request['pre_user_inspection_date'] != '':
+                        get_prod.pre_user_inspection_date = request['pre_user_inspection_date']
                     get_prod.pre_user_inspection_remarks = request['pre_user_inspection_remarks']
-                    get_prod.final_integrated_testing_date = request['final_integrated_testing_date']
+                    if request['final_integrated_testing_date'] != '':
+                        get_prod.final_integrated_testing_date = request['final_integrated_testing_date']
                     get_prod.final_integrated_testing_remarks = request['final_integrated_testing_remarks']
-                    get_prod.load_unload_on_mlv_hlf_date = request['load_unload_on_mlv_hlf_date']
+                    if request['load_unload_on_mlv_hlf_date'] != '':
+                        get_prod.load_unload_on_mlv_hlf_date = request['load_unload_on_mlv_hlf_date']
                     get_prod.load_unload_on_mlv_hlf_remarks = request['load_unload_on_mlv_hlf_remarks']
-
+                    if request['user_id'] !='':
+                        get_prod.user_id = request['user_id']
+                    else:
+                        get_prod.user_id = None
+                    get_prod.isActive = is_active
                     get_prod.save()
             return JsonResponse({'status': 'True', 'message': "Production Status Updated Successfully!"},
                                 status=200)
-        except Exception as e:
-            return JsonResponse({'status': 'False', "message": "Status Not Saved"}, status=500)
+        # except Exception as e:
+        #     return JsonResponse({'status': 'False', "message": "Status Not Saved"}, status=500)
 
     @staticmethod
     def GetProductionList(request):
@@ -785,47 +858,60 @@ class SmsController:
             flightModel.system = request['system']
             flightModel.organization = request['organization']
             flightModel.set_id = request['set_id']
-            flightModel.blt_date = request['blt_date']
+            if request['blt_date'] != '':
+                flightModel.blt_date = request['blt_date']
             flightModel.testing_date = request['testing_date']
             flightModel.sys_type = request['sys_type']
             flightModel.blt_status = request['blt_status']
             flightModel.blt_remarks = request['blt_remarks']
-            flightModel.pre_hil_date = request['pre_hil_date']
+            if request['pre_hil_date'] != '':
+                flightModel.pre_hil_date = request['pre_hil_date']
             flightModel.pre_hil_status = request['pre_hil_status']
             flightModel.pre_hil_remarks = request['pre_hil_remarks']
-            flightModel.vibaration_date = request['vibaration_date']
+            if request['vibaration_date'] != '':
+                flightModel.vibaration_date = request['vibaration_date']
             flightModel.vibaration_status = request['vibaration_status']
             flightModel.vibaration_remarks = request['vibaration_remarks']
-            flightModel.post_hil_date = request['post_hil_date']
+            if request['post_hil_date'] != '':
+                flightModel.post_hil_date = request['post_hil_date']
             flightModel.post_hil_status = request['post_hil_status']
             flightModel.post_hil_remarks = request['post_hil_remarks']
-            flightModel.fgt_date = request['fgt_date']
+            if request['fgt_date'] != '':
+                flightModel.fgt_date = request['fgt_date']
             flightModel.fgt_status = request['fgt_status']
             flightModel.fgt_remarks = request['fgt_remarks']
-            flightModel.final_integration_date = request['final_integration_date']
+            if request['final_integration_date'] != '':
+                flightModel.final_integration_date = request['final_integration_date']
             flightModel.final_integration_status = request['final_integration_status']
             flightModel.final_integration_remarks = request['final_integration_remarks']
-            flightModel.bhd_date = request['bhd_date']
+            if request['bhd_date'] != '':
+                flightModel.bhd_date = request['bhd_date']
             flightModel.bhd_status = request['bhd_status']
             flightModel.bhd_remarks = request['bhd_remarks']
-            flightModel.fqm_date = request['fqm_date']
+            if request['fqm_date'] != '':
+                flightModel.fqm_date = request['fqm_date']
             flightModel.fqm_status = request['fqm_status']
             flightModel.fqm_remarks = request['fqm_remarks']
-            flightModel.qm_certification_date = request['qm_certification_date']
+            if request['qm_certification_date'] != '':
+                flightModel.qm_certification_date = request['qm_certification_date']
             flightModel.qm_certification_status = request['qm_certification_status']
             flightModel.qm_certification_remarks = request['qm_certification_remarks']
             flightModel.attachment = request['attachment']
             flightModel.remarks = request['remarks']
-            flightModel.cgbalancing_date = request['cgbalancing_date']
+            if request['cgbalancing_date'] != '':
+                flightModel.cgbalancing_date = request['cgbalancing_date']
             flightModel.cgbalancing_date_status = request['cgbalancing_date_status']
             flightModel.cgbalancing_date_remarks = request['cgbalancing_date_remarks']
-            flightModel.launchact_date = request['launchact_date']
+            if request['launchact_date'] != '':
+                flightModel.launchact_date = request['launchact_date']
             flightModel.launchact_status = request['launchact_status']
             flightModel.launchact_remarks = request['launchact_remarks']
-            flightModel.incapsulation_date = request['incapsulation_date']
+            if request['incapsulation_date'] != '':
+                flightModel.incapsulation_date = request['incapsulation_date']
             flightModel.incapsulation_status = request['incapsulation_status']
             flightModel.incapsulation_remarks = request['incapsulation_remarks']
-            flightModel.sys_align_Date = request['sys_align_Date']
+            if request['sys_align_Date'] != '':
+                flightModel.sys_align_Date = request['sys_align_Date']
             flightModel.sys_align_status = request['sys_align_status']
             flightModel.sys_align_remarks = request['sys_align_remarks']
             flightModel.testing_type = request['testing_type']
@@ -839,28 +925,40 @@ class SmsController:
             flightModel.pre_user_inspection = request['pre_user_inspection']
             flightModel.final_integrated_testing = request['final_integrated_testing']
             flightModel.load_unload_on_mlv_hlf = request['load_unload_on_mlv_hlf']
-
-            flightModel.emp_proofing_date = request['emp_proofing_date']
+            if request['emp_proofing_date'] != '':
+                flightModel.emp_proofing_date = request['emp_proofing_date']
             flightModel.emp_proofing_remarks = request['emp_proofing_remarks']
-            flightModel.func_tst_date = request['func_tst_date']
+            if request['func_tst_date'] != '':
+                flightModel.func_tst_date = request['func_tst_date']
             flightModel.func_tst_remarks = request['func_tst_remarks']
-            flightModel.func_tst_dummy_bird_date = request['func_tst_dummy_bird_date']
+            if request['func_tst_dummy_bird_date'] != '':
+                flightModel.func_tst_dummy_bird_date = request['func_tst_dummy_bird_date']
             flightModel.func_tst_dummy_bird_remarks = request['func_tst_dummy_bird_remarks']
-            flightModel.road_test_date = request['road_test_date']
+            if request['road_test_date'] != '':
+                flightModel.road_test_date = request['road_test_date']
             flightModel.road_test_remarks = request['road_test_remarks']
-            flightModel.post_road_test_date = request['post_road_test_date']
+            if request['post_road_test_date'] != '':
+                flightModel.post_road_test_date = request['post_road_test_date']
             flightModel.post_road_test_remarks = request['post_road_test_remarks']
-            flightModel.integrated_operation_date = request['integrated_operation_date']
+            if request['integrated_operation_date'] != '':
+                flightModel.integrated_operation_date = request['integrated_operation_date']
             flightModel.integrated_operation_remarks = request['integrated_operation_remarks']
-            flightModel.rain_test_date = request['rain_test_date']
+            if request['rain_test_date'] != '':
+                flightModel.rain_test_date = request['rain_test_date']
             flightModel.rain_test_remarks = request['rain_test_remarks']
-            flightModel.pre_user_inspection_date = request['pre_user_inspection_date']
+            if request['pre_user_inspection_date'] != '':
+                flightModel.pre_user_inspection_date = request['pre_user_inspection_date']
             flightModel.pre_user_inspection_remarks = request['pre_user_inspection_remarks']
-            flightModel.final_integrated_testing_date = request['final_integrated_testing_date']
+            if request['final_integrated_testing_date'] != '':
+                flightModel.final_integrated_testing_date = request['final_integrated_testing_date']
             flightModel.final_integrated_testing_remarks = request['final_integrated_testing_remarks']
-            flightModel.load_unload_on_mlv_hlf_date = request['load_unload_on_mlv_hlf_date']
+            if request['load_unload_on_mlv_hlf_date'] != '':
+                flightModel.load_unload_on_mlv_hlf_date = request['load_unload_on_mlv_hlf_date']
             flightModel.load_unload_on_mlv_hlf_remarks = request['load_unload_on_mlv_hlf_remarks']
-
+            if request['user_id'] != '':
+                flightModel.user_id = request['user_id']
+            else:
+                flightModel.user_id = None
             flightModel.isActive = is_active
             flightModel.save()
             return JsonResponse({'status': 'True', 'message': "Production Status Added Successfully!"},
@@ -885,48 +983,61 @@ class SmsController:
                     FlightHistoryModal.system = get_prod.system
                     FlightHistoryModal.organization = get_prod.organization
                     FlightHistoryModal.set_id = get_prod.set_id
-                    FlightHistoryModal.blt_date = get_prod.blt_date
+                    if request['blt_date'] != '':
+                        FlightHistoryModal.blt_date = get_prod.blt_date
                     FlightHistoryModal.blt_status = get_prod.blt_status
                     FlightHistoryModal.blt_remarks = get_prod.blt_remarks
                     FlightHistoryModal.testing_date = get_prod.testing_date
                     FlightHistoryModal.sys_type = get_prod.sys_type
-                    FlightHistoryModal.pre_hil_date = get_prod.pre_hil_date
+                    if request['pre_hil_date'] != '':
+                        FlightHistoryModal.pre_hil_date = get_prod.pre_hil_date
                     FlightHistoryModal.pre_hil_status = get_prod.pre_hil_status
                     FlightHistoryModal.pre_hil_remarks = get_prod.pre_hil_remarks
-                    FlightHistoryModal.vibaration_date = get_prod.vibaration_date
+                    if request['vibaration_date'] != '':
+                        FlightHistoryModal.vibaration_date = get_prod.vibaration_date
                     FlightHistoryModal.vibaration_status = get_prod.vibaration_status
                     FlightHistoryModal.vibaration_remarks = get_prod.vibaration_remarks
-                    FlightHistoryModal.post_hil_date = get_prod.post_hil_date
+                    if request['post_hil_date'] != '':
+                        FlightHistoryModal.post_hil_date = get_prod.post_hil_date
                     FlightHistoryModal.post_hil_status = get_prod.post_hil_status
                     FlightHistoryModal.post_hil_remarks = get_prod.post_hil_remarks
-                    FlightHistoryModal.fgt_date = get_prod.fgt_date
+                    if request['fgt_date'] != '':
+                        FlightHistoryModal.fgt_date = get_prod.fgt_date
                     FlightHistoryModal.fgt_status = get_prod.fgt_status
                     FlightHistoryModal.fgt_remarks = get_prod.fgt_remarks
-                    FlightHistoryModal.final_integration_date = get_prod.final_integration_date
+                    if request['final_integration_date'] != '':
+                        FlightHistoryModal.final_integration_date = get_prod.final_integration_date
                     FlightHistoryModal.final_integration_status = get_prod.final_integration_status
                     FlightHistoryModal.final_integration_remarks = get_prod.final_integration_remarks
-                    FlightHistoryModal.bhd_date = get_prod.bhd_date
+                    if request['bhd_date'] != '':
+                        FlightHistoryModal.bhd_date = get_prod.bhd_date
                     FlightHistoryModal.bhd_status = get_prod.bhd_status
                     FlightHistoryModal.bhd_remarks = get_prod.bhd_remarks
-                    FlightHistoryModal.fqm_date = get_prod.fqm_date
+                    if request['fqm_date'] != '':
+                        FlightHistoryModal.fqm_date = get_prod.fqm_date
                     FlightHistoryModal.fqm_status = get_prod.fqm_status
                     FlightHistoryModal.fqm_remarks = get_prod.fqm_remarks
-                    FlightHistoryModal.qm_certification_date = get_prod.qm_certification_date
+                    if request['qm_certification_date'] != '':
+                        FlightHistoryModal.qm_certification_date = get_prod.qm_certification_date
                     FlightHistoryModal.qm_certification_status = get_prod.qm_certification_status
                     FlightHistoryModal.qm_certification_remarks = get_prod.qm_certification_remarks
                     FlightHistoryModal.attachment = get_prod.attachment
                     FlightHistoryModal.remarks = get_prod.remarks
                     FlightHistoryModal.isActive = get_prod.isActive
-                    FlightHistoryModal.cgbalancing_date = get_prod.cgbalancing_date
+                    if request['cgbalancing_date'] != '':
+                        FlightHistoryModal.cgbalancing_date = get_prod.cgbalancing_date
                     FlightHistoryModal.cgbalancing_date_status = get_prod.cgbalancing_date_status
                     FlightHistoryModal.cgbalancing_date_remarks = get_prod.cgbalancing_date_remarks
-                    FlightHistoryModal.launchact_date = get_prod.launchact_date
+                    if request['launchact_date'] != '':
+                        FlightHistoryModal.launchact_date = get_prod.launchact_date
                     FlightHistoryModal.launchact_status = get_prod.launchact_status
                     FlightHistoryModal.launchact_remarks = get_prod.launchact_remarks
-                    FlightHistoryModal.incapsulation_date = get_prod.incapsulation_date
+                    if request['incapsulation_date'] != '':
+                        FlightHistoryModal.incapsulation_date = get_prod.incapsulation_date
                     FlightHistoryModal.incapsulation_status = get_prod.incapsulation_status
                     FlightHistoryModal.incapsulation_remarks = get_prod.incapsulation_remarks
-                    FlightHistoryModal.sys_align_Date = get_prod.sys_align_Date
+                    if request['sys_align_Date'] != '':
+                        FlightHistoryModal.sys_align_Date = get_prod.sys_align_Date
                     FlightHistoryModal.sys_align_status = get_prod.sys_align_status
                     FlightHistoryModal.sys_align_remarks = get_prod.sys_align_remarks
                     FlightHistoryModal.testing_type = get_prod.testing_type
@@ -940,26 +1051,35 @@ class SmsController:
                     FlightHistoryModal.pre_user_inspection = get_prod.pre_user_inspection
                     FlightHistoryModal.final_integrated_testing = get_prod.final_integrated_testing
                     FlightHistoryModal.load_unload_on_mlv_hlf = get_prod.load_unload_on_mlv_hlf
-
-                    FlightHistoryModal.emp_proofing_date = get_prod.emp_proofing_date
+                    if request['emp_proofing_date'] != '':
+                        FlightHistoryModal.emp_proofing_date = get_prod.emp_proofing_date
                     FlightHistoryModal.emp_proofing_remarks = get_prod.emp_proofing_remarks
-                    FlightHistoryModal.func_tst_date = get_prod.func_tst_date
+                    if request['func_tst_date'] != '':
+                        FlightHistoryModal.func_tst_date = get_prod.func_tst_date
                     FlightHistoryModal.func_tst_remarks = get_prod.func_tst_remarks
-                    FlightHistoryModal.func_tst_dummy_bird_date = get_prod.func_tst_dummy_bird_date
+                    if request['func_tst_dummy_bird_date'] != '':
+                        FlightHistoryModal.func_tst_dummy_bird_date = get_prod.func_tst_dummy_bird_date
                     FlightHistoryModal.func_tst_dummy_bird_remarks = get_prod.func_tst_dummy_bird_remarks
-                    FlightHistoryModal.road_test_date = get_prod.road_test_date
+                    if request['road_test_date'] != '':
+                        FlightHistoryModal.road_test_date = get_prod.road_test_date
                     FlightHistoryModal.road_test_remarks = get_prod.road_test_remarks
-                    FlightHistoryModal.post_road_test_date = get_prod.post_road_test_date
+                    if request['post_road_test_date'] != '':
+                        FlightHistoryModal.post_road_test_date = get_prod.post_road_test_date
                     FlightHistoryModal.post_road_test_remarks = get_prod.post_road_test_remarks
-                    FlightHistoryModal.integrated_operation_date = get_prod.integrated_operation_date
+                    if request['integrated_operation_date'] != '':
+                        FlightHistoryModal.integrated_operation_date = get_prod.integrated_operation_date
                     FlightHistoryModal.integrated_operation_remarks = get_prod.integrated_operation_remarks
-                    FlightHistoryModal.rain_test_date = get_prod.rain_test_date
+                    if request['rain_test_date'] != '':
+                        FlightHistoryModal.rain_test_date = get_prod.rain_test_date
                     FlightHistoryModal.rain_test_remarks = get_prod.rain_test_remarks
-                    FlightHistoryModal.pre_user_inspection_date = get_prod.pre_user_inspection_date
+                    if request['pre_user_inspection_date'] != '':
+                        FlightHistoryModal.pre_user_inspection_date = get_prod.pre_user_inspection_date
                     FlightHistoryModal.pre_user_inspection_remarks = get_prod.pre_user_inspection_remarks
-                    FlightHistoryModal.final_integrated_testing_date = get_prod.final_integrated_testing_date
+                    if request['final_integrated_testing_date'] != '':
+                        FlightHistoryModal.final_integrated_testing_date = get_prod.final_integrated_testing_date
                     FlightHistoryModal.final_integrated_testing_remarks = get_prod.final_integrated_testing_remarks
-                    FlightHistoryModal.load_unload_on_mlv_hlf_date = get_prod.load_unload_on_mlv_hlf_date
+                    if request['load_unload_on_mlv_hlf_date'] != '':
+                        FlightHistoryModal.load_unload_on_mlv_hlf_date = get_prod.load_unload_on_mlv_hlf_date
                     FlightHistoryModal.load_unload_on_mlv_hlf_remarks = get_prod.load_unload_on_mlv_hlf_remarks
                     FlightHistoryModal.save()
 
@@ -967,49 +1087,60 @@ class SmsController:
                 get_prod.system = request['system']
                 get_prod.organization = request['organization']
                 get_prod.set_id = request['set_id']
-                get_prod.blt_date = request['blt_date']
-                get_prod.blt_status = request['blt_status']
-                get_prod.blt_remarks = request['blt_remarks']
+                if request['blt_date'] != '':
+                    get_prod.blt_date = request['blt_date']
                 get_prod.testing_date = request['testing_date']
                 get_prod.sys_type = request['sys_type']
-                get_prod.pre_hil_date = request['pre_hil_date']
+                get_prod.blt_status = request['blt_status']
+                get_prod.blt_remarks = request['blt_remarks']
+                if request['pre_hil_date'] != '':
+                    get_prod.pre_hil_date = request['pre_hil_date']
                 get_prod.pre_hil_status = request['pre_hil_status']
                 get_prod.pre_hil_remarks = request['pre_hil_remarks']
-                get_prod.vibaration_date = request['vibaration_date']
+                if request['vibaration_date'] != '':
+                    get_prod.vibaration_date = request['vibaration_date']
                 get_prod.vibaration_status = request['vibaration_status']
                 get_prod.vibaration_remarks = request['vibaration_remarks']
-                get_prod.post_hil_date = request['post_hil_date']
+                if request['post_hil_date'] != '':
+                    get_prod.post_hil_date = request['post_hil_date']
                 get_prod.post_hil_status = request['post_hil_status']
                 get_prod.post_hil_remarks = request['post_hil_remarks']
-                get_prod.fgt_date = request['fgt_date']
+                if request['fgt_date'] != '':
+                    get_prod.fgt_date = request['fgt_date']
                 get_prod.fgt_status = request['fgt_status']
                 get_prod.fgt_remarks = request['fgt_remarks']
-                get_prod.final_integration_date = request['final_integration_date']
+                if request['final_integration_date'] != '':
+                    get_prod.final_integration_date = request['final_integration_date']
                 get_prod.final_integration_status = request['final_integration_status']
                 get_prod.final_integration_remarks = request['final_integration_remarks']
-                get_prod.bhd_date = request['bhd_date']
+                if request['bhd_date'] != '':
+                    get_prod.bhd_date = request['bhd_date']
                 get_prod.bhd_status = request['bhd_status']
                 get_prod.bhd_remarks = request['bhd_remarks']
-                get_prod.fqm_date = request['fqm_date']
+                if request['fqm_date'] != '':
+                    get_prod.fqm_date = request['fqm_date']
                 get_prod.fqm_status = request['fqm_status']
                 get_prod.fqm_remarks = request['fqm_remarks']
-                get_prod.qm_certification_date = request['qm_certification_date']
+                if request['qm_certification_date'] != '':
+                    get_prod.qm_certification_date = request['qm_certification_date']
                 get_prod.qm_certification_status = request['qm_certification_status']
                 get_prod.qm_certification_remarks = request['qm_certification_remarks']
-                if request['attachment'] != '':
-                    get_prod.attachment = request['attachment']
+                get_prod.attachment = request['attachment']
                 get_prod.remarks = request['remarks']
-                get_prod.isActive = is_active
-                get_prod.cgbalancing_date = request['cgbalancing_date']
+                if request['cgbalancing_date'] != '':
+                    get_prod.cgbalancing_date = request['cgbalancing_date']
                 get_prod.cgbalancing_date_status = request['cgbalancing_date_status']
                 get_prod.cgbalancing_date_remarks = request['cgbalancing_date_remarks']
-                get_prod.launchact_date = request['launchact_date']
+                if request['launchact_date'] != '':
+                    get_prod.launchact_date = request['launchact_date']
                 get_prod.launchact_status = request['launchact_status']
                 get_prod.launchact_remarks = request['launchact_remarks']
-                get_prod.incapsulation_date = request['incapsulation_date']
+                if request['incapsulation_date'] != '':
+                    get_prod.incapsulation_date = request['incapsulation_date']
                 get_prod.incapsulation_status = request['incapsulation_status']
                 get_prod.incapsulation_remarks = request['incapsulation_remarks']
-                get_prod.sys_align_Date = request['sys_align_Date']
+                if request['sys_align_Date'] != '':
+                    get_prod.sys_align_Date = request['sys_align_Date']
                 get_prod.sys_align_status = request['sys_align_status']
                 get_prod.sys_align_remarks = request['sys_align_remarks']
                 get_prod.testing_type = request['testing_type']
@@ -1023,27 +1154,40 @@ class SmsController:
                 get_prod.pre_user_inspection = request['pre_user_inspection']
                 get_prod.final_integrated_testing = request['final_integrated_testing']
                 get_prod.load_unload_on_mlv_hlf = request['load_unload_on_mlv_hlf']
-
-                get_prod.emp_proofing_date = request['emp_proofing_date']
+                if request['emp_proofing_date'] != '':
+                    get_prod.emp_proofing_date = request['emp_proofing_date']
                 get_prod.emp_proofing_remarks = request['emp_proofing_remarks']
-                get_prod.func_tst_date = request['func_tst_date']
+                if request['func_tst_date'] != '':
+                    get_prod.func_tst_date = request['func_tst_date']
                 get_prod.func_tst_remarks = request['func_tst_remarks']
-                get_prod.func_tst_dummy_bird_date = request['func_tst_dummy_bird_date']
+                if request['func_tst_dummy_bird_date'] != '':
+                    get_prod.func_tst_dummy_bird_date = request['func_tst_dummy_bird_date']
                 get_prod.func_tst_dummy_bird_remarks = request['func_tst_dummy_bird_remarks']
-                get_prod.road_test_date = request['road_test_date']
+                if request['road_test_date'] != '':
+                    get_prod.road_test_date = request['road_test_date']
                 get_prod.road_test_remarks = request['road_test_remarks']
-                get_prod.post_road_test_date = request['post_road_test_date']
+                if request['post_road_test_date'] != '':
+                    get_prod.post_road_test_date = request['post_road_test_date']
                 get_prod.post_road_test_remarks = request['post_road_test_remarks']
-                get_prod.integrated_operation_date = request['integrated_operation_date']
+                if request['integrated_operation_date'] != '':
+                    get_prod.integrated_operation_date = request['integrated_operation_date']
                 get_prod.integrated_operation_remarks = request['integrated_operation_remarks']
-                get_prod.rain_test_date = request['rain_test_date']
+                if request['rain_test_date'] != '':
+                    get_prod.rain_test_date = request['rain_test_date']
                 get_prod.rain_test_remarks = request['rain_test_remarks']
-                get_prod.pre_user_inspection_date = request['pre_user_inspection_date']
+                if request['pre_user_inspection_date'] != '':
+                    get_prod.pre_user_inspection_date = request['pre_user_inspection_date']
                 get_prod.pre_user_inspection_remarks = request['pre_user_inspection_remarks']
-                get_prod.final_integrated_testing_date = request['final_integrated_testing_date']
+                if request['final_integrated_testing_date'] != '':
+                    get_prod.final_integrated_testing_date = request['final_integrated_testing_date']
                 get_prod.final_integrated_testing_remarks = request['final_integrated_testing_remarks']
-                get_prod.load_unload_on_mlv_hlf_date = request['load_unload_on_mlv_hlf_date']
+                if request['load_unload_on_mlv_hlf_date'] != '':
+                    get_prod.load_unload_on_mlv_hlf_date = request['load_unload_on_mlv_hlf_date']
                 get_prod.load_unload_on_mlv_hlf_remarks = request['load_unload_on_mlv_hlf_remarks']
+                if request['user_id'] != '':
+                    get_prod.user_id = request['user_id']
+                else:
+                    get_prod.user_id = None
                 get_prod.isActive = is_active
                 get_prod.save()
         return JsonResponse({'status': 'True', 'message': "Production Status Updated Successfully!"},
@@ -1506,47 +1650,60 @@ class SmsController:
                 refilModel.system = request['system']
                 refilModel.organization = request['organization']
                 refilModel.set_id = request['set_id']
-                refilModel.blt_date = request['blt_date']
+                if request['blt_date'] != '':
+                    refilModel.blt_date = request['blt_date']
                 refilModel.testing_date = request['testing_date']
                 refilModel.sys_type = request['sys_type']
                 refilModel.blt_status = request['blt_status']
                 refilModel.blt_remarks = request['blt_remarks']
-                refilModel.pre_hil_date = request['pre_hil_date']
+                if request['pre_hil_date'] != '':
+                    refilModel.pre_hil_date = request['pre_hil_date']
                 refilModel.pre_hil_status = request['pre_hil_status']
                 refilModel.pre_hil_remarks = request['pre_hil_remarks']
-                refilModel.vibaration_date = request['vibaration_date']
+                if request['vibaration_date'] != '':
+                    refilModel.vibaration_date = request['vibaration_date']
                 refilModel.vibaration_status = request['vibaration_status']
                 refilModel.vibaration_remarks = request['vibaration_remarks']
-                refilModel.post_hil_date = request['post_hil_date']
+                if request['post_hil_date'] != '':
+                    refilModel.post_hil_date = request['post_hil_date']
                 refilModel.post_hil_status = request['post_hil_status']
                 refilModel.post_hil_remarks = request['post_hil_remarks']
-                refilModel.fgt_date = request['fgt_date']
+                if request['fgt_date'] != '':
+                    refilModel.fgt_date = request['fgt_date']
                 refilModel.fgt_status = request['fgt_status']
                 refilModel.fgt_remarks = request['fgt_remarks']
-                refilModel.final_integration_date = request['final_integration_date']
+                if request['final_integration_date'] != '':
+                    refilModel.final_integration_date = request['final_integration_date']
                 refilModel.final_integration_status = request['final_integration_status']
                 refilModel.final_integration_remarks = request['final_integration_remarks']
-                refilModel.bhd_date = request['bhd_date']
+                if request['bhd_date'] != '':
+                    refilModel.bhd_date = request['bhd_date']
                 refilModel.bhd_status = request['bhd_status']
                 refilModel.bhd_remarks = request['bhd_remarks']
-                refilModel.fqm_date = request['fqm_date']
+                if request['fqm_date'] != '':
+                    refilModel.fqm_date = request['fqm_date']
                 refilModel.fqm_status = request['fqm_status']
                 refilModel.fqm_remarks = request['fqm_remarks']
-                refilModel.qm_certification_date = request['qm_certification_date']
+                if request['qm_certification_date'] != '':
+                    refilModel.qm_certification_date = request['qm_certification_date']
                 refilModel.qm_certification_status = request['qm_certification_status']
                 refilModel.qm_certification_remarks = request['qm_certification_remarks']
                 refilModel.attachment = request['attachment']
                 refilModel.remarks = request['remarks']
-                refilModel.cgbalancing_date = request['cgbalancing_date']
+                if request['cgbalancing_date'] != '':
+                    refilModel.cgbalancing_date = request['cgbalancing_date']
                 refilModel.cgbalancing_date_status = request['cgbalancing_date_status']
                 refilModel.cgbalancing_date_remarks = request['cgbalancing_date_remarks']
-                refilModel.enduser_date = request['enduser_date']
+                if request['enduser_date'] != '':
+                    refilModel.enduser_date = request['enduser_date']
                 refilModel.enduser_status = request['enduser_status']
                 refilModel.enduser_remarks = request['enduser_remarks']
-                refilModel.incapsulation_date = request['incapsulation_date']
+                if request['incapsulation_date'] != '':
+                    refilModel.incapsulation_date = request['incapsulation_date']
                 refilModel.incapsulation_status = request['incapsulation_status']
                 refilModel.incapsulation_remarks = request['incapsulation_remarks']
-                refilModel.sys_align_Date = request['sys_align_Date']
+                if request['sys_align_Date'] != '':
+                    refilModel.sys_align_Date = request['sys_align_Date']
                 refilModel.sys_align_status = request['sys_align_status']
                 refilModel.sys_align_remarks = request['sys_align_remarks']
                 refilModel.testing_type = request['testing_type']
@@ -1560,28 +1717,40 @@ class SmsController:
                 refilModel.pre_user_inspection = request['pre_user_inspection']
                 refilModel.final_integrated_testing = request['final_integrated_testing']
                 refilModel.load_unload_on_mlv_hlf = request['load_unload_on_mlv_hlf']
-
-                refilModel.emp_proofing_date = request['emp_proofing_date']
+                if request['emp_proofing_date'] != '':
+                    refilModel.emp_proofing_date = request['emp_proofing_date']
                 refilModel.emp_proofing_remarks = request['emp_proofing_remarks']
-                refilModel.func_tst_date = request['func_tst_date']
+                if request['func_tst_date'] != '':
+                    refilModel.func_tst_date = request['func_tst_date']
                 refilModel.func_tst_remarks = request['func_tst_remarks']
-                refilModel.func_tst_dummy_bird_date = request['func_tst_dummy_bird_date']
+                if request['func_tst_dummy_bird_date'] != '':
+                    refilModel.func_tst_dummy_bird_date = request['func_tst_dummy_bird_date']
                 refilModel.func_tst_dummy_bird_remarks = request['func_tst_dummy_bird_remarks']
-                refilModel.road_test_date = request['road_test_date']
+                if request['road_test_date'] != '':
+                    refilModel.road_test_date = request['road_test_date']
                 refilModel.road_test_remarks = request['road_test_remarks']
-                refilModel.post_road_test_date = request['post_road_test_date']
+                if request['post_road_test_date'] != '':
+                    refilModel.post_road_test_date = request['post_road_test_date']
                 refilModel.post_road_test_remarks = request['post_road_test_remarks']
-                refilModel.integrated_operation_date = request['integrated_operation_date']
+                if request['integrated_operation_date'] != '':
+                    refilModel.integrated_operation_date = request['integrated_operation_date']
                 refilModel.integrated_operation_remarks = request['integrated_operation_remarks']
-                refilModel.rain_test_date = request['rain_test_date']
+                if request['rain_test_date'] != '':
+                    refilModel.rain_test_date = request['rain_test_date']
                 refilModel.rain_test_remarks = request['rain_test_remarks']
-                refilModel.pre_user_inspection_date = request['pre_user_inspection_date']
+                if request['pre_user_inspection_date'] != '':
+                    refilModel.pre_user_inspection_date = request['pre_user_inspection_date']
                 refilModel.pre_user_inspection_remarks = request['pre_user_inspection_remarks']
-                refilModel.final_integrated_testing_date = request['final_integrated_testing_date']
+                if request['final_integrated_testing_date'] != '':
+                    refilModel.final_integrated_testing_date = request['final_integrated_testing_date']
                 refilModel.final_integrated_testing_remarks = request['final_integrated_testing_remarks']
-                refilModel.load_unload_on_mlv_hlf_date = request['load_unload_on_mlv_hlf_date']
+                if request['load_unload_on_mlv_hlf_date'] != '':
+                    refilModel.load_unload_on_mlv_hlf_date = request['load_unload_on_mlv_hlf_date']
                 refilModel.load_unload_on_mlv_hlf_remarks = request['load_unload_on_mlv_hlf_remarks']
-
+                if request['user_id'] != '':
+                    refilModel.user_id = request['user_id']
+                else:
+                    refilModel.user_id = None
                 refilModel.isActive = is_active
                 refilModel.save()
                 return JsonResponse({'status': 'True', 'message': "Production Status Added Successfully!"},
@@ -1605,48 +1774,61 @@ class SmsController:
                         RelifingHistoryModal.system = get_prod.system
                         RelifingHistoryModal.organization = get_prod.organization
                         RelifingHistoryModal.set_id = get_prod.set_id
-                        RelifingHistoryModal.blt_date = get_prod.blt_date
+                        if request['blt_date'] != '':
+                            RelifingHistoryModal.blt_date = get_prod.blt_date
                         RelifingHistoryModal.blt_status = get_prod.blt_status
                         RelifingHistoryModal.blt_remarks = get_prod.blt_remarks
                         RelifingHistoryModal.testing_date = get_prod.testing_date
                         RelifingHistoryModal.sys_type = get_prod.sys_type
-                        RelifingHistoryModal.pre_hil_date = get_prod.pre_hil_date
+                        if request['pre_hil_date'] != '':
+                            RelifingHistoryModal.pre_hil_date = get_prod.pre_hil_date
                         RelifingHistoryModal.pre_hil_status = get_prod.pre_hil_status
                         RelifingHistoryModal.pre_hil_remarks = get_prod.pre_hil_remarks
-                        RelifingHistoryModal.vibaration_date = get_prod.vibaration_date
+                        if request['vibaration_date'] != '':
+                            RelifingHistoryModal.vibaration_date = get_prod.vibaration_date
                         RelifingHistoryModal.vibaration_status = get_prod.vibaration_status
                         RelifingHistoryModal.vibaration_remarks = get_prod.vibaration_remarks
-                        RelifingHistoryModal.post_hil_date = get_prod.post_hil_date
+                        if request['post_hil_date'] != '':
+                            RelifingHistoryModal.post_hil_date = get_prod.post_hil_date
                         RelifingHistoryModal.post_hil_status = get_prod.post_hil_status
                         RelifingHistoryModal.post_hil_remarks = get_prod.post_hil_remarks
-                        RelifingHistoryModal.fgt_date = get_prod.fgt_date
+                        if request['fgt_date'] != '':
+                            RelifingHistoryModal.fgt_date = get_prod.fgt_date
                         RelifingHistoryModal.fgt_status = get_prod.fgt_status
                         RelifingHistoryModal.fgt_remarks = get_prod.fgt_remarks
-                        RelifingHistoryModal.final_integration_date = get_prod.final_integration_date
+                        if request['final_integration_date'] != '':
+                            RelifingHistoryModal.final_integration_date = get_prod.final_integration_date
                         RelifingHistoryModal.final_integration_status = get_prod.final_integration_status
                         RelifingHistoryModal.final_integration_remarks = get_prod.final_integration_remarks
-                        RelifingHistoryModal.bhd_date = get_prod.bhd_date
+                        if request['bhd_date'] != '':
+                            RelifingHistoryModal.bhd_date = get_prod.bhd_date
                         RelifingHistoryModal.bhd_status = get_prod.bhd_status
                         RelifingHistoryModal.bhd_remarks = get_prod.bhd_remarks
-                        RelifingHistoryModal.fqm_date = get_prod.fqm_date
+                        if request['fqm_date'] != '':
+                            RelifingHistoryModal.fqm_date = get_prod.fqm_date
                         RelifingHistoryModal.fqm_status = get_prod.fqm_status
                         RelifingHistoryModal.fqm_remarks = get_prod.fqm_remarks
-                        RelifingHistoryModal.qm_certification_date = get_prod.qm_certification_date
+                        if request['qm_certification_date'] != '':
+                            RelifingHistoryModal.qm_certification_date = get_prod.qm_certification_date
                         RelifingHistoryModal.qm_certification_status = get_prod.qm_certification_status
                         RelifingHistoryModal.qm_certification_remarks = get_prod.qm_certification_remarks
                         RelifingHistoryModal.attachment = get_prod.attachment
                         RelifingHistoryModal.remarks = get_prod.remarks
                         RelifingHistoryModal.isActive = get_prod.isActive
-                        RelifingHistoryModal.cgbalancing_date = get_prod.cgbalancing_date
+                        if request['cgbalancing_date'] != '':
+                            RelifingHistoryModal.cgbalancing_date = get_prod.cgbalancing_date
                         RelifingHistoryModal.cgbalancing_date_status = get_prod.cgbalancing_date_status
                         RelifingHistoryModal.cgbalancing_date_remarks = get_prod.cgbalancing_date_remarks
-                        RelifingHistoryModal.enduser_date = get_prod.enduser_date
+                        if request['enduser_date'] != '':
+                            RelifingHistoryModal.enduser_date = get_prod.enduser_date
                         RelifingHistoryModal.enduser_status = get_prod.enduser_status
                         RelifingHistoryModal.enduser_remarks = get_prod.enduser_remarks
-                        RelifingHistoryModal.incapsulation_date = get_prod.incapsulation_date
+                        if request['incapsulation_date'] != '':
+                            RelifingHistoryModal.incapsulation_date = get_prod.incapsulation_date
                         RelifingHistoryModal.incapsulation_status = get_prod.incapsulation_status
                         RelifingHistoryModal.incapsulation_remarks = get_prod.incapsulation_remarks
-                        RelifingHistoryModal.sys_align_Date = get_prod.sys_align_Date
+                        if request['sys_align_Date'] != '':
+                            RelifingHistoryModal.sys_align_Date = get_prod.sys_align_Date
                         RelifingHistoryModal.sys_align_status = get_prod.sys_align_status
                         RelifingHistoryModal.sys_align_remarks = get_prod.sys_align_remarks
                         RelifingHistoryModal.testing_type = get_prod.testing_type
@@ -1660,26 +1842,35 @@ class SmsController:
                         RelifingHistoryModal.pre_user_inspection = get_prod.pre_user_inspection
                         RelifingHistoryModal.final_integrated_testing = get_prod.final_integrated_testing
                         RelifingHistoryModal.load_unload_on_mlv_hlf = get_prod.load_unload_on_mlv_hlf
-
-                        RelifingHistoryModal.emp_proofing_date = get_prod.emp_proofing_date
+                        if request['emp_proofing_date'] != '':
+                            RelifingHistoryModal.emp_proofing_date = get_prod.emp_proofing_date
                         RelifingHistoryModal.emp_proofing_remarks = get_prod.emp_proofing_remarks
-                        RelifingHistoryModal.func_tst_date = get_prod.func_tst_date
+                        if request['func_tst_date'] != '':
+                            RelifingHistoryModal.func_tst_date = get_prod.func_tst_date
                         RelifingHistoryModal.func_tst_remarks = get_prod.func_tst_remarks
-                        RelifingHistoryModal.func_tst_dummy_bird_date = get_prod.func_tst_dummy_bird_date
+                        if request['func_tst_dummy_bird_date'] != '':
+                            RelifingHistoryModal.func_tst_dummy_bird_date = get_prod.func_tst_dummy_bird_date
                         RelifingHistoryModal.func_tst_dummy_bird_remarks = get_prod.func_tst_dummy_bird_remarks
-                        RelifingHistoryModal.road_test_date = get_prod.road_test_date
+                        if request['road_test_date'] != '':
+                            RelifingHistoryModal.road_test_date = get_prod.road_test_date
                         RelifingHistoryModal.road_test_remarks = get_prod.road_test_remarks
-                        RelifingHistoryModal.post_road_test_date = get_prod.post_road_test_date
+                        if request['post_road_test_date'] != '':
+                            RelifingHistoryModal.post_road_test_date = get_prod.post_road_test_date
                         RelifingHistoryModal.post_road_test_remarks = get_prod.post_road_test_remarks
-                        RelifingHistoryModal.integrated_operation_date = get_prod.integrated_operation_date
+                        if request['integrated_operation_date'] != '':
+                            RelifingHistoryModal.integrated_operation_date = get_prod.integrated_operation_date
                         RelifingHistoryModal.integrated_operation_remarks = get_prod.integrated_operation_remarks
-                        RelifingHistoryModal.rain_test_date = get_prod.rain_test_date
+                        if request['rain_test_date'] != '':
+                            RelifingHistoryModal.rain_test_date = get_prod.rain_test_date
                         RelifingHistoryModal.rain_test_remarks = get_prod.rain_test_remarks
-                        RelifingHistoryModal.pre_user_inspection_date = get_prod.pre_user_inspection_date
+                        if request['pre_user_inspection_date'] != '':
+                            RelifingHistoryModal.pre_user_inspection_date = get_prod.pre_user_inspection_date
                         RelifingHistoryModal.pre_user_inspection_remarks = get_prod.pre_user_inspection_remarks
-                        RelifingHistoryModal.final_integrated_testing_date = get_prod.final_integrated_testing_date
+                        if request['final_integrated_testing_date'] != '':
+                            RelifingHistoryModal.final_integrated_testing_date = get_prod.final_integrated_testing_date
                         RelifingHistoryModal.final_integrated_testing_remarks = get_prod.final_integrated_testing_remarks
-                        RelifingHistoryModal.load_unload_on_mlv_hlf_date = get_prod.load_unload_on_mlv_hlf_date
+                        if request['load_unload_on_mlv_hlf_date'] != '':
+                            RelifingHistoryModal.load_unload_on_mlv_hlf_date = get_prod.load_unload_on_mlv_hlf_date
                         RelifingHistoryModal.load_unload_on_mlv_hlf_remarks = get_prod.load_unload_on_mlv_hlf_remarks
                         RelifingHistoryModal.save()
 
@@ -1687,49 +1878,60 @@ class SmsController:
                     get_prod.system = request['system']
                     get_prod.organization = request['organization']
                     get_prod.set_id = request['set_id']
-                    get_prod.blt_date = request['blt_date']
-                    get_prod.blt_status = request['blt_status']
-                    get_prod.blt_remarks = request['blt_remarks']
+                    if request['blt_date'] != '':
+                        get_prod.blt_date = request['blt_date']
                     get_prod.testing_date = request['testing_date']
                     get_prod.sys_type = request['sys_type']
-                    get_prod.pre_hil_date = request['pre_hil_date']
+                    get_prod.blt_status = request['blt_status']
+                    get_prod.blt_remarks = request['blt_remarks']
+                    if request['pre_hil_date'] != '':
+                        get_prod.pre_hil_date = request['pre_hil_date']
                     get_prod.pre_hil_status = request['pre_hil_status']
                     get_prod.pre_hil_remarks = request['pre_hil_remarks']
-                    get_prod.vibaration_date = request['vibaration_date']
+                    if request['vibaration_date'] != '':
+                        get_prod.vibaration_date = request['vibaration_date']
                     get_prod.vibaration_status = request['vibaration_status']
                     get_prod.vibaration_remarks = request['vibaration_remarks']
-                    get_prod.post_hil_date = request['post_hil_date']
+                    if request['post_hil_date'] != '':
+                        get_prod.post_hil_date = request['post_hil_date']
                     get_prod.post_hil_status = request['post_hil_status']
                     get_prod.post_hil_remarks = request['post_hil_remarks']
-                    get_prod.fgt_date = request['fgt_date']
+                    if request['fgt_date'] != '':
+                        get_prod.fgt_date = request['fgt_date']
                     get_prod.fgt_status = request['fgt_status']
                     get_prod.fgt_remarks = request['fgt_remarks']
-                    get_prod.final_integration_date = request['final_integration_date']
+                    if request['final_integration_date'] != '':
+                        get_prod.final_integration_date = request['final_integration_date']
                     get_prod.final_integration_status = request['final_integration_status']
                     get_prod.final_integration_remarks = request['final_integration_remarks']
-                    get_prod.bhd_date = request['bhd_date']
+                    if request['bhd_date'] != '':
+                        get_prod.bhd_date = request['bhd_date']
                     get_prod.bhd_status = request['bhd_status']
                     get_prod.bhd_remarks = request['bhd_remarks']
-                    get_prod.fqm_date = request['fqm_date']
+                    if request['fqm_date'] != '':
+                        get_prod.fqm_date = request['fqm_date']
                     get_prod.fqm_status = request['fqm_status']
                     get_prod.fqm_remarks = request['fqm_remarks']
-                    get_prod.qm_certification_date = request['qm_certification_date']
+                    if request['qm_certification_date'] != '':
+                        get_prod.qm_certification_date = request['qm_certification_date']
                     get_prod.qm_certification_status = request['qm_certification_status']
                     get_prod.qm_certification_remarks = request['qm_certification_remarks']
-                    if request['attachment'] != '':
-                        get_prod.attachment = request['attachment']
+                    get_prod.attachment = request['attachment']
                     get_prod.remarks = request['remarks']
-                    get_prod.isActive = is_active
-                    get_prod.cgbalancing_date = request['cgbalancing_date']
+                    if request['cgbalancing_date'] != '':
+                        get_prod.cgbalancing_date = request['cgbalancing_date']
                     get_prod.cgbalancing_date_status = request['cgbalancing_date_status']
                     get_prod.cgbalancing_date_remarks = request['cgbalancing_date_remarks']
-                    get_prod.enduser_date = request['enduser_date']
+                    if request['enduser_date'] != '':
+                        get_prod.enduser_date = request['enduser_date']
                     get_prod.enduser_status = request['enduser_status']
                     get_prod.enduser_remarks = request['enduser_remarks']
-                    get_prod.incapsulation_date = request['incapsulation_date']
+                    if request['incapsulation_date'] != '':
+                        get_prod.incapsulation_date = request['incapsulation_date']
                     get_prod.incapsulation_status = request['incapsulation_status']
                     get_prod.incapsulation_remarks = request['incapsulation_remarks']
-                    get_prod.sys_align_Date = request['sys_align_Date']
+                    if request['sys_align_Date'] != '':
+                        get_prod.sys_align_Date = request['sys_align_Date']
                     get_prod.sys_align_status = request['sys_align_status']
                     get_prod.sys_align_remarks = request['sys_align_remarks']
                     get_prod.testing_type = request['testing_type']
@@ -1743,28 +1945,41 @@ class SmsController:
                     get_prod.pre_user_inspection = request['pre_user_inspection']
                     get_prod.final_integrated_testing = request['final_integrated_testing']
                     get_prod.load_unload_on_mlv_hlf = request['load_unload_on_mlv_hlf']
-
-                    get_prod.emp_proofing_date = request['emp_proofing_date']
+                    if request['emp_proofing_date'] != '':
+                        get_prod.emp_proofing_date = request['emp_proofing_date']
                     get_prod.emp_proofing_remarks = request['emp_proofing_remarks']
-                    get_prod.func_tst_date = request['func_tst_date']
+                    if request['func_tst_date'] != '':
+                        get_prod.func_tst_date = request['func_tst_date']
                     get_prod.func_tst_remarks = request['func_tst_remarks']
-                    get_prod.func_tst_dummy_bird_date = request['func_tst_dummy_bird_date']
+                    if request['func_tst_dummy_bird_date'] != '':
+                        get_prod.func_tst_dummy_bird_date = request['func_tst_dummy_bird_date']
                     get_prod.func_tst_dummy_bird_remarks = request['func_tst_dummy_bird_remarks']
-                    get_prod.road_test_date = request['road_test_date']
+                    if request['road_test_date'] != '':
+                        get_prod.road_test_date = request['road_test_date']
                     get_prod.road_test_remarks = request['road_test_remarks']
-                    get_prod.post_road_test_date = request['post_road_test_date']
+                    if request['post_road_test_date'] != '':
+                        get_prod.post_road_test_date = request['post_road_test_date']
                     get_prod.post_road_test_remarks = request['post_road_test_remarks']
-                    get_prod.integrated_operation_date = request['integrated_operation_date']
+                    if request['integrated_operation_date'] != '':
+                        get_prod.integrated_operation_date = request['integrated_operation_date']
                     get_prod.integrated_operation_remarks = request['integrated_operation_remarks']
-                    get_prod.rain_test_date = request['rain_test_date']
+                    if request['rain_test_date'] != '':
+                        get_prod.rain_test_date = request['rain_test_date']
                     get_prod.rain_test_remarks = request['rain_test_remarks']
-                    get_prod.pre_user_inspection_date = request['pre_user_inspection_date']
+                    if request['pre_user_inspection_date'] != '':
+                        get_prod.pre_user_inspection_date = request['pre_user_inspection_date']
                     get_prod.pre_user_inspection_remarks = request['pre_user_inspection_remarks']
-                    get_prod.final_integrated_testing_date = request['final_integrated_testing_date']
+                    if request['final_integrated_testing_date'] != '':
+                        get_prod.final_integrated_testing_date = request['final_integrated_testing_date']
                     get_prod.final_integrated_testing_remarks = request['final_integrated_testing_remarks']
-                    get_prod.load_unload_on_mlv_hlf_date = request['load_unload_on_mlv_hlf_date']
+                    if request['load_unload_on_mlv_hlf_date'] != '':
+                        get_prod.load_unload_on_mlv_hlf_date = request['load_unload_on_mlv_hlf_date']
                     get_prod.load_unload_on_mlv_hlf_remarks = request['load_unload_on_mlv_hlf_remarks']
-
+                    if request['user_id'] != '':
+                        get_prod.user_id = request['user_id']
+                    else:
+                        get_prod.user_id = None
+                    get_prod.isActive = is_active
                     get_prod.save()
             return JsonResponse({'status': 'True', 'message': "Production Status Updated Successfully!"},
                                 status=200)
@@ -1848,8 +2063,9 @@ class SmsController:
                         ListItems = dataList.filter(blt_date__year = year,blt_status = ChildStatus)
                     if ChildStatus == 'Current Count':
                         for data  in dataList:
-                            if data.blt_date.strftime("%Y") == year and (data.blt_status == 'Under process' or data.blt_status=='Observation(same stage)' or data.blt_status=='Halt'):
-                                ListItems.append(data)
+                            if data.blt_date is not None:
+                                if data.blt_date.strftime("%Y") == year and (data.blt_status == 'Under process' or data.blt_status=='Observation(same stage)' or data.blt_status=='Halt'):
+                                    ListItems.append(data)
 
                 if ParentStatus == 'EMP Proofing':
                     if ChildStatus != 'Current Count':
@@ -1858,8 +2074,9 @@ class SmsController:
 
                     if ChildStatus == 'Current Count':
                         for data  in dataList:
-                            if data.emp_proofing_date.strftime("%Y") == year and  (data.emp_proofing == 'Under process' or data.emp_proofing=='Observation(same stage)' or data.emp_proofing=='Halt'):
-                                ListItems.append(data)
+                            if data.emp_proofing_date is not None:
+                                if data.emp_proofing_date.strftime("%Y") == year and  (data.emp_proofing == 'Under process' or data.emp_proofing=='Observation(same stage)' or data.emp_proofing=='Halt'):
+                                    ListItems.append(data)
 
                 if ParentStatus == 'Functional Test W/O Dummy Bird':
                     if ChildStatus != 'Current Count':
@@ -1867,8 +2084,9 @@ class SmsController:
 
                     if ChildStatus == 'Current Count':
                         for data  in dataList:
-                            if data.func_tst_date.strftime("%Y") == year and (data.func_tst == 'Under process' or data.func_tst=='Observation(same stage)' or data.func_tst=='Halt'):
-                                ListItems.append(data)
+                            if data.func_tst_date is not None:
+                                if data.func_tst_date.strftime("%Y") == year and (data.func_tst == 'Under process' or data.func_tst=='Observation(same stage)' or data.func_tst=='Halt'):
+                                    ListItems.append(data)
 
                 if ParentStatus == 'Functional Test With Dummy Bird':
                     if ChildStatus != 'Current Count':
@@ -1876,8 +2094,9 @@ class SmsController:
 
                     if ChildStatus == 'Current Count':
                         for data  in dataList:
-                            if data.func_tst_dummy_bird_date.strftime("%Y") == year and (data.func_tst_dummy_bird == 'Under process' or data.func_tst_dummy_bird=='Observation(same stage)' or data.func_tst_dummy_bird=='Halt'):
-                                ListItems.append(data)
+                            if data.func_tst_dummy_bird_date is not None:
+                                if data.func_tst_dummy_bird_date.strftime("%Y") == year and (data.func_tst_dummy_bird == 'Under process' or data.func_tst_dummy_bird=='Observation(same stage)' or data.func_tst_dummy_bird=='Halt'):
+                                    ListItems.append(data)
 
                 if ParentStatus == 'Road Test':
                     if ChildStatus != 'Current Count':
@@ -1885,8 +2104,9 @@ class SmsController:
 
                     if ChildStatus == 'Current Count':
                         for data  in dataList:
-                            if data.oad_test_date.strftime("%Y") == year and (data.road_test == 'Under process' or data.road_test=='Observation(same stage)' or data.road_test=='Halt'):
-                                ListItems.append(data)
+                            if data.road_test_date is not None:
+                                if data.road_test_date.strftime("%Y") == year and (data.road_test == 'Under process' or data.road_test=='Observation(same stage)' or data.road_test=='Halt'):
+                                    ListItems.append(data)
 
                 if ParentStatus == 'Post Road Test':
                     if ChildStatus != 'Current Count':
@@ -1894,8 +2114,9 @@ class SmsController:
 
                     if ChildStatus == 'Current Count':
                         for data  in dataList:
-                            if data.post_road_test_date.strftime("%Y") == year and (data.post_road_test == 'Under process' or data.post_road_test=='Observation(same stage)' or data.post_road_test=='Halt'):
-                                ListItems.append(data)
+                            if data.post_road_test_date is not None:
+                                if data.post_road_test_date.strftime("%Y") == year and (data.post_road_test == 'Under process' or data.post_road_test=='Observation(same stage)' or data.post_road_test=='Halt'):
+                                    ListItems.append(data)
 
                 if ParentStatus == 'Integrated Operation':
                     if ChildStatus != 'Current Count':
@@ -1903,8 +2124,9 @@ class SmsController:
 
                     if ChildStatus == 'Current Count':
                         for data  in dataList:
-                            if data.integrated_operation_date.strftime("%Y") == year and (data.integrated_operation == 'Under process' or data.integrated_operation=='Observation(same stage)' or data.integrated_operation=='Halt'):
-                                ListItems.append(data)
+                            if data.integrated_operation_date is not None:
+                                if data.integrated_operation_date.strftime("%Y") == year and (data.integrated_operation == 'Under process' or data.integrated_operation=='Observation(same stage)' or data.integrated_operation=='Halt'):
+                                    ListItems.append(data)
 
                 if ParentStatus == 'Rain Test':
                     if ChildStatus != 'Current Count':
@@ -1912,8 +2134,9 @@ class SmsController:
 
                     if ChildStatus == 'Current Count':
                         for data  in dataList:
-                            if data.rain_test_date.strftime("%Y") == year and (data.rain_test == 'Under process' or data.rain_test=='Observation(same stage)' or data.rain_test=='Halt'):
-                                ListItems.append(data)
+                            if data.rain_test_date is not None:
+                                if data.rain_test_date.strftime("%Y") == year and (data.rain_test == 'Under process' or data.rain_test=='Observation(same stage)' or data.rain_test=='Halt'):
+                                    ListItems.append(data)
 
                 if ParentStatus == 'Pre User Inspection':
                     if ChildStatus != 'Current Count':
@@ -1921,8 +2144,9 @@ class SmsController:
 
                     if ChildStatus == 'Current Count':
                         for data  in dataList:
-                            if data.pre_user_inspection_date.strftime("%Y") == year and (data.pre_user_inspection == 'Under process' or data.pre_user_inspection=='Observation(same stage)' or data.pre_user_inspection=='Halt'):
-                                ListItems.append(data)
+                            if data.pre_user_inspection_date is not None:
+                                if data.pre_user_inspection_date.strftime("%Y") == year and (data.pre_user_inspection == 'Under process' or data.pre_user_inspection=='Observation(same stage)' or data.pre_user_inspection=='Halt'):
+                                    ListItems.append(data)
 
                 if ParentStatus == 'Final Integration':
                     if ChildStatus != 'Current Count':
@@ -1930,8 +2154,9 @@ class SmsController:
 
                     if ChildStatus == 'Current Count':
                         for data  in dataList:
-                            if data.final_integration_date.strftime("%Y") == year and (data.final_integration_status == 'Under process' or data.final_integration_status=='Observation(same stage)' or data.final_integration_status=='Halt'):
-                                ListItems.append(data)
+                            if data.final_integration_date is not None:
+                                if data.final_integration_date.strftime("%Y") == year and (data.final_integration_status == 'Under process' or data.final_integration_status=='Observation(same stage)' or data.final_integration_status=='Halt'):
+                                    ListItems.append(data)
 
                 if ParentStatus == 'Loading/Unloading on MLV/HLF':
                     if ChildStatus != 'Current Count':
@@ -1939,8 +2164,9 @@ class SmsController:
 
                     if ChildStatus == 'Current Count':
                         for data  in dataList:
-                            if data.load_unload_on_mlv_hlf_date.strftime("%Y") == year and (data.load_unload_on_mlv_hlf == 'Under process' or data.load_unload_on_mlv_hlf=='Observation(same stage)' or data.load_unload_on_mlv_hlf=='Halt'):
-                                ListItems.append(data)
+                            if data.load_unload_on_mlv_hlf_date is not None:
+                                if data.load_unload_on_mlv_hlf_date.strftime("%Y") == year and (data.load_unload_on_mlv_hlf == 'Under process' or data.load_unload_on_mlv_hlf=='Observation(same stage)' or data.load_unload_on_mlv_hlf=='Halt'):
+                                    ListItems.append(data)
 
                 if ParentStatus == 'Pre-HIL':
                     if ChildStatus != 'Current Count':
@@ -1948,8 +2174,9 @@ class SmsController:
 
                     if ChildStatus == 'Current Count':
                         for data  in dataList:
-                            if data.pre_hil_date.strftime("%Y") == year and (data.pre_hil_status == 'Under process' or data.pre_hil_status=='Observation(same stage)' or data.pre_hil_status=='Halt'):
-                                ListItems.append(data)
+                            if data.pre_hil_date is not None:
+                                if data.pre_hil_date.strftime("%Y") == year and (data.pre_hil_status == 'Under process' or data.pre_hil_status=='Observation(same stage)' or data.pre_hil_status=='Halt'):
+                                    ListItems.append(data)
 
                 if ParentStatus == 'Vibration':
                     if ChildStatus != 'Current Count':
@@ -1957,8 +2184,9 @@ class SmsController:
 
                     if ChildStatus == 'Current Count':
                         for data  in dataList:
-                            if data.vibaration_date.strftime("%Y") == year and (data.vibaration_status == 'Under process' or data.vibaration_status=='Observation(same stage)' or data.vibaration_status=='Halt'):
-                                ListItems.append(data)
+                            if data.vibaration_date is not None:
+                                if data.vibaration_date.strftime("%Y") == year and (data.vibaration_status == 'Under process' or data.vibaration_status=='Observation(same stage)' or data.vibaration_status=='Halt'):
+                                    ListItems.append(data)
 
                 if ParentStatus == 'CG Balancing':
                     if ChildStatus != 'Current Count':
@@ -2244,10 +2472,7 @@ class SmsController:
             system = request.query_params['selected_system']
 
             # create dynamic filter
-            # if year != '':
-            #     filter_objects &= get_filter(
-            #         'testing_date__year', 'equal',
-            #         year)
+
             if org != '':
                 filter_objects &= get_filter(
                     'organization', 'equal',
@@ -2260,8 +2485,30 @@ class SmsController:
                 filter_objects &= get_filter(
                     'system', 'equal',
                     system)
-
+            setid_filter = Q()
+            setid_filter &= get_filter(
+                    'set_id', 'not_equal',
+                    '')
+            if org != '':
+                setid_filter &= get_filter(
+                    'organization', 'equal',
+                    org)
+            if type != '':
+                setid_filter &= get_filter(
+                    'sys_type', 'equal',
+                    type)
+            if system != '':
+                setid_filter &= get_filter(
+                    'system', 'equal',
+                    system)
+            # if year != '':
+            #     setid_filter &= get_filter(
+            #         'set_id', 'not_equal',
+            #         '')
             # production system count
+            # prod_blt_count = ProductionSystemStatus.objects.filter(setid_filter, blt_date__year=year).count()
+            prodTotalCount = ProductionSystemStatus.objects.filter(setid_filter).count()
+            # print(prod_blt_count)
             prod_blt_oklist = ProductionSystemStatus.objects.filter(filter_objects, blt_date__year=year,blt_status='Ok')
             prod_blt_oklistNext = ProductionSystemStatus.objects.filter(filter_objects, blt_date__year=year,blt_status='OK(next stage)')
             prod_blt_observationlist = ProductionSystemStatus.objects.filter(filter_objects,
@@ -2270,6 +2517,9 @@ class SmsController:
                                                                                   blt_date__year=year,blt_status='Observation(next stage)')
             prod_blt_uplist = ProductionSystemStatus.objects.filter(filter_objects, blt_date__year=year,blt_status='Under process')
             prod_blt_haultlist = ProductionSystemStatus.objects.filter(filter_objects, blt_status='Halt')
+
+            prod_prehil_count = ProductionSystemStatus.objects.filter(setid_filter, pre_hil_date__year=year).count()
+            print(prod_prehil_count)
 
             prod_prehil_oklist = ProductionSystemStatus.objects.filter(filter_objects, pre_hil_date__year=year,pre_hil_status='Ok')
             prod_prehil_oklistNext = ProductionSystemStatus.objects.filter(filter_objects,
@@ -2281,6 +2531,10 @@ class SmsController:
             prod_prehil_uplist = ProductionSystemStatus.objects.filter(filter_objects, pre_hil_date__year=year,pre_hil_status='Under process')
             prod_prehil_haultlist = ProductionSystemStatus.objects.filter(filter_objects, pre_hil_date__year=year,pre_hil_status='Halt')
 
+
+            prod_posthil_count = ProductionSystemStatus.objects.filter(setid_filter, post_hil_date__year=year).count()
+            print(prod_posthil_count)
+
             prod_posthil_oklist = ProductionSystemStatus.objects.filter(filter_objects,
                                                                         post_hil_date__year=year,post_hil_status='Ok')
             prod_posthil_oklistNext = ProductionSystemStatus.objects.filter(filter_objects,
@@ -2291,6 +2545,9 @@ class SmsController:
                                                                                      post_hil_date__year=year,post_hil_status='Observation(next stage)')
             prod_posthil_uplist = ProductionSystemStatus.objects.filter(filter_objects, post_hil_date__year=year,post_hil_status='Under process')
             prod_posthil_haultlist = ProductionSystemStatus.objects.filter(filter_objects, post_hil_date__year=year,post_hil_status='Halt')
+
+            prod_finalintegration_count = ProductionSystemStatus.objects.filter(setid_filter, final_integration_date__year=year).count()
+            print(prod_finalintegration_count)
 
             prod_finalintegration_oklist = ProductionSystemStatus.objects.filter(filter_objects,
                                                                                  final_integration_date__year=year,final_integration_status='Ok')
@@ -2308,6 +2565,9 @@ class SmsController:
             prod_finalintegration_haultlist = ProductionSystemStatus.objects.filter(filter_objects,
                                                                                     final_integration_date__year=year,final_integration_status='Halt')
 
+            prod_vibration_count = ProductionSystemStatus.objects.filter(setid_filter, vibaration_date__year=year).count()
+            print(prod_vibration_count)
+
             prod_vibration_oklist = ProductionSystemStatus.objects.filter(filter_objects,
                                                                           vibaration_date__year=year,vibaration_status='Ok')
             prod_vibration_oklistNext = ProductionSystemStatus.objects.filter(filter_objects,
@@ -2320,6 +2580,10 @@ class SmsController:
             prod_vibration_uplist = ProductionSystemStatus.objects.filter(filter_objects,
                                                                           vibaration_date__year=year,vibaration_status='Under process')
             prod_vibration_haultlist = ProductionSystemStatus.objects.filter(filter_objects, vibaration_date__year=year,vibaration_status='Halt')
+
+
+            prod_cg_count = ProductionSystemStatus.objects.filter(setid_filter, cgbalancing_date__year=year).count()
+            print(prod_cg_count)
 
             prod_cg_oklist = ProductionSystemStatus.objects.filter(filter_objects,
                                                                    cgbalancing_date__year=year,cgbalancing_date_status='Ok')
@@ -2335,6 +2599,7 @@ class SmsController:
                                                                    cgbalancing_date__year=year,cgbalancing_date_status='Under process')
             prod_cg_haultlist = ProductionSystemStatus.objects.filter(filter_objects, cgbalancing_date__year=year,cgbalancing_date_status='Halt')
 
+            prod_fgt_count = ProductionSystemStatus.objects.filter(setid_filter, fgt_date__year=year).count()
             prod_fgt_oklist = ProductionSystemStatus.objects.filter(filter_objects, fgt_date__year=year,fgt_status='Ok')
             prod_fgt_oklistNext = ProductionSystemStatus.objects.filter(filter_objects, fgt_date__year=year,fgt_status='OK(next stage)')
             prod_fgt_observationlist = ProductionSystemStatus.objects.filter(filter_objects,
@@ -2345,6 +2610,7 @@ class SmsController:
                                                                     fgt_date__year=year,fgt_status='Under process')
             prod_fgt_haultlist = ProductionSystemStatus.objects.filter(filter_objects, fgt_date__year=year,fgt_status='Halt')
 
+            prod_bhd_count = ProductionSystemStatus.objects.filter(setid_filter, bhd_date__year=year).count()
             prod_bhd_ok = ProductionSystemStatus.objects.filter(filter_objects,
                                                                        bhd_date__year=year,bhd_status='Ok')
             prod_bhd_submitted = ProductionSystemStatus.objects.filter(filter_objects,
@@ -2356,13 +2622,14 @@ class SmsController:
             prod_bhd_inprocess= ProductionSystemStatus.objects.filter(filter_objects,
                                                                          bhd_date__year=year,bhd_status='Audit in-process')
 
-
+            prod_fqm_count = ProductionSystemStatus.objects.filter(setid_filter, fqm_date__year=year).count()
             prod_fqm_planned = ProductionSystemStatus.objects.filter(filter_objects,
                                                                      fqm_date__year=year,fqm_status='Planned')
 
             prod_fqm_conducted = ProductionSystemStatus.objects.filter(filter_objects,
                                                                        fqm_date__year=year,fqm_status='Conducted')
 
+            prod_qmc_count = ProductionSystemStatus.objects.filter(setid_filter, qm_certification_date__year=year).count()
             prod_qmc_issued = ProductionSystemStatus.objects.filter(filter_objects,
                                                                     qm_certification_date__year=year,qm_certification_status='QM certificate issued')
 
@@ -2370,6 +2637,9 @@ class SmsController:
                                                                         qm_certification_date__year=year,qm_certification_status='Audit in-process')
             prod_qmc_obs_forwarded = ProductionSystemStatus.objects.filter(filter_objects,
                                                                         qm_certification_date__year=year,qm_certification_status='QM Observations Forwarded')
+
+
+            prod_enduser_count = ProductionSystemStatus.objects.filter(setid_filter, enduser_date__year=year).count()
 
             prod_enduser_oklist = ProductionSystemStatus.objects.filter(filter_objects, enduser_date__year=year,enduser_status='Ok')
             prod_enduser_oklistNext = ProductionSystemStatus.objects.filter(filter_objects,
@@ -2383,6 +2653,8 @@ class SmsController:
             prod_enduser_haultlist = ProductionSystemStatus.objects.filter(filter_objects, enduser_date__year=year,enduser_status='Halt')
 
 
+            prod_sys_align_count = ProductionSystemStatus.objects.filter(setid_filter, sys_align_Date__year=year).count()
+
             prod_sys_align_oklist = ProductionSystemStatus.objects.filter(filter_objects, sys_align_Date__year=year,sys_align_status='Ok')
             prod_sys_align_oklistNext = ProductionSystemStatus.objects.filter(filter_objects,
                                                                             sys_align_Date__year=year,sys_align_status='OK(next stage)')
@@ -2394,7 +2666,7 @@ class SmsController:
                                                                         sys_align_Date__year=year,sys_align_status='Under process')
             prod_sys_align_haultlist = ProductionSystemStatus.objects.filter(filter_objects, sys_align_Date__year=year,sys_align_status='Halt')
 
-
+            prod_incapsulation_count = ProductionSystemStatus.objects.filter(setid_filter, incapsulation_date__year=year).count()
             prod_incapsulation_oklist = ProductionSystemStatus.objects.filter(filter_objects, incapsulation_date__year=year,incapsulation_status='Ok')
             prod_incapsulation_oklistNext = ProductionSystemStatus.objects.filter(filter_objects,
                                                                             incapsulation_date__year=year,incapsulation_status='OK(next stage)')
@@ -2406,12 +2678,16 @@ class SmsController:
                                                                         incapsulation_date__year=year,incapsulation_status='Under process')
             prod_incapsulation_haultlist = ProductionSystemStatus.objects.filter(filter_objects, incapsulation_date__year=year,incapsulation_status='Halt')
 
+            prod_emp_proofing_count = ProductionSystemStatus.objects.filter(setid_filter, emp_proofing_date__year=year).count()
+
             prod_emp_proofing_oklist = ProductionSystemStatus.objects.filter(filter_objects, emp_proofing_date__year=year,emp_proofing='Ok')
             prod_emp_proofing_oklistNext= ProductionSystemStatus.objects.filter(filter_objects,emp_proofing_date__year=year,emp_proofing='OK(next stage)')
             prod_emp_proofing_observationlist  = ProductionSystemStatus.objects.filter(filter_objects,emp_proofing_date__year=year,emp_proofing='Observation(same stage)')
             prod_emp_proofing_observationlistNext = ProductionSystemStatus.objects.filter(filter_objects,emp_proofing_date__year=year,emp_proofing='Observation(next stage)')
             prod_emp_proofing_uplist = ProductionSystemStatus.objects.filter(filter_objects,emp_proofing_date__year=year,emp_proofing='Under process')
             prod_emp_proofing_haultlist = ProductionSystemStatus.objects.filter(filter_objects,emp_proofing_date__year=year,emp_proofing='Halt')
+
+            prod_func_tst_count = ProductionSystemStatus.objects.filter(setid_filter, func_tst_date__year=year).count()
 
             prod_func_tst_oklistNext_oklist  = ProductionSystemStatus.objects.filter(filter_objects,func_tst_date__year=year,func_tst='Ok')
             prod_func_tst_oklistNext_oklistNext  = ProductionSystemStatus.objects.filter(filter_objects,func_tst_date__year=year,func_tst='OK(next stage)')
@@ -2420,12 +2696,16 @@ class SmsController:
             prod_func_tst_oklistNext_uplist  = ProductionSystemStatus.objects.filter(filter_objects,func_tst_date__year=year,func_tst='Under process')
             prod_func_tst_oklistNext_haultlist  = ProductionSystemStatus.objects.filter(filter_objects,func_tst_date__year=year,func_tst='Halt')
 
+            prod_func_tst_dummy_bird_count = ProductionSystemStatus.objects.filter(setid_filter, func_tst_dummy_bird_date__year=year).count()
+
             prod_func_tst_dummy_bird_oklist = ProductionSystemStatus.objects.filter(filter_objects,func_tst_dummy_bird_date__year=year,func_tst_dummy_bird='Ok')
             prod_func_tst_dummy_bird_oklistNext = ProductionSystemStatus.objects.filter(filter_objects,func_tst_dummy_bird_date__year=year,func_tst_dummy_bird='OK(next stage)')
             prod_func_tst_dummy_bird_observationlist  = ProductionSystemStatus.objects.filter(filter_objects,func_tst_dummy_bird_date__year=year,func_tst_dummy_bird='Observation(same stage)')
             prod_func_tst_dummy_bird_observationlistNext = ProductionSystemStatus.objects.filter(filter_objects,func_tst_dummy_bird_date__year=year,func_tst_dummy_bird='Observation(next stage)')
             prod_func_tst_dummy_bird_uplist = ProductionSystemStatus.objects.filter(filter_objects,func_tst_dummy_bird_date__year=year,func_tst_dummy_bird='Under process')
             prod_func_tst_dummy_bird_haultlist = ProductionSystemStatus.objects.filter(filter_objects,func_tst_dummy_bird_date__year=year,func_tst_dummy_bird='Halt')
+
+            prod_road_test_count = ProductionSystemStatus.objects.filter(setid_filter, road_test_date__year=year).count()
 
             prod_road_test_oklist = ProductionSystemStatus.objects.filter(filter_objects,road_test_date__year=year,road_test='Ok')
             prod_road_test_oklistNext = ProductionSystemStatus.objects.filter(filter_objects,road_test_date__year=year,road_test='OK(next stage)')
@@ -2434,12 +2714,16 @@ class SmsController:
             prod_road_test_uplist = ProductionSystemStatus.objects.filter(filter_objects,road_test_date__year=year,road_test='Under process')
             prod_road_test_haultlist = ProductionSystemStatus.objects.filter(filter_objects,road_test_date__year=year,road_test='Halt')
 
+            prod_post_road_test_count = ProductionSystemStatus.objects.filter(setid_filter, post_road_test_date__year=year).count()
+
             prod_post_road_test_oklist = ProductionSystemStatus.objects.filter(filter_objects,post_road_test_date__year=year,post_road_test='Ok')
             prod_post_road_test_oklistNext = ProductionSystemStatus.objects.filter(filter_objects,post_road_test_date__year=year,post_road_test='OK(next stage)')
             prod_post_road_test_observationlist  = ProductionSystemStatus.objects.filter(filter_objects,post_road_test_date__year=year,post_road_test='Observation(same stage)')
             prod_post_road_test_observationlistNext = ProductionSystemStatus.objects.filter(filter_objects,post_road_test_date__year=year,post_road_test='Observation(next stage)')
             prod_post_road_test_uplist = ProductionSystemStatus.objects.filter(filter_objects,post_road_test_date__year=year,post_road_test='Under process')
             prod_post_road_test_haultlist = ProductionSystemStatus.objects.filter(filter_objects,post_road_test_date__year=year,post_road_test='Halt')
+
+            prod_integrated_operation_count = ProductionSystemStatus.objects.filter(setid_filter, integrated_operation_date__year=year).count()
 
             prod_integrated_operation_oklist = ProductionSystemStatus.objects.filter(filter_objects,integrated_operation_date__year=year,integrated_operation='Ok')
             prod_integrated_operation_oklistNext = ProductionSystemStatus.objects.filter(filter_objects,integrated_operation_date__year=year,integrated_operation='OK(next stage)')
@@ -2448,12 +2732,16 @@ class SmsController:
             prod_integrated_operation_uplist = ProductionSystemStatus.objects.filter(filter_objects,integrated_operation_date__year=year,integrated_operation='Under process')
             prod_integrated_operation_haultlist = ProductionSystemStatus.objects.filter(filter_objects,integrated_operation_date__year=year,integrated_operation='Halt')
 
+            prod_rain_test_count = ProductionSystemStatus.objects.filter(setid_filter, rain_test_date__year=year).count()
+
             prod_rain_test_oklist = ProductionSystemStatus.objects.filter(filter_objects,rain_test_date__year=year,rain_test='Ok')
             prod_rain_test_oklistNext = ProductionSystemStatus.objects.filter(filter_objects,rain_test_date__year=year,rain_test='OK(next stage)')
             prod_rain_test_observationlist  = ProductionSystemStatus.objects.filter(filter_objects,rain_test_date__year=year,rain_test='Observation(same stage)')
             prod_rain_test_observationlistNext = ProductionSystemStatus.objects.filter(filter_objects,rain_test_date__year=year,rain_test='Observation(next stage)')
             prod_rain_test_uplist = ProductionSystemStatus.objects.filter(filter_objects,rain_test_date__year=year,rain_test='Under process')
             prod_rain_test_haultlist = ProductionSystemStatus.objects.filter(filter_objects,rain_test_date__year=year,rain_test='Halt')
+
+            prod_pre_user_inspection_count = ProductionSystemStatus.objects.filter(setid_filter, pre_user_inspection_date__year=year).count()
 
             prod_pre_user_inspection_oklist = ProductionSystemStatus.objects.filter(filter_objects,pre_user_inspection_date__year=year,pre_user_inspection='Ok')
             prod_pre_user_inspection_oklistNext = ProductionSystemStatus.objects.filter(filter_objects,pre_user_inspection_date__year=year,pre_user_inspection='OK(next stage)')
@@ -2462,12 +2750,16 @@ class SmsController:
             prod_pre_user_inspection_uplist = ProductionSystemStatus.objects.filter(filter_objects,pre_user_inspection_date__year=year,pre_user_inspection='Under process')
             prod_pre_user_inspection_haultlist = ProductionSystemStatus.objects.filter(filter_objects,pre_user_inspection_date__year=year,pre_user_inspection='Halt')
 
+            prod_final_integrated_testing_count = ProductionSystemStatus.objects.filter(setid_filter, final_integrated_testing_date__year=year).count()
+
             prod_final_integrated_testing_oklist = ProductionSystemStatus.objects.filter(filter_objects,final_integrated_testing_date__year=year,final_integrated_testing='Ok')
             prod_final_integrated_testing_oklistNext = ProductionSystemStatus.objects.filter(filter_objects,final_integrated_testing_date__year=year,final_integrated_testing='OK(next stage)')
             prod_final_integrated_testing_observationlist  = ProductionSystemStatus.objects.filter(filter_objects,final_integrated_testing_date__year=year,final_integrated_testing='Observation(same stage)')
             prod_final_integrated_testing_observationlistNext = ProductionSystemStatus.objects.filter(filter_objects,final_integrated_testing_date__year=year,final_integrated_testing='Observation(next stage)')
             prod_final_integrated_testing_uplist = ProductionSystemStatus.objects.filter(filter_objects,final_integrated_testing_date__year=year,final_integrated_testing='Under process')
             prod_final_integrated_testing_haultlist = ProductionSystemStatus.objects.filter(filter_objects,final_integrated_testing_date__year=year,final_integrated_testing='Halt')
+
+            prod_load_unload_on_mlv_hlf_count = ProductionSystemStatus.objects.filter(setid_filter, load_unload_on_mlv_hlf_date__year=year).count()
 
             prod_load_unload_on_mlv_hlf_oklist = ProductionSystemStatus.objects.filter(filter_objects,load_unload_on_mlv_hlf_date__year=year,load_unload_on_mlv_hlf='Ok')
             prod_load_unload_on_mlv_hlf_oklistNext = ProductionSystemStatus.objects.filter(filter_objects,load_unload_on_mlv_hlf_date__year=year,load_unload_on_mlv_hlf='OK(next stage)')
@@ -2477,7 +2769,12 @@ class SmsController:
             prod_load_unload_on_mlv_hlf_haultlist = ProductionSystemStatus.objects.filter(filter_objects,load_unload_on_mlv_hlf_date__year=year,load_unload_on_mlv_hlf='Halt')
 
 
+            # prodTotalCount = prod_blt_count+prod_prehil_count+prod_vibration_count+prod_bhd_count+prod_posthil_count+prod_vibration_count+prod_vibration_count+prod_cg_count+prod_qmc_count+prod_fgt_count+prod_fqm_count+prod_emp_proofing_count+prod_enduser_count+prod_finalintegration_count+prod_road_test_count+prod_post_road_test_count+prod_integrated_operation_count+prod_rain_test_count+prod_sys_align_count+prod_pre_user_inspection_count+prod_load_unload_on_mlv_hlf_count+prod_final_integrated_testing_count+prod_func_tst_count+prod_func_tst_dummy_bird_count+prod_incapsulation_count
+
             # flight system count
+            # flight_blt_count = FlightSystemStatus.objects.filter(setid_filter, blt_date__year=year).count()
+            flightTotalCount = FlightSystemStatus.objects.filter(setid_filter).count()
+
             flight_blt_oklist = FlightSystemStatus.objects.filter(filter_objects, blt_date__year=year,blt_status='Ok')
             flight_blt_oklistNext = FlightSystemStatus.objects.filter(filter_objects, blt_date__year=year,blt_status='OK(next stage)')
             flight_blt_observationlist = FlightSystemStatus.objects.filter(filter_objects,
@@ -2486,6 +2783,8 @@ class SmsController:
                                                                                 blt_date__year=year,blt_status='Observation(next stage)')
             flight_blt_uplist = FlightSystemStatus.objects.filter(filter_objects, blt_date__year=year,blt_status='Under process')
             flight_blt_haultlist = FlightSystemStatus.objects.filter(filter_objects, blt_date__year=year,blt_status='Halt')
+
+            flight_prehil_count = FlightSystemStatus.objects.filter(setid_filter, pre_hil_date__year=year).count()
 
             flight_prehil_oklist = FlightSystemStatus.objects.filter(filter_objects, pre_hil_date__year=year,pre_hil_status='Ok')
             flight_prehil_oklistNext = FlightSystemStatus.objects.filter(filter_objects,
@@ -2497,6 +2796,8 @@ class SmsController:
             flight_prehil_uplist = FlightSystemStatus.objects.filter(filter_objects, pre_hil_date__year=year,pre_hil_status='Under process')
             flight_prehil_haultlist = FlightSystemStatus.objects.filter(filter_objects, pre_hil_date__year=year,pre_hil_status='Halt')
 
+            flight_posthil_count = FlightSystemStatus.objects.filter(setid_filter, post_hil_date__year=year).count()
+
             flight_posthil_oklist = FlightSystemStatus.objects.filter(filter_objects, post_hil_date__year=year,post_hil_status='Ok')
             flight_posthil_oklistNext = FlightSystemStatus.objects.filter(filter_objects,
                                                                           post_hil_date__year=year,post_hil_status='OK(next stage)')
@@ -2506,6 +2807,8 @@ class SmsController:
                                                                                    post_hil_date__year=year,post_hil_status='Observation(next stage)')
             flight_posthil_uplist = FlightSystemStatus.objects.filter(filter_objects, post_hil_date__year=year,post_hil_status='Under process')
             flight_posthil_haultlist = FlightSystemStatus.objects.filter(filter_objects, post_hil_date__year=year,post_hil_status='Halt')
+
+            flight_finalintegration_count = FlightSystemStatus.objects.filter(setid_filter, final_integration_date__year=year).count()
 
             flight_finalintegration_oklist = FlightSystemStatus.objects.filter(filter_objects,
                                                                                final_integration_date__year=year,final_integration_status='Ok')
@@ -2521,6 +2824,8 @@ class SmsController:
             flight_finalintegration_haultlist = FlightSystemStatus.objects.filter(filter_objects,
                                                                                   final_integration_date__year=year,final_integration_status='Halt')
 
+            flight_vibration_count = FlightSystemStatus.objects.filter(setid_filter, vibaration_date__year=year).count()
+
             flight_vibration_oklist = FlightSystemStatus.objects.filter(filter_objects,
                                                                         vibaration_date__year=year,vibaration_status='Ok')
             flight_vibration_oklistNext = FlightSystemStatus.objects.filter(filter_objects,
@@ -2532,6 +2837,9 @@ class SmsController:
             flight_vibration_uplist = FlightSystemStatus.objects.filter(filter_objects,
                                                                         vibaration_date__year=year,vibaration_status='Under process')
             flight_vibration_haultlist = FlightSystemStatus.objects.filter(filter_objects, vibaration_date__year=year,vibaration_status='Halt')
+
+
+            flight_cg_count = FlightSystemStatus.objects.filter(setid_filter, cgbalancing_date__year=year).count()
 
             flight_cg_oklist = FlightSystemStatus.objects.filter(filter_objects,
                                                                  cgbalancing_date__year=year,cgbalancing_date_status='Ok')
@@ -2545,6 +2853,8 @@ class SmsController:
                                                                  cgbalancing_date__year=year,cgbalancing_date_status='Under process')
             flight_cg_haultlist = FlightSystemStatus.objects.filter(filter_objects, cgbalancing_date__year=year,cgbalancing_date_status='Halt')
 
+            flight_fgt_count = FlightSystemStatus.objects.filter(setid_filter, fgt_date__year=year).count()
+
             flight_fgt_oklist = FlightSystemStatus.objects.filter(filter_objects, fgt_date__year=year,fgt_status='Ok')
             flight_fgt_oklistNext = FlightSystemStatus.objects.filter(filter_objects, fgt_date__year=year,fgt_status='OK(next stage)')
             flight_fgt_observationlist = FlightSystemStatus.objects.filter(filter_objects,
@@ -2554,6 +2864,8 @@ class SmsController:
             flight_fgt_uplist = FlightSystemStatus.objects.filter(filter_objects,
                                                                   fgt_date__year=year,fgt_status='Under process')
             flight_fgt_haultlist = FlightSystemStatus.objects.filter(filter_objects, fgt_date__year=year,fgt_status='Halt')
+
+            flight_bhd_count = FlightSystemStatus.objects.filter(setid_filter, bhd_date__year=year).count()
 
             flight_bhd_not_submit = FlightSystemStatus.objects.filter(filter_objects,
                                                                      bhd_date__year=year,bhd_status='Not Submitted')
@@ -2566,12 +2878,15 @@ class SmsController:
             flight_bhd_submitted = FlightSystemStatus.objects.filter(filter_objects,
                                                                        bhd_date__year=year,bhd_status='Submitted')
 
+            flight_fqm_count = FlightSystemStatus.objects.filter(setid_filter, fqm_date__year=year).count()
 
             flight_fqm_planned = FlightSystemStatus.objects.filter(filter_objects,
                                                                    fqm_date__year=year,fqm_status='Planned')
 
             flight_fqm_conducted = FlightSystemStatus.objects.filter(filter_objects,
                                                                      fqm_date__year=year,fqm_status='Conducted')
+
+            flight_qmc_count = FlightSystemStatus.objects.filter(setid_filter, qm_certification_date__year=year).count()
 
             flight_qmc_issued = FlightSystemStatus.objects.filter(filter_objects,
                                                                   qm_certification_date__year=year,qm_certification_status='QM certificate issued')
@@ -2580,6 +2895,9 @@ class SmsController:
                                                                       qm_certification_date__year=year,qm_certification_status='Audit in-process')
             flight_qmc_obs_forwarded = FlightSystemStatus.objects.filter(filter_objects,
                                                                         qm_certification_date__year=year,qm_certification_status='QM Observations Forwarded')
+
+
+            flight_launch_count = FlightSystemStatus.objects.filter(setid_filter, launchact_date__year=year).count()
 
             flight_launch_oklist = FlightSystemStatus.objects.filter(filter_objects, launchact_date__year=year,launchact_status='Ok')
             flight_launch_oklistNext = FlightSystemStatus.objects.filter(filter_objects,
@@ -2593,6 +2911,7 @@ class SmsController:
             flight_launch_haultlist = FlightSystemStatus.objects.filter(filter_objects, launchact_date__year=year,launchact_status='Halt')
 
 
+            flight_sys_align_count = FlightSystemStatus.objects.filter(setid_filter, sys_align_Date__year=year).count()
 
             flight_sys_align_oklist = FlightSystemStatus.objects.filter(filter_objects, sys_align_Date__year=year,sys_align_status='Ok')
             flight_sys_align_oklistNext = FlightSystemStatus.objects.filter(filter_objects,
@@ -2606,6 +2925,7 @@ class SmsController:
             flight_sys_align_haultlist = FlightSystemStatus.objects.filter(filter_objects, sys_align_Date__year=year,sys_align_status='Halt')
 
 
+            flight_incapsulation_count = FlightSystemStatus.objects.filter(setid_filter, incapsulation_date__year=year).count()
 
             flight_incapsulation_oklist = FlightSystemStatus.objects.filter(filter_objects, incapsulation_date__year=year,incapsulation_status='Ok')
             flight_incapsulation_oklistNext = FlightSystemStatus.objects.filter(filter_objects,
@@ -2618,12 +2938,16 @@ class SmsController:
                                                                      incapsulation_date__year=year,incapsulation_status='Under process')
             flight_incapsulation_haultlist = FlightSystemStatus.objects.filter(filter_objects, incapsulation_date__year=year,incapsulation_status='Halt')
 
+            flight_emp_proofing_count = FlightSystemStatus.objects.filter(setid_filter, emp_proofing_date__year=year).count()
+
             flight_emp_proofing_oklist = FlightSystemStatus.objects.filter(filter_objects,emp_proofing_date__year=year,emp_proofing='Ok')
             flight_emp_proofing_oklistNext= FlightSystemStatus.objects.filter(filter_objects,emp_proofing_date__year=year,emp_proofing='OK(next stage)')
             flight_emp_proofing_observationlist  = FlightSystemStatus.objects.filter(filter_objects,emp_proofing_date__year=year,emp_proofing='Observation(same stage)')
             flight_emp_proofing_observationlistNext = FlightSystemStatus.objects.filter(filter_objects,emp_proofing_date__year=year,emp_proofing='Observation(next stage)')
             flight_emp_proofing_uplist = FlightSystemStatus.objects.filter(filter_objects,emp_proofing_date__year=year,emp_proofing='Under process')
             flight_emp_proofing_haultlist = FlightSystemStatus.objects.filter(filter_objects,emp_proofing_date__year=year,emp_proofing='Halt')
+
+            flight_func_tst_count = FlightSystemStatus.objects.filter(setid_filter, func_tst_date__year=year).count()
 
             flight_func_tst_oklistNext_oklist  = FlightSystemStatus.objects.filter(filter_objects,func_tst_date__year=year,func_tst='Ok')
             flight_func_tst_oklistNext_oklistNext  = FlightSystemStatus.objects.filter(filter_objects,func_tst_date__year=year,func_tst='OK(next stage)')
@@ -2632,12 +2956,16 @@ class SmsController:
             flight_func_tst_oklistNext_uplist  = FlightSystemStatus.objects.filter(filter_objects,func_tst_date__year=year,func_tst='Under process')
             flight_func_tst_oklistNext_haultlist  = FlightSystemStatus.objects.filter(filter_objects,func_tst_date__year=year,func_tst='Halt')
 
+            flight_func_tst_dummy_bird_count = FlightSystemStatus.objects.filter(setid_filter, func_tst_dummy_bird_date__year=year).count()
+
             flight_func_tst_dummy_bird_oklist = FlightSystemStatus.objects.filter(filter_objects,func_tst_dummy_bird_date__year=year,func_tst_dummy_bird='Ok')
             flight_func_tst_dummy_bird_oklistNext = FlightSystemStatus.objects.filter(filter_objects,func_tst_dummy_bird_date__year=year,func_tst_dummy_bird='OK(next stage)')
             flight_func_tst_dummy_bird_observationlist  = FlightSystemStatus.objects.filter(filter_objects,func_tst_dummy_bird_date__year=year,func_tst_dummy_bird='Observation(same stage)')
             flight_func_tst_dummy_bird_observationlistNext = FlightSystemStatus.objects.filter(filter_objects,func_tst_dummy_bird_date__year=year,func_tst_dummy_bird='Observation(next stage)')
             flight_func_tst_dummy_bird_uplist = FlightSystemStatus.objects.filter(filter_objects,func_tst_dummy_bird_date__year=year,func_tst_dummy_bird='Under process')
             flight_func_tst_dummy_bird_haultlist = FlightSystemStatus.objects.filter(filter_objects,func_tst_dummy_bird_date__year=year,func_tst_dummy_bird='Halt')
+
+            flight_road_test_count = FlightSystemStatus.objects.filter(setid_filter, road_test_date__year=year).count()
 
             flight_road_test_oklist = FlightSystemStatus.objects.filter(filter_objects,road_test_date__year=year,road_test='Ok')
             flight_road_test_oklistNext = FlightSystemStatus.objects.filter(filter_objects,road_test_date__year=year,road_test='OK(next stage)')
@@ -2646,12 +2974,18 @@ class SmsController:
             flight_road_test_uplist = FlightSystemStatus.objects.filter(filter_objects,road_test_date__year=year,road_test='Under process')
             flight_road_test_haultlist = FlightSystemStatus.objects.filter(filter_objects,road_test_date__year=year,road_test='Halt')
 
+
+            flight_post_road_test_count = FlightSystemStatus.objects.filter(setid_filter, post_road_test_date__year=year).count()
+
             flight_post_road_test_oklist = FlightSystemStatus.objects.filter(filter_objects,post_road_test_date__year=year,post_road_test='Ok')
             flight_post_road_test_oklistNext = FlightSystemStatus.objects.filter(filter_objects,post_road_test_date__year=year,post_road_test='OK(next stage)')
             flight_post_road_test_observationlist  = FlightSystemStatus.objects.filter(filter_objects,post_road_test_date__year=year,post_road_test='Observation(same stage)')
             flight_post_road_test_observationlistNext = FlightSystemStatus.objects.filter(filter_objects,post_road_test_date__year=year,post_road_test='Observation(next stage)')
             flight_post_road_test_uplist = FlightSystemStatus.objects.filter(filter_objects,post_road_test_date__year=year,post_road_test='Under process')
             flight_post_road_test_haultlist = FlightSystemStatus.objects.filter(filter_objects,post_road_test_date__year=year,post_road_test='Halt')
+
+
+            flight_integrated_operation_count = FlightSystemStatus.objects.filter(setid_filter, integrated_operation_date__year=year).count()
 
             flight_integrated_operation_oklist = FlightSystemStatus.objects.filter(filter_objects,integrated_operation_date__year=year,integrated_operation='Ok')
             flight_integrated_operation_oklistNext = FlightSystemStatus.objects.filter(filter_objects,integrated_operation_date__year=year,integrated_operation='OK(next stage)')
@@ -2660,12 +2994,18 @@ class SmsController:
             flight_integrated_operation_uplist = FlightSystemStatus.objects.filter(filter_objects,integrated_operation_date__year=year,integrated_operation='Under process')
             flight_integrated_operation_haultlist = FlightSystemStatus.objects.filter(filter_objects,integrated_operation_date__year=year,integrated_operation='Halt')
 
+
+            flight_rain_test_count = FlightSystemStatus.objects.filter(setid_filter, rain_test_date__year=year).count()
+
             flight_rain_test_oklist = FlightSystemStatus.objects.filter(filter_objects,rain_test_date__year=year,rain_test='Ok')
             flight_rain_test_oklistNext = FlightSystemStatus.objects.filter(filter_objects,rain_test_date__year=year,rain_test='OK(next stage)')
             flight_rain_test_observationlist  = FlightSystemStatus.objects.filter(filter_objects,rain_test_date__year=year,rain_test='Observation(same stage)')
             flight_rain_test_observationlistNext = FlightSystemStatus.objects.filter(filter_objects,rain_test_date__year=year,rain_test='Observation(next stage)')
             flight_rain_test_uplist = FlightSystemStatus.objects.filter(filter_objects,rain_test_date__year=year,rain_test='Under process')
             flight_rain_test_haultlist = FlightSystemStatus.objects.filter(filter_objects,rain_test_date__year=year,rain_test='Halt')
+
+
+            flight_pre_user_inspection_count = FlightSystemStatus.objects.filter(setid_filter, pre_user_inspection_date__year=year).count()
 
             flight_pre_user_inspection_oklist = FlightSystemStatus.objects.filter(filter_objects,pre_user_inspection_date__year=year,pre_user_inspection='Ok')
             flight_pre_user_inspection_oklistNext = FlightSystemStatus.objects.filter(filter_objects,pre_user_inspection_date__year=year,pre_user_inspection='OK(next stage)')
@@ -2674,12 +3014,18 @@ class SmsController:
             flight_pre_user_inspection_uplist = FlightSystemStatus.objects.filter(filter_objects,pre_user_inspection_date__year=year,pre_user_inspection='Under process')
             flight_pre_user_inspection_haultlist = FlightSystemStatus.objects.filter(filter_objects,pre_user_inspection_date__year=year,pre_user_inspection='Halt')
 
+
+            flight_final_integrated_testing_count = FlightSystemStatus.objects.filter(setid_filter, final_integrated_testing_date__year=year).count()
+
             flight_final_integrated_testing_oklist = FlightSystemStatus.objects.filter(filter_objects,final_integrated_testing_date__year=year,final_integrated_testing='Ok')
             flight_final_integrated_testing_oklistNext = FlightSystemStatus.objects.filter(filter_objects,final_integrated_testing_date__year=year,final_integrated_testing='OK(next stage)')
             flight_final_integrated_testing_observationlist  = FlightSystemStatus.objects.filter(filter_objects,final_integrated_testing_date__year=year,final_integrated_testing='Observation(same stage)')
             flight_final_integrated_testing_observationlistNext = FlightSystemStatus.objects.filter(filter_objects,final_integrated_testing_date__year=year,final_integrated_testing='Observation(next stage)')
             flight_final_integrated_testing_uplist = FlightSystemStatus.objects.filter(filter_objects,final_integrated_testing_date__year=year,final_integrated_testing='Under process')
             flight_final_integrated_testing_haultlist = FlightSystemStatus.objects.filter(filter_objects,final_integrated_testing_date__year=year,final_integrated_testing='Halt')
+
+
+            flight_load_unload_on_mlv_hlf_count = FlightSystemStatus.objects.filter(setid_filter, load_unload_on_mlv_hlf_date__year=year).count()
 
             flight_load_unload_on_mlv_hlf_oklist = FlightSystemStatus.objects.filter(filter_objects,load_unload_on_mlv_hlf_date__year=year,load_unload_on_mlv_hlf='Ok')
             flight_load_unload_on_mlv_hlf_oklistNext = FlightSystemStatus.objects.filter(filter_objects,load_unload_on_mlv_hlf_date__year=year,load_unload_on_mlv_hlf='OK(next stage)')
@@ -2688,8 +3034,12 @@ class SmsController:
             flight_load_unload_on_mlv_hlf_uplist = FlightSystemStatus.objects.filter(filter_objects,load_unload_on_mlv_hlf_date__year=year,load_unload_on_mlv_hlf='Under process')
             flight_load_unload_on_mlv_hlf_haultlist = FlightSystemStatus.objects.filter(filter_objects,load_unload_on_mlv_hlf_date__year=year,load_unload_on_mlv_hlf='Halt')
 
-
+            # flightTotalCount = flight_blt_count+flight_prehil_count+flight_posthil_count+flight_vibration_count+flight_cg_count+flight_fgt_count+flight_bhd_count+flight_qmc_count+flight_fqm_count+flight_sys_align_count+flight_incapsulation_count+flight_launch_count+flight_finalintegration_count+flight_emp_proofing_count+flight_road_test_count+flight_post_road_test_count+flight_final_integrated_testing_count+flight_rain_test_count+flight_pre_user_inspection_count+flight_func_tst_count+flight_func_tst_dummy_bird_count+flight_integrated_operation_count+flight_load_unload_on_mlv_hlf_count
             # relifing system count
+
+            # relifing_blt_count = RelifingSystemStatus.objects.filter(setid_filter, blt_date__year=year).count()
+            relifTotalCount = RelifingSystemStatus.objects.filter(setid_filter).count()
+
             relifing_blt_oklist = RelifingSystemStatus.objects.filter(filter_objects, blt_date__year=year,blt_status='Ok')
             relifing_blt_oklistNext = RelifingSystemStatus.objects.filter(filter_objects, blt_date__year=year,blt_status='OK(next stage)')
             relifing_blt_observationlist = RelifingSystemStatus.objects.filter(filter_objects,
@@ -2698,6 +3048,9 @@ class SmsController:
                                                                                    blt_date__year=year,blt_status='Observation(next stage)')
             relifing_blt_uplist = RelifingSystemStatus.objects.filter(filter_objects, blt_date__year=year,blt_status='Under process')
             relifing_blt_haultlist = RelifingSystemStatus.objects.filter(filter_objects, blt_date__year=year,blt_status='Halt')
+
+
+            relifing_prehil_count = RelifingSystemStatus.objects.filter(setid_filter, pre_hil_date__year=year).count()
 
             relifing_prehil_oklist = RelifingSystemStatus.objects.filter(filter_objects,
                                                                          pre_hil_date__year=year,pre_hil_status='Ok')
@@ -2709,6 +3062,9 @@ class SmsController:
                                                                                       pre_hil_date__year=year,pre_hil_status='Observation(next stage)')
             relifing_prehil_uplist = RelifingSystemStatus.objects.filter(filter_objects, pre_hil_date__year=year,pre_hil_status='Under process')
             relifing_prehil_haultlist = RelifingSystemStatus.objects.filter(filter_objects, pre_hil_date__year=year,pre_hil_status='Halt')
+
+
+            relifing_posthil_count = RelifingSystemStatus.objects.filter(setid_filter, post_hil_date__year=year).count()
 
             relifing_posthil_oklist = RelifingSystemStatus.objects.filter(filter_objects,
                                                                           post_hil_date__year=year,post_hil_status='Ok')
@@ -2723,6 +3079,7 @@ class SmsController:
             relifing_posthil_haultlist = RelifingSystemStatus.objects.filter(filter_objects, post_hil_date__year=year,post_hil_status='Halt')
 
 
+            relifing_finalintegration_count = RelifingSystemStatus.objects.filter(setid_filter, final_integration_date__year=year).count()
 
             relifing_finalintegration_oklist = RelifingSystemStatus.objects.filter(filter_objects,
                                                                                    final_integration_date__year=year,final_integration_status='Ok')
@@ -2737,6 +3094,9 @@ class SmsController:
             relifing_finalintegration_haultlist = RelifingSystemStatus.objects.filter(filter_objects,
                                                                                       final_integration_date__year=year,final_integration_status='Halt')
 
+
+            relifing_vibration_count = RelifingSystemStatus.objects.filter(setid_filter, vibaration_date__year=year).count()
+
             relifing_vibration_oklist = RelifingSystemStatus.objects.filter(filter_objects,
                                                                             vibaration_date__year=year,vibaration_status='Ok')
             relifing_vibration_oklistNext = RelifingSystemStatus.objects.filter(filter_objects,
@@ -2748,6 +3108,9 @@ class SmsController:
             relifing_vibration_uplist = RelifingSystemStatus.objects.filter(filter_objects,
                                                                             vibaration_date__year=year,vibaration_status='Under process')
             relifing_vibration_haultlist = RelifingSystemStatus.objects.filter(filter_objects, vibaration_date__year=year,vibaration_status='Halt')
+
+
+            relifing_cg_count = RelifingSystemStatus.objects.filter(setid_filter, cgbalancing_date__year=year).count()
 
             relifing_cg_oklist = RelifingSystemStatus.objects.filter(filter_objects,
                                                                      cgbalancing_date__year=year,cgbalancing_date_status='Ok')
@@ -2761,6 +3124,9 @@ class SmsController:
                                                                      cgbalancing_date__year=year,cgbalancing_date_status='Under process')
             relifing_cg_haultlist = RelifingSystemStatus.objects.filter(filter_objects, cgbalancing_date__year=year,cgbalancing_date_status='Halt')
 
+
+            relifing_fgt_count = RelifingSystemStatus.objects.filter(setid_filter, fgt_date__year=year).count()
+
             relifing_fgt_oklist = RelifingSystemStatus.objects.filter(filter_objects, fgt_date__year=year,fgt_status='Ok')
             relifing_fgt_oklistNext = RelifingSystemStatus.objects.filter(filter_objects, fgt_date__year=year,fgt_status='OK(next stage)')
             relifing_fgt_observationlist = RelifingSystemStatus.objects.filter(filter_objects,
@@ -2770,6 +3136,9 @@ class SmsController:
             relifing_fgt_uplist = RelifingSystemStatus.objects.filter(filter_objects,
                                                                       fgt_date__year=year,fgt_status='Under process')
             relifing_fgt_haultlist = RelifingSystemStatus.objects.filter(filter_objects, fgt_date__year=year,fgt_status='Halt')
+
+
+            relifing_bhd_count = RelifingSystemStatus.objects.filter(setid_filter, bhd_date__year=year).count()
 
             relifing_bhd_not_submit = RelifingSystemStatus.objects.filter(filter_objects,
                                                                          bhd_date__year=year,bhd_status='Not Submitted')
@@ -2782,12 +3151,17 @@ class SmsController:
             relifing_bhd_submitted = RelifingSystemStatus.objects.filter(filter_objects,
                                                                        bhd_date__year=year,bhd_status='Submitted')
 
+
+            relifing_fqm_count = RelifingSystemStatus.objects.filter(setid_filter, fqm_date__year=year).count()
+
             relifing_fqm_planned = RelifingSystemStatus.objects.filter(filter_objects,
                                                                        fqm_date__year=year,fqm_status='Planned')
 
             relifing_fqm_conducted = RelifingSystemStatus.objects.filter(filter_objects,
                                                                          fqm_date__year=year,fqm_status='Conducted')
 
+
+            relifing_qmc_count = RelifingSystemStatus.objects.filter(setid_filter, qm_certification_date__year=year).count()
 
             relifing_qmc_issued = RelifingSystemStatus.objects.filter(filter_objects,
                                                                   qm_certification_date__year=year,qm_certification_status='QM certificate issued')
@@ -2798,6 +3172,7 @@ class SmsController:
                                                                         qm_certification_date__year=year,qm_certification_status='QM Observations Forwarded')
 
 
+            relifing_enduser_count = RelifingSystemStatus.objects.filter(setid_filter, enduser_date__year=year).count()
 
             relifing_enduser_oklist = RelifingSystemStatus.objects.filter(filter_objects,
                                                                           enduser_date__year=year,enduser_status='Ok')
@@ -2812,6 +3187,9 @@ class SmsController:
             relifing_enduser_haultlist = RelifingSystemStatus.objects.filter(filter_objects, enduser_date__year=year,enduser_status='Halt')
 
 
+
+            relifing_sys_align_count = RelifingSystemStatus.objects.filter(setid_filter, sys_align_Date__year=year).count()
+
             relifing_sys_align_oklist = RelifingSystemStatus.objects.filter(filter_objects,
                                                                           sys_align_Date__year=year,sys_align_status='Ok')
             relifing_sys_align_oklistNext = RelifingSystemStatus.objects.filter(filter_objects,
@@ -2825,6 +3203,8 @@ class SmsController:
             relifing_sys_align_haultlist = RelifingSystemStatus.objects.filter(filter_objects, sys_align_Date__year=year,sys_align_status='Halt')
 
 
+            relifing_incapsulation_count = RelifingSystemStatus.objects.filter(setid_filter, incapsulation_date__year=year).count()
+
             relifing_incapsulation_oklist = RelifingSystemStatus.objects.filter(filter_objects,
                                                                           incapsulation_date__year=year,incapsulation_status='Ok')
             relifing_incapsulation_oklistNext = RelifingSystemStatus.objects.filter(filter_objects,
@@ -2837,12 +3217,18 @@ class SmsController:
                                                                           incapsulation_date__year=year,incapsulation_status='Under process')
             relifing_incapsulation_haultlist = RelifingSystemStatus.objects.filter(filter_objects, incapsulation_date__year=year,incapsulation_status='Halt')
 
+
+            relifing_emp_proofing_count = RelifingSystemStatus.objects.filter(setid_filter, emp_proofing_date__year=year).count()
+
             relifing_emp_proofing_oklist = RelifingSystemStatus.objects.filter(filter_objects,emp_proofing_date__year=year,emp_proofing='Ok')
             relifing_emp_proofing_oklistNext= RelifingSystemStatus.objects.filter(filter_objects,emp_proofing_date__year=year,emp_proofing='OK(next stage)')
             relifing_emp_proofing_observationlist  = RelifingSystemStatus.objects.filter(filter_objects,emp_proofing_date__year=year,emp_proofing='Observation(same stage)')
             relifing_emp_proofing_observationlistNext = RelifingSystemStatus.objects.filter(filter_objects,emp_proofing_date__year=year,emp_proofing='Observation(next stage)')
             relifing_emp_proofing_uplist = RelifingSystemStatus.objects.filter(filter_objects,emp_proofing_date__year=year,emp_proofing='Under process')
             relifing_emp_proofing_haultlist = RelifingSystemStatus.objects.filter(filter_objects,emp_proofing_date__year=year,emp_proofing='Halt')
+
+
+            relifing_func_tst_count = RelifingSystemStatus.objects.filter(setid_filter, func_tst_date__year=year).count()
 
             relifing_func_tst_oklistNext_oklist  = RelifingSystemStatus.objects.filter(filter_objects,func_tst_date__year=year,func_tst='Ok')
             relifing_func_tst_oklistNext_oklistNext  = RelifingSystemStatus.objects.filter(filter_objects,func_tst_date__year=year,func_tst='OK(next stage)')
@@ -2851,12 +3237,18 @@ class SmsController:
             relifing_func_tst_oklistNext_uplist  = RelifingSystemStatus.objects.filter(filter_objects,func_tst_date__year=year,func_tst='Under process')
             relifing_func_tst_oklistNext_haultlist  = RelifingSystemStatus.objects.filter(filter_objects,func_tst_date__year=year,func_tst='Halt')
 
+
+            relifing_func_tst_dummy_bird_count = RelifingSystemStatus.objects.filter(setid_filter, func_tst_dummy_bird_date__year=year).count()
+
             relifing_func_tst_dummy_bird_oklist = RelifingSystemStatus.objects.filter(filter_objects,func_tst_dummy_bird_date__year=year,func_tst_dummy_bird='Ok')
             relifing_func_tst_dummy_bird_oklistNext = RelifingSystemStatus.objects.filter(filter_objects,func_tst_dummy_bird_date__year=year,func_tst_dummy_bird='OK(next stage)')
             relifing_func_tst_dummy_bird_observationlist  = RelifingSystemStatus.objects.filter(filter_objects,func_tst_dummy_bird_date__year=year,func_tst_dummy_bird='Observation(same stage)')
             relifing_func_tst_dummy_bird_observationlistNext = RelifingSystemStatus.objects.filter(filter_objects,func_tst_dummy_bird_date__year=year,func_tst_dummy_bird='Observation(next stage)')
             relifing_func_tst_dummy_bird_uplist = RelifingSystemStatus.objects.filter(filter_objects,func_tst_dummy_bird_date__year=year,func_tst_dummy_bird='Under process')
             relifing_func_tst_dummy_bird_haultlist = RelifingSystemStatus.objects.filter(filter_objects,func_tst_dummy_bird_date__year=year,func_tst_dummy_bird='Halt')
+
+
+            relifing_road_test_count = RelifingSystemStatus.objects.filter(setid_filter, road_test_date__year=year).count()
 
             relifing_road_test_oklist = RelifingSystemStatus.objects.filter(filter_objects,road_test_date__year=year,road_test='Ok')
             relifing_road_test_oklistNext = RelifingSystemStatus.objects.filter(filter_objects,road_test_date__year=year,road_test='OK(next stage)')
@@ -2865,12 +3257,18 @@ class SmsController:
             relifing_road_test_uplist = RelifingSystemStatus.objects.filter(filter_objects,road_test_date__year=year,road_test='Under process')
             relifing_road_test_haultlist = RelifingSystemStatus.objects.filter(filter_objects,road_test_date__year=year,road_test='Halt')
 
+
+            relifing_post_road_test_count = RelifingSystemStatus.objects.filter(setid_filter, post_road_test_date__year=year).count()
+
             relifing_post_road_test_oklist = RelifingSystemStatus.objects.filter(filter_objects,post_road_test_date__year=year,post_road_test='Ok')
             relifing_post_road_test_oklistNext = RelifingSystemStatus.objects.filter(filter_objects,post_road_test_date__year=year,post_road_test='OK(next stage)')
             relifing_post_road_test_observationlist  = RelifingSystemStatus.objects.filter(filter_objects,post_road_test_date__year=year,post_road_test='Observation(same stage)')
             relifing_post_road_test_observationlistNext = RelifingSystemStatus.objects.filter(filter_objects,post_road_test_date__year=year,post_road_test='Observation(next stage)')
             relifing_post_road_test_uplist = RelifingSystemStatus.objects.filter(filter_objects,post_road_test_date__year=year,post_road_test='Under process')
             relifing_post_road_test_haultlist = RelifingSystemStatus.objects.filter(filter_objects,post_road_test_date__year=year,post_road_test='Halt')
+
+
+            relifing_integrated_operation_count = RelifingSystemStatus.objects.filter(setid_filter, integrated_operation_date__year=year).count()
 
             relifing_integrated_operation_oklist = RelifingSystemStatus.objects.filter(filter_objects,integrated_operation_date__year=year,integrated_operation='Ok')
             relifing_integrated_operation_oklistNext = RelifingSystemStatus.objects.filter(filter_objects,integrated_operation_date__year=year,integrated_operation='OK(next stage)')
@@ -2879,12 +3277,18 @@ class SmsController:
             relifing_integrated_operation_uplist = RelifingSystemStatus.objects.filter(filter_objects,integrated_operation_date__year=year,integrated_operation='Under process')
             relifing_integrated_operation_haultlist = RelifingSystemStatus.objects.filter(filter_objects,integrated_operation_date__year=year,integrated_operation='Halt')
 
+
+            relifing_rain_test_count = RelifingSystemStatus.objects.filter(setid_filter, rain_test_date__year=year).count()
+
             relifing_rain_test_oklist = RelifingSystemStatus.objects.filter(filter_objects,rain_test_date__year=year,rain_test='Ok')
             relifing_rain_test_oklistNext = RelifingSystemStatus.objects.filter(filter_objects,rain_test_date__year=year,rain_test='OK(next stage)')
             relifing_rain_test_observationlist  = RelifingSystemStatus.objects.filter(filter_objects,rain_test_date__year=year,rain_test='Observation(same stage)')
             relifing_rain_test_observationlistNext = RelifingSystemStatus.objects.filter(filter_objects,rain_test_date__year=year,rain_test='Observation(next stage)')
             relifing_rain_test_uplist = RelifingSystemStatus.objects.filter(filter_objects,rain_test_date__year=year,rain_test='Under process')
             relifing_rain_test_haultlist = RelifingSystemStatus.objects.filter(filter_objects,rain_test_date__year=year,rain_test='Halt')
+
+
+            relifing_pre_user_inspection_count = RelifingSystemStatus.objects.filter(setid_filter, pre_user_inspection_date__year=year).count()
 
             relifing_pre_user_inspection_oklist = RelifingSystemStatus.objects.filter(filter_objects,pre_user_inspection_date__year=year,pre_user_inspection='Ok')
             relifing_pre_user_inspection_oklistNext = RelifingSystemStatus.objects.filter(filter_objects,pre_user_inspection_date__year=year,pre_user_inspection='OK(next stage)')
@@ -2893,6 +3297,9 @@ class SmsController:
             relifing_pre_user_inspection_uplist = RelifingSystemStatus.objects.filter(filter_objects,pre_user_inspection_date__year=year,pre_user_inspection='Under process')
             relifing_pre_user_inspection_haultlist = RelifingSystemStatus.objects.filter(filter_objects,pre_user_inspection_date__year=year,pre_user_inspection='Halt')
 
+
+            relifing_final_integrated_testing_count = RelifingSystemStatus.objects.filter(setid_filter, final_integrated_testing_date__year=year).count()
+
             relifing_final_integrated_testing_oklist = RelifingSystemStatus.objects.filter(filter_objects,final_integrated_testing_date__year=year,final_integrated_testing='Ok')
             relifing_final_integrated_testing_oklistNext = RelifingSystemStatus.objects.filter(filter_objects,final_integrated_testing_date__year=year,final_integrated_testing='OK(next stage)')
             relifing_final_integrated_testing_observationlist  = RelifingSystemStatus.objects.filter(filter_objects,final_integrated_testing_date__year=year,final_integrated_testing='Observation(same stage)')
@@ -2900,12 +3307,18 @@ class SmsController:
             relifing_final_integrated_testing_uplist = RelifingSystemStatus.objects.filter(filter_objects,final_integrated_testing_date__year=year,final_integrated_testing='Under process')
             relifing_final_integrated_testing_haultlist = RelifingSystemStatus.objects.filter(filter_objects,final_integrated_testing_date__year=year,final_integrated_testing='Halt')
 
+
+            relifing_load_unload_on_mlv_hlf_count = RelifingSystemStatus.objects.filter(setid_filter, load_unload_on_mlv_hlf_date__year=year).count()
+
             relifing_load_unload_on_mlv_hlf_oklist = RelifingSystemStatus.objects.filter(filter_objects,load_unload_on_mlv_hlf_date__year=year,load_unload_on_mlv_hlf='Ok')
             relifing_load_unload_on_mlv_hlf_oklistNext = RelifingSystemStatus.objects.filter(filter_objects,load_unload_on_mlv_hlf_date__year=year,load_unload_on_mlv_hlf='OK(next stage)')
             relifing_load_unload_on_mlv_hlf_observationlist  = RelifingSystemStatus.objects.filter(filter_objects,load_unload_on_mlv_hlf_date__year=year,load_unload_on_mlv_hlf='Observation(same stage)')
             relifing_load_unload_on_mlv_hlf_observationlistNext = RelifingSystemStatus.objects.filter(filter_objects,load_unload_on_mlv_hlf_date__year=year,load_unload_on_mlv_hlf='Observation(next stage)')
             relifing_load_unload_on_mlv_hlf_uplist = RelifingSystemStatus.objects.filter(filter_objects,load_unload_on_mlv_hlf_date__year=year,load_unload_on_mlv_hlf='Under process')
             relifing_load_unload_on_mlv_hlf_haultlist = RelifingSystemStatus.objects.filter(filter_objects,load_unload_on_mlv_hlf_date__year=year,load_unload_on_mlv_hlf='Halt')
+
+            # relifTotalCount = relifing_blt_count+relifing_prehil_count+relifing_posthil_count+relifing_vibration_count+relifing_cg_count+relifing_finalintegration_count+relifing_fgt_count+relifing_qmc_count+relifing_fqm_count+relifing_bhd_count+relifing_sys_align_count+relifing_incapsulation_count+relifing_emp_proofing_count+relifing_road_test_count+relifing_post_road_test_count+relifing_integrated_operation_count+relifing_rain_test_count+relifing_func_tst_count+relifing_func_tst_dummy_bird_count+relifing_final_integrated_testing_count+relifing_pre_user_inspection_count+relifing_enduser_count+relifing_load_unload_on_mlv_hlf_count
+
             dist = {
                 'prod_blt_ok': prod_blt_oklist.count(),
                 'prod_blt_ok_next': prod_blt_oklistNext.count(),
@@ -3332,6 +3745,9 @@ class SmsController:
                 'flight_load_unload_on_mlv_hlf_observationlistNext' : flight_load_unload_on_mlv_hlf_observationlistNext.count(),
                 'flight_load_unload_on_mlv_hlf_uplist' : flight_load_unload_on_mlv_hlf_uplist.count(),
                 'flight_load_unload_on_mlv_hlf_haultlist' : flight_load_unload_on_mlv_hlf_haultlist.count(),
+                'prodTotalCount': prodTotalCount,
+                'flightTotalCount': flightTotalCount,
+                'relifTotalCount': relifTotalCount
             }
 
             return JsonResponse({'message': 'true', 'data': dist}, status=200)

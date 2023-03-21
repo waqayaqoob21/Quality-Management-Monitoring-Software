@@ -5,6 +5,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.views import APIView
 
 from usermanagement.UserController import *
+
 user_obj = UserController()
 
 class AddUserAPIView(APIView):
@@ -19,10 +20,34 @@ class GetUserListAPIVIEW(APIView):
         result = user_obj.GetUserList(request)
         return result
 
+class DeleteUserAPIVIEW(APIView):
+    permission_classes = [AllowAny]
+    def get(self, request):
+        result = user_obj.DeleteUser(request)
+        return result
 
 
+class GetUserMotorListAPIVIEW(APIView):
+    permission_classes = [AllowAny]
+    def get(self, request):
+        result = user_obj.getUserMotorList(request)
+        return result
 
-
+class GetUserProductionListAPIVIEW(APIView):
+    permission_classes = [AllowAny]
+    def get(self, request):
+        result = user_obj.getUserProductionList(request)
+        return result
+class GetUserRelifingListAPIVIEW(APIView):
+    permission_classes = [AllowAny]
+    def get(self, request):
+        result = user_obj.getUserRelifingList(request)
+        return result
+class GetUserFlightListAPIVIEW(APIView):
+    permission_classes = [AllowAny]
+    def get(self, request):
+        result = user_obj.getUserFlightList(request)
+        return result
 
   # ================================== User Login===============================================
 class UserLoginApiView(TokenObtainPairView):
