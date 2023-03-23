@@ -273,6 +273,7 @@ class MpmController:
                 get_motor = ActiveMotors.objects.filter(id=id).first()
                 if get_motor is not None:
                     if request['qualification_insulation_lining_propellant_rm'] != get_motor.qualification_insulation_lining_propellant_rm \
+                        or request['qualification_insulation_lining_propellant_remarks'] != get_motor.qualification_insulation_lining_propellant_rm \
                         or request['Acceptance_of_casting'] != get_motor.acceptance_casting  or  request['Sand_blasting'] != get_motor.sandblasting \
                         or request['motor_Insulation'] != get_motor.insulation or request['UTandRTofInsulated_Case'] != get_motor.ut_rt_insulated_case \
                         or request['UTandRTofInsulated_Case_date'] != get_motor.ut_rt_insulated_case_date or request['AcceptanceofSilver_Material'] != get_motor.acceptance_silver_material\
@@ -323,7 +324,69 @@ class MpmController:
                         or request['filling_date'] != get_motor.filling_date \
                         or request['assembling_integration_date'] != get_motor.assembling_integration_date \
                         or request['qualification_testing_date'] != get_motor.qualification_testing_date \
-                        or request['performance_testing_date'] != get_motor.performance_testing_date:
+                        or request['performance_testing_date'] != get_motor.performance_testing_date \
+                            or request['Acceptance_of_casting_remarks'] != get_motor.acceptance_casting_remarks or request['Sand_blasting_remarks'] != get_motor.sandblasting_remarks \
+                            or request['motor_Insulation_remarks'] != get_motor.insulation_remarks \
+                            or request['UTandRTofInsulated_Case_Remarks'] != get_motor.ut_rt_insulated_case_remarks \
+                            or request['AcceptanceofSilver_Material_Remarks'] != get_motor.acceptance_silver_material_remarks \
+                            or request['Silver_Application_Remarks'] != get_motor.silver_application_remarks \
+                            or request['Formulationtailoringoflinerand_propellant_remarks'] != get_motor.formulation_tailoring_liner_propellant_remarks \
+                            or request['ConditioningofRaw_Material_remarks'] != get_motor.conditioning_raw_materials_remarks \
+                            or request['conditioning_of_lining_remarks'] != get_motor.conditioning_of_lining_remarks \
+                            or request['Lining_motor_remarks'] != get_motor.lining or request['Casting_motor_remarks'] != get_motor.casting_remarks \
+                            or request['Curing_motor_remarks'] != get_motor.curing_remarks \
+                            or request['Liner_Mechanical_Properties_Remarks'] != get_motor.liner_mechanical_properties_remarks \
+                            or request['Propellant_Mechanical_Properties_Remarks'] != get_motor.propellant_mechanical_properties_remarks \
+                            or request['Interfacebond_strength_Remarks'] != get_motor.interface_bond_strength_remarks \
+                            or request['Propellant_burn_rate_Remarks'] != get_motor.propellant_burn_rate_remarks \
+                            or request['Trimming_of_propellant_grain_remarks'] != get_motor.trimming_Propellant_grain_remarks \
+                            or request['mass_liner_insulation_propellant_srm_remarks'] != get_motor.mass_liner_insulation_propellant_srm_remarks \
+                            or request['ut_endoscopy_rt_grain_remarks'] != get_motor.ut_endoscopy_rt_grain_remarks \
+                            or request['ncr_status_ramarks'] != get_motor.ncr_status_remarks \
+                            or request['matiral_qualified_remarks'] != get_motor.matiral_qualified_remarks \
+                            or request['compo_manufacturing_remarks'] != get_motor.compo_manufacturing_remarks \
+                            or request['powerpack_assembly_remarks'] != get_motor.powerpack_assembly_remarks \
+                            or request['powerpack_testing_remarks'] != get_motor.powerpack_testing_remarks \
+                            or request['raw_material_inspection_remarks'] != get_motor.raw_material_inspection_remarks \
+                            or request['pressing_electrode_remarks'] != get_motor.pressing_electrode_remarks \
+                            or request['formation_process_remarks'] != get_motor.formation_process_remarks \
+                            or request['assembly_process_remarks'] != get_motor.assembly_process_remarks \
+                            or request['battery_testing_remarks'] != get_motor.battery_testing_remarks \
+                            or request['final_qualification_remarks'] != get_motor.final_qualification_remarks \
+                            or request['qualification_raw_material_remarks'] != get_motor.qualification_raw_material_remarks \
+                            or request['filling_remarks'] != get_motor.filling_remarks \
+                            or request['assembling_integration_remarks'] != get_motor.assembling_integration_remarks \
+                            or request['qualification_testing_remarks'] != get_motor.qualification_testing_remarks \
+                            or request['performance_testing_remarks'] != get_motor.performance_testing_remarks \
+                            or request['ncr_status_ramarks'] != get_motor.ncr_status_remarks \
+                            or request['matiral_qualified_remarks'] != get_motor.matiral_qualified_remarks \
+                            or request['compo_manufacturing_remarks'] != get_motor.compo_manufacturing_remarks \
+                            or request['powerpack_assembly_remarks'] != get_motor.powerpack_assembly_remarks \
+                            or request['powerpack_testing_remarks'] != get_motor.powerpack_testing_remarks \
+                            or request['mechanical_properties_liner'] != get_motor.mechanical_properties_liner \
+                            or request['mechanical_properties_liner_date'] != get_motor.mechanical_properties_liner_date \
+                            or request['mechanical_properties_liner_remarks'] != get_motor.mechanical_properties_liner_remarks \
+                            or request['mechanical_properties_propellant'] != get_motor.mechanical_properties_propellant \
+                            or request['mechanical_properties_propellant_remarks'] != get_motor.mechanical_properties_propellant_remarks \
+                            or request['mechanical_properties_propellant_remarks'] != get_motor.mechanical_properties_propellant_remarks \
+                            or request['mass_liner'] != get_motor.mass_liner \
+                            or request['mass_liner_date'] != get_motor.mass_liner_date \
+                            or request['mass_liner_remarks'] != get_motor.mass_liner_remarks \
+                            or request['mass_insulation'] != get_motor.mass_insulation \
+                            or request['mass_insulation_date'] != get_motor.mass_insulation_date \
+                            or request['mass_insulation_remarks'] != get_motor.mass_insulation_remarks \
+                            or request['mass_propellant'] != get_motor.mass_propellant \
+                            or request['mass_propellant_date'] != get_motor.mass_propellant_date \
+                            or request['mass_propellant_remarks'] != get_motor.mass_propellant_remarks \
+                            or request['overall_qualification_status'] != get_motor.overall_qualification_status \
+                            or request['overall_qualification_date'] != get_motor.overall_qualification_date \
+                            or request['overall_qualification_remarks'] != get_motor.overall_qualification_remarks \
+                            or request['bhd_status'] != get_motor.bhd_status \
+                            or request['bhd_date'] != get_motor.bhd_date \
+                            or request['bhd_remarks'] != get_motor.bhd_remarks \
+                            or request['qm_certification_status'] != get_motor.qm_certification_status \
+                            or request['qm_certification_date'] != get_motor.qm_certification_date \
+                            or request['qm_certification_remarks'] != get_motor.qm_certification_remarks:
 
                         MotorHistory = ActiveMotorsHistory()
                         MotorHistory.active_motor_id = get_motor.id
