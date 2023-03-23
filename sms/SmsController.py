@@ -158,7 +158,25 @@ class SmsController:
                         'bhd_status'] != get_prod.bhd_status or request['fqm_status'] != get_prod.fqm_status or request[
                         'qm_certification_status'] != get_prod.qm_certification_status or \
                             request['incapsulation_status'] != get_prod.incapsulation_status or \
-                            request['sys_align_status'] != get_prod.sys_align_status:
+                            request['sys_align_status'] != get_prod.sys_align_status or \
+                            request['blt_date'] != get_prod.blt_date or request['pre_hil_date'] != get_prod.pre_hil_date or \
+                            request['vibaration_date'] != get_prod.vibaration_date or request['post_hil_date'] != get_prod.post_hil_date or \
+                            request['fgt_date'] != get_prod.fgt_date or request['final_integration_date'] != get_prod.final_integration_date or \
+                            request['bhd_date'] != get_prod.bhd_date or request['fqm_date'] != get_prod.fqm_date or \
+                            request['qm_certification_date'] != get_prod.qm_certification_date or \
+                            request['incapsulation_date'] != get_prod.incapsulation_date or \
+                            request['sys_align_Date'] != get_prod.sys_align_Date or \
+                            request['emp_proofing'] != get_prod.emp_proofing or request['emp_proofing_date'] != get_prod.emp_proofing_date or\
+                            request['func_tst'] != get_prod.func_tst or request['func_tst_date'] != get_prod.func_tst_date or \
+                            request['func_tst_dummy_bird'] != get_prod.func_tst_dummy_bird or request['func_tst_dummy_bird_date'] != get_prod.func_tst_dummy_bird_date or\
+                            request['road_test'] != get_prod.road_test or request['road_test_date'] != get_prod.road_test_date or\
+                            request['post_road_test'] != get_prod.post_road_test or request['post_road_test_date'] != get_prod.post_road_test_date or \
+                            request['integrated_operation'] != get_prod.integrated_operation or request['integrated_operation_date'] != get_prod.integrated_operation_date or \
+                            request['rain_test'] != get_prod.rain_test or request['rain_test_date'] != get_prod.rain_test_date or\
+                            request['pre_user_inspection'] != get_prod.pre_user_inspection or request['pre_user_inspection_date'] != get_prod.pre_user_inspection_date or\
+                            request['final_integrated_testing'] != get_prod.final_integrated_testing or request['final_integrated_testing_date'] != get_prod.final_integrated_testing_date or  \
+                            request['load_unload_on_mlv_hlf_date'] != get_prod.load_unload_on_mlv_hlf_date or request['enduser_date'] != get_prod.enduser_date or \
+                            request['enduser_status'] != get_prod.enduser_status:
                         ProdHistoryModal = ProductionSystemStatusHistory()
                         ProdHistoryModal.prod_id = get_prod.id
                         ProdHistoryModal.system = get_prod.system
@@ -976,7 +994,39 @@ class SmsController:
                     'bhd_status'] != get_prod.bhd_status or request['fqm_status'] != get_prod.fqm_status or request[
                     'qm_certification_status'] != get_prod.qm_certification_status or \
                         request['incapsulation_status'] != get_prod.incapsulation_status or \
-                        request['sys_align_status'] != get_prod.sys_align_status:
+                        request['sys_align_status'] != get_prod.sys_align_status or \
+                        request['blt_date'] != get_prod.blt_date or request['pre_hil_date'] != get_prod.pre_hil_date or \
+                        request['vibaration_date'] != get_prod.vibaration_date or request[
+                    'post_hil_date'] != get_prod.post_hil_date or \
+                        request['fgt_date'] != get_prod.fgt_date or request[
+                    'final_integration_date'] != get_prod.final_integration_date or \
+                        request['bhd_date'] != get_prod.bhd_date or request['fqm_date'] != get_prod.fqm_date or \
+                        request['qm_certification_date'] != get_prod.qm_certification_date or \
+                        request['incapsulation_date'] != get_prod.incapsulation_date or \
+                        request['sys_align_Date'] != get_prod.sys_align_Date or \
+                        request['emp_proofing'] != get_prod.emp_proofing or request[
+                    'emp_proofing_date'] != get_prod.emp_proofing_date or \
+                        request['func_tst'] != get_prod.func_tst or request[
+                    'func_tst_date'] != get_prod.func_tst_date or \
+                        request['func_tst_dummy_bird'] != get_prod.func_tst_dummy_bird or request[
+                    'func_tst_dummy_bird_date'] != get_prod.func_tst_dummy_bird_date or \
+                        request['road_test'] != get_prod.road_test or request[
+                    'road_test_date'] != get_prod.road_test_date or \
+                        request['post_road_test'] != get_prod.post_road_test or request[
+                    'post_road_test_date'] != get_prod.post_road_test_date or \
+                        request['integrated_operation'] != get_prod.integrated_operation or request[
+                    'integrated_operation_date'] != get_prod.integrated_operation_date or \
+                        request['rain_test'] != get_prod.rain_test or request[
+                    'rain_test_date'] != get_prod.rain_test_date or \
+                        request['pre_user_inspection'] != get_prod.pre_user_inspection or request[
+                    'pre_user_inspection_date'] != get_prod.pre_user_inspection_date or \
+                        request['final_integrated_testing'] != get_prod.final_integrated_testing or request[
+                    'final_integrated_testing_date'] != get_prod.final_integrated_testing_date or \
+                        request['load_unload_on_mlv_hlf_date'] != get_prod.load_unload_on_mlv_hlf_date or request[
+                    'launchact_status'] != get_prod.launchact_status or \
+                        request['launchact_date'] != get_prod.launchact_date:
+
+
                     print("add data in flight history")
                     FlightHistoryModal = FlightSystemStatusHistory()
                     FlightHistoryModal.f_id = get_prod.id
@@ -1767,7 +1817,25 @@ class SmsController:
                         'bhd_status'] != get_prod.bhd_status or request['fqm_status'] != get_prod.fqm_status or request[
                         'qm_certification_status'] != get_prod.qm_certification_status or \
                             request['incapsulation_status'] != get_prod.incapsulation_status or \
-                            request['sys_align_status'] != get_prod.sys_align_status:
+                            request['sys_align_status'] != get_prod.sys_align_status or \
+                            request['blt_date'] != get_prod.blt_date or request['pre_hil_date'] != get_prod.pre_hil_date or \
+                            request['vibaration_date'] != get_prod.vibaration_date or request['post_hil_date'] != get_prod.post_hil_date or \
+                            request['fgt_date'] != get_prod.fgt_date or request['final_integration_date'] != get_prod.final_integration_date or \
+                            request['bhd_date'] != get_prod.bhd_date or request['fqm_date'] != get_prod.fqm_date or \
+                            request['qm_certification_date'] != get_prod.qm_certification_date or \
+                            request['incapsulation_date'] != get_prod.incapsulation_date or \
+                            request['sys_align_Date'] != get_prod.sys_align_Date or \
+                            request['emp_proofing'] != get_prod.emp_proofing or request['emp_proofing_date'] != get_prod.emp_proofing_date or\
+                            request['func_tst'] != get_prod.func_tst or request['func_tst_date'] != get_prod.func_tst_date or \
+                            request['func_tst_dummy_bird'] != get_prod.func_tst_dummy_bird or request['func_tst_dummy_bird_date'] != get_prod.func_tst_dummy_bird_date or\
+                            request['road_test'] != get_prod.road_test or request['road_test_date'] != get_prod.road_test_date or\
+                            request['post_road_test'] != get_prod.post_road_test or request['post_road_test_date'] != get_prod.post_road_test_date or \
+                            request['integrated_operation'] != get_prod.integrated_operation or request['integrated_operation_date'] != get_prod.integrated_operation_date or \
+                            request['rain_test'] != get_prod.rain_test or request['rain_test_date'] != get_prod.rain_test_date or\
+                            request['pre_user_inspection'] != get_prod.pre_user_inspection or request['pre_user_inspection_date'] != get_prod.pre_user_inspection_date or\
+                            request['final_integrated_testing'] != get_prod.final_integrated_testing or request['final_integrated_testing_date'] != get_prod.final_integrated_testing_date or  \
+                            request['load_unload_on_mlv_hlf_date'] != get_prod.load_unload_on_mlv_hlf_date or request['enduser_date'] != get_prod.enduser_date or \
+                            request['enduser_status'] != get_prod.enduser_status:
                         print("add data in flight history")
                         RelifingHistoryModal = RelifingSystemStatusHistory()
                         RelifingHistoryModal.r_id = get_prod.id

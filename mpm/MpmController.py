@@ -290,7 +290,41 @@ class MpmController:
                         or request['battery_testing_status'] != get_motor.battery_testing_status or request['final_qualification_status'] != get_motor.final_qualification_status \
                         or request['qualification_raw_material_status'] != get_motor.qualification_raw_material_status or request['filling_status'] != get_motor.filling_status \
                         or request['assembling_integration_status'] != get_motor.assembling_integration_status or request['qualification_testing_status'] != get_motor.qualification_testing_status \
-                        or request['performance_testing_status'] != get_motor.performance_testing_status or request['qualification_testing_status'] != get_motor.qualification_testing_status:
+                        or request['performance_testing_status'] != get_motor.performance_testing_status or request['qualification_testing_status'] != get_motor.qualification_testing_status \
+                        or request['qualification_insulation_lining_propellant_rm_date'] != get_motor.qualification_insulation_lining_propellant_rm_date \
+                        or request['Acceptance_of_casting_date'] != get_motor.acceptance_casting or request['Sand_blasting_date'] != get_motor.sandblasting_date \
+                        or request['motor_Insulation_date'] != get_motor.insulation_date  \
+                        or request['UTandRTofInsulated_Case_date'] != get_motor.ut_rt_insulated_case_date \
+                        or request['AcceptanceofSilver_Material_date'] != get_motor.acceptance_silver_material_date \
+                        or request['Silver_Application_date'] != get_motor.silver_application_date \
+                        or request['Formulationtailoringoflinerand_propellant_date'] != get_motor.formulation_tailoring_liner_propellant_date \
+                        or request['ConditioningofRaw_Material_date'] != get_motor.conditioning_raw_materials_date \
+                        or request['Lining_motor_date'] != get_motor.lining or request['Casting_motor'] != get_motor.casting_date \
+                        or request['Curing_motor_date'] != get_motor.curing_date \
+                        or request['Liner_Mechanical_Properties_date'] != get_motor.liner_mechanical_properties_date \
+                        or request['Propellant_Mechanical_Properties_date'] != get_motor.propellant_mechanical_properties_date \
+                        or request['Interfacebond_strength_date'] != get_motor.interface_bond_strength_date \
+                        or request['Propellant_burn_rate_date'] != get_motor.propellant_burn_rate_date \
+                        or request['Trimming_of_propellant_grain_date'] != get_motor.trimming_Propellant_grain_date \
+                        or request['mass_liner_insulation_propellant_srm_date'] != get_motor.mass_liner_insulation_propellant_srm_date \
+                        or request['ut_endoscopy_rt_grain_date'] != get_motor.ut_endoscopy_rt_grain_date \
+                        or request['ncr_status_ramarks'] != get_motor.ncr_status_remarks \
+                        or request['matiral_qualified_date'] != get_motor.matiral_qualified_date \
+                        or request['compo_manufacturing_date'] != get_motor.compo_manufacturing_date \
+                        or request['powerpack_assembly_date'] != get_motor.powerpack_assembly_date \
+                        or request['powerpack_testing_date'] != get_motor.powerpack_testing_date \
+                        or request['raw_material_inspection_date'] != get_motor.raw_material_inspection_date \
+                        or request['pressing_electrode_date'] != get_motor.pressing_electrode_date \
+                        or request['formation_process_date'] != get_motor.formation_process_date \
+                        or request['assembly_process_date'] != get_motor.assembly_process_date \
+                        or request['battery_testing_date'] != get_motor.battery_testing_date \
+                        or request['final_qualification_date'] != get_motor.final_qualification_date \
+                        or request['qualification_raw_material_date'] != get_motor.qualification_raw_material_date \
+                        or request['filling_date'] != get_motor.filling_date \
+                        or request['assembling_integration_date'] != get_motor.assembling_integration_date \
+                        or request['qualification_testing_date'] != get_motor.qualification_testing_date \
+                        or request['performance_testing_date'] != get_motor.performance_testing_date:
+
                         MotorHistory = ActiveMotorsHistory()
                         MotorHistory.active_motor_id = get_motor.id
                         MotorHistory.system_type = get_motor.system_type
