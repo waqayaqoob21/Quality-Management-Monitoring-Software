@@ -68,7 +68,8 @@ class UserLoginApiView(TokenObtainPairView):
                                  'email': serializer.user.email, 'first_name': serializer.user.first_name,
                                  'last_name': serializer.user.last_name, 'is_superuser': serializer.user.is_superuser,
                                  'prod_roles': userRolesData.prod_roles, 'relif_roles': userRolesData.relif_roles,
-                                 'flight_roles': userRolesData.flight_roles, 'motor_roles': userRolesData.motor_roles
+                                 'flight_roles': userRolesData.flight_roles, 'motor_roles': userRolesData.motor_roles,
+                                 'battery_roles': userRolesData.battery_roles, 'pyro_roles': userRolesData.pyro_roles
                                  }
                     return JsonResponse(
                         {'message': "Login Successfully", 'Token': serializer.validated_data,

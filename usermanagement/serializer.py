@@ -12,7 +12,7 @@ class UserSerializer(serializers.ModelSerializer):
 class UserRolesSerializer(serializers.ModelSerializer):
     class Meta(object):
         model = UserRoles
-        fields = ['id','prod_roles','relif_roles','flight_roles','motor_roles','user_id']
+        fields = ['id','prod_roles','relif_roles','flight_roles','motor_roles','battery_roles','pyro_roles','user_id']
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):

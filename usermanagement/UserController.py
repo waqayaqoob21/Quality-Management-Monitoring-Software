@@ -8,6 +8,7 @@ from sms.models import  *
 from sms.serializers import *
 from mpm.models import *
 from mpm.serializer import *
+from django.db.models import F, Q
 
 class UserController:
 
@@ -31,14 +32,18 @@ class UserController:
                 userModel.is_staff = 'True'
                 userModel.save()
                 username = User.objects.filter(username = uname).first()
+                user_roles = UserRoles.objects.filter(user_id = username.id).first()
                 if username != '':
                     rolesModel = UserRoles()
-                    rolesModel.user_id = username.id
-                    rolesModel.prod_roles = request['prod_roles']
-                    rolesModel.relif_roles = request['relif_roles']
-                    rolesModel.flight_roles = request['flight_roles']
-                    rolesModel.motor_roles = request['motor_roles']
-                    rolesModel.save()
+                    if user_roles is None:
+                        rolesModel.user_id = username.id
+                        rolesModel.prod_roles = request['prod_roles']
+                        rolesModel.relif_roles = request['relif_roles']
+                        rolesModel.flight_roles = request['flight_roles']
+                        rolesModel.motor_roles = request['motor_roles']
+                        rolesModel.battery_roles = request['battery_roles']
+                        rolesModel.pyro_roles = request['pyro_roles']
+                        rolesModel.save()
                 return JsonResponse({'masssage': 'User Added Successfully!'},status=200)
             else:
                 userModel = User.objects.filter(id=id).first()
@@ -61,6 +66,8 @@ class UserController:
                     userRole.relif_roles = request['relif_roles']
                     userRole.flight_roles = request['flight_roles']
                     userRole.motor_roles = request['motor_roles']
+                    userRole.battery_roles = request['battery_roles']
+                    userRole.pyro_roles = request['pyro_roles']
                     userRole.save()
                 return JsonResponse({'masssage': 'User Updated Successfully!'}, status=200)
         except:
@@ -75,7 +82,7 @@ class UserController:
             doc_list = []
             cursor = connection.cursor()
             query = "SELECT au.id,au.first_name,au.last_name,au.username,au.password, "\
-                    "ur.prod_roles,ur.flight_roles,ur.relif_roles,ur.motor_roles  " \
+                    "ur.prod_roles,ur.flight_roles,ur.relif_roles,ur.motor_roles,ur.battery_roles,ur.pyro_roles  " \
                     "FROM public.auth_user au " \
                     "FULL OUTER JOIN "\
                     "public.usermanagement_userroles ur ON CAST(ur.user_id AS INTEGER) = au.id ORDER BY au.id DESC;"
@@ -106,12 +113,60 @@ class UserController:
     def getUserMotorList(request):
         try:
             userId = request.query_params['id']
-            print(userId)
-            data = ActiveMotors.objects.filter(user_id=userId)
+            current_comp = request.query_params['component']
+            comp = current_comp.split('[')
+            component = comp[0]
+            def get_filter(field_name, filter_condition, filter_value):
+                if filter_condition.strip() == "contains":
+                    kwargs = {
+                        '{0}__icontains'.format(field_name): filter_value
+                    }
+                    return Q(**kwargs)
+
+                if filter_condition.strip() == "not_equal":
+                    kwargs = {
+                        '{0}__iexact'.format(field_name): filter_value
+                    }
+                    return ~Q(**kwargs)
+
+                if filter_condition.strip() == "starts_with":
+                    kwargs = {
+                        '{0}__istartswith'.format(field_name): filter_value
+                    }
+                    return Q(**kwargs)
+                if filter_condition.strip() == "equal":
+                    kwargs = {
+                        '{0}__iexact'.format(field_name): filter_value
+                    }
+                    return Q(**kwargs)
+
+                if filter_condition.strip() == "not_equal":
+                    kwargs = {
+                        '{0}__ne'.format(field_name): filter_value
+                    }
+                    return ~Q(**kwargs)
+                if filter_condition.strip() == "less_than":
+                    kwargs = {
+                        '{0}__lt'.format(field_name): filter_value
+                    }
+                    return ~Q(**kwargs)
+                if filter_condition.strip() == "greater_than":
+                    kwargs = {
+                        '{0}__gt'.format(field_name): filter_value
+                    }
+                    return ~Q(**kwargs)
+
+            typeQuery = Q()
+            filter_objects = Q()
+
+            if component !='':
+                filter_objects &= get_filter(
+                    'component_type', 'equal', component)
+
+            data = ActiveMotors.objects.filter(component_type = component, user_id=userId)
             serializer = ActiveMotorSerializer(data, many=True)
-            print(serializer.data)
             return JsonResponse({'status': 'True', 'data': serializer.data},
-                                status=200)
+                                    status=200)
         except:
             return JsonResponse({'message': 'Sorry! No Audit found.'}, status=500)
     @staticmethod
@@ -120,7 +175,6 @@ class UserController:
             userId = request.query_params['id']
             data = ProductionSystemStatus.objects.filter(user_id=userId)
             serializer = ProductionSystemSerialzer(data, many=True)
-            print(serializer.data)
             return JsonResponse({'status': 'True', 'data': serializer.data},
                                 status=200)
         except:
@@ -132,7 +186,6 @@ class UserController:
             userId = request.query_params['id']
             data = RelifingSystemStatus.objects.filter(user_id=userId)
             serializer = RelifingSystemSerialzer(data, many=True)
-            print(serializer.data)
             return JsonResponse({'status': 'True', 'data': serializer.data},
                                 status=200)
         except:

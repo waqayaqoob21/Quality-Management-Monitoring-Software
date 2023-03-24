@@ -10,6 +10,8 @@ class UserRoles(models.Model):
     relif_roles = models.CharField(max_length=555)
     flight_roles = models.CharField(max_length=555)
     motor_roles = models.CharField(max_length=555)
+    battery_roles = models.CharField(max_length=555, null=True)
+    pyro_roles = models.CharField(max_length=555, null=True)
     user_id = models.CharField(max_length=555)
 
 class doctracking(models.Model):

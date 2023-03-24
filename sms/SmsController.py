@@ -500,11 +500,30 @@ class SmsController:
                     'system', 'equal',
                     system)
 
+            setid_filter = Q()
+            setid_filter &= get_filter(
+                    'set_id', 'not_equal',
+                    '')
+            if org != '':
+                setid_filter &= get_filter(
+                    'organization', 'equal',
+                    org)
+            if type != '':
+                setid_filter &= get_filter(
+                    'sys_type', 'equal',
+                    type)
+            if system != '':
+                setid_filter &= get_filter(
+                    'system', 'equal',
+                    system)
 
             # else:
             dataList = ProductionSystemStatus.objects.filter(filter_objects)
             if ParentStatus != '':
                 ListItems = []
+                if ParentStatus == 'Prod':
+                    if ChildStatus == 'Total System':
+                        ListItems = ProductionSystemStatus.objects.filter(setid_filter)
                 if ParentStatus == 'BLT':
                     if ChildStatus != 'Current Count':
                         # filter_objects &= get_filter('blt_status', 'equal', ChildStatus)
@@ -1376,10 +1395,28 @@ class SmsController:
                     'system', 'equal',
                     system)
 
-
+            setid_filter = Q()
+            setid_filter &= get_filter(
+                    'set_id', 'not_equal',
+                    '')
+            if org != '':
+                setid_filter &= get_filter(
+                    'organization', 'equal',
+                    org)
+            if type != '':
+                setid_filter &= get_filter(
+                    'sys_type', 'equal',
+                    type)
+            if system != '':
+                setid_filter &= get_filter(
+                    'system', 'equal',
+                    system)
             dataList = FlightSystemStatus.objects.filter(filter_objects)
             if ParentStatus != '':
                 ListItems = []
+                if ParentStatus == 'Flight':
+                    if ChildStatus == 'Total System':
+                        ListItems = FlightSystemStatus.objects.filter(setid_filter)
                 if ParentStatus == 'BLT':
                     if ChildStatus != 'Current Count':
                         # filter_objects &= get_filter('blt_status', 'equal', ChildStatus)
@@ -2226,9 +2263,30 @@ class SmsController:
                     'system', 'equal',
                     system)
 
+            setid_filter = Q()
+            setid_filter &= get_filter(
+                    'set_id', 'not_equal',
+                    '')
+            if org != '':
+                setid_filter &= get_filter(
+                    'organization', 'equal',
+                    org)
+            if type != '':
+                setid_filter &= get_filter(
+                    'sys_type', 'equal',
+                    type)
+            if system != '':
+                setid_filter &= get_filter(
+                    'system', 'equal',
+                    system)
             dataList = RelifingSystemStatus.objects.filter(filter_objects)
+
             if ParentStatus != '':
                 ListItems = []
+                if ParentStatus == 'Relif':
+                    if ChildStatus == 'Total System':
+                        ListItems = RelifingSystemStatus.objects.filter(setid_filter)
+
                 if ParentStatus == 'BLT':
                     if ChildStatus != 'Current Count':
                         # filter_objects &= get_filter('blt_status', 'equal', ChildStatus)
@@ -2450,7 +2508,7 @@ class SmsController:
                                 ListItems.append(data)
 
                 serializer = RelifingSystemSerialzer(ListItems, many=True)
-                return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+                return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data }, status=200)
             # serializer = RelifingSystemSerialzer(dataList, many=True)
             # return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
         except:
