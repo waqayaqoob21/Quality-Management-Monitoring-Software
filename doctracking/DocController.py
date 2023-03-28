@@ -813,7 +813,7 @@ class DocController:
                             item.task_date = datetime.today() + timedelta(hours=5)
                         if item.due_date.date() > item.task_date.date():
                             list.append(item)
-                #docList = list
+                # docList = list
                 serializer = DocListSerializer(list, many=True)
                 return JsonResponse({'status': 'True', 'data': serializer.data},
                                     status=200)
@@ -1619,6 +1619,10 @@ class DocController:
                 current_filter_objects &= get_filter(
                     'status', 'not_equal',
                     'Approved')
+            if selected_org != '':
+                current_filter_objects &= get_filter(
+                    'sender', 'equal',
+                    selected_org)
             if selected_year is '':
                 # doc_approved = doctracking.objects.filter(status='Approved').count()
                 # doc_approvedList = doctracking.objects.filter(status='Approved')
@@ -1831,13 +1835,13 @@ class DocController:
                                                                              sender=selected_org).count()
 
             doc_approved = doc_approvedList.filter(current_filter_objects).count()
-            QAC_count = doc_approvedList.filter(doc_type='Qualification & Acceptance Criteria').count()
-            QFTP_count = doc_approvedList.filter(doc_type='QFTP').count()
-            TDP_count = doc_approvedList.filter(doc_type='TDP').count()
-            SOP_count = doc_approvedList.filter(doc_type='SOP').count()
-            Guidelines_count = doc_approvedList.filter(doc_type='Guidelines').count()
-            others_count = doc_approvedList.filter(doc_type='Others/Misc').count()
-            ATP_count = doc_approvedList.filter(doc_type='ATP').count()
+            QAC_count = doc_approvedList.filter(current_filter_objects, doc_type='Qualification & Acceptance Criteria').count()
+            QFTP_count = doc_approvedList.filter(current_filter_objects, doc_type='QFTP').count()
+            TDP_count = doc_approvedList.filter(current_filter_objects, doc_type='TDP').count()
+            SOP_count = doc_approvedList.filter(current_filter_objects, doc_type='SOP').count()
+            Guidelines_count = doc_approvedList.filter(current_filter_objects, doc_type='Guidelines').count()
+            others_count = doc_approvedList.filter(current_filter_objects, doc_type='Others').count()
+            ATP_count = doc_approvedList.filter(current_filter_objects, doc_type='ATP').count()
             # Total document
             total_QAC_count = total_doc_approvedList.filter(doc_type='Qualification & Acceptance Criteria').count()
             total_QFTP_count = total_doc_approvedList.filter(doc_type='QFTP').count()
@@ -1860,10 +1864,15 @@ class DocController:
             current_filter_objects_process &= get_filter(
                 'status', 'equal',
                 'Audit in-process')
+            if selected_org != '':
+                current_filter_objects_process &= get_filter(
+                    'sender', 'equal',
+                    selected_org)
 
             count_current_audit_in_process = 0
 
-            current_current_audit_in_process = doctracking.objects.filter(current_filter_objects_process, receive_date__year=selected_year)
+            current_current_audit_in_process = doctracking.objects.filter(current_filter_objects_process,
+                                                                          receive_date__year=selected_year)
             if current_current_audit_in_process is not None:
                 for item in current_current_audit_in_process:
                     if item.task_date is None:
