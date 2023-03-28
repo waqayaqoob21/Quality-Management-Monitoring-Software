@@ -521,9 +521,106 @@ class SmsController:
             dataList = ProductionSystemStatus.objects.filter(filter_objects)
             if ParentStatus != '':
                 ListItems = []
-                if ParentStatus == 'Prod':
-                    if ChildStatus == 'Total System':
-                        ListItems = ProductionSystemStatus.objects.filter(setid_filter)
+                totCountProduction = ProductionSystemStatus.objects.filter(setid_filter)
+                for set in totCountProduction:
+                    count_id = 0
+                    if set.blt_status != 'None' and set.set_id != '' and set.blt_date is not None:
+                        if count_id == 0 and set.blt_date.strftime("%Y") == year:
+                            count_id = set.id
+                            ListItems.append(set)
+                    if set.pre_hil_status != 'None' and set.set_id != '' and set.pre_hil_date is not None:
+                        if count_id == 0 and set.pre_hil_date.strftime("%Y") == year:
+                            count_id = set.id
+                            ListItems.append(set)
+                    if set.vibaration_status != 'None' and set.set_id != '' and set.vibaration_date is not None:
+                        if count_id == 0 and set.vibaration_date.strftime("%Y") == year:
+                            count_id = set.id
+                            ListItems.append(set)
+                    if set.post_hil_status != 'None' and set.set_id != '' and set.post_hil_date is not None:
+                        if count_id == 0 and set.post_hil_date.strftime("%Y") == year:
+                            count_id = set.id
+                            ListItems.append(set)
+                    if set.fgt_status != 'None' and set.set_id != '' and set.fgt_date is not None:
+                        if count_id == 0 and set.fgt_date.strftime("%Y") == year:
+                            count_id = set.id
+                            ListItems.append(set)
+
+                    if set.final_integration_status != 'None' and set.set_id != '' and set.final_integration_date is not None:
+                        if count_id == 0 and set.final_integration_date.strftime("%Y") == year:
+                            count_id = set.id
+                            ListItems.append(set)
+                    if set.bhd_status != 'None' and set.set_id != '' and set.bhd_date is not None:
+                        if count_id == 0 and set.bhd_date.strftime("%Y") == year:
+                            count_id = set.id
+                            ListItems.append(set)
+                    if set.fqm_status != 'None' and set.set_id != '' and set.fqm_date is not None:
+                        if count_id == 0 and set.fqm_date.strftime("%Y") == year:
+                            count_id = set.id
+                            ListItems.append(set)
+                    if set.qm_certification_status != 'None' and set.set_id != '' and set.qm_certification_date is not None:
+                        if count_id == 0 and set.qm_certification_date.strftime("%Y") == year:
+                            count_id = set.id
+                            ListItems.append(set)
+                    if set.cgbalancing_date_status != 'None' and set.set_id != '' and set.cgbalancing_date is not None:
+                        if count_id == 0 and set.cgbalancing_date.strftime("%Y") == year:
+                            count_id = set.id
+                            ListItems.append(set)
+
+                    if set.enduser_status != 'None' and set.set_id != '' and set.enduser_date is not None:
+                        if count_id == 0 and set.enduser_date.strftime("%Y") == year:
+                            count_id = set.id
+                            ListItems.append(set)
+                    if set.incapsulation_status != 'None' and set.set_id != '' and set.incapsulation_date is not None:
+                        if count_id == 0 and set.incapsulation_date.strftime("%Y") == year:
+                            count_id = set.id
+                            ListItems.append(set)
+                    if set.sys_align_status != 'None' and set.set_id != '' and set.sys_align_Date is not None:
+                        if count_id == 0 and set.sys_align_Date.strftime("%Y") == year:
+                            count_id = set.id
+                            ListItems.append(set)
+                    if set.emp_proofing != 'None' and set.set_id != '' and set.emp_proofing_date is not None:
+                        if count_id == 0 and set.emp_proofing_date.strftime("%Y") == year:
+                            count_id = set.id
+                            ListItems.append(set)
+                    if set.func_tst != 'None' and set.set_id != '' and set.func_tst_date is not None:
+                        if count_id == 0 and set.func_tst_date.strftime("%Y") == year:
+                            count_id = set.id
+                            ListItems.append(set)
+
+                    if set.func_tst_dummy_bird != 'None' and set.set_id != '' and set.func_tst_dummy_bird_date is not None:
+                        if count_id == 0 and set.func_tst_dummy_bird_date.strftime("%Y") == year:
+                            count_id = set.id
+                            ListItems.append(set)
+                    if set.road_test != 'None' and set.set_id != '' and set.road_test_date is not None:
+                        if count_id == 0 and set.road_test_date.strftime("%Y") == year:
+                            count_id = set.id
+                            ListItems.append(set)
+                    if set.post_road_test != 'None' and set.set_id != '' and set.post_road_test_date is not None:
+                        if count_id == 0 and set.post_road_test_date.strftime("%Y") == year:
+                            count_id = set.id
+                            ListItems.append(set)
+                    if set.integrated_operation != 'None' and set.set_id != '' and set.integrated_operation_date is not None:
+                        if count_id == 0 and set.integrated_operation_date.strftime("%Y") == year:
+                            count_id = set.id
+                            ListItems.append(set)
+                    if set.rain_test != 'None' and set.set_id != '' and set.rain_test_date is not None:
+                        if count_id == 0 and set.rain_test_date.strftime("%Y") == year:
+                            count_id = set.id
+                            ListItems.append(set)
+
+                    if set.pre_user_inspection != 'None' and set.set_id != '' and set.pre_user_inspection_date is not None:
+                        if count_id == 0 and set.pre_user_inspection_date.strftime("%Y") == year:
+                            count_id = set.id
+                            ListItems.append(set)
+                    if set.final_integrated_testing != 'None' and set.set_id != '' and set.final_integrated_testing_date is not None:
+                        if count_id == 0 and set.final_integrated_testing_date.strftime("%Y") == year:
+                            count_id = set.id
+                            ListItems.append(set)
+                    if set.load_unload_on_mlv_hlf != 'None' and set.set_id != '' and set.load_unload_on_mlv_hlf_date is not None:
+                        if count_id == 0 and set.load_unload_on_mlv_hlf_date.strftime("%Y") == year:
+                            count_id = set.id
+                            ListItems.append(set)
+
                 if ParentStatus == 'BLT':
                     if ChildStatus != 'Current Count':
                         # filter_objects &= get_filter('blt_status', 'equal', ChildStatus)
@@ -1414,9 +1511,105 @@ class SmsController:
             dataList = FlightSystemStatus.objects.filter(filter_objects)
             if ParentStatus != '':
                 ListItems = []
-                if ParentStatus == 'Flight':
-                    if ChildStatus == 'Total System':
-                        ListItems = FlightSystemStatus.objects.filter(setid_filter)
+                totCountProduction = FlightSystemStatus.objects.filter(setid_filter)
+                for set in totCountProduction:
+                    count_id = 0
+                    if set.blt_status != 'None' and set.set_id != '' and set.blt_date is not None:
+                        if count_id == 0 and set.blt_date.strftime("%Y") == year:
+                            count_id = set.id
+                            ListItems.append(set)
+                    if set.pre_hil_status != 'None' and set.set_id != '' and set.pre_hil_date is not None:
+                        if count_id == 0 and set.pre_hil_date.strftime("%Y") == year:
+                            count_id = set.id
+                            ListItems.append(set)
+                    if set.vibaration_status != 'None' and set.set_id != '' and set.vibaration_date is not None:
+                        if count_id == 0 and set.vibaration_date.strftime("%Y") == year:
+                            count_id = set.id
+                            ListItems.append(set)
+                    if set.post_hil_status != 'None' and set.set_id != '' and set.post_hil_date is not None:
+                        if count_id == 0 and set.post_hil_date.strftime("%Y") == year:
+                            count_id = set.id
+                            ListItems.append(set)
+                    if set.fgt_status != 'None' and set.set_id != '' and set.fgt_date is not None:
+                        if count_id == 0 and set.fgt_date.strftime("%Y") == year:
+                            count_id = set.id
+                            ListItems.append(set)
+
+                    if set.final_integration_status != 'None' and set.set_id != '' and set.final_integration_date is not None:
+                        if count_id == 0 and set.final_integration_date.strftime("%Y") == year:
+                            count_id = set.id
+                            ListItems.append(set)
+                    if set.bhd_status != 'None' and set.set_id != '' and set.bhd_date is not None:
+                        if count_id == 0 and set.bhd_date.strftime("%Y") == year:
+                            count_id = set.id
+                            ListItems.append(set)
+                    if set.fqm_status != 'None' and set.set_id != '' and set.fqm_date is not None:
+                        if count_id == 0 and set.fqm_date.strftime("%Y") == year:
+                            count_id = set.id
+                            ListItems.append(set)
+                    if set.qm_certification_status != 'None' and set.set_id != '' and set.qm_certification_date is not None:
+                        if count_id == 0 and set.qm_certification_date.strftime("%Y") == year:
+                            count_id = set.id
+                            ListItems.append(set)
+                    if set.cgbalancing_date_status != 'None' and set.set_id != '' and set.cgbalancing_date is not None:
+                        if count_id == 0 and set.cgbalancing_date.strftime("%Y") == year:
+                            count_id = set.id
+                            ListItems.append(set)
+
+                    if set.launchact_status != 'None' and set.set_id != '' and set.launchact_date is not None:
+                        if count_id == 0 and set.launchact_date.strftime("%Y") == year:
+                            count_id = set.id
+                            ListItems.append(set)
+                    if set.incapsulation_status != 'None' and set.set_id != '' and set.incapsulation_date is not None:
+                        if count_id == 0 and set.incapsulation_date.strftime("%Y") == year:
+                            count_id = set.id
+                            ListItems.append(set)
+                    if set.sys_align_status != 'None' and set.set_id != '' and set.sys_align_Date is not None:
+                        if count_id == 0 and set.sys_align_Date.strftime("%Y") == year:
+                            count_id = set.id
+                            ListItems.append(set)
+                    if set.emp_proofing != 'None' and set.set_id != '' and set.emp_proofing_date is not None:
+                        if count_id == 0 and set.emp_proofing_date.strftime("%Y") == year:
+                            count_id = set.id
+                            ListItems.append(set)
+                    if set.func_tst != 'None' and set.set_id != '' and set.func_tst_date is not None:
+                        if count_id == 0 and set.func_tst_date.strftime("%Y") == year:
+                            count_id = set.id
+                            ListItems.append(set)
+
+                    if set.func_tst_dummy_bird != 'None' and set.set_id != '' and set.func_tst_dummy_bird_date is not None:
+                        if count_id == 0 and set.func_tst_dummy_bird_date.strftime("%Y") == year:
+                            count_id = set.id
+                            ListItems.append(set)
+                    if set.road_test != 'None' and set.set_id != '' and set.road_test_date is not None:
+                        if count_id == 0 and set.road_test_date.strftime("%Y") == year:
+                            count_id = set.id
+                            ListItems.append(set)
+                    if set.post_road_test != 'None' and set.set_id != '' and set.post_road_test_date is not None:
+                        if count_id == 0 and set.post_road_test_date.strftime("%Y") == year:
+                            count_id = set.id
+                            ListItems.append(set)
+                    if set.integrated_operation != 'None' and set.set_id != '' and set.integrated_operation_date is not None:
+                        if count_id == 0 and set.integrated_operation_date.strftime("%Y") == year:
+                            count_id = set.id
+                            ListItems.append(set)
+                    if set.rain_test != 'None' and set.set_id != '' and set.rain_test_date is not None:
+                        if count_id == 0 and set.rain_test_date.strftime("%Y") == year:
+                            count_id = set.id
+                            ListItems.append(set)
+
+                    if set.pre_user_inspection != 'None' and set.set_id != '' and set.pre_user_inspection_date is not None:
+                        if count_id == 0 and set.pre_user_inspection_date.strftime("%Y") == year:
+                            count_id = set.id
+                            ListItems.append(set)
+                    if set.final_integrated_testing != 'None' and set.set_id != '' and set.final_integrated_testing_date is not None:
+                        if count_id == 0 and set.final_integrated_testing_date.strftime("%Y") == year:
+                            count_id = set.id
+                            ListItems.append(set)
+                    if set.load_unload_on_mlv_hlf != 'None' and set.set_id != '' and set.load_unload_on_mlv_hlf_date is not None:
+                        if count_id == 0 and set.load_unload_on_mlv_hlf_date.strftime("%Y") == year:
+                            count_id = set.id
+                            ListItems.append(set)
                 if ParentStatus == 'BLT':
                     if ChildStatus != 'Current Count':
                         # filter_objects &= get_filter('blt_status', 'equal', ChildStatus)
@@ -1647,6 +1840,7 @@ class SmsController:
                                 ListItems.append(data)
 
                 serializer = FlightSystemSerialzer(ListItems, many=True)
+                print(serializer.data)
                 return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
 
 
@@ -2197,7 +2391,7 @@ class SmsController:
 
     @staticmethod
     def GetRelifingList(request):
-        try:
+        # try:
             org = request.query_params['selected_org']
             year = request.query_params['selected_year']
             type = request.query_params['selected_type']
@@ -2283,9 +2477,108 @@ class SmsController:
 
             if ParentStatus != '':
                 ListItems = []
-                if ParentStatus == 'Relif':
-                    if ChildStatus == 'Total System':
-                        ListItems = RelifingSystemStatus.objects.filter(setid_filter)
+                if ChildStatus == 'Total System':
+                    # listVlaue = RelifingSystemStatus.objects.filter(setid_filter).values()
+                    totCountRelif = RelifingSystemStatus.objects.filter(setid_filter)
+                    relif_sys_count = 0
+                    for set in totCountRelif:
+                        count_id = 0
+                        if set.blt_status != 'None' and set.set_id != '' and set.blt_date is not None:
+                            if count_id == 0 and set.blt_date.strftime("%Y") == year:
+                                count_id = set.id
+                                ListItems.append(set)
+                        if set.pre_hil_status != 'None' and set.set_id != '' and set.pre_hil_date is not None:
+                            if count_id == 0 and set.pre_hil_date.strftime("%Y") == year:
+                                count_id = set.id
+                                ListItems.append(set)
+                        if set.vibaration_status != 'None' and set.set_id != '' and set.vibaration_date is not None:
+                            if count_id == 0 and set.vibaration_date.strftime("%Y") == year:
+                                count_id = set.id
+                                ListItems.append(set)
+                        if set.post_hil_status != 'None' and set.set_id != '' and set.post_hil_date is not None:
+                            if count_id == 0 and set.post_hil_date.strftime("%Y") == year:
+                                count_id = set.id
+                                ListItems.append(set)
+                        if set.fgt_status != 'None' and set.set_id != '' and set.fgt_date is not None:
+                            if count_id == 0 and set.fgt_date.strftime("%Y") == year:
+                                count_id = set.id
+                                ListItems.append(set)
+
+                        if set.final_integration_status != 'None' and set.set_id != '' and set.final_integration_date is not None:
+                            if count_id == 0 and set.final_integration_date.strftime("%Y") == year:
+                                count_id = set.id
+                                ListItems.append(set)
+                        if set.bhd_status != 'None' and set.set_id != '' and set.bhd_date is not None:
+                            if count_id == 0 and set.bhd_date.strftime("%Y") == year:
+                                count_id = set.id
+                                ListItems.append(set)
+                        if set.fqm_status != 'None' and set.set_id != '' and set.fqm_date is not None:
+                            if count_id == 0 and set.fqm_date.strftime("%Y") == year:
+                                count_id = set.id
+                                ListItems.append(set)
+                        if set.qm_certification_status != 'None' and set.set_id != '' and set.qm_certification_date is not None:
+                            if count_id == 0 and set.qm_certification_date.strftime("%Y") == year:
+                                count_id = set.id
+                                ListItems.append(set)
+                        if set.cgbalancing_date_status != 'None' and set.set_id != '' and set.cgbalancing_date is not None:
+                            if count_id == 0 and set.cgbalancing_date.strftime("%Y") == year:
+                                count_id = set.id
+                                ListItems.append(set)
+
+                        if set.enduser_status != 'None' and set.set_id != '' and set.enduser_date is not None:
+                            if count_id == 0 and set.enduser_date.strftime("%Y") == year:
+                                count_id = set.id
+                                ListItems.append(set)
+                        if set.incapsulation_status != 'None' and set.set_id != '' and set.incapsulation_date is not None:
+                            if count_id == 0 and set.incapsulation_date.strftime("%Y") == year:
+                                count_id = set.id
+                                ListItems.append(set)
+                        if set.sys_align_status != 'None' and set.set_id != '' and set.sys_align_Date is not None:
+                            if count_id == 0 and set.sys_align_Date.strftime("%Y") == year:
+                                count_id = set.id
+                                ListItems.append(set)
+                        if set.emp_proofing != 'None' and set.set_id != '' and set.emp_proofing_date is not None:
+                            if count_id == 0 and set.emp_proofing_date.strftime("%Y") == year:
+                                count_id = set.id
+                                ListItems.append(set)
+                        if set.func_tst != 'None' and set.set_id != '' and set.func_tst_date is not None:
+                            if count_id == 0 and set.func_tst_date.strftime("%Y") == year:
+                                count_id = set.id
+                                ListItems.append(set)
+
+                        if set.func_tst_dummy_bird != 'None' and set.set_id != '' and set.func_tst_dummy_bird_date is not None:
+                            if count_id == 0 and set.func_tst_dummy_bird_date.strftime("%Y") == year:
+                                count_id = set.id
+                                ListItems.append(set)
+                        if set.road_test != 'None' and set.set_id != '' and set.road_test_date is not None:
+                            if count_id == 0 and set.road_test_date.strftime("%Y") == year:
+                                count_id = set.id
+                                ListItems.append(set)
+                        if set.post_road_test != 'None' and set.set_id != '' and set.post_road_test_date is not None:
+                            if count_id == 0 and set.post_road_test_date.strftime("%Y") == year:
+                                count_id = set.id
+                                ListItems.append(set)
+                        if set.integrated_operation != 'None' and set.set_id != '' and set.integrated_operation_date is not None:
+                            if count_id == 0 and set.integrated_operation_date.strftime("%Y") == year:
+                                count_id = set.id
+                                ListItems.append(set)
+                        if set.rain_test != 'None' and set.set_id != '' and set.rain_test_date is not None:
+                            if count_id == 0 and set.rain_test_date.strftime("%Y") == year:
+                                count_id = set.id
+                                ListItems.append(set)
+
+                        if set.pre_user_inspection != 'None' and set.set_id != '' and set.pre_user_inspection_date is not None:
+                            if count_id == 0 and set.pre_user_inspection_date.strftime("%Y") == year:
+                                count_id = set.id
+                                ListItems.append(set)
+                        if set.final_integrated_testing != 'None' and set.set_id != '' and set.final_integrated_testing_date is not None:
+                            if count_id == 0 and set.final_integrated_testing_date.strftime("%Y") == year:
+                                count_id = set.id
+                                ListItems.append(set)
+                        if set.load_unload_on_mlv_hlf != 'None' and set.set_id != '' and set.load_unload_on_mlv_hlf_date is not None:
+                            if count_id == 0 and set.load_unload_on_mlv_hlf_date.strftime("%Y") == year:
+                                count_id = set.id
+                                ListItems.append(set)
 
                 if ParentStatus == 'BLT':
                     if ChildStatus != 'Current Count':
@@ -2296,6 +2589,7 @@ class SmsController:
                             if data.blt_date is not None:
                                 if data.blt_date.strftime("%Y") == year and (data.blt_status == 'Under process' or data.blt_status=='Observation(same stage)' or data.blt_status=='Halt'):
                                     ListItems.append(data)
+
 
                 if ParentStatus == 'EMP Proofing':
                     if ChildStatus != 'Current Count':
@@ -2511,8 +2805,8 @@ class SmsController:
                 return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data }, status=200)
             # serializer = RelifingSystemSerialzer(dataList, many=True)
             # return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
-        except:
-            return JsonResponse({'message': 'Sorry! No Task found.'}, status=200)
+        # except:
+        #     return JsonResponse({'message': 'Sorry! No Task found.'}, status=200)
 
     @staticmethod
     def GetRelifingHistoryList(request):
@@ -2737,7 +3031,109 @@ class SmsController:
             #         '')
             # production system count
             # prod_blt_count = ProductionSystemStatus.objects.filter(setid_filter, blt_date__year=year).count()
-            prodTotalCount = ProductionSystemStatus.objects.filter(setid_filter).count()
+            totCount = ProductionSystemStatus.objects.filter(setid_filter)
+            sys_count = 0
+            for set in totCount:
+                count_id = 0
+                if set.blt_status != 'None' and set.set_id != '' and set.blt_date is not None:
+                    if count_id == 0 and set.blt_date.strftime("%Y") == year:
+                        count_id = set.id
+                        sys_count += 1
+                if set.pre_hil_status != 'None' and set.set_id != '' and set.pre_hil_date is not None:
+                    if count_id == 0 and set.pre_hil_date.strftime("%Y") == year:
+                        count_id = set.id
+                        sys_count += 1
+                if set.vibaration_status != 'None' and set.set_id != '' and set.vibaration_date is not None:
+                    if count_id == 0 and set.vibaration_date.strftime("%Y") == year:
+                        count_id = set.id
+                        sys_count += 1
+                if set.post_hil_status != 'None' and set.set_id != '' and set.post_hil_date is not None:
+                    if count_id == 0 and set.post_hil_date.strftime("%Y") == year:
+                        count_id = set.id
+                        sys_count += 1
+                if set.fgt_status != 'None' and set.set_id != '' and set.fgt_date is not None:
+                    if count_id == 0 and set.fgt_date.strftime("%Y") == year:
+                        count_id = set.id
+                        sys_count += 1
+
+                if set.final_integration_status != 'None' and set.set_id != '' and set.final_integration_date is not None:
+                    if count_id == 0 and set.final_integration_date.strftime("%Y") == year:
+                        count_id = set.id
+                        sys_count += 1
+                if set.bhd_status != 'None' and set.set_id != '' and set.bhd_date is not None:
+                    if count_id == 0 and set.bhd_date.strftime("%Y") == year:
+                        count_id = set.id
+                        sys_count += 1
+                if set.fqm_status != 'None' and set.set_id != '' and set.fqm_date is not None:
+                    if count_id == 0 and set.fqm_date.strftime("%Y") == year:
+                        count_id = set.id
+                        sys_count += 1
+                if set.qm_certification_status != 'None' and set.set_id != '' and set.qm_certification_date is not None:
+                    if count_id == 0 and set.qm_certification_date.strftime("%Y") == year:
+                        count_id = set.id
+                        sys_count += 1
+                if set.cgbalancing_date_status != 'None' and set.set_id != '' and set.cgbalancing_date is not None:
+                    if count_id == 0 and set.cgbalancing_date.strftime("%Y") == year:
+                        count_id = set.id
+                        sys_count += 1
+
+                if set.enduser_status != 'None' and set.set_id != '' and set.enduser_date is not None:
+                    if count_id == 0 and set.enduser_date.strftime("%Y") == year:
+                        count_id = set.id
+                        sys_count += 1
+                if set.incapsulation_status != 'None' and set.set_id != '' and set.incapsulation_date is not None:
+                    if count_id == 0 and set.incapsulation_date.strftime("%Y") == year:
+                        count_id = set.id
+                        sys_count += 1
+                if set.sys_align_status != 'None' and set.set_id != '' and set.sys_align_Date is not None:
+                    if count_id == 0 and set.sys_align_Date.strftime("%Y") == year:
+                        count_id = set.id
+                        sys_count += 1
+                if set.emp_proofing != 'None' and set.set_id != '' and set.emp_proofing_date is not None:
+                    if count_id == 0 and set.emp_proofing_date.strftime("%Y") == year:
+                        count_id = set.id
+                        sys_count += 1
+                if set.func_tst != 'None' and set.set_id != '' and set.func_tst_date is not None:
+                    if count_id == 0 and set.func_tst_date.strftime("%Y") == year:
+                        count_id = set.id
+                        sys_count += 1
+
+                if set.func_tst_dummy_bird != 'None' and set.set_id != '' and set.func_tst_dummy_bird_date is not None:
+                    if count_id == 0 and set.func_tst_dummy_bird_date.strftime("%Y") == year:
+                        count_id = set.id
+                        sys_count += 1
+                if set.road_test != 'None' and set.set_id != '' and set.road_test_date is not None:
+                    if count_id == 0 and set.road_test_date.strftime("%Y") == year:
+                        count_id = set.id
+                        sys_count += 1
+                if set.post_road_test != 'None' and set.set_id != '' and set.post_road_test_date is not None:
+                    if count_id == 0 and set.post_road_test_date.strftime("%Y") == year:
+                        count_id = set.id
+                        sys_count += 1
+                if set.integrated_operation != 'None' and set.set_id != '' and set.integrated_operation_date is not None:
+                    if count_id == 0 and set.integrated_operation_date.strftime("%Y") == year:
+                        count_id = set.id
+                        sys_count += 1
+                if set.rain_test != 'None' and set.set_id != '' and set.rain_test_date is not None:
+                    if count_id == 0 and set.rain_test_date.strftime("%Y") == year:
+                        count_id = set.id
+                        sys_count += 1
+
+                if set.pre_user_inspection != 'None' and set.set_id != '' and set.pre_user_inspection_date is not None:
+                    if count_id == 0 and set.pre_user_inspection_date.strftime("%Y") == year:
+                        count_id = set.id
+                        sys_count += 1
+                if set.final_integrated_testing != 'None' and set.set_id != '' and set.final_integrated_testing_date is not None:
+                    if count_id == 0 and set.final_integrated_testing_date.strftime("%Y") == year:
+                        count_id = set.id
+                        sys_count += 1
+                if set.load_unload_on_mlv_hlf != 'None' and set.set_id != '' and set.load_unload_on_mlv_hlf_date is not None:
+                    if count_id == 0 and set.load_unload_on_mlv_hlf_date.strftime("%Y") == year:
+                        count_id = set.id
+                        sys_count += 1
+
+
+            prodTotalCount = sys_count
             # print(prod_blt_count)
             prod_blt_oklist = ProductionSystemStatus.objects.filter(filter_objects, blt_date__year=year,blt_status='Ok')
             prod_blt_oklistNext = ProductionSystemStatus.objects.filter(filter_objects, blt_date__year=year,blt_status='OK(next stage)')
@@ -3003,8 +3399,109 @@ class SmsController:
 
             # flight system count
             # flight_blt_count = FlightSystemStatus.objects.filter(setid_filter, blt_date__year=year).count()
-            flightTotalCount = FlightSystemStatus.objects.filter(setid_filter).count()
+            totCountFlight = FlightSystemStatus.objects.filter(setid_filter)
+            # totCount = ProductionSystemStatus.objects.filter(setid_filter)
+            flight_sys_count = 0
+            for set in totCountFlight:
+                count_id = 0
+                if set.blt_status != 'None' and set.set_id != '' and set.blt_date is not None:
+                    if count_id == 0 and set.blt_date.strftime("%Y") == year:
+                        count_id = set.id
+                        flight_sys_count += 1
+                if set.pre_hil_status != 'None' and set.set_id != '' and set.pre_hil_date is not None:
+                    if count_id == 0 and set.pre_hil_date.strftime("%Y") == year:
+                        count_id = set.id
+                        flight_sys_count += 1
+                if set.vibaration_status != 'None' and set.set_id != '' and set.vibaration_date is not None:
+                    if count_id == 0 and set.vibaration_date.strftime("%Y") == year:
+                        count_id = set.id
+                        flight_sys_count += 1
+                if set.post_hil_status != 'None' and set.set_id != '' and set.post_hil_date is not None:
+                    if count_id == 0 and set.post_hil_date.strftime("%Y") == year:
+                        count_id = set.id
+                        flight_sys_count += 1
+                if set.fgt_status != 'None' and set.set_id != '' and set.fgt_date is not None:
+                    if count_id == 0 and set.fgt_date.strftime("%Y") == year:
+                        count_id = set.id
+                        flight_sys_count += 1
 
+                if set.final_integration_status != 'None' and set.set_id != '' and set.final_integration_date is not None:
+                    if count_id == 0 and set.final_integration_date.strftime("%Y") == year:
+                        count_id = set.id
+                        flight_sys_count += 1
+                if set.bhd_status != 'None' and set.set_id != '' and set.bhd_date is not None:
+                    if count_id == 0 and set.bhd_date.strftime("%Y") == year:
+                        count_id = set.id
+                        flight_sys_count += 1
+                if set.fqm_status != 'None' and set.set_id != '' and set.fqm_date is not None:
+                    if count_id == 0 and set.fqm_date.strftime("%Y") == year:
+                        count_id = set.id
+                        flight_sys_count += 1
+                if set.qm_certification_status != 'None' and set.set_id != '' and set.qm_certification_date is not None:
+                    if count_id == 0 and set.qm_certification_date.strftime("%Y") == year:
+                        count_id = set.id
+                        flight_sys_count += 1
+                if set.cgbalancing_date_status != 'None' and set.set_id != '' and set.cgbalancing_date is not None:
+                    if count_id == 0 and set.cgbalancing_date.strftime("%Y") == year:
+                        count_id = set.id
+                        flight_sys_count += 1
+
+                if set.launchact_status != 'None' and set.set_id != '' and set.launchact_date is not None:
+                    if count_id == 0 and set.launchact_date.strftime("%Y") == year:
+                        count_id = set.id
+                        sys_count += 1
+                if set.incapsulation_status != 'None' and set.set_id != '' and set.incapsulation_date is not None:
+                    if count_id == 0 and set.incapsulation_date.strftime("%Y") == year:
+                        count_id = set.id
+                        flight_sys_count += 1
+                if set.sys_align_status != 'None' and set.set_id != '' and set.sys_align_Date is not None:
+                    if count_id == 0 and set.sys_align_Date.strftime("%Y") == year:
+                        count_id = set.id
+                        flight_sys_count += 1
+                if set.emp_proofing != 'None' and set.set_id != '' and set.emp_proofing_date is not None:
+                    if count_id == 0 and set.emp_proofing_date.strftime("%Y") == year:
+                        count_id = set.id
+                        flight_sys_count += 1
+                if set.func_tst != 'None' and set.set_id != '' and set.func_tst_date is not None:
+                    if count_id == 0 and set.func_tst_date.strftime("%Y") == year:
+                        count_id = set.id
+                        flight_sys_count += 1
+
+                if set.func_tst_dummy_bird != 'None' and set.set_id != '' and set.func_tst_dummy_bird_date is not None:
+                    if count_id == 0 and set.func_tst_dummy_bird_date.strftime("%Y") == year:
+                        count_id = set.id
+                        flight_sys_count += 1
+                if set.road_test != 'None' and set.set_id != '' and set.road_test_date is not None:
+                    if count_id == 0 and set.road_test_date.strftime("%Y") == year:
+                        count_id = set.id
+                        flight_sys_count += 1
+                if set.post_road_test != 'None' and set.set_id != '' and set.post_road_test_date is not None:
+                    if count_id == 0 and set.post_road_test_date.strftime("%Y") == year:
+                        count_id = set.id
+                        flight_sys_count += 1
+                if set.integrated_operation != 'None' and set.set_id != '' and set.integrated_operation_date is not None:
+                    if count_id == 0 and set.integrated_operation_date.strftime("%Y") == year:
+                        count_id = set.id
+                        flight_sys_count += 1
+                if set.rain_test != 'None' and set.set_id != '' and set.rain_test_date is not None:
+                    if count_id == 0 and set.rain_test_date.strftime("%Y") == year:
+                        count_id = set.id
+                        flight_sys_count += 1
+
+                if set.pre_user_inspection != 'None' and set.set_id != '' and set.pre_user_inspection_date is not None:
+                    if count_id == 0 and set.pre_user_inspection_date.strftime("%Y") == year:
+                        count_id = set.id
+                        flight_sys_count += 1
+                if set.final_integrated_testing != 'None' and set.set_id != '' and set.final_integrated_testing_date is not None:
+                    if count_id == 0 and set.final_integrated_testing_date.strftime("%Y") == year:
+                        count_id = set.id
+                        flight_sys_count += 1
+                if set.load_unload_on_mlv_hlf != 'None' and set.set_id != '' and set.load_unload_on_mlv_hlf_date is not None:
+                    if count_id == 0 and set.load_unload_on_mlv_hlf_date.strftime("%Y") == year:
+                        count_id = set.id
+                        flight_sys_count += 1
+
+            flightTotalCount = flight_sys_count
             flight_blt_oklist = FlightSystemStatus.objects.filter(filter_objects, blt_date__year=year,blt_status='Ok')
             flight_blt_oklistNext = FlightSystemStatus.objects.filter(filter_objects, blt_date__year=year,blt_status='OK(next stage)')
             flight_blt_observationlist = FlightSystemStatus.objects.filter(filter_objects,
@@ -3268,8 +3765,108 @@ class SmsController:
             # relifing system count
 
             # relifing_blt_count = RelifingSystemStatus.objects.filter(setid_filter, blt_date__year=year).count()
-            relifTotalCount = RelifingSystemStatus.objects.filter(setid_filter).count()
+            totCountRelif = RelifingSystemStatus.objects.filter(setid_filter)
+            # totCount = ProductionSystemStatus.objects.filter(setid_filter)
+            relif_sys_count = 0
+            for set in totCountRelif:
+                count_id = 0
+                if set.blt_status != 'None' and set.set_id != '' and set.blt_date is not None:
+                    if count_id == 0 and set.blt_date.strftime("%Y") == year:
+                        count_id = set.id
+                        relif_sys_count += 1
+                if set.pre_hil_status != 'None' and set.set_id != '' and set.pre_hil_date is not None:
+                    if count_id == 0 and set.pre_hil_date.strftime("%Y") == year:
+                        count_id = set.id
+                        relif_sys_count += 1
+                if set.vibaration_status != 'None' and set.set_id != '' and set.vibaration_date is not None:
+                    if count_id == 0 and set.vibaration_date.strftime("%Y") == year:
+                        count_id = set.id
+                        relif_sys_count += 1
+                if set.post_hil_status != 'None' and set.set_id != '' and set.post_hil_date is not None:
+                    if count_id == 0 and set.post_hil_date.strftime("%Y") == year:
+                        count_id = set.id
+                        relif_sys_count += 1
+                if set.fgt_status != 'None' and set.set_id != '' and set.fgt_date is not None:
+                    if count_id == 0 and set.fgt_date.strftime("%Y") == year:
+                        count_id = set.id
+                        relif_sys_count += 1
 
+                if set.final_integration_status != 'None' and set.set_id != '' and set.final_integration_date is not None:
+                    if count_id == 0 and set.final_integration_date.strftime("%Y") == year:
+                        count_id = set.id
+                        relif_sys_count += 1
+                if set.bhd_status != 'None' and set.set_id != '' and set.bhd_date is not None:
+                    if count_id == 0 and set.bhd_date.strftime("%Y") == year:
+                        count_id = set.id
+                        relif_sys_count += 1
+                if set.fqm_status != 'None' and set.set_id != '' and set.fqm_date is not None:
+                    if count_id == 0 and set.fqm_date.strftime("%Y") == year:
+                        count_id = set.id
+                        relif_sys_count += 1
+                if set.qm_certification_status != 'None' and set.set_id != '' and set.qm_certification_date is not None:
+                    if count_id == 0 and set.qm_certification_date.strftime("%Y") == year:
+                        count_id = set.id
+                        relif_sys_count += 1
+                if set.cgbalancing_date_status != 'None' and set.set_id != '' and set.cgbalancing_date is not None:
+                    if count_id == 0 and set.cgbalancing_date.strftime("%Y") == year:
+                        count_id = set.id
+                        relif_sys_count += 1
+
+                if set.enduser_status != 'None' and set.set_id != '' and set.enduser_date is not None:
+                    if count_id == 0 and set.enduser_date.strftime("%Y") == year:
+                        count_id = set.id
+                        relif_sys_count += 1
+                if set.incapsulation_status != 'None' and set.set_id != '' and set.incapsulation_date is not None:
+                    if count_id == 0 and set.incapsulation_date.strftime("%Y") == year:
+                        count_id = set.id
+                        relif_sys_count += 1
+                if set.sys_align_status != 'None' and set.set_id != '' and set.sys_align_Date is not None:
+                    if count_id == 0 and set.sys_align_Date.strftime("%Y") == year:
+                        count_id = set.id
+                        relif_sys_count += 1
+                if set.emp_proofing != 'None' and set.set_id != '' and set.emp_proofing_date is not None:
+                    if count_id == 0 and set.emp_proofing_date.strftime("%Y") == year:
+                        count_id = set.id
+                        relif_sys_count += 1
+                if set.func_tst != 'None' and set.set_id != '' and set.func_tst_date is not None:
+                    if count_id == 0 and set.func_tst_date.strftime("%Y") == year:
+                        count_id = set.id
+                        relif_sys_count += 1
+
+                if set.func_tst_dummy_bird != 'None' and set.set_id != '' and set.func_tst_dummy_bird_date is not None:
+                    if count_id == 0 and set.func_tst_dummy_bird_date.strftime("%Y") == year:
+                        count_id = set.id
+                        relif_sys_count += 1
+                if set.road_test != 'None' and set.set_id != '' and set.road_test_date is not None:
+                    if count_id == 0 and set.road_test_date.strftime("%Y") == year:
+                        count_id = set.id
+                        relif_sys_count += 1
+                if set.post_road_test != 'None' and set.set_id != '' and set.post_road_test_date is not None:
+                    if count_id == 0 and set.post_road_test_date.strftime("%Y") == year:
+                        count_id = set.id
+                        relif_sys_count += 1
+                if set.integrated_operation != 'None' and set.set_id != '' and set.integrated_operation_date is not None:
+                    if count_id == 0 and set.integrated_operation_date.strftime("%Y") == year:
+                        count_id = set.id
+                        relif_sys_count += 1
+                if set.rain_test != 'None' and set.set_id != '' and set.rain_test_date is not None:
+                    if count_id == 0 and set.rain_test_date.strftime("%Y") == year:
+                        count_id = set.id
+                        relif_sys_count += 1
+
+                if set.pre_user_inspection != 'None' and set.set_id != '' and set.pre_user_inspection_date is not None:
+                    if count_id == 0 and set.pre_user_inspection_date.strftime("%Y") == year:
+                        count_id = set.id
+                        relif_sys_count += 1
+                if set.final_integrated_testing != 'None' and set.set_id != '' and set.final_integrated_testing_date is not None:
+                    if count_id == 0 and set.final_integrated_testing_date.strftime("%Y") == year:
+                        count_id = set.id
+                        relif_sys_count += 1
+                if set.load_unload_on_mlv_hlf != 'None' and set.set_id != '' and set.load_unload_on_mlv_hlf_date is not None:
+                    if count_id == 0 and set.load_unload_on_mlv_hlf_date.strftime("%Y") == year:
+                        count_id = set.id
+                        relif_sys_count += 1
+            relifTotalCount = relif_sys_count
             relifing_blt_oklist = RelifingSystemStatus.objects.filter(filter_objects, blt_date__year=year,blt_status='Ok')
             relifing_blt_oklistNext = RelifingSystemStatus.objects.filter(filter_objects, blt_date__year=year,blt_status='OK(next stage)')
             relifing_blt_observationlist = RelifingSystemStatus.objects.filter(filter_objects,

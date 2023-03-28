@@ -262,8 +262,10 @@ class MpmController:
                 motorModel.ncr_status_remarks = request['ncr_status_ramarks']
                 motorModel.overall_status = request['overall_status']
                 motorModel.overall_remarks = request['overall_status_ramarks']
-                motorModel.user_id = request['user_id']
-
+                if request['user_id'] != '':
+                    motorModel.user_id = request['user_id']
+                else:
+                    motorModel.user_id = None
                 if request['base64File'] != '':
                     motorModel.attachments = request['base64File']
                 motorModel.save()
@@ -782,7 +784,10 @@ class MpmController:
                     get_motor.ncr_status_remarks = request['ncr_status_ramarks']
                     get_motor.overall_status = request['overall_status']
                     get_motor.overall_remarks = request['overall_status_ramarks']
-                    get_motor.user_id = request['user_id']
+                    if request['user_id'] != '':
+                        get_motor.user_id = request['user_id']
+                    else:
+                        get_motor.user_id = None
                     if request['base64File'] != '':
                         get_motor.attachments = request['base64File']
                     get_motor.save()
