@@ -583,6 +583,7 @@ class MpmController:
                         MotorHistory.overall_status = get_motor.overall_status
                         MotorHistory.overall_remarks = get_motor.overall_remarks
                         MotorHistory.attachments = get_motor.attachments
+                        MotorHistory.user_id = get_motor.user_id
                         MotorHistory.save()
 
                     get_motor.system_type = request['system_type']
@@ -1271,8 +1272,10 @@ class MpmController:
     def GetActiveMotorHistoryList(request):
         try:
             id = request.query_params['id']
+            print(id)
             data = ActiveMotorsHistory.objects.filter(active_motor_id=id)
             serializer = ActiveMotorSerializer(data, many=True)
+            print(serializer.data)
             return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
 
         except:

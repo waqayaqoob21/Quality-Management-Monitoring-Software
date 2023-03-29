@@ -169,6 +169,7 @@ class ProductionSystemStatusHistory(models.Model):
     final_integrated_testing_remarks = models.TextField(null=True)
     load_unload_on_mlv_hlf_date = models.DateTimeField(auto_now_add=False, null=True)
     load_unload_on_mlv_hlf_remarks = models.TextField(null=True)
+    user_id = models.IntegerField(null=True)
 
 
 class FlightSystemStatus(models.Model):
@@ -339,6 +340,8 @@ class FlightSystemStatusHistory(models.Model):
     final_integrated_testing_remarks = models.TextField(null=True)
     load_unload_on_mlv_hlf_date = models.DateTimeField(auto_now_add=False, null=True)
     load_unload_on_mlv_hlf_remarks = models.TextField(null=True)
+    user_id = models.IntegerField(null=True)
+
 class RelifingSystemStatus(models.Model):
     system = models.CharField(max_length=300)
     organization = models.CharField(max_length=300)
@@ -505,3 +508,4 @@ class RelifingSystemStatusHistory(models.Model):
     final_integrated_testing_remarks = models.TextField(null=True)
     load_unload_on_mlv_hlf_date = models.DateTimeField(auto_now_add=False, null=True)
     load_unload_on_mlv_hlf_remarks = models.TextField(null=True)
+    user_id = models.IntegerField(null=True)

@@ -8,7 +8,7 @@ class ActiveMotorSerializer(Serializer):
     system_type = CharField()
     system_name = CharField()
     organization = CharField()
-    creation_date = CharField()
+    # creation_date = CharField()
     testing_date = CharField()
     testing_type = CharField()
     motor_id = CharField()
@@ -199,6 +199,7 @@ class ActiveMotorSerializer(Serializer):
     overall_status = CharField()
     overall_remarks = CharField()
     attachments =  CharField()
+    user_id =  IntegerField()
     Created_at = DateTimeField()
 
 

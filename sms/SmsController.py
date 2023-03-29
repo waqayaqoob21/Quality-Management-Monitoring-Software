@@ -319,7 +319,10 @@ class SmsController:
                         if request['load_unload_on_mlv_hlf_date'] != '':
                             ProdHistoryModal.load_unload_on_mlv_hlf_date = get_prod.load_unload_on_mlv_hlf_date
                         ProdHistoryModal.load_unload_on_mlv_hlf_remarks = get_prod.load_unload_on_mlv_hlf_remarks
-
+                        if request['user_id'] != '':
+                            ProdHistoryModal.user_id = get_prod.user_id
+                        else:
+                            ProdHistoryModal.user_id = None
                         ProdHistoryModal.save()
 
                         # history saved
@@ -1312,6 +1315,10 @@ class SmsController:
                     if request['load_unload_on_mlv_hlf_date'] != '':
                         FlightHistoryModal.load_unload_on_mlv_hlf_date = get_prod.load_unload_on_mlv_hlf_date
                     FlightHistoryModal.load_unload_on_mlv_hlf_remarks = get_prod.load_unload_on_mlv_hlf_remarks
+                    if request['user_id'] != '':
+                        FlightHistoryModal.user_id = get_prod.user_id
+                    else:
+                        FlightHistoryModal.user_id = None
                     FlightHistoryModal.save()
 
                     # history saved
@@ -2275,6 +2282,10 @@ class SmsController:
                         if request['load_unload_on_mlv_hlf_date'] != '':
                             RelifingHistoryModal.load_unload_on_mlv_hlf_date = get_prod.load_unload_on_mlv_hlf_date
                         RelifingHistoryModal.load_unload_on_mlv_hlf_remarks = get_prod.load_unload_on_mlv_hlf_remarks
+                        if request['user_id'] != '':
+                            RelifingHistoryModal.user_id = get_prod.user_id
+                        else:
+                            RelifingHistoryModal.user_id = None
                         RelifingHistoryModal.save()
 
                         # history saved

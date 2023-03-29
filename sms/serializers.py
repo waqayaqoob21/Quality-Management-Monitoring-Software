@@ -85,6 +85,8 @@ class ProductionSystemSerialzer(Serializer):
     final_integrated_testing_remarks = CharField()
     load_unload_on_mlv_hlf_date = DateTimeField()
     load_unload_on_mlv_hlf_remarks = CharField()
+    user_id = models.IntegerField(null=True)
+
 class FlightSystemSerialzer(Serializer):
     id = IntegerField()
     system = CharField()
@@ -166,6 +168,7 @@ class FlightSystemSerialzer(Serializer):
     final_integrated_testing_remarks = CharField()
     load_unload_on_mlv_hlf_date = DateTimeField()
     load_unload_on_mlv_hlf_remarks = CharField()
+    user_id = models.IntegerField(null=True)
 
 
 class RelifingSystemSerialzer(Serializer):
@@ -249,3 +252,4 @@ class RelifingSystemSerialzer(Serializer):
     final_integrated_testing_remarks = CharField()
     load_unload_on_mlv_hlf_date = DateTimeField()
     load_unload_on_mlv_hlf_remarks = CharField()
+    user_id = models.IntegerField(null=True)
