@@ -800,173 +800,132 @@ class MpmController:
     @staticmethod
     def GetActiveMotorListDateNone(request, self=None):
             dataList = ActiveMotors.objects.all()
-            ListItems = []
             for data in dataList:
                 if data.qualification_insulation_lining_propellant_rm == 'None':
                     data.qualification_insulation_lining_propellant_rm_date = None
-                    ListItems.append(data)
 
                 if data.lining == 'None':
                     data.lining_date = None
-                    ListItems.append(data)
 
                 if data.propellant_mechanical_properties == 'None':
                     data.propellant_mechanical_properties_date = None
-                    ListItems.append(data)
 
                 if data.acceptance_casting == 'None':
                     data.acceptance_casting_date = None
-                    ListItems.append(data)
 
                 if data.sandblasting == 'None':
                     data.sandblasting_date = None
-                    ListItems.append(data)
 
                 if data.insulation == 'None':
                     data.insulation_date = None
-                    ListItems.append(data)
 
                 if data.ut_rt_insulated_case == 'None':
                     data.ut_rt_insulated_case_date = None
-                    ListItems.append(data)
 
                 if data.acceptance_silver_material == 'None':
                     data.acceptance_silver_material_date = None
-                    ListItems.append(data)
 
                 if data.silver_application == 'None':
                     data.silver_application_date = None
-                    ListItems.append(data)
 
                 if data.formulation_tailoring_liner_propellant == 'None':
                     data.formulation_tailoring_liner_propellant_date = None
-                    ListItems.append(data)
 
                 if data.conditioning_raw_materials == 'None':
                     data.conditioning_raw_materials_date = None
-                    ListItems.append(data)
 
                 if data.conditioning_of_lining == 'None':
                     data.conditioning_of_lining_date = None
-                    ListItems.append(data)
 
                 if data.casting == 'None':
                     data.casting_date = None
-                    ListItems.append(data)
 
                 if data.curing == 'None':
                     data.curing_date = None
-                    ListItems.append(data)
 
                 if  data.ut_endoscopy_rt_grain == 'None':
                     data.ut_endoscopy_rt_grain_date = None
-                    ListItems.append(data)
 
                 if data.liner_mechanical_properties == 'None':
                     data.liner_mechanical_properties_date = None
-                    ListItems.append(data)
 
                 if data.mechanical_properties_propellant == 'None':
                     data.mechanical_properties_propellant_date = None
-                    ListItems.append(data)
 
                 if data.interface_bond_strength == 'None':
                     data.interface_bond_strength_date = None
-                    ListItems.append(data)
 
                 if data.propellant_burn_rate == 'None':
                     data.propellant_burn_rate_date = None
-                    ListItems.append(data)
 
                 if data.trimming_Propellant_grain == 'None':
                     data.trimming_Propellant_grain_date = None
-                    ListItems.append(data)
 
                 if data.mass_liner_insulation_propellant_srm == 'None':
                     data.mass_liner_insulation_propellant_srm_date = None
-                    ListItems.append(data)
 
                 if data.mass_insulation == 'None':
                     data.mass_insulation_date = None
-                    ListItems.append(data)
 
                 if data.mass_propellant == 'None':
                     data.mass_propellant_date = None
-                    ListItems.append(data)
 
                 if data.bhd_status == 'None' :
                     data.bhd_date = None
-                    ListItems.append(data)
 
                 if data.qm_certification_status == 'None':
                     data.qm_certification_date = None
-                    ListItems.append(data)
 
                 if data.overall_qualification_status == 'None':
                     data.overall_qualification_date = None
-                    ListItems.append(data)
 
                 if data.matiral_qualified_status == 'None':
                     data.matiral_qualified_date = None
-                    ListItems.append(data)
 
                 if data.compo_manufacturing_status == 'None':
                     data.compo_manufacturing_date = None
-                    ListItems.append(data)
 
                 if data.powerpack_assembly_status == 'None':
                     data.powerpack_assembly_date = None
-                    ListItems.append(data)
 
                 if data.powerpack_testing_status == 'None':
                     data.powerpack_testing_date = None
-                    ListItems.append(data)
 
                 if data.raw_material_inspection_status == 'None':
                     data.raw_material_inspection_date = None
-                    ListItems.append(data)
 
                 if data.pressing_electrode_status == 'None':
                     data.pressing_electrode_date = None
-                    ListItems.append(data)
 
                 if data.formation_process_status == 'None':
                     data.formation_process_date = None
-                    ListItems.append(data)
 
                 if data.assembly_process_status == 'None':
                     data.assembly_process_date = None
-                    ListItems.append(data)
 
                 if data.battery_testing_status == 'None':
                     data.battery_testing_date = None
-                    ListItems.append(data)
 
                 if data.final_qualification_status == 'None':
                     data.final_qualification_date = None
-                    ListItems.append(data)
 
                 if data.qualification_raw_material_status == 'None':
                     data.qualification_raw_material_date = None
-                    ListItems.append(data)
 
                 if data.filling_status == 'None':
                     data.filling_date = None
-                    ListItems.append(data)
 
                 if data.assembling_integration_status == 'None':
                     data.assembling_integration_date = None
-                    ListItems.append(data)
 
                 if data.qualification_testing_status == 'None':
                     data.qualification_testing_date = None
-                    ListItems.append(data)
 
                 if data.performance_testing_status == 'None':
                     data.performance_testing_date = None
-                    ListItems.append(data)
-
-            serializer = ActiveMotorSerializer(ListItems, many=True)
+                data.save()
+            data = ActiveMotors.objects.all()
+            serializer = ActiveMotorSerializer(data, many=True)
             return JsonResponse({'status': 'True', 'data': serializer.data}, status=200)
     @staticmethod
     def GetActiveMotorList(request, self=None):
