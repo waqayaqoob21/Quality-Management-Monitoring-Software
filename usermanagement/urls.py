@@ -30,5 +30,6 @@ urlpatterns = [
     path('userprod/', GetUserProductionListAPIVIEW.as_view(), name='userprod'),
     path('userrelif/', GetUserRelifingListAPIVIEW.as_view(), name='userrelif'),
     path('userflight/', GetUserFlightListAPIVIEW.as_view(), name='userflight'),
+    path('usercsv/', AddUserCSVAPIView.as_view(), name='usercsv'),
 
 ]

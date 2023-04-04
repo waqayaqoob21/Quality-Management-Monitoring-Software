@@ -9,7 +9,7 @@ from sms.serializers import *
 from mpm.models import *
 from mpm.serializer import *
 from django.db.models import F, Q
-
+from csv import reader
 class UserController:
 
     @staticmethod
@@ -202,3 +202,34 @@ class UserController:
                                 status=200)
         except:
             return JsonResponse({'message': 'Sorry! No Audit found.'}, status=500)
+
+
+    @staticmethod
+    def AddUserCSV(request):
+        userModel = User()
+        # attachment = request['attachment']
+        with open('users.csv', 'r') as csv_file:
+            csvf = reader(csv_file)
+            data = []
+            for first_name, last_name, username, password, email, *__ in csvf:
+                user = User(first_name=first_name,last_name=last_name,username=username,email=email )
+                user.set_password(password)
+                data.append(user)
+            User.objects.bulk_create(data)
+            return JsonResponse({'message': 'Sorry! No Audit found.'}, status=500)
+
+        # try:
+        #     uname = request['username']
+        #     id = request['id']
+        #     if id == '0':
+        #         userModel.first_name = request['first_name']
+        #         userModel.last_name = request['last_name']
+        #         userModel.username = request['username']
+        #         userModel.email = 'nescom@nescom.com'
+        #         encryptedpassword = make_password(request['password'])
+        #         userModel.password = encryptedpassword
+        #         userModel.is_superuser = 'False'
+        #         userModel.last_login = date.today()
+        #         userModel.is_active = 'True'
+        #         userModel.is_staff = 'True'
+        #         userModel.save()

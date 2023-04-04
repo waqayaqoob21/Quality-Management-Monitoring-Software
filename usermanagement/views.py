@@ -14,6 +14,11 @@ class AddUserAPIView(APIView):
         result = user_obj.AddUser(request.data)
         return result
 
+class AddUserCSVAPIView(APIView):
+    permission_classes = [AllowAny]
+    def post(self, request):
+        result = user_obj.AddUserCSV(request.data)
+        return result
 class GetUserListAPIVIEW(APIView):
     permission_classes = [AllowAny]
     def get(self, request):

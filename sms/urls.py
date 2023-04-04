@@ -5,6 +5,7 @@ urlpatterns = [
   
 
         path('addprod/', AddProductionAPIVIEW.as_view(), name='addprod'),
+        path('importprodcsv/', ImportProductionCsvAPIVIEW.as_view(), name='importprodcsv'),
         path('editprod/', EditProductionAPIVIEW.as_view(), name='editprod'),
         path('prodlist/', GetProductionListAPIVIEW.as_view(), name='prodlist'),
         path('prodlistHistory/', GetProductionHistoryListAPIVIEW.as_view(), name='prodlistHistory'),
@@ -22,9 +23,6 @@ urlpatterns = [
         path('getflightexl/', GetFlightExcelAPIVIEW.as_view(), name='getflightexl'),
         path('deleteflightsys/', DeleteFlightAPIVIEW.as_view(), name='deleteflightsys'),
 
-
-
-
         path('addrelifing/', AddRelifingAPIVIEW.as_view(), name='addrelifing'),
         path('editrelifing/', EditRelifingAPIVIEW.as_view(), name='editrelifing'),
         path('relifinglist/', GetRelifingListAPIVIEW.as_view(), name='relifinglist'),
@@ -34,5 +32,9 @@ urlpatterns = [
         path('deleterelifing/', DeleteRelifingAPIVIEW.as_view(), name='deleterelifing'),
 
         path('getSystemMonitoringDashboardCount/', getSystemMonitoringDashboardCountAPIVIEW.as_view(), name='getSystemMonitoringDashboardCount'),
+
+        path('prodatenone/', GetProductionDateNoneListAPIVIEW.as_view(), name='prodatenone'),
+        path('flightdatenone/', GetFlightDateNoneListAPIVIEW.as_view(), name='flightdatenone'),
+        path('relifdatenone/', GetRelifingDateNoneListAPIVIEW.as_view(), name='relifdatenone'),
 
 ]

@@ -18,7 +18,11 @@ class AddProductionAPIVIEW(APIView):
         result = task_obj.AddProductionStatus(request.data)
         return result
 
-
+class ImportProductionCsvAPIVIEW(APIView):
+    permission_classes = [AllowAny]
+    def post(self, request):
+        result = task_obj.ImportProductionCsv(request.data)
+        return result
 class EditProductionAPIVIEW(APIView):
     permission_classes = [AllowAny]
 
@@ -35,7 +39,26 @@ class GetProductionListAPIVIEW(APIView):
         result = task_obj.GetProductionList(request)
         return result
 
+class GetProductionDateNoneListAPIVIEW(APIView):
+    permission_classes = [AllowAny]
 
+    def get(self, request):
+        result = task_obj.GetProdctionDateNone(request)
+        return result
+
+class GetFlightDateNoneListAPIVIEW(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        result = task_obj.GetFlightDateNone(request)
+        return result
+
+class GetRelifingDateNoneListAPIVIEW(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        result = task_obj.GetRelifingDateNone(request)
+        return result
 class GetProductionHistoryListAPIVIEW(APIView):
     permission_classes = [AllowAny]
 

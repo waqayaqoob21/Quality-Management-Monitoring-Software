@@ -18,5 +18,6 @@ urlpatterns = [
 
         path('gethistory/', GetActiveMotorHistoryAPIVIEW.as_view(), name='gethistory'),
 
+        path('datenone/', GetActiveMotorListDateNoneAPIVIEW.as_view(), name='datenone'),
 
 ]

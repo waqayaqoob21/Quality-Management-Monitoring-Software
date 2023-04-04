@@ -16,6 +16,9 @@ import io
 import os
 from PIL import Image
 from pytesseract import pytesseract
+from csv import reader
+import os
+import csv
 
 from sms.models import FlightSystemStatus, ProductionSystemStatus, RelifingSystemStatus, ProductionSystemStatusHistory, \
     FlightSystemStatusHistory, RelifingSystemStatusHistory
@@ -30,11 +33,11 @@ class SmsController:
 
     @staticmethod
     def AddProductionStatus(request):
-            is_active = 0
-            prodModel = ProductionSystemStatus()
-            if request['is_active'] == 'true':
-                is_active = 1
-        # try:
+        is_active = 0
+        prodModel = ProductionSystemStatus()
+        if request['is_active'] == 'true':
+            is_active = 1
+        try:
             id = request['id']
             if id == '0':
                 prodModel.system = request['system']
@@ -435,9 +438,122 @@ class SmsController:
                     get_prod.save()
             return JsonResponse({'status': 'True', 'message': "Production Status Updated Successfully!"},
                                 status=200)
-        # except Exception as e:
-        #     return JsonResponse({'status': 'False', "message": "Status Not Saved"}, status=500)
+        except Exception as e:
+            return JsonResponse({'status': 'False', "message": "Status Not Saved"}, status=500)
 
+    @staticmethod
+    def ImportProductionCsv(request):
+        try:
+            id = request['id']
+            importedCsvFile = request["csv_file"]
+            if not os.path.isdir('imported_files'):
+                os.mkdir('imported_files')
+            path = "imported_files/"
+            fs = FileSystemStorage(location=path)
+            fs.save(importedCsvFile.name, importedCsvFile)
+            file_path = path + importedCsvFile.name
+            user_id = 0
+            if request['user_id'] != '':
+                user_id = request['user_id']
+            if id == '0':
+                file = open(file_path)
+                csvf = csv.reader(file)
+                next(csvf, None)
+                data = []
+                for system, sys_type, testing_type, organization, set_id, blt_date, blt_status, blt_remarks, pre_hil_date, pre_hil_status, pre_hil_remarks, vibration_date, vibration_status, vibration_remarks, cg_balancing_date, cg_balancing_status, cg_balancing_remarks, post_hil_date, post_hil_status, post_hil_remarks, final_integrated_testing_date, final_integrated_testing_status, final_integrated_testing_remarks, bhd_date, bhd_status, bhd_remarks, fqm_date, fqm_status, fqm_remarks, qm_certification_date, qm_certification_status, qm_certification_remarks, end_user_date, end_user_status, end_user_remarks, remarks, *__ in csvf:
+                    prod_system = ProductionSystemStatus(system=system,sys_type=sys_type,testing_type=testing_type,organization=organization,set_id=set_id,blt_date=blt_date,blt_status=blt_status,blt_remarks=blt_remarks,pre_hil_date=pre_hil_date,pre_hil_status=pre_hil_status,pre_hil_remarks=pre_hil_remarks,vibaration_date=vibration_date,vibaration_status=vibration_status,vibaration_remarks=vibration_remarks,cgbalancing_date= cg_balancing_date,cgbalancing_date_status=cg_balancing_status,cgbalancing_date_remarks=cg_balancing_remarks,post_hil_date=post_hil_date,post_hil_status=post_hil_status,post_hil_remarks=post_hil_remarks,final_integrated_testing_date=final_integrated_testing_date,final_integrated_testing=final_integrated_testing_status,final_integrated_testing_remarks=final_integrated_testing_remarks,bhd_date=bhd_date,bhd_status=bhd_status,bhd_remarks=bhd_remarks,fqm_date=fqm_date,fqm_status=fqm_status,fqm_remarks=fqm_remarks,qm_certification_date=qm_certification_date,qm_certification_status=qm_certification_status,qm_certification_remarks=qm_certification_remarks,enduser_date=end_user_date,enduser_status=end_user_status, enduser_remarks=end_user_remarks,remarks=remarks,user_id= user_id)
+                    data.append(prod_system)
+                ProductionSystemStatus.objects.bulk_create(data)
+                os.remove(file_path)
+                return JsonResponse({'message': 'Production Status Updated Successfully!'}, status=200)
+            else:
+                return JsonResponse({'status': 'False', "message": "Status Not Saved"}, status=500)
+        except Exception as e:
+            return JsonResponse({'status': 'False', "message": "Status Not Saved"}, status=500)
+    @staticmethod
+    def GetProdctionDateNone(request):
+        dataList = ProductionSystemStatus.objects.all()
+        prodModel = ProductionSystemStatus()
+
+        for data in dataList:
+            if data.blt_status == 'None':
+                data.blt_date = None
+
+            if data.emp_proofing == 'None':
+                data.emp_proofing_date = None
+
+            if data.func_tst == 'None':
+                data.func_tst_date = None
+
+            if data.func_tst_dummy_bird == 'None':
+                data.func_tst_dummy_bird_date = None
+
+            if data.road_test == 'None':
+                data.road_test_date = None
+
+            if data.post_road_test == 'None':
+                data.post_road_test_date = None
+
+            if data.integrated_operation == 'None':
+                data.integrated_operation_date = None
+
+            if data.rain_test == 'None':
+                data.rain_test_date = None
+
+            if data.pre_user_inspection == 'None':
+                data.pre_user_inspection_date = None
+
+            if data.final_integration_status == 'None':
+                data.final_integration_date = None
+
+            if data.load_unload_on_mlv_hlf == 'None':
+                data.load_unload_on_mlv_hlf_date = None
+
+            if data.pre_hil_status == 'None':
+                data.pre_hil_date = None
+
+            if data.vibaration_status == 'None':
+                data.vibaration_date = None
+
+            if data.cgbalancing_date_status == 'None':
+                data.cgbalancing_date = None
+
+            if data.cgbalancing_date_status == 'None':
+                data.cgbalancing_date = None
+
+            if data.post_hil_status == 'None':
+                data.post_hil_date = None
+
+            if data.sys_align_status == 'None':
+                data.sys_align_Date = None
+
+            if data.incapsulation_status == 'None':
+                data.incapsulation_date = None
+
+            if data.final_integration_status == 'None':
+                data.final_integration_date = None
+
+            if data.final_integration_status == 'None':
+                data.final_integration_date = None
+
+            if data.fgt_status == 'None':
+                data.fgt_date =None
+
+            if data.bhd_status == 'None':
+                data.bhd_date = None
+
+            if data.fqm_status == 'None':
+                data.fqm_date = None
+
+            if data.qm_certification_status == 'None':
+                data.qm_certification_date = None
+
+            if data.enduser_status == 'None' or data.enduser_status == '':
+                data.enduser_date = None
+            data.save()
+        ListItem = ProductionSystemStatus.objects.all()
+        serializer = ProductionSystemSerialzer(ListItem, many=True)
+        return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
     @staticmethod
     def GetProductionList(request):
         try:
@@ -1435,6 +1551,89 @@ class SmsController:
     #     return JsonResponse({'status': 'False', "message": "Status Not Saved"}, status=500)
 
     @staticmethod
+    def GetFlightDateNone(request):
+        dataList = FlightSystemStatus.objects.all()
+        ListItems = []
+        for data in dataList:
+            if data.blt_status == 'None':
+                data.blt_date = None
+
+            if data.emp_proofing == 'None':
+                data.emp_proofing_date = None
+
+            if data.func_tst == 'None':
+                data.func_tst_date = None
+
+            if data.func_tst_dummy_bird == 'None':
+                data.func_tst_dummy_bird_date = None
+
+            if data.road_test == 'None':
+                data.road_test_date = None
+
+            if data.post_road_test == 'None':
+                data.post_road_test_date = None
+
+            if data.integrated_operation == 'None':
+                data.integrated_operation_date = None
+
+            if data.rain_test == 'None':
+                data.rain_test_date = None
+
+            if data.pre_user_inspection == 'None':
+                data.pre_user_inspection_date = None
+
+            if data.final_integration_status == 'None':
+                data.final_integration_date = None
+
+            if data.load_unload_on_mlv_hlf == 'None':
+                data.load_unload_on_mlv_hlf_date = None
+
+            if data.pre_hil_status == 'None':
+                data.pre_hil_date = None
+
+            if data.vibaration_status == 'None':
+                data.vibaration_date = None
+
+            if data.cgbalancing_date_status == 'None':
+                data.cgbalancing_date = None
+
+            if data.cgbalancing_date_status == 'None':
+                data.cgbalancing_date = None
+
+            if data.post_hil_status == 'None':
+                data.post_hil_date = None
+
+            if data.sys_align_status == 'None':
+                data.sys_align_Date = None
+
+            if data.incapsulation_status == 'None':
+                data.incapsulation_date = None
+
+            if data.final_integration_status == 'None':
+                data.final_integration_date = None
+
+            if data.final_integration_status == 'None':
+                data.final_integration_date = None
+
+            if data.fgt_status == 'None':
+                data.fgt_date =None
+
+            if data.bhd_status == 'None':
+                data.bhd_date = None
+
+            if data.fqm_status == 'None':
+                data.fqm_date = None
+
+            if data.qm_certification_status == 'None':
+                data.qm_certification_date = None
+
+            if data.launchact_status == 'None':
+                data.launchact_date = None
+            data.save()
+        my_list = FlightSystemStatus.objects.all()
+        serializer = FlightSystemSerialzer(my_list, many=True)
+        return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+    @staticmethod
     def GetFlightList(request):
         try:
             org = request.query_params['selected_org']
@@ -2400,6 +2599,91 @@ class SmsController:
         except Exception as e:
             return JsonResponse({'status': 'False', "message": "Status Not Saved"}, status=500)
 
+
+    @staticmethod
+    def GetRelifingDateNone(request):
+        dataList = RelifingSystemStatus.objects.all()
+        ListItems = []
+        for data in dataList:
+            if data.blt_status == 'None':
+                data.blt_date = None
+
+            if data.emp_proofing == 'None':
+                data.emp_proofing_date = None
+
+            if data.func_tst == 'None':
+                data.func_tst_date = None
+
+            if data.func_tst_dummy_bird == 'None':
+                data.func_tst_dummy_bird_date = None
+
+            if data.road_test == 'None':
+                data.oad_test_date = None
+
+            if data.post_road_test == 'None':
+                data.post_road_test_date = None
+
+            if data.integrated_operation == 'None':
+                data.integrated_operation_date = None
+
+            if data.rain_test == 'None':
+                data.rain_test_date = None
+
+            if data.pre_user_inspection == 'None':
+                data.pre_user_inspection_date = None
+
+            if data.final_integration_status == 'None':
+                data.final_integration_date = None
+
+            if data.load_unload_on_mlv_hlf == 'None':
+                data.load_unload_on_mlv_hlf_date = None
+
+            if data.pre_hil_status == 'None':
+                data.pre_hil_date = None
+
+            if data.vibaration_status == 'None':
+                data.vibaration_date = None
+
+            if data.cgbalancing_date_status == 'None':
+                data.cgbalancing_date = None
+
+            if data.cgbalancing_date_status == 'None':
+                data.cgbalancing_date = None
+
+            if data.post_hil_status == 'None':
+                data.post_hil_date = None
+
+            if data.sys_align_status == 'None':
+                data.sys_align_Date = None
+
+            if data.incapsulation_status == 'None':
+                data.incapsulation_date = None
+
+            if data.final_integration_status == 'None':
+                data.final_integration_date = None
+
+            if data.final_integration_status == 'None':
+                data.final_integration_date = None
+
+            if data.fgt_status == 'None':
+                data.fgt_date =None
+
+            if data.bhd_status == 'None':
+                data.bhd_date = None
+
+
+            if data.fqm_status == 'None':
+                data.fqm_date = None
+
+            if data.qm_certification_status == 'None':
+                data.qm_certification_date = None
+
+            if data.enduser_status == 'None':
+                data.enduser_date = None
+            data.save()
+        my_list = RelifingSystemStatus.objects.all()
+        serializer = RelifingSystemSerialzer(my_list, many=True)
+        return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
     @staticmethod
     def GetRelifingList(request):
         # try:
