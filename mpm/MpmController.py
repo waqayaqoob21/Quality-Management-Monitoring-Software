@@ -799,7 +799,7 @@ class MpmController:
 
     @staticmethod
     def GetActiveMotorListDateNone(request, self=None):
-            dataList = ActiveMotors.objects.all()
+            dataList = ActiveMotorsHistory.objects.all()
             for data in dataList:
                 if data.qualification_insulation_lining_propellant_rm == 'None':
                     data.qualification_insulation_lining_propellant_rm_date = None
@@ -924,7 +924,7 @@ class MpmController:
                 if data.performance_testing_status == 'None':
                     data.performance_testing_date = None
                 data.save()
-            data = ActiveMotors.objects.all()
+            data = ActiveMotorsHistory.objects.all()
             serializer = ActiveMotorSerializer(data, many=True)
             return JsonResponse({'status': 'True', 'data': serializer.data}, status=200)
     @staticmethod

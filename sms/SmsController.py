@@ -472,8 +472,7 @@ class SmsController:
             return JsonResponse({'status': 'False', "message": "Status Not Saved"}, status=500)
     @staticmethod
     def GetProdctionDateNone(request):
-        dataList = ProductionSystemStatus.objects.all()
-        prodModel = ProductionSystemStatus()
+        dataList = ProductionSystemStatusHistory.objects.all()
 
         for data in dataList:
             if data.blt_status == 'None':
@@ -551,7 +550,7 @@ class SmsController:
             if data.enduser_status == 'None' or data.enduser_status == '':
                 data.enduser_date = None
             data.save()
-        ListItem = ProductionSystemStatus.objects.all()
+        ListItem = ProductionSystemStatusHistory.objects.all()
         serializer = ProductionSystemSerialzer(ListItem, many=True)
         return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
     @staticmethod
@@ -1552,7 +1551,7 @@ class SmsController:
 
     @staticmethod
     def GetFlightDateNone(request):
-        dataList = FlightSystemStatus.objects.all()
+        dataList = FlightSystemStatusHistory.objects.all()
         ListItems = []
         for data in dataList:
             if data.blt_status == 'None':
@@ -1630,7 +1629,7 @@ class SmsController:
             if data.launchact_status == 'None':
                 data.launchact_date = None
             data.save()
-        my_list = FlightSystemStatus.objects.all()
+        my_list = FlightSystemStatusHistory.objects.all()
         serializer = FlightSystemSerialzer(my_list, many=True)
         return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
     @staticmethod
@@ -2602,7 +2601,7 @@ class SmsController:
 
     @staticmethod
     def GetRelifingDateNone(request):
-        dataList = RelifingSystemStatus.objects.all()
+        dataList = RelifingSystemStatusHistory.objects.all()
         ListItems = []
         for data in dataList:
             if data.blt_status == 'None':
@@ -2681,7 +2680,7 @@ class SmsController:
             if data.enduser_status == 'None':
                 data.enduser_date = None
             data.save()
-        my_list = RelifingSystemStatus.objects.all()
+        my_list = RelifingSystemStatusHistory.objects.all()
         serializer = RelifingSystemSerialzer(my_list, many=True)
         return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
     @staticmethod

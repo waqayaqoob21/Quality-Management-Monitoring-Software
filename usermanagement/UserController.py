@@ -99,15 +99,17 @@ class UserController:
             return JsonResponse({'massage', 'No record found!'}, status=201)
     @staticmethod
     def DeleteUser(request):
-        try:
+        # try:
             userId = request.query_params['id']
-            user = User.objects.get(id=userId)
-            user.delete()
-            role = UserRoles.objects.get(user_id = userId).first()
-            role.delete()
+            if userId != '':
+                user = User.objects.get(id=userId)
+                user.delete()
+            if userId != '':
+                role = UserRoles.objects.get(user_id = userId)
+                role.delete()
             return JsonResponse({'message': 'User has been deleted'}, status=200)
-        except:
-            return JsonResponse({'message': 'Sorry! No Audit found.'}, status=500)
+        # except:
+        #     return JsonResponse({'message': 'Sorry! No Audit found.'}, status=500)
 
     @staticmethod
     def getUserMotorList(request):
