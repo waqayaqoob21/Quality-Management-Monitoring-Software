@@ -810,8 +810,8 @@ class DocController:
                 if docList is not None:
                     for item in docList:
                         if item.task_date is None:
-                            item.task_date = datetime.today() + timedelta(hours=5)
-                        if item.due_date.date() > item.task_date.date():
+                            item.task_date = datetime.today() #+ timedelta(hours=5)
+                        if item.due_date.date() >= item.task_date.date():
                             list.append(item)
                 # docList = list
                 serializer = DocListSerializer(list, many=True)
@@ -1877,7 +1877,7 @@ class DocController:
                 for item in current_current_audit_in_process:
                     if item.task_date is None:
                         item.task_date = datetime.today() + timedelta(hours=5)
-                    if item.due_date.date() > item.task_date.date():
+                    if item.due_date.date() >= item.task_date.date():
                         count_current_audit_in_process = count_current_audit_in_process + 1
             audit_inProcess = count_current_audit_in_process
             dist = {
