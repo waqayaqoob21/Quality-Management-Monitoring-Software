@@ -19,7 +19,9 @@ from pytesseract import pytesseract
 from csv import reader
 import os
 import csv
+from django.db.models.functions import *
 
+from dateutil.relativedelta import relativedelta
 from sms.models import FlightSystemStatus, ProductionSystemStatus, RelifingSystemStatus, ProductionSystemStatusHistory, \
     FlightSystemStatusHistory, RelifingSystemStatusHistory
 from sms.serializers import FlightSystemSerialzer, ProductionSystemSerialzer, \
@@ -446,6 +448,7 @@ class SmsController:
         try:
             id = request['id']
             importedCsvFile = request["csv_file"]
+            system_type = request["system_type"]
             if not os.path.isdir('imported_files'):
                 os.mkdir('imported_files')
             path = "imported_files/"
@@ -460,16 +463,329 @@ class SmsController:
                 csvf = csv.reader(file)
                 next(csvf, None)
                 data = []
-                for system, sys_type, testing_type, organization, set_id, blt_date, blt_status, blt_remarks, pre_hil_date, pre_hil_status, pre_hil_remarks, vibration_date, vibration_status, vibration_remarks, cg_balancing_date, cg_balancing_status, cg_balancing_remarks, post_hil_date, post_hil_status, post_hil_remarks, final_integrated_testing_date, final_integrated_testing_status, final_integrated_testing_remarks, bhd_date, bhd_status, bhd_remarks, fqm_date, fqm_status, fqm_remarks, qm_certification_date, qm_certification_status, qm_certification_remarks, end_user_date, end_user_status, end_user_remarks, remarks, *__ in csvf:
-                    prod_system = ProductionSystemStatus(system=system,sys_type=sys_type,testing_type=testing_type,organization=organization,set_id=set_id,blt_date=blt_date,blt_status=blt_status,blt_remarks=blt_remarks,pre_hil_date=pre_hil_date,pre_hil_status=pre_hil_status,pre_hil_remarks=pre_hil_remarks,vibaration_date=vibration_date,vibaration_status=vibration_status,vibaration_remarks=vibration_remarks,cgbalancing_date= cg_balancing_date,cgbalancing_date_status=cg_balancing_status,cgbalancing_date_remarks=cg_balancing_remarks,post_hil_date=post_hil_date,post_hil_status=post_hil_status,post_hil_remarks=post_hil_remarks,final_integrated_testing_date=final_integrated_testing_date,final_integrated_testing=final_integrated_testing_status,final_integrated_testing_remarks=final_integrated_testing_remarks,bhd_date=bhd_date,bhd_status=bhd_status,bhd_remarks=bhd_remarks,fqm_date=fqm_date,fqm_status=fqm_status,fqm_remarks=fqm_remarks,qm_certification_date=qm_certification_date,qm_certification_status=qm_certification_status,qm_certification_remarks=qm_certification_remarks,enduser_date=end_user_date,enduser_status=end_user_status, enduser_remarks=end_user_remarks,remarks=remarks,user_id= user_id)
-                    data.append(prod_system)
-                ProductionSystemStatus.objects.bulk_create(data)
-                os.remove(file_path)
+                if system_type == "Ballistic":
+                    for system, sys_type, testing_type, organization, set_id, blt_date, blt_status, blt_remarks, pre_hil_date, pre_hil_status, pre_hil_remarks,\
+                            vibration_date, vibration_status, vibration_remarks, cg_balancing_date, cg_balancing_status, cg_balancing_remarks, post_hil_date, post_hil_status, post_hil_remarks,\
+                            final_integrated_testing_date, final_integrated_testing_status, final_integrated_testing_remarks, bhd_date, bhd_status, bhd_remarks, fqm_date, fqm_status, fqm_remarks,\
+                            qm_certification_date, qm_certification_status, qm_certification_remarks, end_user_date, end_user_status, end_user_remarks, remarks, *__ in csvf:
+
+                        prod_system = ProductionSystemStatus(system=system,sys_type=sys_type,testing_type=testing_type,organization=organization,set_id=set_id,blt_date= datetime.strptime(blt_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),blt_status=blt_status,blt_remarks=blt_remarks,
+                            pre_hil_date= datetime.strptime(pre_hil_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),pre_hil_status=pre_hil_status,pre_hil_remarks=pre_hil_remarks,vibaration_date= datetime.strptime(vibration_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),vibaration_status=vibration_status,vibaration_remarks=vibration_remarks,
+                            cgbalancing_date=  datetime.strptime(cg_balancing_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),cgbalancing_date_status=cg_balancing_status,cgbalancing_date_remarks=cg_balancing_remarks,post_hil_date= datetime.strptime(post_hil_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),post_hil_status=post_hil_status,post_hil_remarks=post_hil_remarks,
+                            final_integrated_testing_date= datetime.strptime(final_integrated_testing_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),final_integrated_testing=final_integrated_testing_status,final_integrated_testing_remarks=final_integrated_testing_remarks,
+                            bhd_date= datetime.strptime(bhd_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),bhd_status=bhd_status,bhd_remarks=bhd_remarks,fqm_date= datetime.strptime(fqm_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),fqm_status=fqm_status,fqm_remarks=fqm_remarks,
+                            qm_certification_date= datetime.strptime(qm_certification_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),qm_certification_status=qm_certification_status,qm_certification_remarks=qm_certification_remarks,
+                            enduser_date= datetime.strptime(end_user_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),enduser_status=end_user_status, enduser_remarks=end_user_remarks,remarks=remarks,user_id= user_id)
+                        data.append(prod_system)
+                    ProductionSystemStatus.objects.bulk_create(data)
+                    os.remove(file_path)
+                elif system_type == "Cruise":
+                    for system, sys_type, testing_type, organization, set_id, blt_date, blt_status, blt_remarks, pre_hil_date, pre_hil_status, pre_hil_remarks, vibration_date, vibration_status, vibration_remarks,\
+                            cg_balancing_date, cg_balancing_status, cg_balancing_remarks, post_hil_date, post_hil_status, post_hil_remarks,sys_align_date, sys_align_status, sys_align_remarks, fgt_date, fgt_status, fgt_remarks,\
+                            encapsulation_date, encapsulation_status, encapsulation_remarks, final_integrated_testing_date, final_integrated_testing_status, final_integrated_testing_remarks, bhd_date, bhd_status, bhd_remarks,\
+                            fqm_date, fqm_status, fqm_remarks, qm_certification_date, qm_certification_status, qm_certification_remarks, end_user_date, end_user_status, end_user_remarks, remarks, *__ in csvf:
+                        prod_system = ProductionSystemStatus(system=system,sys_type=sys_type,testing_type=testing_type,organization=organization,
+                            set_id=set_id,blt_date= datetime.strptime(blt_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),blt_status=blt_status,blt_remarks=blt_remarks,pre_hil_date= datetime.strptime(pre_hil_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),pre_hil_status=pre_hil_status,
+                            pre_hil_remarks=pre_hil_remarks,vibaration_date= datetime.strptime(vibration_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),vibaration_status=vibration_status,vibaration_remarks=vibration_remarks,
+                            cgbalancing_date=  datetime.strptime(cg_balancing_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),cgbalancing_date_status=cg_balancing_status,cgbalancing_date_remarks=cg_balancing_remarks,post_hil_date= datetime.strptime(post_hil_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),post_hil_status=post_hil_status,post_hil_remarks=post_hil_remarks,
+                            sys_align_Date=  datetime.strptime(sys_align_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"), sys_align_status= sys_align_status, sys_align_remarks= sys_align_remarks,
+                            fgt_date=  datetime.strptime(fgt_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"), fgt_status= fgt_status, fgt_remarks=fgt_remarks, incapsulation_date=  datetime.strptime(encapsulation_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"), incapsulation_status=encapsulation_status, incapsulation_remarks=encapsulation_remarks,
+                            final_integrated_testing_date= datetime.strptime(final_integrated_testing_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),final_integrated_testing=final_integrated_testing_status,final_integrated_testing_remarks=final_integrated_testing_remarks,
+                            bhd_date= datetime.strptime(bhd_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),bhd_status=bhd_status,bhd_remarks=bhd_remarks,fqm_date= datetime.strptime(fqm_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),fqm_status=fqm_status,fqm_remarks=fqm_remarks,
+                            qm_certification_date= datetime.strptime(qm_certification_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),qm_certification_status=qm_certification_status,qm_certification_remarks=qm_certification_remarks,enduser_date= datetime.strptime(end_user_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),enduser_status=end_user_status, enduser_remarks=end_user_remarks,remarks=remarks,user_id= user_id)
+                        data.append(prod_system)
+                    ProductionSystemStatus.objects.bulk_create(data)
+                    os.remove(file_path)
+
+                elif system_type =="Launch System":
+                    for system, sys_type, testing_type, organization, set_id, blt_date, blt_status, blt_remarks,emp_proofing_date,emp_proofing_status,emp_proofing_remarks,\
+                        func_test_date,func_test_status,func_test_remarks,func_test_dummy_date,func_test_dummy_status,func_test_dummy_remarks,road_test_date,road_test_status,road_test_remarks,\
+                        post_road_test_date,post_road_test_status,post_road_test_remarks,integrated_operation_date,integrated_operation_status,integrated_operation_remarks,\
+                        rain_test_date,rain_test_status,rain_test_remarks,pre_user_inspection_date,pre_user_inspection_status,\
+                        pre_user_inspection_remarks,final_integrated_testing_date, final_integrated_testing_status, final_integrated_testing_remarks, bhd_date, bhd_status, bhd_remarks, fqm_date, fqm_status, fqm_remarks, qm_certification_date, qm_certification_status, qm_certification_remarks, end_user_date, end_user_status, end_user_remarks, remarks, *__ in csvf:
+
+                        prod_system = ProductionSystemStatus(system=system,sys_type=sys_type,testing_type=testing_type,organization=organization,set_id=set_id,blt_date= datetime.strptime(blt_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),blt_status=blt_status,blt_remarks=blt_remarks,
+                            emp_proofing_date=  datetime.strptime(emp_proofing_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),emp_proofing= emp_proofing_status,emp_proofing_remarks= emp_proofing_remarks,
+                            func_tst_date=  datetime.strptime(func_test_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),func_tst= func_test_status,func_tst_remarks= func_test_remarks,
+                            func_tst_dummy_bird= func_test_dummy_status,func_tst_dummy_bird_date= datetime.strptime(func_test_dummy_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),func_tst_dummy_bird_remarks= func_test_dummy_remarks,
+                            road_test= road_test_status,road_test_date=  datetime.strptime(road_test_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),road_test_remarks= road_test_remarks,
+                            post_road_test_date=  datetime.strptime(post_road_test_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),post_road_test= post_road_test_status,post_road_test_remarks= post_road_test_remarks,
+                            integrated_operation=integrated_operation_status, integrated_operation_date= datetime.strptime(integrated_operation_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),integrated_operation_remarks= integrated_operation_remarks,
+                            rain_test=rain_test_status, rain_test_date=  datetime.strptime(rain_test_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),rain_test_remarks= rain_test_remarks,
+                            pre_user_inspection_date=  datetime.strptime(pre_user_inspection_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),pre_user_inspection= pre_user_inspection_status, pre_user_inspection_remarks= pre_user_inspection_remarks,
+                            final_integrated_testing_date= datetime.strptime(final_integrated_testing_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),final_integrated_testing=final_integrated_testing_status,final_integrated_testing_remarks=final_integrated_testing_remarks,
+                            bhd_date= datetime.strptime(bhd_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),bhd_status=bhd_status,bhd_remarks=bhd_remarks,fqm_date= datetime.strptime(fqm_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),fqm_status=fqm_status,fqm_remarks=fqm_remarks,
+                            qm_certification_date= datetime.strptime(qm_certification_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),qm_certification_status=qm_certification_status,qm_certification_remarks=qm_certification_remarks,
+                            enduser_date= datetime.strptime(end_user_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),enduser_status=end_user_status, enduser_remarks=end_user_remarks,remarks=remarks,user_id= user_id)
+                        data.append(prod_system)
+                    ProductionSystemStatus.objects.bulk_create(data)
+                    os.remove(file_path)
+
+                elif system_type == "Launch Tube":
+                    for system, sys_type, testing_type, organization, set_id, blt_date, blt_status, blt_remarks, pre_user_inspection_date,pre_user_inspection_status,pre_user_inspection_remarks,\
+                            load_unload_date,load_unload_status,load_unload_remarks,encapsulation_date,encapsulation_status,encapsulation_remarks, final_integrated_testing_date, final_integrated_testing_status, final_integrated_testing_remarks,\
+                            bhd_date, bhd_status, bhd_remarks, fqm_date, fqm_status, fqm_remarks, qm_certification_date, qm_certification_status, qm_certification_remarks, end_user_date, end_user_status, end_user_remarks, remarks, *__ in csvf:
+
+                        prod_system = ProductionSystemStatus(system=system,sys_type=sys_type,testing_type=testing_type,organization=organization,set_id=set_id,blt_date= datetime.strptime(blt_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),blt_status=blt_status,blt_remarks=blt_remarks,
+                            pre_user_inspection_date=  datetime.strptime(pre_user_inspection_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),pre_user_inspection= pre_user_inspection_status,pre_user_inspection_remarks= pre_user_inspection_remarks,
+                            load_unload_on_mlv_hlf_date=  datetime.strptime(load_unload_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),load_unload_on_mlv_hlf= load_unload_status,load_unload_on_mlv_hlf_remarks=load_unload_remarks,incapsulation_date= datetime.strptime(encapsulation_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),incapsulation_status= encapsulation_status,incapsulation_remarks= encapsulation_remarks,
+                            final_integrated_testing_date= datetime.strptime(final_integrated_testing_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),final_integrated_testing=final_integrated_testing_status,final_integrated_testing_remarks=final_integrated_testing_remarks,bhd_date= datetime.strptime(bhd_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),bhd_status=bhd_status,bhd_remarks=bhd_remarks,
+                            fqm_date= datetime.strptime(fqm_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),fqm_status=fqm_status,fqm_remarks=fqm_remarks,qm_certification_date= datetime.strptime(qm_certification_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),qm_certification_status=qm_certification_status,qm_certification_remarks=qm_certification_remarks,enduser_date= datetime.strptime(end_user_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),enduser_status=end_user_status, enduser_remarks=end_user_remarks,remarks=remarks,user_id= user_id)
+                        data.append(prod_system)
+                    ProductionSystemStatus.objects.bulk_create(data)
+                    os.remove(file_path)
+
+                elif system_type == "Air Launch":
+                    for system, sys_type, testing_type, organization, set_id, blt_date, blt_status, blt_remarks, pre_hil_date, pre_hil_status, pre_hil_remarks, vibration_date, vibration_status, vibration_remarks,\
+                            cg_balancing_date, cg_balancing_status, cg_balancing_remarks, post_hil_date, post_hil_status, post_hil_remarks, sys_align_date, sys_align_status, sys_align_remarks, bhd_date, bhd_status, bhd_remarks,\
+                            fqm_date, fqm_status, fqm_remarks, qm_certification_date, qm_certification_status, qm_certification_remarks, end_user_date, end_user_status, end_user_remarks, remarks, *__ in csvf:
+
+                        prod_system = ProductionSystemStatus(system=system,sys_type=sys_type,testing_type=testing_type,organization=organization,set_id=set_id,blt_date= datetime.strptime(blt_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),blt_status=blt_status,blt_remarks=blt_remarks,
+                            pre_hil_date= datetime.strptime(pre_hil_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),pre_hil_status=pre_hil_status,pre_hil_remarks=pre_hil_remarks,vibaration_date= datetime.strptime(vibration_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),vibaration_status=vibration_status,vibaration_remarks=vibration_remarks,
+                            cgbalancing_date=  datetime.strptime(cg_balancing_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),cgbalancing_date_status=cg_balancing_status,cgbalancing_date_remarks=cg_balancing_remarks,post_hil_date= datetime.strptime(post_hil_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),post_hil_status=post_hil_status,post_hil_remarks=post_hil_remarks,
+                            sys_align_Date=  datetime.strptime(sys_align_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"), sys_align_status= sys_align_status, sys_align_remarks= sys_align_remarks,bhd_date= datetime.strptime(bhd_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),bhd_status=bhd_status,bhd_remarks=bhd_remarks,fqm_date= datetime.strptime(fqm_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),fqm_status=fqm_status,fqm_remarks=fqm_remarks,
+                            qm_certification_date= datetime.strptime(qm_certification_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),qm_certification_status=qm_certification_status,qm_certification_remarks=qm_certification_remarks,enduser_date= datetime.strptime(end_user_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),enduser_status=end_user_status, enduser_remarks=end_user_remarks,remarks=remarks,user_id= user_id)
+                        data.append(prod_system)
+                    ProductionSystemStatus.objects.bulk_create(data)
+                    os.remove(file_path)
                 return JsonResponse({'message': 'Production Status Updated Successfully!'}, status=200)
+
             else:
                 return JsonResponse({'status': 'False', "message": "Status Not Saved"}, status=500)
         except Exception as e:
             return JsonResponse({'status': 'False', "message": "Status Not Saved"}, status=500)
+
+
+    @staticmethod
+    def ImportFlightCsv(request):
+        try:
+            id = request['id']
+            importedCsvFile = request["csv_file"]
+            system_type = request["system_type"]
+            if not os.path.isdir('imported_files'):
+                os.mkdir('imported_files')
+            path = "imported_files/"
+            fs = FileSystemStorage(location=path)
+            fs.save(importedCsvFile.name, importedCsvFile)
+            file_path = path + importedCsvFile.name
+            user_id = 0
+            if request['user_id'] != '':
+                user_id = request['user_id']
+            if id == '0':
+                file = open(file_path)
+                csvf = csv.reader(file)
+                next(csvf, None)
+                data = []
+                if system_type == "Ballistic":
+                    for system, sys_type, testing_type, organization, set_id, blt_date, blt_status, blt_remarks, pre_hil_date, pre_hil_status, pre_hil_remarks,\
+                            vibration_date, vibration_status, vibration_remarks, cg_balancing_date, cg_balancing_status, cg_balancing_remarks, post_hil_date, post_hil_status, post_hil_remarks,\
+                            final_integrated_testing_date, final_integrated_testing_status, final_integrated_testing_remarks, bhd_date, bhd_status, bhd_remarks, fqm_date, fqm_status, fqm_remarks,\
+                            qm_certification_date, qm_certification_status, qm_certification_remarks, launchact_date, launchact_status, launchact_remarks, remarks, *__ in csvf:
+
+                        flight_system = FlightSystemStatus(system=system,sys_type=sys_type,testing_type=testing_type,organization=organization,set_id=set_id,blt_date= datetime.strptime(blt_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),blt_status=blt_status,blt_remarks=blt_remarks,
+                            pre_hil_date= datetime.strptime(pre_hil_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),pre_hil_status=pre_hil_status,pre_hil_remarks=pre_hil_remarks,vibaration_date= datetime.strptime(vibration_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),vibaration_status=vibration_status,vibaration_remarks=vibration_remarks,
+                            cgbalancing_date=  datetime.strptime(cg_balancing_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),cgbalancing_date_status=cg_balancing_status,cgbalancing_date_remarks=cg_balancing_remarks,post_hil_date= datetime.strptime(post_hil_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),post_hil_status=post_hil_status,post_hil_remarks=post_hil_remarks,
+                            final_integrated_testing_date= datetime.strptime(final_integrated_testing_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),final_integrated_testing=final_integrated_testing_status,final_integrated_testing_remarks=final_integrated_testing_remarks,
+                            bhd_date= datetime.strptime(bhd_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),bhd_status=bhd_status,bhd_remarks=bhd_remarks,fqm_date= datetime.strptime(fqm_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),fqm_status=fqm_status,fqm_remarks=fqm_remarks,
+                            qm_certification_date= datetime.strptime(qm_certification_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),qm_certification_status=qm_certification_status,qm_certification_remarks=qm_certification_remarks,
+                            launchact_date= datetime.strptime(launchact_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),launchact_status=launchact_status, launchact_remarks=launchact_remarks,remarks=remarks,user_id= user_id)
+                        data.append(flight_system)
+                    FlightSystemStatus.objects.bulk_create(data)
+                    os.remove(file_path)
+                elif system_type == "Cruise":
+                    for system, sys_type, testing_type, organization, set_id, blt_date, blt_status, blt_remarks, pre_hil_date, pre_hil_status, pre_hil_remarks, vibration_date, vibration_status, vibration_remarks,\
+                            cg_balancing_date, cg_balancing_status, cg_balancing_remarks, post_hil_date, post_hil_status, post_hil_remarks,sys_align_date, sys_align_status, sys_align_remarks, fgt_date, fgt_status, fgt_remarks,\
+                            encapsulation_date, encapsulation_status, encapsulation_remarks, final_integrated_testing_date, final_integrated_testing_status, final_integrated_testing_remarks, bhd_date, bhd_status, bhd_remarks,\
+                            fqm_date, fqm_status, fqm_remarks, qm_certification_date, qm_certification_status, qm_certification_remarks, \
+                            launchact_date, launchact_status, launchact_remarks, remarks, *__ in csvf:
+                        flight_system = FlightSystemStatus(system=system,sys_type=sys_type,testing_type=testing_type,organization=organization,
+                            set_id=set_id,blt_date= datetime.strptime(blt_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),blt_status=blt_status,blt_remarks=blt_remarks,pre_hil_date= datetime.strptime(pre_hil_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),pre_hil_status=pre_hil_status,
+                            pre_hil_remarks=pre_hil_remarks,vibaration_date= datetime.strptime(vibration_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),vibaration_status=vibration_status,vibaration_remarks=vibration_remarks,
+                            cgbalancing_date=  datetime.strptime(cg_balancing_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),cgbalancing_date_status=cg_balancing_status,cgbalancing_date_remarks=cg_balancing_remarks,post_hil_date= datetime.strptime(post_hil_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),post_hil_status=post_hil_status,post_hil_remarks=post_hil_remarks,
+                            sys_align_Date=  datetime.strptime(sys_align_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"), sys_align_status= sys_align_status, sys_align_remarks= sys_align_remarks,
+                            fgt_date=  datetime.strptime(fgt_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"), fgt_status= fgt_status, fgt_remarks=fgt_remarks, incapsulation_date=  datetime.strptime(encapsulation_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"), incapsulation_status=encapsulation_status, incapsulation_remarks=encapsulation_remarks,
+                            final_integrated_testing_date= datetime.strptime(final_integrated_testing_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),final_integrated_testing=final_integrated_testing_status,final_integrated_testing_remarks=final_integrated_testing_remarks,
+                            bhd_date= datetime.strptime(bhd_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),bhd_status=bhd_status,bhd_remarks=bhd_remarks,fqm_date= datetime.strptime(fqm_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),fqm_status=fqm_status,fqm_remarks=fqm_remarks,
+                            qm_certification_date= datetime.strptime(qm_certification_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),qm_certification_status=qm_certification_status,qm_certification_remarks=qm_certification_remarks,
+                            launchact_date= datetime.strptime(launchact_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),launchact_status=launchact_status, launchact_remarks=launchact_remarks,remarks=remarks,user_id= user_id)
+                        data.append(flight_system)
+                    FlightSystemStatus.objects.bulk_create(data)
+                    os.remove(file_path)
+
+                elif system_type =="Launch System":
+                    for system, sys_type, testing_type, organization, set_id, blt_date, blt_status, blt_remarks,emp_proofing_date,emp_proofing_status,emp_proofing_remarks,\
+                        func_test_date,func_test_status,func_test_remarks,func_test_dummy_date,func_test_dummy_status,func_test_dummy_remarks,road_test_date,road_test_status,road_test_remarks,\
+                        post_road_test_date,post_road_test_status,post_road_test_remarks,integrated_operation_date,integrated_operation_status,integrated_operation_remarks,\
+                        rain_test_date,rain_test_status,rain_test_remarks,pre_user_inspection_date,pre_user_inspection_status,\
+                        pre_user_inspection_remarks,final_integrated_testing_date, final_integrated_testing_status, final_integrated_testing_remarks,\
+                        bhd_date, bhd_status, bhd_remarks, fqm_date, fqm_status, fqm_remarks, qm_certification_date, qm_certification_status, qm_certification_remarks,\
+                        launchact_date, launchact_status, launchact_remarks, remarks, *__ in csvf:
+
+                        flight_system = FlightSystemStatus(system=system,sys_type=sys_type,testing_type=testing_type,organization=organization,set_id=set_id,blt_date= datetime.strptime(blt_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),blt_status=blt_status,blt_remarks=blt_remarks,
+                            emp_proofing_date=  datetime.strptime(emp_proofing_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),emp_proofing= emp_proofing_status,emp_proofing_remarks= emp_proofing_remarks,
+                            func_tst_date=  datetime.strptime(func_test_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),func_tst= func_test_status,func_tst_remarks= func_test_remarks,
+                            func_tst_dummy_bird= func_test_dummy_status,func_tst_dummy_bird_date= datetime.strptime(func_test_dummy_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),func_tst_dummy_bird_remarks= func_test_dummy_remarks,
+                            road_test= road_test_status,road_test_date=  datetime.strptime(road_test_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),road_test_remarks= road_test_remarks,
+                            post_road_test_date=  datetime.strptime(post_road_test_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),post_road_test= post_road_test_status,post_road_test_remarks= post_road_test_remarks,
+                            integrated_operation=integrated_operation_status, integrated_operation_date= datetime.strptime(integrated_operation_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),integrated_operation_remarks= integrated_operation_remarks,
+                            rain_test=rain_test_status, rain_test_date=  datetime.strptime(rain_test_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),rain_test_remarks= rain_test_remarks,
+                            pre_user_inspection_date=  datetime.strptime(pre_user_inspection_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),pre_user_inspection= pre_user_inspection_status, pre_user_inspection_remarks= pre_user_inspection_remarks,
+                            final_integrated_testing_date= datetime.strptime(final_integrated_testing_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),final_integrated_testing=final_integrated_testing_status,final_integrated_testing_remarks=final_integrated_testing_remarks,
+                            bhd_date= datetime.strptime(bhd_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),bhd_status=bhd_status,bhd_remarks=bhd_remarks,fqm_date= datetime.strptime(fqm_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),fqm_status=fqm_status,fqm_remarks=fqm_remarks,
+                            qm_certification_date= datetime.strptime(qm_certification_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),qm_certification_status=qm_certification_status,qm_certification_remarks=qm_certification_remarks,
+                            launchact_date= datetime.strptime(launchact_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),launchact_status=launchact_status, launchact_remarks=launchact_remarks,remarks=remarks,user_id= user_id)
+                        data.append(flight_system)
+                    FlightSystemStatus.objects.bulk_create(data)
+                    os.remove(file_path)
+
+                elif system_type == "Launch Tube":
+                    for system, sys_type, testing_type, organization, set_id, blt_date, blt_status, blt_remarks, pre_user_inspection_date,pre_user_inspection_status,pre_user_inspection_remarks,\
+                            load_unload_date,load_unload_status,load_unload_remarks,encapsulation_date,encapsulation_status,encapsulation_remarks, final_integrated_testing_date, final_integrated_testing_status, final_integrated_testing_remarks,\
+                            bhd_date, bhd_status, bhd_remarks, fqm_date, fqm_status, fqm_remarks, qm_certification_date, qm_certification_status, qm_certification_remarks, launchact_date, launchact_status, launchact_remarks, remarks, *__ in csvf:
+
+                        flight_system = FlightSystemStatus(system=system,sys_type=sys_type,testing_type=testing_type,organization=organization,set_id=set_id,blt_date= datetime.strptime(blt_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),blt_status=blt_status,blt_remarks=blt_remarks,
+                            pre_user_inspection_date=  datetime.strptime(pre_user_inspection_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),pre_user_inspection= pre_user_inspection_status,pre_user_inspection_remarks= pre_user_inspection_remarks,
+                            load_unload_on_mlv_hlf_date=  datetime.strptime(load_unload_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),load_unload_on_mlv_hlf= load_unload_status,load_unload_on_mlv_hlf_remarks=load_unload_remarks,incapsulation_date= datetime.strptime(encapsulation_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),incapsulation_status= encapsulation_status,incapsulation_remarks= encapsulation_remarks,
+                            final_integrated_testing_date= datetime.strptime(final_integrated_testing_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),final_integrated_testing=final_integrated_testing_status,final_integrated_testing_remarks=final_integrated_testing_remarks,bhd_date= datetime.strptime(bhd_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),bhd_status=bhd_status,bhd_remarks=bhd_remarks,
+                            fqm_date= datetime.strptime(fqm_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),fqm_status=fqm_status,fqm_remarks=fqm_remarks,qm_certification_date= datetime.strptime(qm_certification_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),qm_certification_status=qm_certification_status,qm_certification_remarks=qm_certification_remarks,
+                            launchact_date= datetime.strptime(launchact_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),launchact_status=launchact_status, launchact_remarks=launchact_remarks,remarks=remarks,user_id= user_id)
+                        data.append(flight_system)
+                    FlightSystemStatus.objects.bulk_create(data)
+                    os.remove(file_path)
+
+                elif system_type == "Air Launch":
+                    for system, sys_type, testing_type, organization, set_id, blt_date, blt_status, blt_remarks, pre_hil_date, pre_hil_status, pre_hil_remarks, vibration_date, vibration_status, vibration_remarks,\
+                            cg_balancing_date, cg_balancing_status, cg_balancing_remarks, post_hil_date, post_hil_status, post_hil_remarks, sys_align_date, sys_align_status, sys_align_remarks, bhd_date, bhd_status, bhd_remarks,\
+                            fqm_date, fqm_status, fqm_remarks, qm_certification_date, qm_certification_status, qm_certification_remarks, launchact_date, launchact_status, launchact_remarks, remarks, *__ in csvf:
+
+                        flight_system = FlightSystemStatus(system=system,sys_type=sys_type,testing_type=testing_type,organization=organization,set_id=set_id,blt_date= datetime.strptime(blt_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),blt_status=blt_status,blt_remarks=blt_remarks,
+                            pre_hil_date= datetime.strptime(pre_hil_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),pre_hil_status=pre_hil_status,pre_hil_remarks=pre_hil_remarks,vibaration_date= datetime.strptime(vibration_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),vibaration_status=vibration_status,vibaration_remarks=vibration_remarks,
+                            cgbalancing_date=  datetime.strptime(cg_balancing_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),cgbalancing_date_status=cg_balancing_status,cgbalancing_date_remarks=cg_balancing_remarks,post_hil_date= datetime.strptime(post_hil_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),post_hil_status=post_hil_status,post_hil_remarks=post_hil_remarks,
+                            sys_align_Date=  datetime.strptime(sys_align_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"), sys_align_status= sys_align_status, sys_align_remarks= sys_align_remarks,bhd_date= datetime.strptime(bhd_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),bhd_status=bhd_status,bhd_remarks=bhd_remarks,fqm_date= datetime.strptime(fqm_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),fqm_status=fqm_status,fqm_remarks=fqm_remarks,
+                            qm_certification_date= datetime.strptime(qm_certification_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),qm_certification_status=qm_certification_status,qm_certification_remarks=qm_certification_remarks,launchact_date= datetime.strptime(launchact_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),launchact_status=launchact_status, launchact_remarks=launchact_remarks,remarks=remarks,user_id= user_id)
+                        data.append(flight_system)
+                    FlightSystemStatus.objects.bulk_create(data)
+                    os.remove(file_path)
+                return JsonResponse({'message': 'Production Status Updated Successfully!'}, status=200)
+
+            else:
+                return JsonResponse({'status': 'False', "message": "Status Not Saved"}, status=500)
+        except Exception as e:
+            return JsonResponse({'status': 'False', "message": "Status Not Saved"}, status=500)
+
+
+    @staticmethod
+    def ImportRelifingCsv(request):
+        # try:
+            id = request['id']
+            importedCsvFile = request["csv_file"]
+            system_type = request["system_type"]
+            if not os.path.isdir('imported_files'):
+                os.mkdir('imported_files')
+            path = "imported_files/"
+            fs = FileSystemStorage(location=path)
+            fs.save(importedCsvFile.name, importedCsvFile)
+            file_path = path + importedCsvFile.name
+            user_id = 0
+            if request['user_id'] != '':
+                user_id = request['user_id']
+            if id == '0':
+                file = open(file_path)
+                csvf = csv.reader(file)
+                next(csvf, None)
+                data = []
+                if system_type == "Ballistic":
+                    for system, sys_type, testing_type, organization, set_id, blt_date, blt_status, blt_remarks, pre_hil_date, pre_hil_status, pre_hil_remarks,\
+                            vibration_date, vibration_status, vibration_remarks, cg_balancing_date, cg_balancing_status, cg_balancing_remarks, post_hil_date, post_hil_status, post_hil_remarks,\
+                            final_integrated_testing_date, final_integrated_testing_status, final_integrated_testing_remarks, bhd_date, bhd_status, bhd_remarks, fqm_date, fqm_status, fqm_remarks,\
+                            qm_certification_date, qm_certification_status, qm_certification_remarks, end_user_date, end_user_status, end_user_remarks, remarks, *__ in csvf:
+
+                        relif_system = RelifingSystemStatus(system=system,sys_type=sys_type,testing_type=testing_type,organization=organization,set_id=set_id,blt_date= datetime.strptime(blt_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),blt_status=blt_status,blt_remarks=blt_remarks,
+                            pre_hil_date= datetime.strptime(pre_hil_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),pre_hil_status=pre_hil_status,pre_hil_remarks=pre_hil_remarks,vibaration_date= datetime.strptime(vibration_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),vibaration_status=vibration_status,vibaration_remarks=vibration_remarks,
+                            cgbalancing_date=  datetime.strptime(cg_balancing_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),cgbalancing_date_status=cg_balancing_status,cgbalancing_date_remarks=cg_balancing_remarks,post_hil_date= datetime.strptime(post_hil_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),post_hil_status=post_hil_status,post_hil_remarks=post_hil_remarks,
+                            final_integrated_testing_date= datetime.strptime(final_integrated_testing_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),final_integrated_testing=final_integrated_testing_status,final_integrated_testing_remarks=final_integrated_testing_remarks,
+                            bhd_date= datetime.strptime(bhd_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),bhd_status=bhd_status,bhd_remarks=bhd_remarks,fqm_date= datetime.strptime(fqm_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),fqm_status=fqm_status,fqm_remarks=fqm_remarks,
+                            qm_certification_date= datetime.strptime(qm_certification_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),qm_certification_status=qm_certification_status,qm_certification_remarks=qm_certification_remarks,
+                            enduser_date= datetime.strptime(end_user_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),enduser_status=end_user_status, enduser_remarks=end_user_remarks,remarks=remarks,user_id= user_id)
+                        data.append(relif_system)
+                    RelifingSystemStatus.objects.bulk_create(data)
+                    os.remove(file_path)
+                elif system_type == "Cruise":
+                    for system, sys_type, testing_type, organization, set_id, blt_date, blt_status, blt_remarks, pre_hil_date, pre_hil_status, pre_hil_remarks, vibration_date, vibration_status, vibration_remarks,\
+                            cg_balancing_date, cg_balancing_status, cg_balancing_remarks, post_hil_date, post_hil_status, post_hil_remarks,sys_align_date, sys_align_status, sys_align_remarks, fgt_date, fgt_status, fgt_remarks,\
+                            encapsulation_date, encapsulation_status, encapsulation_remarks, final_integrated_testing_date, final_integrated_testing_status, final_integrated_testing_remarks, bhd_date, bhd_status, bhd_remarks,\
+                            fqm_date, fqm_status, fqm_remarks, qm_certification_date, qm_certification_status, qm_certification_remarks, end_user_date, end_user_status, end_user_remarks, remarks, *__ in csvf:
+                        relif_system = RelifingSystemStatus(system=system,sys_type=sys_type,testing_type=testing_type,organization=organization,
+                            set_id=set_id,blt_date= datetime.strptime(blt_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),blt_status=blt_status,blt_remarks=blt_remarks,pre_hil_date= datetime.strptime(pre_hil_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),pre_hil_status=pre_hil_status,
+                            pre_hil_remarks=pre_hil_remarks,vibaration_date= datetime.strptime(vibration_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),vibaration_status=vibration_status,vibaration_remarks=vibration_remarks,
+                            cgbalancing_date=  datetime.strptime(cg_balancing_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),cgbalancing_date_status=cg_balancing_status,cgbalancing_date_remarks=cg_balancing_remarks,post_hil_date= datetime.strptime(post_hil_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),post_hil_status=post_hil_status,post_hil_remarks=post_hil_remarks,
+                            sys_align_Date=  datetime.strptime(sys_align_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"), sys_align_status= sys_align_status, sys_align_remarks= sys_align_remarks,
+                            fgt_date=  datetime.strptime(fgt_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"), fgt_status= fgt_status, fgt_remarks=fgt_remarks, incapsulation_date=  datetime.strptime(encapsulation_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"), incapsulation_status=encapsulation_status, incapsulation_remarks=encapsulation_remarks,
+                            final_integrated_testing_date= datetime.strptime(final_integrated_testing_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),final_integrated_testing=final_integrated_testing_status,final_integrated_testing_remarks=final_integrated_testing_remarks,
+                            bhd_date= datetime.strptime(bhd_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),bhd_status=bhd_status,bhd_remarks=bhd_remarks,fqm_date= datetime.strptime(fqm_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),fqm_status=fqm_status,fqm_remarks=fqm_remarks,
+                            qm_certification_date= datetime.strptime(qm_certification_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),qm_certification_status=qm_certification_status,qm_certification_remarks=qm_certification_remarks,enduser_date= datetime.strptime(end_user_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),enduser_status=end_user_status, enduser_remarks=end_user_remarks,remarks=remarks,user_id= user_id)
+                        data.append(relif_system)
+                    RelifingSystemStatus.objects.bulk_create(data)
+                    os.remove(file_path)
+
+                elif system_type =="Launch System":
+                    for system, sys_type, testing_type, organization, set_id, blt_date, blt_status, blt_remarks,emp_proofing_date,emp_proofing_status,emp_proofing_remarks,\
+                        func_test_date,func_test_status,func_test_remarks,func_test_dummy_date,func_test_dummy_status,func_test_dummy_remarks,road_test_date,road_test_status,road_test_remarks,\
+                        post_road_test_date,post_road_test_status,post_road_test_remarks,integrated_operation_date,integrated_operation_status,integrated_operation_remarks,\
+                        rain_test_date,rain_test_status,rain_test_remarks,pre_user_inspection_date,pre_user_inspection_status,\
+                        pre_user_inspection_remarks,final_integrated_testing_date, final_integrated_testing_status, final_integrated_testing_remarks, bhd_date, bhd_status, bhd_remarks, fqm_date, fqm_status, fqm_remarks, qm_certification_date, qm_certification_status, qm_certification_remarks, end_user_date, end_user_status, end_user_remarks, remarks, *__ in csvf:
+
+                        relif_system = RelifingSystemStatus(system=system,sys_type=sys_type,testing_type=testing_type,organization=organization,set_id=set_id,blt_date= datetime.strptime(blt_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),blt_status=blt_status,blt_remarks=blt_remarks,
+                            emp_proofing_date=  datetime.strptime(emp_proofing_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),emp_proofing= emp_proofing_status,emp_proofing_remarks= emp_proofing_remarks,
+                            func_tst_date=  datetime.strptime(func_test_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),func_tst= func_test_status,func_tst_remarks= func_test_remarks,
+                            func_tst_dummy_bird= func_test_dummy_status,func_tst_dummy_bird_date= datetime.strptime(func_test_dummy_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),func_tst_dummy_bird_remarks= func_test_dummy_remarks,
+                            road_test= road_test_status,road_test_date=  datetime.strptime(road_test_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),road_test_remarks= road_test_remarks,
+                            post_road_test_date=  datetime.strptime(post_road_test_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),post_road_test= post_road_test_status,post_road_test_remarks= post_road_test_remarks,
+                            integrated_operation=integrated_operation_status, integrated_operation_date= datetime.strptime(integrated_operation_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),integrated_operation_remarks= integrated_operation_remarks,
+                            rain_test=rain_test_status, rain_test_date=  datetime.strptime(rain_test_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),rain_test_remarks= rain_test_remarks,
+                            pre_user_inspection_date=  datetime.strptime(pre_user_inspection_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),pre_user_inspection= pre_user_inspection_status, pre_user_inspection_remarks= pre_user_inspection_remarks,
+                            final_integrated_testing_date= datetime.strptime(final_integrated_testing_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),final_integrated_testing=final_integrated_testing_status,final_integrated_testing_remarks=final_integrated_testing_remarks,
+                            bhd_date= datetime.strptime(bhd_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),bhd_status=bhd_status,bhd_remarks=bhd_remarks,fqm_date= datetime.strptime(fqm_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),fqm_status=fqm_status,fqm_remarks=fqm_remarks,
+                            qm_certification_date= datetime.strptime(qm_certification_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),qm_certification_status=qm_certification_status,qm_certification_remarks=qm_certification_remarks,
+                            enduser_date= datetime.strptime(end_user_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),enduser_status=end_user_status, enduser_remarks=end_user_remarks,remarks=remarks,user_id= user_id)
+                        data.append(relif_system)
+                    RelifingSystemStatus.objects.bulk_create(data)
+                    os.remove(file_path)
+
+                elif system_type == "Launch Tube":
+                    for system, sys_type, testing_type, organization, set_id, blt_date, blt_status, blt_remarks, pre_user_inspection_date,pre_user_inspection_status,pre_user_inspection_remarks,\
+                            load_unload_date,load_unload_status,load_unload_remarks,encapsulation_date,encapsulation_status,encapsulation_remarks, final_integrated_testing_date, final_integrated_testing_status, final_integrated_testing_remarks,\
+                            bhd_date, bhd_status, bhd_remarks, fqm_date, fqm_status, fqm_remarks, qm_certification_date, qm_certification_status, qm_certification_remarks, end_user_date, end_user_status, end_user_remarks, remarks, *__ in csvf:
+
+                        relif_system = RelifingSystemStatus(system=system,sys_type=sys_type,testing_type=testing_type,organization=organization,set_id=set_id,blt_date= datetime.strptime(blt_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),blt_status=blt_status,blt_remarks=blt_remarks,
+                            pre_user_inspection_date=  datetime.strptime(pre_user_inspection_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),pre_user_inspection= pre_user_inspection_status,pre_user_inspection_remarks= pre_user_inspection_remarks,
+                            load_unload_on_mlv_hlf_date=  datetime.strptime(load_unload_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),load_unload_on_mlv_hlf= load_unload_status,load_unload_on_mlv_hlf_remarks=load_unload_remarks,incapsulation_date= datetime.strptime(encapsulation_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),incapsulation_status= encapsulation_status,incapsulation_remarks= encapsulation_remarks,
+                            final_integrated_testing_date= datetime.strptime(final_integrated_testing_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),final_integrated_testing=final_integrated_testing_status,final_integrated_testing_remarks=final_integrated_testing_remarks,bhd_date= datetime.strptime(bhd_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),bhd_status=bhd_status,bhd_remarks=bhd_remarks,
+                            fqm_date= datetime.strptime(fqm_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),fqm_status=fqm_status,fqm_remarks=fqm_remarks,qm_certification_date= datetime.strptime(qm_certification_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),qm_certification_status=qm_certification_status,qm_certification_remarks=qm_certification_remarks,enduser_date= datetime.strptime(end_user_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),enduser_status=end_user_status, enduser_remarks=end_user_remarks,remarks=remarks,user_id= user_id)
+                        data.append(relif_system)
+                    RelifingSystemStatus.objects.bulk_create(data)
+                    os.remove(file_path)
+
+                elif system_type == "Air Launch":
+                    for system, sys_type, testing_type, organization, set_id, blt_date, blt_status, blt_remarks, pre_hil_date, pre_hil_status, pre_hil_remarks, vibration_date, vibration_status, vibration_remarks,\
+                            cg_balancing_date, cg_balancing_status, cg_balancing_remarks, post_hil_date, post_hil_status, post_hil_remarks, sys_align_date, sys_align_status, sys_align_remarks, bhd_date, bhd_status, bhd_remarks,\
+                            fqm_date, fqm_status, fqm_remarks, qm_certification_date, qm_certification_status, qm_certification_remarks, end_user_date, end_user_status, end_user_remarks, remarks, *__ in csvf:
+
+                        relif_system = RelifingSystemStatus(system=system,sys_type=sys_type,testing_type=testing_type,organization=organization,set_id=set_id,blt_date= datetime.strptime(blt_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),blt_status=blt_status,blt_remarks=blt_remarks,
+                            pre_hil_date= datetime.strptime(pre_hil_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),pre_hil_status=pre_hil_status,pre_hil_remarks=pre_hil_remarks,vibaration_date= datetime.strptime(vibration_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),vibaration_status=vibration_status,vibaration_remarks=vibration_remarks,
+                            cgbalancing_date=  datetime.strptime(cg_balancing_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),cgbalancing_date_status=cg_balancing_status,cgbalancing_date_remarks=cg_balancing_remarks,post_hil_date= datetime.strptime(post_hil_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),post_hil_status=post_hil_status,post_hil_remarks=post_hil_remarks,
+                            sys_align_Date=  datetime.strptime(sys_align_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"), sys_align_status= sys_align_status, sys_align_remarks= sys_align_remarks,bhd_date= datetime.strptime(bhd_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),bhd_status=bhd_status,bhd_remarks=bhd_remarks,fqm_date= datetime.strptime(fqm_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),fqm_status=fqm_status,fqm_remarks=fqm_remarks,
+                            qm_certification_date= datetime.strptime(qm_certification_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),qm_certification_status=qm_certification_status,qm_certification_remarks=qm_certification_remarks,enduser_date= datetime.strptime(end_user_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),enduser_status=end_user_status, enduser_remarks=end_user_remarks,remarks=remarks,user_id= user_id)
+                        data.append(relif_system)
+                    RelifingSystemStatus.objects.bulk_create(data)
+                    os.remove(file_path)
+                return JsonResponse({'message': 'Production Status Updated Successfully!'}, status=200)
+
+            else:
+                return JsonResponse({'status': 'False', "message": "Status Not Saved"}, status=500)
+        # except Exception as e:
+        #     return JsonResponse({'status': 'False', "message": "Status Not Saved"}, status=500)
+
     @staticmethod
     def GetProdctionDateNone(request):
         dataList = ProductionSystemStatusHistory.objects.all()
@@ -740,8 +1056,14 @@ class SmsController:
                             ListItems.append(set)
 
                 if ParentStatus == 'BLT':
+                    dataList = dataList.extra(
+                          select={
+                          'year': 'extract (year from blt_date)',
+                          'month': 'extract (month from blt_date)',
+                          'day': 'extract (day from blt_date)'},
+                           order_by=['month','day','-year']
+                            )
                     if ChildStatus != 'Current Count':
-                        # filter_objects &= get_filter('blt_status', 'equal', ChildStatus)
                         ListItems = dataList.filter(blt_date__year = year,blt_status = ChildStatus)
                     if ChildStatus == 'Current Count':
                         for data  in dataList:
@@ -749,8 +1071,12 @@ class SmsController:
                                 ListItems.append(data)
 
                 if ParentStatus == 'EMP Proofing':
+                    dataList = dataList.extra(
+                          select={'year': 'extract (year from emp_proofing_date)',
+                          'month': 'extract (month from emp_proofing_date)',
+                          'day': 'extract (day from emp_proofing_date)'},
+                           order_by=['month','day','-year'])
                     if ChildStatus != 'Current Count':
-                        # filter_objects &= get_filter('emp_proofing', 'equal', ChildStatus)
                         ListItems = dataList.filter(emp_proofing_date__year = year,emp_proofing = ChildStatus)
 
                     if ChildStatus == 'Current Count':
@@ -759,6 +1085,11 @@ class SmsController:
                                 ListItems.append(data)
 
                 if ParentStatus == 'Functional Test W/O Dummy Bird':
+                    dataList = dataList.extra(
+                          select={'year': 'extract (year from func_tst_date)',
+                          'month': 'extract (month from func_tst_date)',
+                          'day': 'extract (day from func_tst_date)'},
+                           order_by=['month','day','-year'])
                     if ChildStatus != 'Current Count':
                         ListItems = dataList.filter(func_tst_date__year = year, func_tst = ChildStatus)
 
@@ -768,6 +1099,11 @@ class SmsController:
                                 ListItems.append(data)
 
                 if ParentStatus == 'Functional Test With Dummy Bird':
+                    dataList = dataList.extra(
+                          select={'year': 'extract (year from func_tst_dummy_bird_date)',
+                          'month': 'extract (month from func_tst_dummy_bird_date)',
+                          'day': 'extract (day from func_tst_dummy_bird_date)'},
+                           order_by=['month','day','-year'])
                     if ChildStatus != 'Current Count':
                         ListItems = dataList.filter(func_tst_dummy_bird_date__year = year, func_tst_dummy_bird = ChildStatus)
 
@@ -777,15 +1113,25 @@ class SmsController:
                                 ListItems.append(data)
 
                 if ParentStatus == 'Road Test':
+                    dataList = dataList.extra(
+                          select={'year': 'extract (year from road_test_date)',
+                          'month': 'extract (month from road_test_date)',
+                          'day': 'extract (day from road_test_date)'},
+                           order_by=['month','day','-year'])
                     if ChildStatus != 'Current Count':
                         ListItems = dataList.filter(road_test_date__year = year, road_test = ChildStatus)
 
                     if ChildStatus == 'Current Count':
                         for data  in dataList:
-                            if data.oad_test_date.strftime("%Y") == year and (data.road_test == 'Under process' or data.road_test=='Observation(same stage)' or data.road_test=='Halt'):
+                            if data.road_test_date.strftime("%Y") == year and (data.road_test == 'Under process' or data.road_test=='Observation(same stage)' or data.road_test=='Halt'):
                                 ListItems.append(data)
 
                 if ParentStatus == 'Post Road Test':
+                    dataList = dataList.extra(
+                          select={'year': 'extract (year from post_road_test_date)',
+                          'month': 'extract (month from post_road_test_date)',
+                          'day': 'extract (day from post_road_test_date)'},
+                           order_by=['month','day','-year'])
                     if ChildStatus != 'Current Count':
                         ListItems = dataList.filter(post_road_test_date__year = year, post_road_test = ChildStatus)
 
@@ -795,6 +1141,11 @@ class SmsController:
                                 ListItems.append(data)
 
                 if ParentStatus == 'Integrated Operation':
+                    dataList = dataList.extra(
+                          select={'year': 'extract (year from integrated_operation_date)',
+                          'month': 'extract (month from integrated_operation_date)',
+                          'day': 'extract (day from integrated_operation_date)'},
+                           order_by=['month','day','-year'])
                     if ChildStatus != 'Current Count':
                         ListItems = dataList.filter(integrated_operation_date__year = year, integrated_operation = ChildStatus)
 
@@ -804,6 +1155,11 @@ class SmsController:
                                 ListItems.append(data)
 
                 if ParentStatus == 'Rain Test':
+                    dataList = dataList.extra(
+                          select={'year': 'extract (year from rain_test_date)',
+                          'month': 'extract (month from rain_test_date)',
+                          'day': 'extract (day from rain_test_date)'},
+                           order_by=['month','day','-year'])
                     if ChildStatus != 'Current Count':
                         ListItems = dataList.filter(rain_test_date__year = year, rain_test = ChildStatus)
 
@@ -813,6 +1169,11 @@ class SmsController:
                                 ListItems.append(data)
 
                 if ParentStatus == 'Pre User Inspection':
+                    dataList = dataList.extra(
+                          select={'year': 'extract (year from pre_user_inspection_date)',
+                          'month': 'extract (month from pre_user_inspection_date)',
+                          'day': 'extract (day from pre_user_inspection_date)'},
+                           order_by=['month','day','-year'])
                     if ChildStatus != 'Current Count':
                         ListItems = dataList.filter(pre_user_inspection_date__year = year, pre_user_inspection = ChildStatus)
 
@@ -822,6 +1183,11 @@ class SmsController:
                                 ListItems.append(data)
 
                 if ParentStatus == 'Final Integration':
+                    dataList = dataList.extra(
+                          select={'year': 'extract (year from final_integration_date)',
+                          'month': 'extract (month from final_integration_date)',
+                          'day': 'extract (day from final_integration_date)'},
+                           order_by=['month','day','-year'])
                     if ChildStatus != 'Current Count':
                         ListItems = dataList.filter(final_integration_date__year = year, final_integration_status = ChildStatus)
 
@@ -831,6 +1197,11 @@ class SmsController:
                                 ListItems.append(data)
 
                 if ParentStatus == 'Loading/Unloading on MLV/HLF':
+                    dataList = dataList.extra(
+                          select={'year': 'extract (year from load_unload_on_mlv_hlf_date)',
+                          'month': 'extract (month from load_unload_on_mlv_hlf_date)',
+                          'day': 'extract (day from load_unload_on_mlv_hlf_date)'},
+                           order_by=['month','day','-year'])
                     if ChildStatus != 'Current Count':
                         ListItems = dataList.filter(load_unload_on_mlv_hlf_date__year = year, load_unload_on_mlv_hlf = ChildStatus)
 
@@ -840,6 +1211,11 @@ class SmsController:
                                 ListItems.append(data)
 
                 if ParentStatus == 'Pre-HIL':
+                    dataList = dataList.extra(
+                          select={'year': 'extract (year from pre_hil_date)',
+                          'month': 'extract (month from pre_hil_date)',
+                          'day': 'extract (day from pre_hil_date)'},
+                           order_by=['month','day','-year'])
                     if ChildStatus != 'Current Count':
                         ListItems = dataList.filter(pre_hil_date__year = year, pre_hil_status = ChildStatus)
 
@@ -849,6 +1225,11 @@ class SmsController:
                                 ListItems.append(data)
 
                 if ParentStatus == 'Vibration':
+                    dataList = dataList.extra(
+                          select={'year': 'extract (year from vibaration_date)',
+                          'month': 'extract (month from vibaration_date)',
+                          'day': 'extract (day from vibaration_date)'},
+                           order_by=['month','day','-year'])
                     if ChildStatus != 'Current Count':
                         ListItems = dataList.filter(vibaration_date__year = year, vibaration_status = ChildStatus)
 
@@ -858,6 +1239,11 @@ class SmsController:
                                 ListItems.append(data)
 
                 if ParentStatus == 'CG Balancing':
+                    dataList = dataList.extra(
+                          select={'year': 'extract (year from cgbalancing_date)',
+                          'month': 'extract (month from cgbalancing_date)',
+                          'day': 'extract (day from cgbalancing_date)'},
+                           order_by=['month','day','-year'])
                     if ChildStatus != 'Current Count':
                         ListItems = dataList.filter(cgbalancing_date__year = year, cgbalancing_date_status = ChildStatus)
 
@@ -867,6 +1253,11 @@ class SmsController:
                                 ListItems.append(data)
 
                 if ParentStatus == 'Post-HIL':
+                    dataList = dataList.extra(
+                          select={'year': 'extract (year from post_hil_date)',
+                          'month': 'extract (month from post_hil_date)',
+                          'day': 'extract (day from post_hil_date)'},
+                           order_by=['month','day','-year'])
                     if ChildStatus != 'Current Count':
                         ListItems = dataList.filter(post_hil_date__year = year, post_hil_status = ChildStatus)
 
@@ -876,6 +1267,11 @@ class SmsController:
                                 ListItems.append(data)
 
                 if ParentStatus == 'System Alignment':
+                    dataList = dataList.extra(
+                          select={'year': 'extract (year from sys_align_Date)',
+                          'month': 'extract (month from sys_align_Date)',
+                          'day': 'extract (day from sys_align_Date)'},
+                           order_by=['month','day','-year'])
                     if ChildStatus != 'Current Count':
                         ListItems = dataList.filter(sys_align_Date__year = year, sys_align_status = ChildStatus)
 
@@ -885,6 +1281,11 @@ class SmsController:
                                 ListItems.append(data)
 
                 if ParentStatus == 'Incapsulation':
+                    dataList = dataList.extra(
+                          select={'year': 'extract (year from incapsulation_date)',
+                          'month': 'extract (month from incapsulation_date)',
+                          'day': 'extract (day from incapsulation_date)'},
+                           order_by=['month','day','-year'])
                     if ChildStatus != 'Current Count':
                         ListItems = dataList.filter(incapsulation_date__year = year, incapsulation_status = ChildStatus)
 
@@ -894,6 +1295,11 @@ class SmsController:
                                 ListItems.append(data)
 
                 if ParentStatus == 'Final Integrated Testing':
+                    dataList = dataList.extra(
+                          select={'year': 'extract (year from final_integration_date)',
+                          'month': 'extract (month from final_integration_date)',
+                          'day': 'extract (day from final_integration_date)'},
+                           order_by=['month','day','-year'])
                     if ChildStatus != 'Current Count':
                         ListItems = dataList.filter(final_integration_date__year = year, final_integration_status = ChildStatus)
 
@@ -903,6 +1309,11 @@ class SmsController:
                                 ListItems.append(data)
 
                 if ParentStatus == 'FGT Status':
+                    dataList = dataList.extra(
+                          select={'year': 'extract (year from fgt_date)',
+                          'month': 'extract (month from fgt_date)',
+                          'day': 'extract (day from fgt_date)'},
+                           order_by=['month','day','-year'])
                     if ChildStatus != 'Current Count':
                         ListItems = dataList.filter(fgt_date__year = year, fgt_status = ChildStatus)
 
@@ -912,6 +1323,11 @@ class SmsController:
                                 ListItems.append(data)
 
                 if ParentStatus == 'BHD Status':
+                    dataList = dataList.extra(
+                          select={'year': 'extract (year from bhd_date)',
+                          'month': 'extract (month from bhd_date)',
+                          'day': 'extract (day from bhd_date)'},
+                           order_by=['month','day','-year'])
                     if ChildStatus != 'Current Count':
                         ListItems = dataList.filter(bhd_date__year = year, bhd_status = ChildStatus)
 
@@ -921,6 +1337,11 @@ class SmsController:
                                 ListItems.append(data)
 
                 if ParentStatus == 'FQM Status':
+                    dataList = dataList.extra(
+                          select={'year': 'extract (year from fqm_date)',
+                          'month': 'extract (month from fqm_date)',
+                          'day': 'extract (day from fqm_date)'},
+                           order_by=['month','day','-year'])
                     if ChildStatus != 'Current Count':
                         ListItems = dataList.filter(fqm_date__year = year, fqm_status = ChildStatus)
 
@@ -930,6 +1351,11 @@ class SmsController:
                                 ListItems.append(data)
 
                 if ParentStatus == 'QM Certification Status':
+                    dataList = dataList.extra(
+                          select={'year': 'extract (year from qm_certification_date)',
+                          'month': 'extract (month from qm_certification_date)',
+                          'day': 'extract (day from qm_certification_date)'},
+                           order_by=['month','day','-year'])
                     if ChildStatus != 'Current Count':
                         ListItems = dataList.filter(qm_certification_date__year = year, qm_certification_status = ChildStatus)
 
@@ -939,6 +1365,11 @@ class SmsController:
                                 ListItems.append(data)
 
                 if ParentStatus == 'Launch/ End User':
+                    dataList = dataList.extra(
+                          select={'year': 'extract (year from enduser_date)',
+                          'month': 'extract (month from enduser_date)',
+                          'day': 'extract (day from enduser_date)'},
+                           order_by=['month','day','-year'])
                     if ChildStatus != 'Current Count':
                         ListItems = dataList.filter(enduser_date__year = year, enduser_status = ChildStatus)
                     else:
@@ -948,9 +1379,6 @@ class SmsController:
 
                 serializer = ProductionSystemSerialzer(ListItems, many=True)
                 return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
-            # serializer = ProductionSystemSerialzer(dataList, many=True)
-            # print(serializer.data)
-            # return JsonResponse({'status': 'true', 'data': serializer.data}, status=200)
         except Exception as e:
             print(e)
             return JsonResponse({'status': 'false'}, status=200)
@@ -959,8 +1387,176 @@ class SmsController:
     def GetProductionListHistory(request):
         try:
             id = request.query_params['id']
-            data = ProductionSystemStatusHistory.objects.filter(prod_id=id)
-            serializer = ProductionSystemSerialzer(data, many=True)
+            ParentStatus = request.query_params['parent_status']
+            dataList = ProductionSystemStatusHistory.objects.filter(prod_id=id)
+            if ParentStatus == 'BLT':
+                dataList = dataList.extra(
+                    select={
+                        'year': 'extract (year from blt_date)',
+                        'month': 'extract (month from blt_date)',
+                        'day': 'extract (day from blt_date)'},
+                    order_by=['month', 'day', '-year'])
+
+
+            if ParentStatus == 'EMP Proofing':
+                dataList = dataList.extra(
+                    select={'year': 'extract (year from emp_proofing_date)',
+                            'month': 'extract (month from emp_proofing_date)',
+                            'day': 'extract (day from emp_proofing_date)'},
+                    order_by=['month', 'day', '-year'])
+
+            if ParentStatus == 'Functional Test W/O Dummy Bird':
+                dataList = dataList.extra(
+                    select={'year': 'extract (year from func_tst_date)',
+                            'month': 'extract (month from func_tst_date)',
+                            'day': 'extract (day from func_tst_date)'},
+                    order_by=['month', 'day', '-year'])
+
+            if ParentStatus == 'Functional Test With Dummy Bird':
+                dataList = dataList.extra(
+                    select={'year': 'extract (year from func_tst_dummy_bird_date)',
+                            'month': 'extract (month from func_tst_dummy_bird_date)',
+                            'day': 'extract (day from func_tst_dummy_bird_date)'},
+                    order_by=['month', 'day', '-year'])
+
+            if ParentStatus == 'Road Test':
+                dataList = dataList.extra(
+                    select={'year': 'extract (year from road_test_date)',
+                            'month': 'extract (month from road_test_date)',
+                            'day': 'extract (day from road_test_date)'},
+                    order_by=['month', 'day', '-year'])
+
+            if ParentStatus == 'Post Road Test':
+                dataList = dataList.extra(
+                    select={'year': 'extract (year from post_road_test_date)',
+                            'month': 'extract (month from post_road_test_date)',
+                            'day': 'extract (day from post_road_test_date)'},
+                    order_by=['month', 'day', '-year'])
+
+            if ParentStatus == 'Integrated Operation':
+                dataList = dataList.extra(
+                    select={'year': 'extract (year from integrated_operation_date)',
+                            'month': 'extract (month from integrated_operation_date)',
+                            'day': 'extract (day from integrated_operation_date)'},
+                    order_by=['month', 'day', '-year'])
+
+            if ParentStatus == 'Rain Test':
+                dataList = dataList.extra(
+                    select={'year': 'extract (year from rain_test_date)',
+                            'month': 'extract (month from rain_test_date)',
+                            'day': 'extract (day from rain_test_date)'},
+                    order_by=['month', 'day', '-year'])
+
+            if ParentStatus == 'Pre User Inspection':
+                dataList = dataList.extra(
+                    select={'year': 'extract (year from pre_user_inspection_date)',
+                            'month': 'extract (month from pre_user_inspection_date)',
+                            'day': 'extract (day from pre_user_inspection_date)'},
+                    order_by=['month', 'day', '-year'])
+
+            if ParentStatus == 'Final Integration':
+                dataList = dataList.extra(
+                    select={'year': 'extract (year from final_integration_date)',
+                            'month': 'extract (month from final_integration_date)',
+                            'day': 'extract (day from final_integration_date)'},
+                    order_by=['month', 'day', '-year'])
+
+            if ParentStatus == 'Loading/Unloading on MLV/HLF':
+                dataList = dataList.extra(
+                    select={'year': 'extract (year from load_unload_on_mlv_hlf_date)',
+                            'month': 'extract (month from load_unload_on_mlv_hlf_date)',
+                            'day': 'extract (day from load_unload_on_mlv_hlf_date)'},
+                    order_by=['month', 'day', '-year'])
+
+            if ParentStatus == 'Pre-HIL':
+                dataList = dataList.extra(
+                    select={'year': 'extract (year from pre_hil_date)',
+                            'month': 'extract (month from pre_hil_date)',
+                            'day': 'extract (day from pre_hil_date)'},
+                    order_by=['month', 'day', '-year'])
+
+            if ParentStatus == 'Vibration':
+                dataList = dataList.extra(
+                    select={'year': 'extract (year from vibaration_date)',
+                            'month': 'extract (month from vibaration_date)',
+                            'day': 'extract (day from vibaration_date)'},
+                    order_by=['month', 'day', '-year'])
+
+            if ParentStatus == 'CG Balancing':
+                dataList = dataList.extra(
+                    select={'year': 'extract (year from cgbalancing_date)',
+                            'month': 'extract (month from cgbalancing_date)',
+                            'day': 'extract (day from cgbalancing_date)'},
+                    order_by=['month', 'day', '-year'])
+
+            if ParentStatus == 'Post-HIL':
+                dataList = dataList.extra(
+                    select={'year': 'extract (year from post_hil_date)',
+                            'month': 'extract (month from post_hil_date)',
+                            'day': 'extract (day from post_hil_date)'},
+                    order_by=['month', 'day', '-year'])
+
+            if ParentStatus == 'System Alignment':
+                dataList = dataList.extra(
+                    select={'year': 'extract (year from sys_align_Date)',
+                            'month': 'extract (month from sys_align_Date)',
+                            'day': 'extract (day from sys_align_Date)'},
+                    order_by=['month', 'day', '-year'])
+
+
+            if ParentStatus == 'Incapsulation':
+                dataList = dataList.extra(
+                    select={'year': 'extract (year from incapsulation_date)',
+                            'month': 'extract (month from incapsulation_date)',
+                            'day': 'extract (day from incapsulation_date)'},
+                    order_by=['month', 'day', '-year'])
+
+
+            if ParentStatus == 'Final Integrated Testing':
+                dataList = dataList.extra(
+                    select={'year': 'extract (year from final_integration_date)',
+                            'month': 'extract (month from final_integration_date)',
+                            'day': 'extract (day from final_integration_date)'},
+                    order_by=['month', 'day', '-year'])
+
+
+            if ParentStatus == 'FGT Status':
+                dataList = dataList.extra(
+                    select={'year': 'extract (year from fgt_date)',
+                            'month': 'extract (month from fgt_date)',
+                            'day': 'extract (day from fgt_date)'},
+                    order_by=['month', 'day', '-year'])
+
+            if ParentStatus == 'BHD Status':
+                dataList = dataList.extra(
+                    select={'year': 'extract (year from bhd_date)',
+                            'month': 'extract (month from bhd_date)',
+                            'day': 'extract (day from bhd_date)'},
+                    order_by=['month', 'day', '-year'])
+
+            if ParentStatus == 'FQM Status':
+                dataList = dataList.extra(
+                    select={'year': 'extract (year from fqm_date)',
+                            'month': 'extract (month from fqm_date)',
+                            'day': 'extract (day from fqm_date)'},
+                    order_by=['month', 'day', '-year'])
+
+
+            if ParentStatus == 'QM Certification Status':
+                dataList = dataList.extra(
+                    select={'year': 'extract (year from qm_certification_date)',
+                            'month': 'extract (month from qm_certification_date)',
+                            'day': 'extract (day from qm_certification_date)'},
+                    order_by=['month', 'day', '-year'])
+
+            if ParentStatus == 'Launch/ End User':
+                dataList = dataList.extra(
+                    select={'year': 'extract (year from enduser_date)',
+                            'month': 'extract (month from enduser_date)',
+                            'day': 'extract (day from enduser_date)'},
+                    order_by=['month', 'day', '-year'])
+
+            serializer = ProductionSystemSerialzer(dataList, many=True)
             return JsonResponse({'status': 'true', 'data': serializer.data}, status=200)
 
         except Exception as e:
@@ -1815,9 +2411,16 @@ class SmsController:
                         if count_id == 0 and set.load_unload_on_mlv_hlf_date.strftime("%Y") == year:
                             count_id = set.id
                             ListItems.append(set)
+
                 if ParentStatus == 'BLT':
+                    dataList = dataList.extra(
+                        select={
+                            'year': 'extract (year from blt_date)',
+                            'month': 'extract (month from blt_date)',
+                            'day': 'extract (day from blt_date)'},
+                        order_by=['month', 'day', '-year']
+                    )
                     if ChildStatus != 'Current Count':
-                        # filter_objects &= get_filter('blt_status', 'equal', ChildStatus)
                         ListItems = dataList.filter(blt_date__year=year, blt_status=ChildStatus)
                     if ChildStatus == 'Current Count':
                         for data in dataList:
@@ -1826,8 +2429,12 @@ class SmsController:
                                 ListItems.append(data)
 
                 if ParentStatus == 'EMP Proofing':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from emp_proofing_date)',
+                                'month': 'extract (month from emp_proofing_date)',
+                                'day': 'extract (day from emp_proofing_date)'},
+                        order_by=['month', 'day', '-year'])
                     if ChildStatus != 'Current Count':
-                        # filter_objects &= get_filter('emp_proofing', 'equal', ChildStatus)
                         ListItems = dataList.filter(emp_proofing_date__year=year, emp_proofing=ChildStatus)
 
                     if ChildStatus == 'Current Count':
@@ -1837,6 +2444,11 @@ class SmsController:
                                 ListItems.append(data)
 
                 if ParentStatus == 'Functional Test W/O Dummy Bird':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from func_tst_date)',
+                                'month': 'extract (month from func_tst_date)',
+                                'day': 'extract (day from func_tst_date)'},
+                        order_by=['month', 'day', '-year'])
                     if ChildStatus != 'Current Count':
                         ListItems = dataList.filter(func_tst_date__year=year, func_tst=ChildStatus)
 
@@ -1847,8 +2459,14 @@ class SmsController:
                                 ListItems.append(data)
 
                 if ParentStatus == 'Functional Test With Dummy Bird':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from func_tst_dummy_bird_date)',
+                                'month': 'extract (month from func_tst_dummy_bird_date)',
+                                'day': 'extract (day from func_tst_dummy_bird_date)'},
+                        order_by=['month', 'day', '-year'])
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(func_tst_dummy_bird_date__year=year, func_tst_dummy_bird=ChildStatus)
+                        ListItems = dataList.filter(func_tst_dummy_bird_date__year=year,
+                                                    func_tst_dummy_bird=ChildStatus)
 
                     if ChildStatus == 'Current Count':
                         for data in dataList:
@@ -1857,16 +2475,26 @@ class SmsController:
                                 ListItems.append(data)
 
                 if ParentStatus == 'Road Test':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from road_test_date)',
+                                'month': 'extract (month from road_test_date)',
+                                'day': 'extract (day from road_test_date)'},
+                        order_by=['month', 'day', '-year'])
                     if ChildStatus != 'Current Count':
                         ListItems = dataList.filter(road_test_date__year=year, road_test=ChildStatus)
 
                     if ChildStatus == 'Current Count':
                         for data in dataList:
-                            if data.oad_test_date.strftime("%Y") == year and (
+                            if data.road_test_date.strftime("%Y") == year and (
                                     data.road_test == 'Under process' or data.road_test == 'Observation(same stage)' or data.road_test == 'Halt'):
                                 ListItems.append(data)
 
                 if ParentStatus == 'Post Road Test':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from post_road_test_date)',
+                                'month': 'extract (month from post_road_test_date)',
+                                'day': 'extract (day from post_road_test_date)'},
+                        order_by=['month', 'day', '-year'])
                     if ChildStatus != 'Current Count':
                         ListItems = dataList.filter(post_road_test_date__year=year, post_road_test=ChildStatus)
 
@@ -1877,8 +2505,14 @@ class SmsController:
                                 ListItems.append(data)
 
                 if ParentStatus == 'Integrated Operation':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from integrated_operation_date)',
+                                'month': 'extract (month from integrated_operation_date)',
+                                'day': 'extract (day from integrated_operation_date)'},
+                        order_by=['month', 'day', '-year'])
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(integrated_operation_date__year=year, integrated_operation=ChildStatus)
+                        ListItems = dataList.filter(integrated_operation_date__year=year,
+                                                    integrated_operation=ChildStatus)
 
                     if ChildStatus == 'Current Count':
                         for data in dataList:
@@ -1887,6 +2521,11 @@ class SmsController:
                                 ListItems.append(data)
 
                 if ParentStatus == 'Rain Test':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from rain_test_date)',
+                                'month': 'extract (month from rain_test_date)',
+                                'day': 'extract (day from rain_test_date)'},
+                        order_by=['month', 'day', '-year'])
                     if ChildStatus != 'Current Count':
                         ListItems = dataList.filter(rain_test_date__year=year, rain_test=ChildStatus)
 
@@ -1897,8 +2536,14 @@ class SmsController:
                                 ListItems.append(data)
 
                 if ParentStatus == 'Pre User Inspection':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from pre_user_inspection_date)',
+                                'month': 'extract (month from pre_user_inspection_date)',
+                                'day': 'extract (day from pre_user_inspection_date)'},
+                        order_by=['month', 'day', '-year'])
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(pre_user_inspection_date__year=year, pre_user_inspection=ChildStatus)
+                        ListItems = dataList.filter(pre_user_inspection_date__year=year,
+                                                    pre_user_inspection=ChildStatus)
 
                     if ChildStatus == 'Current Count':
                         for data in dataList:
@@ -1907,8 +2552,14 @@ class SmsController:
                                 ListItems.append(data)
 
                 if ParentStatus == 'Final Integration':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from final_integration_date)',
+                                'month': 'extract (month from final_integration_date)',
+                                'day': 'extract (day from final_integration_date)'},
+                        order_by=['month', 'day', '-year'])
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(final_integration_date__year=year, final_integration_status=ChildStatus)
+                        ListItems = dataList.filter(final_integration_date__year=year,
+                                                    final_integration_status=ChildStatus)
 
                     if ChildStatus == 'Current Count':
                         for data in dataList:
@@ -1917,6 +2568,11 @@ class SmsController:
                                 ListItems.append(data)
 
                 if ParentStatus == 'Loading/Unloading on MLV/HLF':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from load_unload_on_mlv_hlf_date)',
+                                'month': 'extract (month from load_unload_on_mlv_hlf_date)',
+                                'day': 'extract (day from load_unload_on_mlv_hlf_date)'},
+                        order_by=['month', 'day', '-year'])
                     if ChildStatus != 'Current Count':
                         ListItems = dataList.filter(load_unload_on_mlv_hlf_date__year=year,
                                                     load_unload_on_mlv_hlf=ChildStatus)
@@ -1928,6 +2584,11 @@ class SmsController:
                                 ListItems.append(data)
 
                 if ParentStatus == 'Pre-HIL':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from pre_hil_date)',
+                                'month': 'extract (month from pre_hil_date)',
+                                'day': 'extract (day from pre_hil_date)'},
+                        order_by=['month', 'day', '-year'])
                     if ChildStatus != 'Current Count':
                         ListItems = dataList.filter(pre_hil_date__year=year, pre_hil_status=ChildStatus)
 
@@ -1938,6 +2599,11 @@ class SmsController:
                                 ListItems.append(data)
 
                 if ParentStatus == 'Vibration':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from vibaration_date)',
+                                'month': 'extract (month from vibaration_date)',
+                                'day': 'extract (day from vibaration_date)'},
+                        order_by=['month', 'day', '-year'])
                     if ChildStatus != 'Current Count':
                         ListItems = dataList.filter(vibaration_date__year=year, vibaration_status=ChildStatus)
 
@@ -1948,6 +2614,11 @@ class SmsController:
                                 ListItems.append(data)
 
                 if ParentStatus == 'CG Balancing':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from cgbalancing_date)',
+                                'month': 'extract (month from cgbalancing_date)',
+                                'day': 'extract (day from cgbalancing_date)'},
+                        order_by=['month', 'day', '-year'])
                     if ChildStatus != 'Current Count':
                         ListItems = dataList.filter(cgbalancing_date__year=year, cgbalancing_date_status=ChildStatus)
 
@@ -1958,6 +2629,11 @@ class SmsController:
                                 ListItems.append(data)
 
                 if ParentStatus == 'Post-HIL':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from post_hil_date)',
+                                'month': 'extract (month from post_hil_date)',
+                                'day': 'extract (day from post_hil_date)'},
+                        order_by=['month', 'day', '-year'])
                     if ChildStatus != 'Current Count':
                         ListItems = dataList.filter(post_hil_date__year=year, post_hil_status=ChildStatus)
 
@@ -1968,6 +2644,11 @@ class SmsController:
                                 ListItems.append(data)
 
                 if ParentStatus == 'System Alignment':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from sys_align_Date)',
+                                'month': 'extract (month from sys_align_Date)',
+                                'day': 'extract (day from sys_align_Date)'},
+                        order_by=['month', 'day', '-year'])
                     if ChildStatus != 'Current Count':
                         ListItems = dataList.filter(sys_align_Date__year=year, sys_align_status=ChildStatus)
 
@@ -1978,6 +2659,11 @@ class SmsController:
                                 ListItems.append(data)
 
                 if ParentStatus == 'Incapsulation':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from incapsulation_date)',
+                                'month': 'extract (month from incapsulation_date)',
+                                'day': 'extract (day from incapsulation_date)'},
+                        order_by=['month', 'day', '-year'])
                     if ChildStatus != 'Current Count':
                         ListItems = dataList.filter(incapsulation_date__year=year, incapsulation_status=ChildStatus)
 
@@ -1988,8 +2674,14 @@ class SmsController:
                                 ListItems.append(data)
 
                 if ParentStatus == 'Final Integrated Testing':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from final_integration_date)',
+                                'month': 'extract (month from final_integration_date)',
+                                'day': 'extract (day from final_integration_date)'},
+                        order_by=['month', 'day', '-year'])
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(final_integration_date__year=year, final_integration_status=ChildStatus)
+                        ListItems = dataList.filter(final_integration_date__year=year,
+                                                    final_integration_status=ChildStatus)
 
                     if ChildStatus == 'Current Count':
                         for data in dataList:
@@ -1998,6 +2690,11 @@ class SmsController:
                                 ListItems.append(data)
 
                 if ParentStatus == 'FGT Status':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from fgt_date)',
+                                'month': 'extract (month from fgt_date)',
+                                'day': 'extract (day from fgt_date)'},
+                        order_by=['month', 'day', '-year'])
                     if ChildStatus != 'Current Count':
                         ListItems = dataList.filter(fgt_date__year=year, fgt_status=ChildStatus)
 
@@ -2008,6 +2705,11 @@ class SmsController:
                                 ListItems.append(data)
 
                 if ParentStatus == 'BHD Status':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from bhd_date)',
+                                'month': 'extract (month from bhd_date)',
+                                'day': 'extract (day from bhd_date)'},
+                        order_by=['month', 'day', '-year'])
                     if ChildStatus != 'Current Count':
                         ListItems = dataList.filter(bhd_date__year=year, bhd_status=ChildStatus)
 
@@ -2018,6 +2720,11 @@ class SmsController:
                                 ListItems.append(data)
 
                 if ParentStatus == 'FQM Status':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from fqm_date)',
+                                'month': 'extract (month from fqm_date)',
+                                'day': 'extract (day from fqm_date)'},
+                        order_by=['month', 'day', '-year'])
                     if ChildStatus != 'Current Count':
                         ListItems = dataList.filter(fqm_date__year=year, fqm_status=ChildStatus)
 
@@ -2027,8 +2734,14 @@ class SmsController:
                                 ListItems.append(data)
 
                 if ParentStatus == 'QM Certification Status':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from qm_certification_date)',
+                                'month': 'extract (month from qm_certification_date)',
+                                'day': 'extract (day from qm_certification_date)'},
+                        order_by=['month', 'day', '-year'])
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(qm_certification_date__year=year, qm_certification_status=ChildStatus)
+                        ListItems = dataList.filter(qm_certification_date__year=year,
+                                                    qm_certification_status=ChildStatus)
 
                     if ChildStatus == 'Current Count':
                         for data in dataList:
@@ -2037,6 +2750,11 @@ class SmsController:
                                 ListItems.append(data)
 
                 if ParentStatus == 'Launch/ End User':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from launchact_date)',
+                                'month': 'extract (month from launchact_date)',
+                                'day': 'extract (day from launchact_date)'},
+                        order_by=['month', 'day', '-year'])
                     if ChildStatus != 'Current Count':
                         ListItems = dataList.filter(launchact_date__year = year, launchact_status=ChildStatus)
                     else:
@@ -2061,7 +2779,174 @@ class SmsController:
     def GetFlightListHistory(request):
         try:
             id = request.query_params['id']
-            data = FlightSystemStatusHistory.objects.filter(f_id=id)
+            ParentStatus = request.query_params['parent_status']
+            dataList = FlightSystemStatusHistory.objects.filter(f_id=id)
+            if ParentStatus == 'BLT':
+                dataList = dataList.extra(
+                    select={
+                        'year': 'extract (year from blt_date)',
+                        'month': 'extract (month from blt_date)',
+                        'day': 'extract (day from blt_date)'},
+                    order_by=['month', 'day', '-year'])
+
+
+            if ParentStatus == 'EMP Proofing':
+                dataList = dataList.extra(
+                    select={'year': 'extract (year from emp_proofing_date)',
+                            'month': 'extract (month from emp_proofing_date)',
+                            'day': 'extract (day from emp_proofing_date)'},
+                    order_by=['month', 'day', '-year'])
+
+            if ParentStatus == 'Functional Test W/O Dummy Bird':
+                dataList = dataList.extra(
+                    select={'year': 'extract (year from func_tst_date)',
+                            'month': 'extract (month from func_tst_date)',
+                            'day': 'extract (day from func_tst_date)'},
+                    order_by=['month', 'day', '-year'])
+
+            if ParentStatus == 'Functional Test With Dummy Bird':
+                dataList = dataList.extra(
+                    select={'year': 'extract (year from func_tst_dummy_bird_date)',
+                            'month': 'extract (month from func_tst_dummy_bird_date)',
+                            'day': 'extract (day from func_tst_dummy_bird_date)'},
+                    order_by=['month', 'day', '-year'])
+
+            if ParentStatus == 'Road Test':
+                dataList = dataList.extra(
+                    select={'year': 'extract (year from road_test_date)',
+                            'month': 'extract (month from road_test_date)',
+                            'day': 'extract (day from road_test_date)'},
+                    order_by=['month', 'day', '-year'])
+
+            if ParentStatus == 'Post Road Test':
+                dataList = dataList.extra(
+                    select={'year': 'extract (year from post_road_test_date)',
+                            'month': 'extract (month from post_road_test_date)',
+                            'day': 'extract (day from post_road_test_date)'},
+                    order_by=['month', 'day', '-year'])
+
+            if ParentStatus == 'Integrated Operation':
+                dataList = dataList.extra(
+                    select={'year': 'extract (year from integrated_operation_date)',
+                            'month': 'extract (month from integrated_operation_date)',
+                            'day': 'extract (day from integrated_operation_date)'},
+                    order_by=['month', 'day', '-year'])
+
+            if ParentStatus == 'Rain Test':
+                dataList = dataList.extra(
+                    select={'year': 'extract (year from rain_test_date)',
+                            'month': 'extract (month from rain_test_date)',
+                            'day': 'extract (day from rain_test_date)'},
+                    order_by=['month', 'day', '-year'])
+
+            if ParentStatus == 'Pre User Inspection':
+                dataList = dataList.extra(
+                    select={'year': 'extract (year from pre_user_inspection_date)',
+                            'month': 'extract (month from pre_user_inspection_date)',
+                            'day': 'extract (day from pre_user_inspection_date)'},
+                    order_by=['month', 'day', '-year'])
+
+            if ParentStatus == 'Final Integration':
+                dataList = dataList.extra(
+                    select={'year': 'extract (year from final_integration_date)',
+                            'month': 'extract (month from final_integration_date)',
+                            'day': 'extract (day from final_integration_date)'},
+                    order_by=['month', 'day', '-year'])
+
+            if ParentStatus == 'Loading/Unloading on MLV/HLF':
+                dataList = dataList.extra(
+                    select={'year': 'extract (year from load_unload_on_mlv_hlf_date)',
+                            'month': 'extract (month from load_unload_on_mlv_hlf_date)',
+                            'day': 'extract (day from load_unload_on_mlv_hlf_date)'},
+                    order_by=['month', 'day', '-year'])
+
+            if ParentStatus == 'Pre-HIL':
+                dataList = dataList.extra(
+                    select={'year': 'extract (year from pre_hil_date)',
+                            'month': 'extract (month from pre_hil_date)',
+                            'day': 'extract (day from pre_hil_date)'},
+                    order_by=['month', 'day', '-year'])
+
+            if ParentStatus == 'Vibration':
+                dataList = dataList.extra(
+                    select={'year': 'extract (year from vibaration_date)',
+                            'month': 'extract (month from vibaration_date)',
+                            'day': 'extract (day from vibaration_date)'},
+                    order_by=['month', 'day', '-year'])
+
+            if ParentStatus == 'CG Balancing':
+                dataList = dataList.extra(
+                    select={'year': 'extract (year from cgbalancing_date)',
+                            'month': 'extract (month from cgbalancing_date)',
+                            'day': 'extract (day from cgbalancing_date)'},
+                    order_by=['month', 'day', '-year'])
+
+            if ParentStatus == 'Post-HIL':
+                dataList = dataList.extra(
+                    select={'year': 'extract (year from post_hil_date)',
+                            'month': 'extract (month from post_hil_date)',
+                            'day': 'extract (day from post_hil_date)'},
+                    order_by=['month', 'day', '-year'])
+
+            if ParentStatus == 'System Alignment':
+                dataList = dataList.extra(
+                    select={'year': 'extract (year from sys_align_Date)',
+                            'month': 'extract (month from sys_align_Date)',
+                            'day': 'extract (day from sys_align_Date)'},
+                    order_by=['month', 'day', '-year'])
+
+
+            if ParentStatus == 'Incapsulation':
+                dataList = dataList.extra(
+                    select={'year': 'extract (year from incapsulation_date)',
+                            'month': 'extract (month from incapsulation_date)',
+                            'day': 'extract (day from incapsulation_date)'},
+                    order_by=['month', 'day', '-year'])
+
+
+            if ParentStatus == 'Final Integrated Testing':
+                dataList = dataList.extra(
+                    select={'year': 'extract (year from final_integration_date)',
+                            'month': 'extract (month from final_integration_date)',
+                            'day': 'extract (day from final_integration_date)'},
+                    order_by=['month', 'day', '-year'])
+
+
+            if ParentStatus == 'FGT Status':
+                dataList = dataList.extra(
+                    select={'year': 'extract (year from fgt_date)',
+                            'month': 'extract (month from fgt_date)',
+                            'day': 'extract (day from fgt_date)'},
+                    order_by=['month', 'day', '-year'])
+
+            if ParentStatus == 'BHD Status':
+                dataList = dataList.extra(
+                    select={'year': 'extract (year from bhd_date)',
+                            'month': 'extract (month from bhd_date)',
+                            'day': 'extract (day from bhd_date)'},
+                    order_by=['month', 'day', '-year'])
+
+            if ParentStatus == 'FQM Status':
+                dataList = dataList.extra(
+                    select={'year': 'extract (year from fqm_date)',
+                            'month': 'extract (month from fqm_date)',
+                            'day': 'extract (day from fqm_date)'},
+                    order_by=['month', 'day', '-year'])
+
+
+            if ParentStatus == 'QM Certification Status':
+                dataList = dataList.extra(
+                    select={'year': 'extract (year from qm_certification_date)',
+                            'month': 'extract (month from qm_certification_date)',
+                            'day': 'extract (day from qm_certification_date)'},
+                    order_by=['month', 'day', '-year'])
+
+            if ParentStatus == 'Launch/ End User':
+                dataList = dataList.extra(
+                    select={'year': 'extract (year from launchact_date)',
+                            'month': 'extract (month from launchact_date)',
+                            'day': 'extract (day from launchact_date)'},
+                    order_by=['month', 'day', '-year'])
             serializer = FlightSystemSerialzer(data, many=True)
             return JsonResponse({'status': 'true', 'data': serializer.data}, status=200)
 
@@ -2875,219 +3760,348 @@ class SmsController:
                                 ListItems.append(set)
 
                 if ParentStatus == 'BLT':
+                    dataList = dataList.extra(
+                        select={
+                            'year': 'extract (year from blt_date)',
+                            'month': 'extract (month from blt_date)',
+                            'day': 'extract (day from blt_date)'},
+                        order_by=['month', 'day', '-year']
+                    )
                     if ChildStatus != 'Current Count':
-                        # filter_objects &= get_filter('blt_status', 'equal', ChildStatus)
-                        ListItems = dataList.filter(blt_date__year = year,blt_status = ChildStatus)
+                        ListItems = dataList.filter(blt_date__year=year, blt_status=ChildStatus)
                     if ChildStatus == 'Current Count':
-                        for data  in dataList:
-                            if data.blt_date is not None:
-                                if data.blt_date.strftime("%Y") == year and (data.blt_status == 'Under process' or data.blt_status=='Observation(same stage)' or data.blt_status=='Halt'):
-                                    ListItems.append(data)
-
+                        for data in dataList:
+                            if data.blt_date.strftime("%Y") == year and (
+                                    data.blt_status == 'Under process' or data.blt_status == 'Observation(same stage)' or data.blt_status == 'Halt'):
+                                ListItems.append(data)
 
                 if ParentStatus == 'EMP Proofing':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from emp_proofing_date)',
+                                'month': 'extract (month from emp_proofing_date)',
+                                'day': 'extract (day from emp_proofing_date)'},
+                        order_by=['month', 'day', '-year'])
                     if ChildStatus != 'Current Count':
-                        # filter_objects &= get_filter('emp_proofing', 'equal', ChildStatus)
-                        ListItems = dataList.filter(emp_proofing_date__year = year,emp_proofing = ChildStatus)
+                        ListItems = dataList.filter(emp_proofing_date__year=year, emp_proofing=ChildStatus)
 
                     if ChildStatus == 'Current Count':
-                        for data  in dataList:
-                            if data.emp_proofing_date is not None:
-                                if data.emp_proofing_date.strftime("%Y") == year and  (data.emp_proofing == 'Under process' or data.emp_proofing=='Observation(same stage)' or data.emp_proofing=='Halt'):
-                                    ListItems.append(data)
+                        for data in dataList:
+                            if data.emp_proofing_date.strftime("%Y") == year and (
+                                    data.emp_proofing == 'Under process' or data.emp_proofing == 'Observation(same stage)' or data.emp_proofing == 'Halt'):
+                                ListItems.append(data)
 
                 if ParentStatus == 'Functional Test W/O Dummy Bird':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from func_tst_date)',
+                                'month': 'extract (month from func_tst_date)',
+                                'day': 'extract (day from func_tst_date)'},
+                        order_by=['month', 'day', '-year'])
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(func_tst_date__year = year, func_tst = ChildStatus)
+                        ListItems = dataList.filter(func_tst_date__year=year, func_tst=ChildStatus)
 
                     if ChildStatus == 'Current Count':
-                        for data  in dataList:
-                            if data.func_tst_date is not None:
-                                if data.func_tst_date.strftime("%Y") == year and (data.func_tst == 'Under process' or data.func_tst=='Observation(same stage)' or data.func_tst=='Halt'):
-                                    ListItems.append(data)
+                        for data in dataList:
+                            if data.func_tst_date.strftime("%Y") == year and (
+                                    data.func_tst == 'Under process' or data.func_tst == 'Observation(same stage)' or data.func_tst == 'Halt'):
+                                ListItems.append(data)
 
                 if ParentStatus == 'Functional Test With Dummy Bird':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from func_tst_dummy_bird_date)',
+                                'month': 'extract (month from func_tst_dummy_bird_date)',
+                                'day': 'extract (day from func_tst_dummy_bird_date)'},
+                        order_by=['month', 'day', '-year'])
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(func_tst_dummy_bird_date__year = year, func_tst_dummy_bird = ChildStatus)
+                        ListItems = dataList.filter(func_tst_dummy_bird_date__year=year,
+                                                    func_tst_dummy_bird=ChildStatus)
 
                     if ChildStatus == 'Current Count':
-                        for data  in dataList:
-                            if data.func_tst_dummy_bird_date is not None:
-                                if data.func_tst_dummy_bird_date.strftime("%Y") == year and (data.func_tst_dummy_bird == 'Under process' or data.func_tst_dummy_bird=='Observation(same stage)' or data.func_tst_dummy_bird=='Halt'):
-                                    ListItems.append(data)
+                        for data in dataList:
+                            if data.func_tst_dummy_bird_date.strftime("%Y") == year and (
+                                    data.func_tst_dummy_bird == 'Under process' or data.func_tst_dummy_bird == 'Observation(same stage)' or data.func_tst_dummy_bird == 'Halt'):
+                                ListItems.append(data)
 
                 if ParentStatus == 'Road Test':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from road_test_date)',
+                                'month': 'extract (month from road_test_date)',
+                                'day': 'extract (day from road_test_date)'},
+                        order_by=['month', 'day', '-year'])
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(road_test_date__year = year, road_test = ChildStatus)
+                        ListItems = dataList.filter(road_test_date__year=year, road_test=ChildStatus)
 
                     if ChildStatus == 'Current Count':
-                        for data  in dataList:
-                            if data.road_test_date is not None:
-                                if data.road_test_date.strftime("%Y") == year and (data.road_test == 'Under process' or data.road_test=='Observation(same stage)' or data.road_test=='Halt'):
-                                    ListItems.append(data)
+                        for data in dataList:
+                            if data.road_test_date.strftime("%Y") == year and (
+                                    data.road_test == 'Under process' or data.road_test == 'Observation(same stage)' or data.road_test == 'Halt'):
+                                ListItems.append(data)
 
                 if ParentStatus == 'Post Road Test':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from post_road_test_date)',
+                                'month': 'extract (month from post_road_test_date)',
+                                'day': 'extract (day from post_road_test_date)'},
+                        order_by=['month', 'day', '-year'])
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(post_road_test_date__year = year, post_road_test = ChildStatus)
+                        ListItems = dataList.filter(post_road_test_date__year=year, post_road_test=ChildStatus)
 
                     if ChildStatus == 'Current Count':
-                        for data  in dataList:
-                            if data.post_road_test_date is not None:
-                                if data.post_road_test_date.strftime("%Y") == year and (data.post_road_test == 'Under process' or data.post_road_test=='Observation(same stage)' or data.post_road_test=='Halt'):
-                                    ListItems.append(data)
+                        for data in dataList:
+                            if data.post_road_test_date.strftime("%Y") == year and (
+                                    data.post_road_test == 'Under process' or data.post_road_test == 'Observation(same stage)' or data.post_road_test == 'Halt'):
+                                ListItems.append(data)
 
                 if ParentStatus == 'Integrated Operation':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from integrated_operation_date)',
+                                'month': 'extract (month from integrated_operation_date)',
+                                'day': 'extract (day from integrated_operation_date)'},
+                        order_by=['month', 'day', '-year'])
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(integrated_operation_date__year = year, integrated_operation = ChildStatus)
+                        ListItems = dataList.filter(integrated_operation_date__year=year,
+                                                    integrated_operation=ChildStatus)
 
                     if ChildStatus == 'Current Count':
-                        for data  in dataList:
-                            if data.integrated_operation_date is not None:
-                                if data.integrated_operation_date.strftime("%Y") == year and (data.integrated_operation == 'Under process' or data.integrated_operation=='Observation(same stage)' or data.integrated_operation=='Halt'):
-                                    ListItems.append(data)
+                        for data in dataList:
+                            if data.integrated_operation_date.strftime("%Y") == year and (
+                                    data.integrated_operation == 'Under process' or data.integrated_operation == 'Observation(same stage)' or data.integrated_operation == 'Halt'):
+                                ListItems.append(data)
 
                 if ParentStatus == 'Rain Test':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from rain_test_date)',
+                                'month': 'extract (month from rain_test_date)',
+                                'day': 'extract (day from rain_test_date)'},
+                        order_by=['month', 'day', '-year'])
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(rain_test_date__year = year, rain_test = ChildStatus)
+                        ListItems = dataList.filter(rain_test_date__year=year, rain_test=ChildStatus)
 
                     if ChildStatus == 'Current Count':
-                        for data  in dataList:
-                            if data.rain_test_date is not None:
-                                if data.rain_test_date.strftime("%Y") == year and (data.rain_test == 'Under process' or data.rain_test=='Observation(same stage)' or data.rain_test=='Halt'):
-                                    ListItems.append(data)
+                        for data in dataList:
+                            if data.rain_test_date.strftime("%Y") == year and (
+                                    data.rain_test == 'Under process' or data.rain_test == 'Observation(same stage)' or data.rain_test == 'Halt'):
+                                ListItems.append(data)
 
                 if ParentStatus == 'Pre User Inspection':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from pre_user_inspection_date)',
+                                'month': 'extract (month from pre_user_inspection_date)',
+                                'day': 'extract (day from pre_user_inspection_date)'},
+                        order_by=['month', 'day', '-year'])
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(pre_user_inspection_date__year = year, pre_user_inspection = ChildStatus)
+                        ListItems = dataList.filter(pre_user_inspection_date__year=year,
+                                                    pre_user_inspection=ChildStatus)
 
                     if ChildStatus == 'Current Count':
-                        for data  in dataList:
-                            if data.pre_user_inspection_date is not None:
-                                if data.pre_user_inspection_date.strftime("%Y") == year and (data.pre_user_inspection == 'Under process' or data.pre_user_inspection=='Observation(same stage)' or data.pre_user_inspection=='Halt'):
-                                    ListItems.append(data)
+                        for data in dataList:
+                            if data.pre_user_inspection_date.strftime("%Y") == year and (
+                                    data.pre_user_inspection == 'Under process' or data.pre_user_inspection == 'Observation(same stage)' or data.pre_user_inspection == 'Halt'):
+                                ListItems.append(data)
 
                 if ParentStatus == 'Final Integration':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from final_integration_date)',
+                                'month': 'extract (month from final_integration_date)',
+                                'day': 'extract (day from final_integration_date)'},
+                        order_by=['month', 'day', '-year'])
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(final_integration_date__year = year, final_integration_status = ChildStatus)
+                        ListItems = dataList.filter(final_integration_date__year=year,
+                                                    final_integration_status=ChildStatus)
 
                     if ChildStatus == 'Current Count':
-                        for data  in dataList:
-                            if data.final_integration_date is not None:
-                                if data.final_integration_date.strftime("%Y") == year and (data.final_integration_status == 'Under process' or data.final_integration_status=='Observation(same stage)' or data.final_integration_status=='Halt'):
-                                    ListItems.append(data)
+                        for data in dataList:
+                            if data.final_integration_date.strftime("%Y") == year and (
+                                    data.final_integration_status == 'Under process' or data.final_integration_status == 'Observation(same stage)' or data.final_integration_status == 'Halt'):
+                                ListItems.append(data)
 
                 if ParentStatus == 'Loading/Unloading on MLV/HLF':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from load_unload_on_mlv_hlf_date)',
+                                'month': 'extract (month from load_unload_on_mlv_hlf_date)',
+                                'day': 'extract (day from load_unload_on_mlv_hlf_date)'},
+                        order_by=['month', 'day', '-year'])
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(load_unload_on_mlv_hlf_date__year = year, load_unload_on_mlv_hlf = ChildStatus)
+                        ListItems = dataList.filter(load_unload_on_mlv_hlf_date__year=year,
+                                                    load_unload_on_mlv_hlf=ChildStatus)
 
                     if ChildStatus == 'Current Count':
-                        for data  in dataList:
-                            if data.load_unload_on_mlv_hlf_date is not None:
-                                if data.load_unload_on_mlv_hlf_date.strftime("%Y") == year and (data.load_unload_on_mlv_hlf == 'Under process' or data.load_unload_on_mlv_hlf=='Observation(same stage)' or data.load_unload_on_mlv_hlf=='Halt'):
-                                    ListItems.append(data)
+                        for data in dataList:
+                            if data.load_unload_on_mlv_hlf_date.strftime("%Y") == year and (
+                                    data.load_unload_on_mlv_hlf == 'Under process' or data.load_unload_on_mlv_hlf == 'Observation(same stage)' or data.load_unload_on_mlv_hlf == 'Halt'):
+                                ListItems.append(data)
 
                 if ParentStatus == 'Pre-HIL':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from pre_hil_date)',
+                                'month': 'extract (month from pre_hil_date)',
+                                'day': 'extract (day from pre_hil_date)'},
+                        order_by=['month', 'day', '-year'])
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(pre_hil_date__year = year, pre_hil_status = ChildStatus)
+                        ListItems = dataList.filter(pre_hil_date__year=year, pre_hil_status=ChildStatus)
 
                     if ChildStatus == 'Current Count':
-                        for data  in dataList:
-                            if data.pre_hil_date is not None:
-                                if data.pre_hil_date.strftime("%Y") == year and (data.pre_hil_status == 'Under process' or data.pre_hil_status=='Observation(same stage)' or data.pre_hil_status=='Halt'):
-                                    ListItems.append(data)
+                        for data in dataList:
+                            if data.pre_hil_date.strftime("%Y") == year and (
+                                    data.pre_hil_status == 'Under process' or data.pre_hil_status == 'Observation(same stage)' or data.pre_hil_status == 'Halt'):
+                                ListItems.append(data)
 
                 if ParentStatus == 'Vibration':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from vibaration_date)',
+                                'month': 'extract (month from vibaration_date)',
+                                'day': 'extract (day from vibaration_date)'},
+                        order_by=['month', 'day', '-year'])
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(vibaration_date__year = year, vibaration_status = ChildStatus)
+                        ListItems = dataList.filter(vibaration_date__year=year, vibaration_status=ChildStatus)
 
                     if ChildStatus == 'Current Count':
-                        for data  in dataList:
-                            if data.vibaration_date is not None:
-                                if data.vibaration_date.strftime("%Y") == year and (data.vibaration_status == 'Under process' or data.vibaration_status=='Observation(same stage)' or data.vibaration_status=='Halt'):
-                                    ListItems.append(data)
+                        for data in dataList:
+                            if data.vibaration_date.strftime("%Y") == year and (
+                                    data.vibaration_status == 'Under process' or data.vibaration_status == 'Observation(same stage)' or data.vibaration_status == 'Halt'):
+                                ListItems.append(data)
 
                 if ParentStatus == 'CG Balancing':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from cgbalancing_date)',
+                                'month': 'extract (month from cgbalancing_date)',
+                                'day': 'extract (day from cgbalancing_date)'},
+                        order_by=['month', 'day', '-year'])
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(cgbalancing_date__year = year, cgbalancing_date_status = ChildStatus)
+                        ListItems = dataList.filter(cgbalancing_date__year=year, cgbalancing_date_status=ChildStatus)
 
                     if ChildStatus == 'Current Count':
-                        for data  in dataList:
-                            if data.cgbalancing_date.strftime("%Y") == year and (data.cgbalancing_date_status == 'Under process' or data.cgbalancing_date_status=='Observation(same stage)' or data.cgbalancing_date_status=='Halt'):
+                        for data in dataList:
+                            if data.cgbalancing_date.strftime("%Y") == year and (
+                                    data.cgbalancing_date_status == 'Under process' or data.cgbalancing_date_status == 'Observation(same stage)' or data.cgbalancing_date_status == 'Halt'):
                                 ListItems.append(data)
 
                 if ParentStatus == 'Post-HIL':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from post_hil_date)',
+                                'month': 'extract (month from post_hil_date)',
+                                'day': 'extract (day from post_hil_date)'},
+                        order_by=['month', 'day', '-year'])
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(post_hil_date__year = year, post_hil_status = ChildStatus)
+                        ListItems = dataList.filter(post_hil_date__year=year, post_hil_status=ChildStatus)
 
                     if ChildStatus == 'Current Count':
-                        for data  in dataList:
-                            if data.post_hil_date.strftime("%Y") == year and (data.post_hil_status == 'Under process' or data.post_hil_status=='Observation(same stage)' or data.post_hil_status=='Halt'):
+                        for data in dataList:
+                            if data.post_hil_date.strftime("%Y") == year and (
+                                    data.post_hil_status == 'Under process' or data.post_hil_status == 'Observation(same stage)' or data.post_hil_status == 'Halt'):
                                 ListItems.append(data)
 
                 if ParentStatus == 'System Alignment':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from sys_align_Date)',
+                                'month': 'extract (month from sys_align_Date)',
+                                'day': 'extract (day from sys_align_Date)'},
+                        order_by=['month', 'day', '-year'])
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(sys_align_Date__year = year, sys_align_status = ChildStatus)
+                        ListItems = dataList.filter(sys_align_Date__year=year, sys_align_status=ChildStatus)
 
                     if ChildStatus == 'Current Count':
-                        for data  in dataList:
-                            if data.sys_align_Date.strftime("%Y") == year and (data.sys_align_status == 'Under process' or data.sys_align_status=='Observation(same stage)' or data.sys_align_status=='Halt'):
+                        for data in dataList:
+                            if data.sys_align_Date.strftime("%Y") == year and (
+                                    data.sys_align_status == 'Under process' or data.sys_align_status == 'Observation(same stage)' or data.sys_align_status == 'Halt'):
                                 ListItems.append(data)
 
                 if ParentStatus == 'Incapsulation':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from incapsulation_date)',
+                                'month': 'extract (month from incapsulation_date)',
+                                'day': 'extract (day from incapsulation_date)'},
+                        order_by=['month', 'day', '-year'])
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(incapsulation_date__year = year, incapsulation_status = ChildStatus)
+                        ListItems = dataList.filter(incapsulation_date__year=year, incapsulation_status=ChildStatus)
 
                     if ChildStatus == 'Current Count':
-                        for data  in dataList:
-                            if data.incapsulation_date.strftime("%Y") == year and (data.incapsulation_status == 'Under process' or data.incapsulation_status=='Observation(same stage)' or data.incapsulation_status=='Halt'):
+                        for data in dataList:
+                            if data.incapsulation_date.strftime("%Y") == year and (
+                                    data.incapsulation_status == 'Under process' or data.incapsulation_status == 'Observation(same stage)' or data.incapsulation_status == 'Halt'):
                                 ListItems.append(data)
 
                 if ParentStatus == 'Final Integrated Testing':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from final_integration_date)',
+                                'month': 'extract (month from final_integration_date)',
+                                'day': 'extract (day from final_integration_date)'},
+                        order_by=['month', 'day', '-year'])
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(final_integration_date__year = year, final_integration_status = ChildStatus)
+                        ListItems = dataList.filter(final_integration_date__year=year,
+                                                    final_integration_status=ChildStatus)
 
                     if ChildStatus == 'Current Count':
-                        for data  in dataList:
-                            if data.final_integration_date.strftime("%Y") == year and (data.final_integration_status == 'Under process' or data.final_integration_status=='Observation(same stage)' or data.final_integration_status=='Halt'):
+                        for data in dataList:
+                            if data.final_integration_date.strftime("%Y") == year and (
+                                    data.final_integration_status == 'Under process' or data.final_integration_status == 'Observation(same stage)' or data.final_integration_status == 'Halt'):
                                 ListItems.append(data)
 
                 if ParentStatus == 'FGT Status':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from fgt_date)',
+                                'month': 'extract (month from fgt_date)',
+                                'day': 'extract (day from fgt_date)'},
+                        order_by=['month', 'day', '-year'])
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(fgt_date__year = year, fgt_status = ChildStatus)
+                        ListItems = dataList.filter(fgt_date__year=year, fgt_status=ChildStatus)
 
                     if ChildStatus == 'Current Count':
-                        for data  in dataList:
-                            if data.fgt_date.strftime("%Y") == year and (data.fgt_status == 'Under process' or data.fgt_status=='Observation(same stage)' or data.fgt_status=='Halt'):
+                        for data in dataList:
+                            if data.fgt_date.strftime("%Y") == year and (
+                                    data.fgt_status == 'Under process' or data.fgt_status == 'Observation(same stage)' or data.fgt_status == 'Halt'):
                                 ListItems.append(data)
 
                 if ParentStatus == 'BHD Status':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from bhd_date)',
+                                'month': 'extract (month from bhd_date)',
+                                'day': 'extract (day from bhd_date)'},
+                        order_by=['month', 'day', '-year'])
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(bhd_date__year = year, bhd_status = ChildStatus)
+                        ListItems = dataList.filter(bhd_date__year=year, bhd_status=ChildStatus)
 
                     if ChildStatus == 'Current Count':
-                        for data  in dataList:
-                            if data.bhd_date.strftime("%Y") == year and (data.bhd_status == 'Ok' or data.bhd_status=='Not Submitted)' or data.bhd_status=='QM Observations Forwarded'):
+                        for data in dataList:
+                            if data.bhd_date.strftime("%Y") == year and (
+                                    data.bhd_status == 'Ok' or data.bhd_status == 'Not Submitted)' or data.bhd_status == 'QM Observations Forwarded'):
                                 ListItems.append(data)
 
                 if ParentStatus == 'FQM Status':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from fqm_date)',
+                                'month': 'extract (month from fqm_date)',
+                                'day': 'extract (day from fqm_date)'},
+                        order_by=['month', 'day', '-year'])
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(fqm_date__year = year, fqm_status = ChildStatus)
+                        ListItems = dataList.filter(fqm_date__year=year, fqm_status=ChildStatus)
 
                     if ChildStatus == 'Current Count':
-                        for data  in dataList:
-                            if data.fqm_date.strftime("%Y") == year and (data.fqm_status=='Not Conducted)'):
+                        for data in dataList:
+                            if data.fqm_date.strftime("%Y") == year and (data.fqm_status == 'Not Conducted)'):
                                 ListItems.append(data)
 
                 if ParentStatus == 'QM Certification Status':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from qm_certification_date)',
+                                'month': 'extract (month from qm_certification_date)',
+                                'day': 'extract (day from qm_certification_date)'},
+                        order_by=['month', 'day', '-year'])
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(qm_certification_date__year = year, qm_certification_status = ChildStatus)
+                        ListItems = dataList.filter(qm_certification_date__year=year,
+                                                    qm_certification_status=ChildStatus)
 
                     if ChildStatus == 'Current Count':
-                        for data  in dataList:
-                            if data.qm_certification_date.strftime("%Y") == year and (data.qm_certification_status == 'QM certificate issued' or data.qm_certification_status=='QM Observations Forwarded)'):
+                        for data in dataList:
+                            if data.qm_certification_date.strftime("%Y") == year and (
+                                    data.qm_certification_status == 'QM certificate issued' or data.qm_certification_status == 'QM Observations Forwarded)'):
                                 ListItems.append(data)
 
                 if ParentStatus == 'Launch/ End User':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from enduser_date)',
+                                'month': 'extract (month from enduser_date)',
+                                'day': 'extract (day from enduser_date)'},
+                        order_by=['month', 'day', '-year'])
                     if ChildStatus != 'Current Count':
                         ListItems = dataList.filter(enduser_date__year = year, enduser_status = ChildStatus)
                     else:
@@ -3106,8 +4120,175 @@ class SmsController:
     def GetRelifingHistoryList(request):
         try:
             id = request.query_params['id']
-            data = RelifingSystemStatusHistory.objects.filter(r_id=id)
-            serializer = RelifingSystemSerialzer(data, many=True)
+            ParentStatus = request.query_params['parent_status']
+            dataList = RelifingSystemStatusHistory.objects.filter(r_id=id)
+            if ParentStatus == 'BLT':
+                dataList = dataList.extra(
+                    select={
+                        'year': 'extract (year from blt_date)',
+                        'month': 'extract (month from blt_date)',
+                        'day': 'extract (day from blt_date)'},
+                    order_by=['month', 'day', '-year'])
+
+
+            if ParentStatus == 'EMP Proofing':
+                dataList = dataList.extra(
+                    select={'year': 'extract (year from emp_proofing_date)',
+                            'month': 'extract (month from emp_proofing_date)',
+                            'day': 'extract (day from emp_proofing_date)'},
+                    order_by=['month', 'day', '-year'])
+
+            if ParentStatus == 'Functional Test W/O Dummy Bird':
+                dataList = dataList.extra(
+                    select={'year': 'extract (year from func_tst_date)',
+                            'month': 'extract (month from func_tst_date)',
+                            'day': 'extract (day from func_tst_date)'},
+                    order_by=['month', 'day', '-year'])
+
+            if ParentStatus == 'Functional Test With Dummy Bird':
+                dataList = dataList.extra(
+                    select={'year': 'extract (year from func_tst_dummy_bird_date)',
+                            'month': 'extract (month from func_tst_dummy_bird_date)',
+                            'day': 'extract (day from func_tst_dummy_bird_date)'},
+                    order_by=['month', 'day', '-year'])
+
+            if ParentStatus == 'Road Test':
+                dataList = dataList.extra(
+                    select={'year': 'extract (year from road_test_date)',
+                            'month': 'extract (month from road_test_date)',
+                            'day': 'extract (day from road_test_date)'},
+                    order_by=['month', 'day', '-year'])
+
+            if ParentStatus == 'Post Road Test':
+                dataList = dataList.extra(
+                    select={'year': 'extract (year from post_road_test_date)',
+                            'month': 'extract (month from post_road_test_date)',
+                            'day': 'extract (day from post_road_test_date)'},
+                    order_by=['month', 'day', '-year'])
+
+            if ParentStatus == 'Integrated Operation':
+                dataList = dataList.extra(
+                    select={'year': 'extract (year from integrated_operation_date)',
+                            'month': 'extract (month from integrated_operation_date)',
+                            'day': 'extract (day from integrated_operation_date)'},
+                    order_by=['month', 'day', '-year'])
+
+            if ParentStatus == 'Rain Test':
+                dataList = dataList.extra(
+                    select={'year': 'extract (year from rain_test_date)',
+                            'month': 'extract (month from rain_test_date)',
+                            'day': 'extract (day from rain_test_date)'},
+                    order_by=['month', 'day', '-year'])
+
+            if ParentStatus == 'Pre User Inspection':
+                dataList = dataList.extra(
+                    select={'year': 'extract (year from pre_user_inspection_date)',
+                            'month': 'extract (month from pre_user_inspection_date)',
+                            'day': 'extract (day from pre_user_inspection_date)'},
+                    order_by=['month', 'day', '-year'])
+
+            if ParentStatus == 'Final Integration':
+                dataList = dataList.extra(
+                    select={'year': 'extract (year from final_integration_date)',
+                            'month': 'extract (month from final_integration_date)',
+                            'day': 'extract (day from final_integration_date)'},
+                    order_by=['month', 'day', '-year'])
+
+            if ParentStatus == 'Loading/Unloading on MLV/HLF':
+                dataList = dataList.extra(
+                    select={'year': 'extract (year from load_unload_on_mlv_hlf_date)',
+                            'month': 'extract (month from load_unload_on_mlv_hlf_date)',
+                            'day': 'extract (day from load_unload_on_mlv_hlf_date)'},
+                    order_by=['month', 'day', '-year'])
+
+            if ParentStatus == 'Pre-HIL':
+                dataList = dataList.extra(
+                    select={'year': 'extract (year from pre_hil_date)',
+                            'month': 'extract (month from pre_hil_date)',
+                            'day': 'extract (day from pre_hil_date)'},
+                    order_by=['month', 'day', '-year'])
+
+            if ParentStatus == 'Vibration':
+                dataList = dataList.extra(
+                    select={'year': 'extract (year from vibaration_date)',
+                            'month': 'extract (month from vibaration_date)',
+                            'day': 'extract (day from vibaration_date)'},
+                    order_by=['month', 'day', '-year'])
+
+            if ParentStatus == 'CG Balancing':
+                dataList = dataList.extra(
+                    select={'year': 'extract (year from cgbalancing_date)',
+                            'month': 'extract (month from cgbalancing_date)',
+                            'day': 'extract (day from cgbalancing_date)'},
+                    order_by=['month', 'day', '-year'])
+
+            if ParentStatus == 'Post-HIL':
+                dataList = dataList.extra(
+                    select={'year': 'extract (year from post_hil_date)',
+                            'month': 'extract (month from post_hil_date)',
+                            'day': 'extract (day from post_hil_date)'},
+                    order_by=['month', 'day', '-year'])
+
+            if ParentStatus == 'System Alignment':
+                dataList = dataList.extra(
+                    select={'year': 'extract (year from sys_align_Date)',
+                            'month': 'extract (month from sys_align_Date)',
+                            'day': 'extract (day from sys_align_Date)'},
+                    order_by=['month', 'day', '-year'])
+
+
+            if ParentStatus == 'Incapsulation':
+                dataList = dataList.extra(
+                    select={'year': 'extract (year from incapsulation_date)',
+                            'month': 'extract (month from incapsulation_date)',
+                            'day': 'extract (day from incapsulation_date)'},
+                    order_by=['month', 'day', '-year'])
+
+
+            if ParentStatus == 'Final Integrated Testing':
+                dataList = dataList.extra(
+                    select={'year': 'extract (year from final_integration_date)',
+                            'month': 'extract (month from final_integration_date)',
+                            'day': 'extract (day from final_integration_date)'},
+                    order_by=['month', 'day', '-year'])
+
+
+            if ParentStatus == 'FGT Status':
+                dataList = dataList.extra(
+                    select={'year': 'extract (year from fgt_date)',
+                            'month': 'extract (month from fgt_date)',
+                            'day': 'extract (day from fgt_date)'},
+                    order_by=['month', 'day', '-year'])
+
+            if ParentStatus == 'BHD Status':
+                dataList = dataList.extra(
+                    select={'year': 'extract (year from bhd_date)',
+                            'month': 'extract (month from bhd_date)',
+                            'day': 'extract (day from bhd_date)'},
+                    order_by=['month', 'day', '-year'])
+
+            if ParentStatus == 'FQM Status':
+                dataList = dataList.extra(
+                    select={'year': 'extract (year from fqm_date)',
+                            'month': 'extract (month from fqm_date)',
+                            'day': 'extract (day from fqm_date)'},
+                    order_by=['month', 'day', '-year'])
+
+
+            if ParentStatus == 'QM Certification Status':
+                dataList = dataList.extra(
+                    select={'year': 'extract (year from qm_certification_date)',
+                            'month': 'extract (month from qm_certification_date)',
+                            'day': 'extract (day from qm_certification_date)'},
+                    order_by=['month', 'day', '-year'])
+
+            if ParentStatus == 'Launch/ End User':
+                dataList = dataList.extra(
+                    select={'year': 'extract (year from enduser_date)',
+                            'month': 'extract (month from enduser_date)',
+                            'day': 'extract (day from enduser_date)'},
+                    order_by=['month', 'day', '-year'])
+            serializer = RelifingSystemSerialzer(dataList, many=True)
             return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
 
         except:

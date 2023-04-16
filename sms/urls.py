@@ -5,7 +5,6 @@ urlpatterns = [
   
 
         path('addprod/', AddProductionAPIVIEW.as_view(), name='addprod'),
-        path('importprodcsv/', ImportProductionCsvAPIVIEW.as_view(), name='importprodcsv'),
         path('editprod/', EditProductionAPIVIEW.as_view(), name='editprod'),
         path('prodlist/', GetProductionListAPIVIEW.as_view(), name='prodlist'),
         path('prodlistHistory/', GetProductionHistoryListAPIVIEW.as_view(), name='prodlistHistory'),
@@ -36,5 +35,13 @@ urlpatterns = [
         path('prodatenone/', GetProductionDateNoneListAPIVIEW.as_view(), name='prodatenone'),
         path('flightdatenone/', GetFlightDateNoneListAPIVIEW.as_view(), name='flightdatenone'),
         path('relifdatenone/', GetRelifingDateNoneListAPIVIEW.as_view(), name='relifdatenone'),
+
+        path('importprodcsv/', ImportProductionCsvAPIVIEW.as_view(), name='importprodcsv'),
+        path('importflightcsv/', ImportFlightCsvAPIVIEW.as_view(), name='importflightcsv'),
+        path('importrelifcsv/', ImportRelifingCsvAPIVIEW.as_view(), name='importrelifcsv'),
+
+        path('importmotorcsv/', ImportProductionCsvAPIVIEW.as_view(), name='importmotorcsv'),
+        path('importbatteriescsv/', ImportProductionCsvAPIVIEW.as_view(), name='importbatteriescsv'),
+        path('importpyrocsv/', ImportProductionCsvAPIVIEW.as_view(), name='importpyrocsv'),
 
 ]

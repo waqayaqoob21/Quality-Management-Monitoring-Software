@@ -12,6 +12,7 @@ import fitz  # pip install PyMuPDF Pillow
 import io
 from PIL import Image
 from pytesseract import pytesseract  # install tesseract-ocr-w64-setup-v5.2.0.20220712.exe (64 bit) resp.
+from django.db.models.functions import Extract
 
 
 # from https://github.com/UB-Mannheim/tesseract/wiki
@@ -165,7 +166,9 @@ class AmsController:
                         'assigned_to', 'equal',
                         selected_group)
                 data = TaskSummary.objects.filter(current_over_due_filter,
-                                                  assigned_date__year=selected_year)
+                                                  assigned_date__year=selected_year).annotate(
+                curr_month=Extract('assigned_date', 'month'),curr_year=Extract('assigned_date', 'year'),
+                curr_day=Extract('assigned_date', 'day')).order_by('curr_day', 'curr_month','-curr_year')
                 result = []
                 if data is not None:
                     for item in data:
@@ -183,7 +186,9 @@ class AmsController:
                     current_total_filter &= get_filter(
                         'assigned_to', 'equal',
                         selected_group)
-                data = TaskSummary.objects.filter(current_total_filter, assigned_date__year=selected_year)
+                data = TaskSummary.objects.filter(current_total_filter, assigned_date__year=selected_year).annotate(
+                curr_month=Extract('assigned_date', 'month'),curr_year=Extract('assigned_date', 'year'),
+                curr_day=Extract('assigned_date', 'day')).order_by('curr_day', 'curr_month','-curr_year')
                 serializer = TaskSummarySerialzer(data, many=True)
                 return JsonResponse({'message': 'true', 'data': serializer.data}, status=200)
             if status == 'total_overdue':
@@ -192,7 +197,9 @@ class AmsController:
                     'status', 'equal',
                     'Task in-process')
 
-                data = TaskSummary.objects.filter(current_over_due_filter)
+                data = TaskSummary.objects.filter(current_over_due_filter).annotate(
+                curr_month=Extract('assigned_date', 'month'),curr_year=Extract('assigned_date', 'year'),
+                curr_day=Extract('assigned_date', 'day')).order_by('curr_day', 'curr_month','-curr_year')
                 result = []
                 if data is not None:
                     for item in data:
@@ -204,7 +211,9 @@ class AmsController:
                 serializer = TaskSummarySerialzer(result, many=True)
                 return JsonResponse({'message': 'true', 'data': serializer.data}, status=200)
             if status == 'all_tasks':
-                data = TaskSummary.objects.filter(all_filter_objects)
+                data = TaskSummary.objects.filter(all_filter_objects).annotate(
+                curr_month=Extract('assigned_date', 'month'),curr_year=Extract('assigned_date', 'year'),
+                curr_day=Extract('assigned_date', 'day')).order_by('curr_day', 'curr_month','-curr_year')
                 if assignFrom != '' and assignTo != '':
                     data = data.filter(assigned_date__gte=assignFrom,
                                        assigned_date__lte=assignTo).order_by('-id')
@@ -214,7 +223,9 @@ class AmsController:
                 all_filter_objects &= get_filter(
                     'status', 'equal',
                     'Task Completed')
-                data = TaskSummary.objects.filter(all_filter_objects)
+                data = TaskSummary.objects.filter(all_filter_objects).annotate(
+                curr_month=Extract('assigned_date', 'month'),curr_year=Extract('assigned_date', 'year'),
+                curr_day=Extract('assigned_date', 'day')).order_by('curr_day', 'curr_month','-curr_year')
                 serializer = TaskSummarySerialzer(data, many=True)
                 return JsonResponse({'message': 'true', 'data': serializer.data}, status=200)
 
@@ -222,7 +233,9 @@ class AmsController:
                 all_filter_objects &= get_filter(
                     'status', 'not_equal',
                     'Task Completed')
-                data = TaskSummary.objects.filter(all_filter_objects)
+                data = TaskSummary.objects.filter(all_filter_objects).annotate(
+                curr_month=Extract('assigned_date', 'month'),curr_year=Extract('assigned_date', 'year'),
+                curr_day=Extract('assigned_date', 'day')).order_by('curr_day', 'curr_month','-curr_year')
                 result = []
                 if data is not None:
                     for item in data:
@@ -235,7 +248,9 @@ class AmsController:
                 return JsonResponse({'message': 'true', 'data': serializer.data}, status=200)
 
             if status == 'all' and selected_year is not '':
-                data = TaskSummary.objects.filter(assigned_date__year=selected_year)
+                data = TaskSummary.objects.filter(assigned_date__year=selected_year).annotate(
+                curr_month=Extract('assigned_date', 'month'),curr_year=Extract('assigned_date', 'year'),
+                curr_day=Extract('assigned_date', 'day')).order_by('curr_day', 'curr_month','-curr_year')
                 serializer = TaskSummarySerialzer(data, many=True)
                 return JsonResponse({'message': 'true', 'data': serializer.data}, status=200)
             if selected_year is not '' and selected_group is '':
@@ -271,7 +286,9 @@ class AmsController:
     def GetTaskListHistory(request):
         try:
             id = request.query_params['id']
-            data = TaskSummaryHistory.objects.filter(task_id=id)
+            data = TaskSummaryHistory.objects.filter(task_id=id).annotate(
+                curr_month=Extract('assigned_date', 'month'),curr_year=Extract('assigned_date', 'year'),
+                curr_day=Extract('assigned_date', 'day')).order_by('curr_day', 'curr_month','-curr_year')
 
             serializer = TaskSummarySerialzer(data, many=True)
             return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)

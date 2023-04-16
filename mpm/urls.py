@@ -19,5 +19,8 @@ urlpatterns = [
         path('gethistory/', GetActiveMotorHistoryAPIVIEW.as_view(), name='gethistory'),
 
         path('datenone/', GetActiveMotorListDateNoneAPIVIEW.as_view(), name='datenone'),
+        path('historydatenone/', GetActiveMotorHistoryListDateNoneAPIVIEW.as_view(), name='historydatenone'),
+        path('importprocesscsv/', AddProcessCsvAPIVIEW.as_view(), name='importprocesscsv'),
+
 
 ]

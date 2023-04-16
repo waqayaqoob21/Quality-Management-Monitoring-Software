@@ -10,7 +10,7 @@ import itertools
 from qms.models import *
 from qms.serializer import *
 from datetime import date
-
+from django.db.models.functions import Extract
 class QmsController:
     @staticmethod
     def AddQmsAudit(request):
@@ -221,7 +221,9 @@ class QmsController:
                     return ~Q(**kwargs)
 
             if current_status == 'Total Current Year Audits':
-                data = QmsAudit.objects.filter(planned_date__year=current_year).order_by('planned_date')
+                data = QmsAudit.objects.filter(planned_date__year=current_year).annotate(
+                planned_date__month=Extract('planned_date', 'month'),planned_date__year=Extract('planned_date', 'year'),
+                planned_date__day=Extract('planned_date', 'day')).order_by('planned_date__month', 'planned_date__day','-planned_date__year')
                 serializer = QmsAuditSerializer(data, many=True)
                 return JsonResponse({'status': 'True', 'data': serializer.data},
                                     status=200)
@@ -249,11 +251,17 @@ class QmsController:
             dataList = QmsAudit.objects.filter(filter_objects)
 
             if current_status == 'QMS Total Under Process':
-                dataList = QmsAudit.objects.filter(~Q(audit_status = 'Completed'))
+                dataList = QmsAudit.objects.filter(~Q(audit_status = 'Completed')).annotate(
+                planned_date__month=Extract('planned_date', 'month'),planned_date__year=Extract('planned_date', 'year'),
+                planned_date__day=Extract('planned_date', 'day')).order_by('planned_date__month', 'planned_date__day','-planned_date__year')
             if current_status == 'QMS Total Completed':
-                dataList = QmsAudit.objects.filter(audit_status = 'Completed')
+                dataList = QmsAudit.objects.filter(audit_status = 'Completed').annotate(
+                planned_date__month=Extract('planned_date', 'month'),planned_date__year=Extract('planned_date', 'year'),
+                planned_date__day=Extract('planned_date', 'day')).order_by('planned_date__month', 'planned_date__day','-planned_date__year')
             if current_status == 'QMS Total Audits':
-                dataList = QmsAudit.objects.all().order_by('planned_date')
+                dataList = QmsAudit.objects.all().annotate(
+                planned_date__month=Extract('planned_date', 'month'),planned_date__year=Extract('planned_date', 'year'),
+                planned_date__day=Extract('planned_date', 'day')).order_by('planned_date__month', 'planned_date__day','-planned_date__year')
             if current_status == 'QMS Total Overdue':
                 OverdueList = []
                 if current_org == '' and standItems == '' and setItems == '':
@@ -1022,7 +1030,9 @@ class QmsController:
         try:
             audit_id = request.query_params.get('id')
 
-            docList = QmsAuditHistory.objects.filter(qms_audit_id=audit_id).order_by('-id')
+            docList = QmsAuditHistory.objects.filter(qms_audit_id=audit_id).annotate(
+                planned_date__month=Extract('planned_date', 'month'),planned_date__year=Extract('planned_date', 'year'),
+                planned_date__day=Extract('planned_date', 'day')).order_by('planned_date__month', 'planned_date__day','-planned_date__year')
             serializer = QmsAuditSerializer(docList, many=True)
             return JsonResponse({'status': 'True', 'data': serializer.data},
                                 status=200)
@@ -1337,17 +1347,30 @@ class QmsController:
             if current_status == 'Certified' or current_status == 'New Client' or current_status == 'Suspended' or current_status == 'Widthdrawl':
                 filter_objects &= get_filter('certification_status', 'equal',current_status)
 
-            dataList = CespAudit.objects.filter(filter_objects).order_by('-planned_date')
+            dataList = CespAudit.objects.filter(filter_objects).annotate(
+                planned_date__month=Extract('planned_date', 'month'),planned_date__year=Extract('planned_date', 'year'),
+                planned_date__day=Extract('planned_date', 'day')).order_by('planned_date__month', 'planned_date__day','-planned_date__year')
+
             if current_status == 'Total CeSP Under Process':
-                dataList = CespAudit.objects.filter(~Q(audit_status = 'Completed')).order_by('-planned_date')
+                dataList = CespAudit.objects.filter(~Q(audit_status = 'Completed')).annotate(
+                planned_date__month=Extract('planned_date', 'month'),planned_date__year=Extract('planned_date', 'year'),
+                planned_date__day=Extract('planned_date', 'day')).order_by('planned_date__month', 'planned_date__day','-planned_date__year')
             if current_status == 'Total CeSP Completed':
-                dataList = CespAudit.objects.filter(audit_status = 'Completed').order_by('-planned_date')
+                dataList = CespAudit.objects.filter(audit_status = 'Completed').annotate(
+                planned_date__month=Extract('planned_date', 'month'),planned_date__year=Extract('planned_date', 'year'),
+                planned_date__day=Extract('planned_date', 'day')).order_by('planned_date__month', 'planned_date__day','-planned_date__year')
             if current_status == 'Total CeSP Overdue':
-                dataList = CespAudit.objects.filter(audit_start_date__gt=F('planned_date')).order_by('-planned_date')
+                dataList = CespAudit.objects.filter(audit_start_date__gt=F('planned_date')).annotate(
+                planned_date__month=Extract('planned_date', 'month'),planned_date__year=Extract('planned_date', 'year'),
+                planned_date__day=Extract('planned_date', 'day')).order_by('planned_date__month', 'planned_date__day','-planned_date__year')
             if current_status == 'Overdue':
-                dataList = dataList.filter(audit_start_date__gt=F('planned_date')).order_by('-planned_date')
+                dataList = dataList.filter(audit_start_date__gt=F('planned_date')).annotate(
+                planned_date__month=Extract('planned_date', 'month'),planned_date__year=Extract('planned_date', 'year'),
+                planned_date__day=Extract('planned_date', 'day')).order_by('planned_date__month', 'planned_date__day','-planned_date__year')
             if current_status == 'Total CeSP Audits':
-                dataList = CespAudit.objects.all().order_by('-planned_date')
+                dataList = CespAudit.objects.all().annotate(
+                planned_date__month=Extract('planned_date', 'month'),planned_date__year=Extract('planned_date', 'year'),
+                planned_date__day=Extract('planned_date', 'day')).order_by('planned_date__month', 'planned_date__day','-planned_date__year')
             if current_status == 'Current Year Audits':
                 dataList = dataList.filter(planned_date__year = current_year)
 
@@ -1897,7 +1920,9 @@ class QmsController:
 
         try:
             audit_id = request.query_params.get('id')
-            docList = CespAuditHistory.objects.filter(cesp_audit_id=audit_id).order_by('-id')
+            docList = CespAuditHistory.objects.filter(cesp_audit_id=audit_id).annotate(
+                planned_date__month=Extract('planned_date', 'month'),planned_date__year=Extract('planned_date', 'year'),
+                planned_date__day=Extract('planned_date', 'day')).order_by('planned_date__month', 'planned_date__day','-planned_date__year')
             serializer = CespAuditSerializer(docList, many=True)
             return JsonResponse({'status': 'True', 'data': serializer.data},
                                 status=200)

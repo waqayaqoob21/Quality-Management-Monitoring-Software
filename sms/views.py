@@ -23,6 +23,16 @@ class ImportProductionCsvAPIVIEW(APIView):
     def post(self, request):
         result = task_obj.ImportProductionCsv(request.data)
         return result
+class ImportFlightCsvAPIVIEW(APIView):
+    permission_classes = [AllowAny]
+    def post(self, request):
+        result = task_obj.ImportFlightCsv(request.data)
+        return result
+class ImportRelifingCsvAPIVIEW(APIView):
+    permission_classes = [AllowAny]
+    def post(self, request):
+        result = task_obj.ImportRelifingCsv(request.data)
+        return result
 class EditProductionAPIVIEW(APIView):
     permission_classes = [AllowAny]
 

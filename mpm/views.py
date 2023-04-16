@@ -30,6 +30,14 @@ class AddLotIdsAPIVIEW(APIView):
         result = motor_obj.AddLotIds(request.data)
         return result
 
+class AddProcessCsvAPIVIEW(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        print(request.data)
+
+        result = motor_obj.ImporProcessCsv(request.data)
+        return result
 
 class GetLotAPIVIEW(APIView):
     permission_classes = [AllowAny]
@@ -45,6 +53,13 @@ class GetActiveMotorListDateNoneAPIVIEW(APIView):
     def get(self, request):
 
         result = motor_obj.GetActiveMotorListDateNone(request)
+        return result
+class GetActiveMotorHistoryListDateNoneAPIVIEW(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+
+        result = motor_obj.GetActiveMotorHistoryListDateNone(request)
         return result
 class DeleteLotIdAPIVIEW(APIView):
     permission_classes = [AllowAny]

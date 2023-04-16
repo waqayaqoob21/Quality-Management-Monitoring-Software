@@ -12,7 +12,11 @@ from mpm.models import ActiveMotors, organization_lot_ids,ActiveMotorsHistory
 from mpm.serializer import ActiveMotorSerializer, LotIdsSerialzer
 import itertools
 from django.db.models import F, Q
-
+from csv import reader
+import os
+import csv
+from dateutil.relativedelta import relativedelta
+from django.db.models.functions import *
 
 class MpmController:
     @staticmethod
@@ -797,8 +801,269 @@ class MpmController:
         except Exception as e:
             return JsonResponse({'status': 'False', "message": "Motor Not Saved"}, status=500)
 
+
+    @staticmethod
+    def ImporProcessCsv(request):
+        # try:
+            id = request['id']
+            importedCsvFile = request["csv_file"]
+            system_type = request["component_type"]
+            if not os.path.isdir('imported_files'):
+                os.mkdir('imported_files')
+            path = "imported_files/"
+            fs = FileSystemStorage(location=path)
+            fs.save(importedCsvFile.name, importedCsvFile)
+            file_path = path + importedCsvFile.name
+            user_id = 0
+            if request['user_id'] != '':
+                user_id = request['user_id']
+            if id == '0':
+                file = open(file_path)
+                csvf = csv.reader(file)
+                next(csvf, None)
+                data = []
+                if system_type == "Motor":
+                    for component_type,system_name,sys_type,testing_type,organization,motor_id,\
+                            qualification_insulation_lining_propellant_rm_date,qualification_insulation_lining_propellant_rm,qualification_insulation_lining_propellant_rm_remarks,\
+                            lining_date,lining_status,lining_remarks,propellant_mechanical_properties_date,propellant_mechanical_properties_status,propellant_mechanical_properties_remarks,\
+                            sandblasting_date,sandblasting_status,sandblasting_remarks,insulation_application_date,insulation_application_status,insulation_application_remarks,\
+                            ut_rt_insulated_case_date,ut_rt_insulated_case_status,ut_rt_insulated_case_remarks,sliver_acceptance_date,sliver_acceptance_status,\
+                            sliver_acceptance_remarks,sliver_application_date,sliver_application_status,sliver_application_remarks,\
+                            formulation_tailoring_date,formulation_tailoring_status,formulation_tailoring_remarks,\
+                            conditioning_raw_materials_date,conditioning_raw_materials_status,conditioning_raw_materials_remarks,\
+                            conditioning_of_lining_date,conditioning_of_lining_status,conditioning_of_lining_remarks,casting_date,casting_status,casting_remarks,\
+                            curing_date,curing_status,curing_remarks,ut_endoscopy_rt_grain_date,ut_endoscopy_rt_grain_status,ut_endoscopy_rt_grain_remarks,\
+                            mechanical_properties_liner_date,mechanical_properties_liner_status,mechanical_properties_liner_remarks,\
+                            mechanical_properties_propellant_date,mechanical_properties_propellant_status,mechanical_properties_propellant_remarks,\
+                            interface_bond_strength_date,interface_bond_strength_status,interface_bond_strength_remarks,\
+                            propellant_burn_rate_date,propellant_burn_rate_status,propellant_burn_rate_remarks,mass_liner_date,mass_liner_status,mass_liner_remarks,\
+                            mass_insulation_date,mass_insulation_status,mass_insulation_remarks,mass_propellant_date,mass_propellant_status,mass_propellant_remarks,\
+                            overall_qualification_date,overall_qualification_status,overall_qualification_remarks,\
+                            bhd_date,bhd_status,bhd_remarks,qm_certification_date,qm_certification_status,qm_certification_remarks, *__ in csvf:
+
+                        motor_system = ActiveMotors(component_type= component_type,system_name=system_name,system_type=sys_type,testing_type=testing_type,organization=organization,motor_id=motor_id,
+                            qualification_insulation_lining_propellant_rm_date= datetime.strptime(qualification_insulation_lining_propellant_rm_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),qualification_insulation_lining_propellant_rm= qualification_insulation_lining_propellant_rm,qualification_insulation_lining_propellant_rm_remarks= qualification_insulation_lining_propellant_rm_remarks,
+                            lining_date = datetime.strptime(lining_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),lining = lining_status,lining_remarks= lining_remarks,
+                            propellant_mechanical_properties_date = datetime.strptime(propellant_mechanical_properties_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),propellant_mechanical_properties= propellant_mechanical_properties_status,propellant_mechanical_properties_remarks= propellant_mechanical_properties_remarks,
+                            sandblasting_date = datetime.strptime(sandblasting_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),sandblasting = sandblasting_status,sandblasting_remarks = sandblasting_remarks,
+                            insulation_date = datetime.strptime(insulation_application_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),insulation= insulation_application_status,insulation_remarks= insulation_application_remarks,
+                            ut_rt_insulated_case_date = datetime.strptime(ut_rt_insulated_case_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),ut_rt_insulated_case = ut_rt_insulated_case_status,ut_rt_insulated_case_remarks= ut_rt_insulated_case_remarks,
+                            acceptance_silver_material_date = datetime.strptime(sliver_acceptance_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),acceptance_silver_material= sliver_acceptance_status,acceptance_silver_material_remarks= sliver_acceptance_remarks,
+                            silver_application_date = datetime.strptime(sliver_application_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),silver_application= sliver_application_status,silver_application_remarks= sliver_application_remarks,
+                            formulation_tailoring_liner_propellant_date = datetime.strptime(formulation_tailoring_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),formulation_tailoring_liner_propellant= formulation_tailoring_status,formulation_tailoring_liner_propellant_remarks= formulation_tailoring_remarks,
+                            conditioning_raw_materials_date = datetime.strptime(conditioning_raw_materials_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),conditioning_raw_materials = conditioning_raw_materials_status,conditioning_raw_materials_remarks = conditioning_raw_materials_remarks,
+                            conditioning_of_lining_date = datetime.strptime(conditioning_of_lining_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),conditioning_of_lining= conditioning_of_lining_status,conditioning_of_lining_remarks = conditioning_of_lining_remarks,
+                            casting_date = datetime.strptime(casting_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),casting= casting_status,casting_remarks = casting_remarks,
+                            curing_date = datetime.strptime(curing_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),curing= curing_status,curing_remarks = curing_remarks,
+                            ut_endoscopy_rt_grain_date = datetime.strptime(ut_endoscopy_rt_grain_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),ut_endoscopy_rt_grain = ut_endoscopy_rt_grain_status,ut_endoscopy_rt_grain_remarks = ut_endoscopy_rt_grain_remarks,
+                            liner_mechanical_properties_date = datetime.strptime(mechanical_properties_liner_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),liner_mechanical_properties = mechanical_properties_liner_status,liner_mechanical_properties_remarks = mechanical_properties_liner_remarks,
+                            mechanical_properties_propellant_date = datetime.strptime(mechanical_properties_propellant_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),mechanical_properties_propellant = mechanical_properties_propellant_status,mechanical_properties_propellant_remarks = mechanical_properties_propellant_remarks,
+                            interface_bond_strength_date = datetime.strptime(interface_bond_strength_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),interface_bond_strength = interface_bond_strength_status,interface_bond_strength_remarks = interface_bond_strength_remarks,
+                            propellant_burn_rate_date = datetime.strptime(propellant_burn_rate_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),propellant_burn_rate = propellant_burn_rate_status,propellant_burn_rate_remarks = propellant_burn_rate_remarks,
+                            mass_liner_insulation_propellant_srm_date = datetime.strptime(mass_liner_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),mass_liner_insulation_propellant_srm = mass_liner_status,mass_liner_insulation_propellant_srm_remarks = mass_liner_remarks,
+                            mass_insulation_date = datetime.strptime(mass_insulation_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),mass_insulation = mass_insulation_status,mass_insulation_remarks = mass_insulation_remarks,
+                            mass_propellant_date = datetime.strptime(mass_propellant_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),mass_propellant = mass_propellant_status,mass_propellant_remarks = mass_propellant_remarks,
+                            overall_qualification_date = datetime.strptime(overall_qualification_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),overall_qualification_status = overall_qualification_status,overall_qualification_remarks = overall_qualification_remarks,
+                            bhd_date = datetime.strptime(bhd_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),bhd_status = bhd_status,bhd_remarks = bhd_remarks,qm_certification_date = datetime.strptime(qm_certification_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),qm_certification_status = qm_certification_status,qm_certification_remarks = qm_certification_remarks ,user_id= user_id)
+
+                        data.append(motor_system)
+                    ActiveMotors.objects.bulk_create(data)
+                    os.remove(file_path)
+                elif system_type == "Thermal Batteries":
+                    for component_type,	organization,	battery_type,	tb_type,	battery_id,	lot_id,	matiral_qualified_date,	matiral_qualified_status,	matiral_qualified_remarks,\
+                            compo_manufacturing_date,compo_manufacturing_status,	compo_manufacturing_remarks,	powerpack_assembly_date,	powerpack_assembly_status,	powerpack_assembly_remarks,\
+                            powerpack_testing_date,	powerpack_testing_status,	powerpack_testing_remarks,	assembly_process_date,	assembly_process_status,	assembly_process_remarks,\
+                            battery_testing_date,	battery_testing_status,	battery_testing_remarks,	final_qualification_date,	final_qualification_status,	final_qualification_remarks, *__ in csvf:
+
+                        motor_system = ActiveMotors(component_type=component_type,organization=organization,battery_type=battery_type,tb_type=tb_type,battery_id= battery_id,lot_id = lot_id,
+                            matiral_qualified_date= datetime.strptime(matiral_qualified_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),matiral_qualified_status=matiral_qualified_status,matiral_qualified_remarks=matiral_qualified_remarks,
+                            compo_manufacturing_date= datetime.strptime(compo_manufacturing_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),compo_manufacturing_status=compo_manufacturing_status,compo_manufacturing_remarks=compo_manufacturing_remarks,
+                            powerpack_assembly_date= datetime.strptime(powerpack_assembly_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),powerpack_assembly_status=powerpack_assembly_status,powerpack_assembly_remarks=powerpack_assembly_remarks,
+                            powerpack_testing_date= datetime.strptime(powerpack_testing_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"), powerpack_testing_status=powerpack_testing_status,powerpack_testing_remarks=powerpack_testing_remarks,
+                            assembly_process_date=  datetime.strptime(assembly_process_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),assembly_process_status=assembly_process_status,assembly_process_remarks=assembly_process_remarks,
+                            battery_testing_date=  datetime.strptime(battery_testing_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"), battery_testing_status= battery_testing_status, battery_testing_remarks= battery_testing_remarks,
+                            final_qualification_date=  datetime.strptime(final_qualification_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"), final_qualification_status= final_qualification_status, final_qualification_remarks=final_qualification_remarks,user_id= user_id)
+                        data.append(motor_system)
+                    ActiveMotors.objects.bulk_create(data)
+                    os.remove(file_path)
+
+                elif system_type =="Zinc Batteries":
+                    for component_type,	organization,	battery_type,	battery_id,	lot_id,	raw_material_inspection_date,	raw_material_inspection_status,	raw_material_inspection_remarks,\
+                            pressing_electrode_date,	pressing_electrode_status,	pressing_electrode_remarks,\
+                            formation_process_date,	formation_process_status,	formation_process_remarks,	assembly_process_date,	assembly_process_status,	assembly_process_remarks,\
+                            battery_testing_date,	battery_testing_status,	battery_testing_remarks,	final_qualification_date,	final_qualification_status,	final_qualification_remarks,*__ in csvf:
+
+
+                        motor_system = ActiveMotors(component_type=component_type,organization=organization,battery_type=battery_type,battery_id= battery_id,lot_id = lot_id,
+                            raw_material_inspection_date= datetime.strptime(raw_material_inspection_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),raw_material_inspection_status=raw_material_inspection_status,raw_material_inspection_remarks=raw_material_inspection_remarks,
+                            pressing_electrode_date= datetime.strptime(pressing_electrode_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),pressing_electrode_status=pressing_electrode_status,pressing_electrode_remarks=pressing_electrode_remarks,
+                            formation_process_date= datetime.strptime(formation_process_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),formation_process_status=formation_process_status,formation_process_remarks=formation_process_remarks,
+                            assembly_process_date=  datetime.strptime(assembly_process_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),assembly_process_status=assembly_process_status,assembly_process_remarks=assembly_process_remarks,
+                            battery_testing_date=  datetime.strptime(battery_testing_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"), battery_testing_status= battery_testing_status, battery_testing_remarks= battery_testing_remarks,
+                            final_qualification_date=  datetime.strptime(final_qualification_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"), final_qualification_status= final_qualification_status, final_qualification_remarks=final_qualification_remarks,user_id= user_id)
+                        data.append(motor_system)
+                    ActiveMotors.objects.bulk_create(data)
+                    os.remove(file_path)
+
+                elif system_type == "Pyro Devices":
+                    for component_type,	organization,	pyro_device_type,	pyro_device_id,	lot_id,	qualification_raw_material_date,	qualification_raw_material_status,	qualification_raw_material_remarks,	\
+                        filling_date,	filling_status,	filling_remarks,	assembling_integration_date,	assembling_integration_status,	assembling_integration_remarks,\
+                        qualification_testing_date,	qualification_testing_status,	qualification_testing_remarks,	\
+                        performance_testing_date,performance_testing_status,	performance_testing_remarks, *__ in csvf:
+
+                        motor_system = ActiveMotors(component_type=component_type,organization=organization,pd_type=pyro_device_type,pd_id=pyro_device_id,lot_id = lot_id,
+                            qualification_raw_material_date= datetime.strptime(qualification_raw_material_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),qualification_raw_material_status=qualification_raw_material_status,qualification_raw_material_remarks=qualification_raw_material_remarks,
+                            filling_date= datetime.strptime(filling_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),filling_status=filling_status,filling_remarks=filling_remarks,
+                            assembling_integration_date= datetime.strptime(assembling_integration_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),assembling_integration_status=assembling_integration_status,assembling_integration_remarks=assembling_integration_remarks,
+                            qualification_testing_date= datetime.strptime(qualification_testing_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"), qualification_testing_status=qualification_testing_status,qualification_testing_remarks=qualification_testing_remarks,
+                            performance_testing_date=  datetime.strptime(performance_testing_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),performance_testing_status=performance_testing_status,performance_testing_remarks=performance_testing_remarks,user_id= user_id)
+                        data.append(motor_system)
+                    ActiveMotors.objects.bulk_create(data)
+                    os.remove(file_path)
+
+                return JsonResponse({'message': 'Production Status Updated Successfully!'}, status=200)
+
+            else:
+                return JsonResponse({'status': 'False', "message": "Status Not Saved"}, status=500)
+        # except Exception as e:
+        #     return JsonResponse({'status': 'False', "message": "Status Not Saved"}, status=500)
+
+
+
     @staticmethod
     def GetActiveMotorListDateNone(request, self=None):
+            dataList = ActiveMotors.objects.all()
+            for data in dataList:
+                if data.qualification_insulation_lining_propellant_rm == 'None':
+                    data.qualification_insulation_lining_propellant_rm_date = None
+
+                if data.lining == 'None':
+                    data.lining_date = None
+
+                if data.propellant_mechanical_properties == 'None':
+                    data.propellant_mechanical_properties_date = None
+
+                if data.acceptance_casting == 'None':
+                    data.acceptance_casting_date = None
+
+                if data.sandblasting == 'None':
+                    data.sandblasting_date = None
+
+                if data.insulation == 'None':
+                    data.insulation_date = None
+
+                if data.ut_rt_insulated_case == 'None':
+                    data.ut_rt_insulated_case_date = None
+
+                if data.acceptance_silver_material == 'None':
+                    data.acceptance_silver_material_date = None
+
+                if data.silver_application == 'None':
+                    data.silver_application_date = None
+
+                if data.formulation_tailoring_liner_propellant == 'None':
+                    data.formulation_tailoring_liner_propellant_date = None
+
+                if data.conditioning_raw_materials == 'None':
+                    data.conditioning_raw_materials_date = None
+
+                if data.conditioning_of_lining == 'None':
+                    data.conditioning_of_lining_date = None
+
+                if data.casting == 'None':
+                    data.casting_date = None
+
+                if data.curing == 'None':
+                    data.curing_date = None
+
+                if  data.ut_endoscopy_rt_grain == 'None':
+                    data.ut_endoscopy_rt_grain_date = None
+
+                if data.liner_mechanical_properties == 'None':
+                    data.liner_mechanical_properties_date = None
+
+                if data.mechanical_properties_propellant == 'None':
+                    data.mechanical_properties_propellant_date = None
+
+                if data.interface_bond_strength == 'None':
+                    data.interface_bond_strength_date = None
+
+                if data.propellant_burn_rate == 'None':
+                    data.propellant_burn_rate_date = None
+
+                if data.trimming_Propellant_grain == 'None':
+                    data.trimming_Propellant_grain_date = None
+
+                if data.mass_liner_insulation_propellant_srm == 'None':
+                    data.mass_liner_insulation_propellant_srm_date = None
+
+                if data.mass_insulation == 'None':
+                    data.mass_insulation_date = None
+
+                if data.mass_propellant == 'None':
+                    data.mass_propellant_date = None
+
+                if data.bhd_status == 'None' :
+                    data.bhd_date = None
+
+                if data.qm_certification_status == 'None':
+                    data.qm_certification_date = None
+
+                if data.overall_qualification_status == 'None':
+                    data.overall_qualification_date = None
+
+                if data.matiral_qualified_status == 'None':
+                    data.matiral_qualified_date = None
+
+                if data.compo_manufacturing_status == 'None':
+                    data.compo_manufacturing_date = None
+
+                if data.powerpack_assembly_status == 'None':
+                    data.powerpack_assembly_date = None
+
+                if data.powerpack_testing_status == 'None':
+                    data.powerpack_testing_date = None
+
+                if data.raw_material_inspection_status == 'None':
+                    data.raw_material_inspection_date = None
+
+                if data.pressing_electrode_status == 'None':
+                    data.pressing_electrode_date = None
+
+                if data.formation_process_status == 'None':
+                    data.formation_process_date = None
+
+                if data.assembly_process_status == 'None':
+                    data.assembly_process_date = None
+
+                if data.battery_testing_status == 'None':
+                    data.battery_testing_date = None
+
+                if data.final_qualification_status == 'None':
+                    data.final_qualification_date = None
+
+                if data.qualification_raw_material_status == 'None':
+                    data.qualification_raw_material_date = None
+
+                if data.filling_status == 'None':
+                    data.filling_date = None
+
+                if data.assembling_integration_status == 'None':
+                    data.assembling_integration_date = None
+
+                if data.qualification_testing_status == 'None':
+                    data.qualification_testing_date = None
+
+                if data.performance_testing_status == 'None':
+                    data.performance_testing_date = None
+                data.save()
+            data = ActiveMotors.objects.all()
+            serializer = ActiveMotorSerializer(data, many=True)
+            return JsonResponse({'status': 'True', 'data': serializer.data}, status=200)
+
+
+    @staticmethod
+    def GetActiveMotorHistoryListDateNone(request, self=None):
             dataList = ActiveMotorsHistory.objects.all()
             for data in dataList:
                 if data.qualification_insulation_lining_propellant_rm == 'None':
@@ -945,7 +1210,7 @@ class MpmController:
 
 
             today = date.today()
-            dataList = []
+            # dataList = []
 
             def get_filter(field_name, filter_condition, filter_value):
                 if filter_condition.strip() == "contains":
@@ -1021,17 +1286,29 @@ class MpmController:
                     'pd_type', 'equal',
                     pd_type)
 
-            dataList = ActiveMotors.objects.filter(filter_objects).order_by('-id')
+            dataList = ActiveMotors.objects.filter(filter_objects)
             if ParentStatus != '':
                 ListItems = []
                 if ParentStatus == 'Qualification of raw material of insulation':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from qualification_insulation_lining_propellant_rm_date)',
+                                'month': 'extract (month from qualification_insulation_lining_propellant_rm_date)',
+                                'day': 'extract (day from qualification_insulation_lining_propellant_rm_date)'},
+                        order_by=['month', 'day', '-year'])
                     if ChildStatus != 'Current Count':
-                        ListItems = dataList.filter(qualification_insulation_lining_propellant_rm_date__year = current_year, qualification_insulation_lining_propellant_rm=ChildStatus)
+                        ListItems = dataList.filter(qualification_insulation_lining_propellant_rm_date__year = current_year,
+                                                    qualification_insulation_lining_propellant_rm=ChildStatus)
+
                     if ChildStatus == 'Current Count':
                         for data in dataList:
                             if data.qualification_insulation_lining_propellant_rm_date.strftime("%Y") == current_year and (data.qualification_insulation_lining_propellant_rm == 'Under process' or data.qualification_insulation_lining_propellant_rm == 'Observation(same stage)' or data.qualification_insulation_lining_propellant_rm == 'Halt'):
                                 ListItems.append(data)
                 elif ParentStatus == 'Lining':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from lining_date)',
+                                'month': 'extract (month from lining_date)',
+                                'day': 'extract (day from lining_date)'},
+                        order_by=['month', 'day', '-year'])
                     if ChildStatus != 'Current Count':
                         ListItems = dataList.filter(lining_date__year = current_year, lining=ChildStatus)
                     if ChildStatus == 'Current Count':
@@ -1039,6 +1316,11 @@ class MpmController:
                             if data.lining_date.strftime("%Y") == current_year and (data.lining == 'Under process' or data.lining == 'Observation(same stage)' or data.lining == 'Halt'):
                                 ListItems.append(data)
                 elif ParentStatus == 'Qualification of Propellant':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from propellant_mechanical_properties_date)',
+                                'month': 'extract (month from propellant_mechanical_properties_date)',
+                                'day': 'extract (day from propellant_mechanical_properties_date)'},
+                        order_by=['month', 'day', '-year'])
                     if ChildStatus != 'Current Count':
                         ListItems = dataList.filter(propellant_mechanical_properties_date__year = current_year, propellant_mechanical_properties=ChildStatus)
                     if ChildStatus == 'Current Count':
@@ -1046,6 +1328,11 @@ class MpmController:
                             if data.propellant_mechanical_properties_date.strftime("%Y") == current_year and (data.propellant_mechanical_properties == 'Under process' or data.propellant_mechanical_properties == 'Observation(same stage)' or data.propellant_mechanical_properties == 'Halt'):
                                 ListItems.append(data)
                 elif ParentStatus == 'Acceptance of casting':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from acceptance_casting_date)',
+                                'month': 'extract (month from acceptance_casting_date)',
+                                'day': 'extract (day from acceptance_casting_date)'},
+                        order_by=['month', 'day', '-year'])
                     if ChildStatus != 'Current Count':
                         ListItems = dataList.filter(acceptance_casting_date__year = current_year, acceptance_casting=ChildStatus)
                     if ChildStatus == 'Current Count':
@@ -1053,6 +1340,11 @@ class MpmController:
                             if data.acceptance_casting_date.strftime("%Y") == current_year and (data.acceptance_casting == 'Under process' or data.acceptance_casting == 'Observation(same stage)' or data.acceptance_casting == 'Halt'):
                                 ListItems.append(data)
                 elif ParentStatus == 'Sandblasting':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from sandblasting_date)',
+                                'month': 'extract (month from sandblasting_date)',
+                                'day': 'extract (day from sandblasting_date)'},
+                        order_by=['month', 'day', '-year'])
                     if ChildStatus != 'Current Count':
                         ListItems = dataList.filter(sandblasting_date__year = current_year, sandblasting=ChildStatus)
                     if ChildStatus == 'Current Count':
@@ -1060,6 +1352,11 @@ class MpmController:
                             if data.sandblasting_date.strftime("%Y") == current_year and (data.sandblasting == 'Under process' or data.sandblasting == 'Observation(same stage)' or data.sandblasting == 'Halt'):
                                 ListItems.append(data)
                 elif ParentStatus == 'Insulation':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from insulation_date)',
+                                'month': 'extract (month from insulation_date)',
+                                'day': 'extract (day from insulation_date)'},
+                        order_by=['month', 'day', '-year'])
                     if ChildStatus != 'Current Count':
                         ListItems = dataList.filter(insulation_date__year = current_year, insulation=ChildStatus)
                     if ChildStatus == 'Current Count':
@@ -1067,6 +1364,11 @@ class MpmController:
                             if data.insulation_date.strftime("%Y") == current_year and (data.insulation == 'Under process' or data.insulation == 'Observation(same stage)' or data.insulation == 'Halt'):
                                 ListItems.append(data)
                 elif ParentStatus == 'UT and RT of Insulated Case':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from ut_rt_insulated_case_date)',
+                                'month': 'extract (month from ut_rt_insulated_case_date)',
+                                'day': 'extract (day from ut_rt_insulated_case_date)'},
+                        order_by=['month', 'day', '-year'])
                     if ChildStatus != 'Current Count':
                         ListItems = dataList.filter(ut_rt_insulated_case_date__year = current_year, ut_rt_insulated_case=ChildStatus)
                     if ChildStatus == 'Current Count':
@@ -1074,6 +1376,11 @@ class MpmController:
                             if data.ut_rt_insulated_case_date.strftime("%Y") == current_year and (data.ut_rt_insulated_case == 'Under process' or data.ut_rt_insulated_case == 'Observation(same stage)' or data.ut_rt_insulated_case == 'Halt'):
                                 ListItems.append(data)
                 elif ParentStatus == 'Acceptance of Sliver Material':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from acceptance_silver_material_date)',
+                                'month': 'extract (month from acceptance_silver_material_date)',
+                                'day': 'extract (day from acceptance_silver_material_date)'},
+                        order_by=['month', 'day', '-year'])
                     if ChildStatus != 'Current Count':
                         ListItems = dataList.filter(acceptance_silver_material_date__year = current_year, acceptance_silver_material=ChildStatus)
                     if ChildStatus == 'Current Count':
@@ -1081,6 +1388,11 @@ class MpmController:
                             if data.acceptance_silver_material_date.strftime("%Y") == current_year and (data.acceptance_silver_material == 'Under process' or data.acceptance_silver_material == 'Observation(same stage)' or data.acceptance_silver_material == 'Halt'):
                                 ListItems.append(data)
                 elif ParentStatus == 'Silver Application':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from silver_application_date)',
+                                'month': 'extract (month from silver_application_date)',
+                                'day': 'extract (day from silver_application_date)'},
+                        order_by=['month', 'day', '-year'])
                     if ChildStatus != 'Current Count':
                         ListItems = dataList.filter(silver_application_date__year = current_year, silver_application=ChildStatus)
                     if ChildStatus == 'Current Count':
@@ -1088,6 +1400,11 @@ class MpmController:
                             if data.silver_application_date.strftime("%Y") == current_year and (data.silver_application == 'Under process' or data.silver_application == 'Observation(same stage)' or data.silver_application == 'Halt'):
                                 ListItems.append(data)
                 elif ParentStatus == 'Formulation tailoring':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from formulation_tailoring_liner_propellant_date)',
+                                'month': 'extract (month from formulation_tailoring_liner_propellant_date)',
+                                'day': 'extract (day from formulation_tailoring_liner_propellant_date)'},
+                        order_by=['month', 'day', '-year'])
                     if ChildStatus != 'Current Count':
                         ListItems = dataList.filter(formulation_tailoring_liner_propellant_date__year = current_year, formulation_tailoring_liner_propellant=ChildStatus)
                     if ChildStatus == 'Current Count':
@@ -1095,6 +1412,11 @@ class MpmController:
                             if data.formulation_tailoring_liner_propellant_date.strftime("%Y") == current_year and (data.formulation_tailoring_liner_propellant == 'Under process' or data.formulation_tailoring_liner_propellant == 'Observation(same stage)' or data.formulation_tailoring_liner_propellant == 'Halt'):
                                 ListItems.append(data)
                 elif ParentStatus == 'Conditioning of Raw Material':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from conditioning_raw_materials_date)',
+                                'month': 'extract (month from conditioning_raw_materials_date)',
+                                'day': 'extract (day from conditioning_raw_materials_date)'},
+                        order_by=['month', 'day', '-year'])
                     if ChildStatus != 'Current Count':
                         ListItems = dataList.filter(conditioning_raw_materials_date__year = current_year, conditioning_raw_materials=ChildStatus)
                     if ChildStatus == 'Current Count':
@@ -1102,6 +1424,11 @@ class MpmController:
                             if data.conditioning_raw_materials_date.strftime("%Y") == current_year and (data.conditioning_raw_materials == 'Under process' or data.conditioning_raw_materials == 'Observation(same stage)' or data.conditioning_raw_materials == 'Halt'):
                                 ListItems.append(data)
                 elif ParentStatus == 'Conditioning of Lining':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from conditioning_of_lining_date)',
+                                'month': 'extract (month from conditioning_of_lining_date)',
+                                'day': 'extract (day from conditioning_of_lining_date)'},
+                        order_by=['month', 'day', '-year'])
                     if ChildStatus != 'Current Count':
                         ListItems = dataList.filter(conditioning_of_lining_date__year = current_year,conditioning_of_lining=ChildStatus)
                     if ChildStatus == 'Current Count':
@@ -1109,6 +1436,11 @@ class MpmController:
                             if data.conditioning_of_lining_date.strftime("%Y") == current_year and  (data.conditioning_of_lining == 'Under process' or data.conditioning_of_lining == 'Observation(same stage)' or data.conditioning_of_lining == 'Halt'):
                                 ListItems.append(data)
                 elif ParentStatus == 'Casing':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from casting_date)',
+                                'month': 'extract (month from casting_date)',
+                                'day': 'extract (day from casting_date)'},
+                        order_by=['month', 'day', '-year'])
                     if ChildStatus != 'Current Count':
                         ListItems = dataList.filter(casting_date__year = current_year, casting=ChildStatus)
                     if ChildStatus == 'Current Count':
@@ -1116,6 +1448,11 @@ class MpmController:
                             if data.casting_date.strftime("%Y") == current_year and (data.casting == 'Under process' or data.casting == 'Observation(same stage)' or data.casting == 'Halt'):
                                 ListItems.append(data)
                 elif ParentStatus == 'Curing':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from curing_date)',
+                                'month': 'extract (month from curing_date)',
+                                'day': 'extract (day from curing_date)'},
+                        order_by=['month', 'day', '-year'])
                     if ChildStatus != 'Current Count':
                         ListItems = dataList.filter(curing_date__year = current_year, curing=ChildStatus)
                     if ChildStatus == 'Current Count':
@@ -1123,6 +1460,11 @@ class MpmController:
                             if data.curing_date.strftime("%Y") == current_year and (data.curing == 'Under process' or data.curing == 'Observation(same stage)' or data.curing == 'Halt'):
                                 ListItems.append(data)
                 elif ParentStatus == 'UT, endoscopy and RT of grain':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from ut_endoscopy_rt_grain_date)',
+                                'month': 'extract (month from ut_endoscopy_rt_grain_date)',
+                                'day': 'extract (day from ut_endoscopy_rt_grain_date)'},
+                        order_by=['month', 'day', '-year'])
                     if ChildStatus != 'Current Count':
                         ListItems = dataList.filter(ut_endoscopy_rt_grain_date__year = current_year,ut_endoscopy_rt_grain=ChildStatus)
                     if ChildStatus == 'Current Count':
@@ -1131,6 +1473,11 @@ class MpmController:
                                 ListItems.append(data)
 
                 elif ParentStatus == 'Mechanical Properties of Liner':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from liner_mechanical_properties_date)',
+                                'month': 'extract (month from liner_mechanical_properties_date)',
+                                'day': 'extract (day from liner_mechanical_properties_date)'},
+                        order_by=['month', 'day', '-year'])
                     if ChildStatus != 'Current Count':
                         ListItems = dataList.filter(liner_mechanical_properties_date__year = current_year, liner_mechanical_properties=ChildStatus)
                     if ChildStatus == 'Current Count':
@@ -1138,6 +1485,11 @@ class MpmController:
                             if data.liner_mechanical_properties_date.strftime("%Y") == current_year and (data.liner_mechanical_properties == 'Under process' or data.liner_mechanical_properties == 'Observation(same stage)' or data.liner_mechanical_properties == 'Halt'):
                                 ListItems.append(data)
                 elif ParentStatus == 'Mechanical Properties of Propellant':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from mechanical_properties_propellant_date)',
+                                'month': 'extract (month from mechanical_properties_propellant_date)',
+                                'day': 'extract (day from mechanical_properties_propellant_date)'},
+                        order_by=['month', 'day', '-year'])
                     if ChildStatus != 'Current Count':
                         ListItems = dataList.filter(mechanical_properties_propellant_date__year = current_year, mechanical_properties_propellant=ChildStatus)
                     if ChildStatus == 'Current Count':
@@ -1145,6 +1497,11 @@ class MpmController:
                             if data.mechanical_properties_propellant_date.strftime("%Y") == current_year and (data.mechanical_properties_propellant == 'Under process' or data.mechanical_properties_propellant == 'Observation(same stage)' or data.mechanical_properties_propellant == 'Halt'):
                                 ListItems.append(data)
                 elif ParentStatus == 'Interface bond strength':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from interface_bond_strength_date)',
+                                'month': 'extract (month from interface_bond_strength_date)',
+                                'day': 'extract (day from interface_bond_strength_date)'},
+                        order_by=['month', 'day', '-year'])
                     if ChildStatus != 'Current Count':
                         ListItems = dataList.filter(interface_bond_strength_date__year = current_year, interface_bond_strength=ChildStatus)
                     if ChildStatus == 'Current Count':
@@ -1152,6 +1509,11 @@ class MpmController:
                             if data.interface_bond_strength_date.strftime("%Y") == current_year and (data.interface_bond_strength == 'Under process' or data.interface_bond_strength == 'Observation(same stage)' or data.interface_bond_strength == 'Halt'):
                                 ListItems.append(data)
                 elif ParentStatus == 'Propellant burn rate':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from propellant_burn_rate_date)',
+                                'month': 'extract (month from propellant_burn_rate_date)',
+                                'day': 'extract (day from propellant_burn_rate_date)'},
+                        order_by=['month', 'day', '-year'])
                     if ChildStatus != 'Current Count':
                         ListItems = dataList.filter(propellant_burn_rate_date__year = current_year, propellant_burn_rate=ChildStatus)
                     if ChildStatus == 'Current Count':
@@ -1159,6 +1521,11 @@ class MpmController:
                             if data.propellant_burn_rate_date.strftime("%Y") == current_year and (data.propellant_burn_rate == 'Under process' or data.propellant_burn_rate == 'Observation(same stage)' or data.propellant_burn_rate == 'Halt'):
                                 ListItems.append(data)
                 elif ParentStatus == 'Trimming of propellant grain':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from trimming_Propellant_grain_date)',
+                                'month': 'extract (month from trimming_Propellant_grain_date)',
+                                'day': 'extract (day from trimming_Propellant_grain_date)'},
+                        order_by=['month', 'day', '-year'])
                     if ChildStatus != 'Current Count':
                         ListItems = dataList.filter(trimming_Propellant_grain_date__year = current_year, trimming_Propellant_grain=ChildStatus)
                     if ChildStatus == 'Current Count':
@@ -1166,6 +1533,11 @@ class MpmController:
                             if data.trimming_Propellant_grain_date.strftime("%Y") == current_year and (data.trimming_Propellant_grain == 'Under process' or data.trimming_Propellant_grain == 'Observation(same stage)' or data.trimming_Propellant_grain == 'Halt'):
                                 ListItems.append(data)
                 elif ParentStatus == 'Mass of liner':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from mass_liner_insulation_propellant_srm_date)',
+                                'month': 'extract (month from mass_liner_insulation_propellant_srm_date)',
+                                'day': 'extract (day from mass_liner_insulation_propellant_srm_date)'},
+                        order_by=['month', 'day', '-year'])
                     if ChildStatus != 'Current Count':
                         ListItems = dataList.filter(mass_liner_insulation_propellant_srm_date__year = current_year, mass_liner_insulation_propellant_srm=ChildStatus)
                     if ChildStatus == 'Current Count':
@@ -1173,6 +1545,11 @@ class MpmController:
                             if data.mass_liner_insulation_propellant_srm_date.strftime("%Y") == current_year and (data.mass_liner_insulation_propellant_srm == 'Under process' or data.mass_liner_insulation_propellant_srm == 'Observation(same stage)' or data.mass_liner_insulation_propellant_srm == 'Halt'):
                                 ListItems.append(data)
                 elif ParentStatus == 'Mass of Insulation':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from mass_insulation_date)',
+                                'month': 'extract (month from mass_insulation_date)',
+                                'day': 'extract (day from mass_insulation_date)'},
+                        order_by=['month', 'day', '-year'])
                     if ChildStatus != 'Current Count':
                         ListItems = dataList.filter(mass_insulation_date__year = current_year, mass_insulation=ChildStatus)
                     if ChildStatus == 'Current Count':
@@ -1180,6 +1557,11 @@ class MpmController:
                             if data.mass_insulation_date.strftime("%Y") == current_year and (data.mass_insulation == 'Under process' or data.mass_insulation == 'Observation(same stage)' or data.mass_insulation == 'Halt'):
                                 ListItems.append(data)
                 elif ParentStatus == 'Mass of Propellant':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from mass_propellant_date)',
+                                'month': 'extract (month from mass_propellant_date)',
+                                'day': 'extract (day from mass_propellant_date)'},
+                        order_by=['month', 'day', '-year'])
                     if ChildStatus != 'Current Count':
                         ListItems = dataList.filter(mass_propellant_date__year = current_year, mass_propellant=ChildStatus)
                     if ChildStatus == 'Current Count':
@@ -1187,16 +1569,33 @@ class MpmController:
                             if data.mass_propellant_date.strftime("%Y") == current_year and (data.mass_propellant == 'Under process' or data.mass_propellant == 'Observation(same stage)' or data.mass_propellant == 'Halt'):
                                 ListItems.append(data)
                 elif ParentStatus == 'BHD Status':
-                        ListItems = dataList.filter(bhd_date__year = current_year, bhd_status=ChildStatus)
+                        ListItems = dataList.filter(bhd_date__year = current_year, bhd_status=ChildStatus).extra(
+                        select={'year': 'extract (year from bhd_date)',
+                                'month': 'extract (month from bhd_date)',
+                                'day': 'extract (day from bhd_date)'},
+                        order_by=['month', 'day', '-year'])
 
                 elif ParentStatus == 'QM Certification Status':
-                        ListItems = dataList.filter(qm_certification_date__year = current_year, qm_certification_status=ChildStatus)
+                        ListItems = dataList.filter(qm_certification_date__year = current_year, qm_certification_status=ChildStatus).extra(
+                        select={'year': 'extract (year from qm_certification_date)',
+                                'month': 'extract (month from qm_certification_date)',
+                                'day': 'extract (day from qm_certification_date)'},
+                        order_by=['month', 'day', '-year'])
 
                 elif ParentStatus == 'Overall Qualification':
-                        ListItems = dataList.filter(overall_qualification_date__year = current_year,overall_qualification_status=ChildStatus)
+                        ListItems = dataList.filter(overall_qualification_date__year = current_year,overall_qualification_status=ChildStatus).extra(
+                        select={'year': 'extract (year from overall_qualification_date)',
+                                'month': 'extract (month from overall_qualification_date)',
+                                'day': 'extract (day from overall_qualification_date)'},
+                        order_by=['month', 'day', '-year'])
 
 
                 elif ParentStatus == 'Material Qualified':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from matiral_qualified_date)',
+                                'month': 'extract (month from matiral_qualified_date)',
+                                'day': 'extract (day from matiral_qualified_date)'},
+                        order_by=['month', 'day', '-year'])
                     if ChildStatus != 'Current Count':
                         ListItems = dataList.filter(matiral_qualified_date__year = current_year,matiral_qualified_status=ChildStatus)
                     if ChildStatus == 'Current Count':
@@ -1204,6 +1603,11 @@ class MpmController:
                             if data.matiral_qualified_date.strftime("%Y") == current_year and (data.matiral_qualified_status == 'Under process' or data.matiral_qualified_status == 'Observation(same stage)' or data.matiral_qualified_status == 'Halt'):
                                 ListItems.append(data)
                 elif ParentStatus == 'Component Manufacturing':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from compo_manufacturing_date)',
+                                'month': 'extract (month from compo_manufacturing_date)',
+                                'day': 'extract (day from compo_manufacturing_date)'},
+                        order_by=['month', 'day', '-year'])
                     if ChildStatus != 'Current Count':
                         # filter_objects &= get_filter('blt_status', 'equal', ChildStatus)
                         ListItems = dataList.filter(compo_manufacturing_date__year = current_year, compo_manufacturing_status=ChildStatus)
@@ -1212,6 +1616,11 @@ class MpmController:
                             if data.compo_manufacturing_date.strftime("%Y") == current_year and (data.compo_manufacturing_status == 'Under process' or data.compo_manufacturing_status == 'Observation(same stage)' or data.compo_manufacturing_status == 'Halt'):
                                 ListItems.append(data)
                 elif ParentStatus == 'Power Pack Assembly':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from powerpack_assembly_date)',
+                                'month': 'extract (month from powerpack_assembly_date)',
+                                'day': 'extract (day from powerpack_assembly_date)'},
+                        order_by=['month', 'day', '-year'])
                     if ChildStatus != 'Current Count':
                         ListItems = dataList.filter(powerpack_assembly_date__year = current_year, powerpack_assembly_status=ChildStatus)
                     if ChildStatus == 'Current Count':
@@ -1219,6 +1628,11 @@ class MpmController:
                             if data.powerpack_assembly_date.strftime("%Y") == current_year and (data.powerpack_assembly_status == 'Under process' or data.powerpack_assembly_status == 'Observation(same stage)' or data.powerpack_assembly_status == 'Halt'):
                                 ListItems.append(data)
                 elif ParentStatus == 'Power Pack Testing':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from powerpack_testing_date)',
+                                'month': 'extract (month from powerpack_testing_date)',
+                                'day': 'extract (day from powerpack_testing_date)'},
+                        order_by=['month', 'day', '-year'])
                     if ChildStatus != 'Current Count':
                         ListItems = dataList.filter(powerpack_testing_status=ChildStatus)
                     if ChildStatus == 'Current Count':
@@ -1226,6 +1640,11 @@ class MpmController:
                             if data.powerpack_testing_date.strftime("%Y") == current_year and (data.powerpack_testing_status == 'Under process' or data.powerpack_testing_status == 'Observation(same stage)' or data.powerpack_testing_status == 'Halt'):
                                 ListItems.append(data)
                 elif ParentStatus == 'Raw Material Inspection':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from raw_material_inspection_date)',
+                                'month': 'extract (month from raw_material_inspection_date)',
+                                'day': 'extract (day from raw_material_inspection_date)'},
+                        order_by=['month', 'day', '-year'])
                     if ChildStatus != 'Current Count':
                         ListItems = dataList.filter(raw_material_inspection_date__year = current_year, raw_material_inspection_status=ChildStatus)
                     if ChildStatus == 'Current Count':
@@ -1233,6 +1652,11 @@ class MpmController:
                             if data.raw_material_inspection_date.strftime("%Y") == current_year and (data.raw_material_inspection_status == 'Under process' or data.raw_material_inspection_status == 'Observation(same stage)' or data.raw_material_inspection_status == 'Halt'):
                                 ListItems.append(data)
                 elif ParentStatus == 'Pressing Electrode':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from pressing_electrode_date)',
+                                'month': 'extract (month from pressing_electrode_date)',
+                                'day': 'extract (day from pressing_electrode_date)'},
+                        order_by=['month', 'day', '-year'])
                     if ChildStatus != 'Current Count':
                         ListItems = dataList.filter(pressing_electrode_date__year = current_year, pressing_electrode_status=ChildStatus)
                     if ChildStatus == 'Current Count':
@@ -1240,6 +1664,11 @@ class MpmController:
                             if data.pressing_electrode_date.strftime("%Y") == current_year and (data.pressing_electrode_status == 'Under process' or data.pressing_electrode_status == 'Observation(same stage)' or data.pressing_electrode_status == 'Halt'):
                                 ListItems.append(data)
                 elif ParentStatus == 'Formation Process':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from formation_process_date)',
+                                'month': 'extract (month from formation_process_date)',
+                                'day': 'extract (day from formation_process_date)'},
+                        order_by=['month', 'day', '-year'])
                     if ChildStatus != 'Current Count':
                         ListItems = dataList.filter(formation_process_date__year = current_year, formation_process_status=ChildStatus)
                     if ChildStatus == 'Current Count':
@@ -1247,6 +1676,11 @@ class MpmController:
                             if data.formation_process_date.strftime("%Y") == current_year and (data.formation_process_status == 'Under process' or data.formation_process_status == 'Observation(same stage)' or data.formation_process_status == 'Halt'):
                                 ListItems.append(data)
                 elif ParentStatus == 'Assembly Process':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from assembly_process_date)',
+                                'month': 'extract (month from assembly_process_date)',
+                                'day': 'extract (day from assembly_process_date)'},
+                        order_by=['month', 'day', '-year'])
                     if ChildStatus != 'Current Count':
                         ListItems = dataList.filter(assembly_process_date__year = current_year, assembly_process_status=ChildStatus)
                     if ChildStatus == 'Current Count':
@@ -1254,6 +1688,11 @@ class MpmController:
                             if data.assembly_process_date.strftime("%Y") == current_year and (data.assembly_process_status == 'Under process' or data.assembly_process_status == 'Observation(same stage)' or data.assembly_process_status == 'Halt'):
                                 ListItems.append(data)
                 elif ParentStatus == 'Battery Testing':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from battery_testing_date)',
+                                'month': 'extract (month from battery_testing_date)',
+                                'day': 'extract (day from battery_testing_date)'},
+                        order_by=['month', 'day', '-year'])
                     if ChildStatus != 'Current Count':
                         ListItems = dataList.filter(battery_testing_date__year = current_year, battery_testing_status=ChildStatus)
                     if ChildStatus == 'Current Count':
@@ -1261,6 +1700,11 @@ class MpmController:
                             if data.battery_testing_date.strftime("%Y") == current_year and (data.battery_testing_status == 'Under process' or data.battery_testing_status == 'Observation(same stage)' or data.battery_testing_status == 'Halt'):
                                 ListItems.append(data)
                 elif ParentStatus == 'Final Qualification':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from final_qualification_date)',
+                                'month': 'extract (month from final_qualification_date)',
+                                'day': 'extract (day from final_qualification_date)'},
+                        order_by=['month', 'day', '-year'])
                     if ChildStatus != 'Current Count':
                         ListItems = dataList.filter(final_qualification_date__year = current_year, final_qualification_status=ChildStatus)
                     if ChildStatus == 'Current Count':
@@ -1269,6 +1713,11 @@ class MpmController:
                                 ListItems.append(data)
 
                 elif ParentStatus == 'Qualification of Raw Material':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from qualification_raw_material_date)',
+                                'month': 'extract (month from qualification_raw_material_date)',
+                                'day': 'extract (day from qualification_raw_material_date)'},
+                        order_by=['month', 'day', '-year'])
                     if ChildStatus != 'Current Count':
                         ListItems = dataList.filter(qualification_raw_material_date__year =  current_year, qualification_raw_material_status=ChildStatus)
                     if ChildStatus == 'Current Count':
@@ -1276,6 +1725,11 @@ class MpmController:
                             if data.qualification_raw_material_date.strftime("%Y") ==  current_year and (data.qualification_raw_material_status == 'Under process' or data.qualification_raw_material_status == 'Observation(same stage)' or data.qualification_raw_material_status == 'Halt'):
                                 ListItems.append(data)
                 elif ParentStatus == 'Filling':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from filling_date)',
+                                'month': 'extract (month from filling_date)',
+                                'day': 'extract (day from filling_date)'},
+                        order_by=['month', 'day', '-year'])
                     if ChildStatus != 'Current Count':
                         ListItems = dataList.filter(filling_date__year = current_year, filling_status=ChildStatus)
                     if ChildStatus == 'Current Count':
@@ -1283,6 +1737,11 @@ class MpmController:
                             if data.filling_date.strftime("%Y")== current_year and (data.filling_status == 'Under process' or data.filling_status == 'Observation(same stage)' or data.filling_status == 'Halt'):
                                 ListItems.append(data)
                 elif ParentStatus == 'Assembling/Integration':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from assembling_integration_date)',
+                                'month': 'extract (month from assembling_integration_date)',
+                                'day': 'extract (day from assembling_integration_date)'},
+                        order_by=['month', 'day', '-year'])
                     if ChildStatus != 'Current Count':
                         ListItems = dataList.filter(assembling_integration_date__year = current_year, assembling_integration_status=ChildStatus)
                     if ChildStatus == 'Current Count':
@@ -1290,6 +1749,11 @@ class MpmController:
                             if data.assembling_integration_date.strftime("%Y") == current_year and (data.assembling_integration_status == 'Under process' or data.assembling_integration_status == 'Observation(same stage)' or data.assembling_integration_status == 'Halt'):
                                 ListItems.append(data)
                 elif ParentStatus == 'Qualification Testing':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from qualification_testing_date)',
+                                'month': 'extract (month from qualification_testing_date)',
+                                'day': 'extract (day from qualification_testing_date)'},
+                        order_by=['month', 'day', '-year'])
                     if ChildStatus != 'Current Count':
                         ListItems = dataList.filter(qualification_testing_date__year = current_year, qualification_testing_status=ChildStatus)
                     if ChildStatus == 'Current Count':
@@ -1297,6 +1761,11 @@ class MpmController:
                             if data.qualification_testing_date.strftime("%Y") == current_year and (data.qualification_testing_status == 'Under process' or data.qualification_testing_status == 'Observation(same stage)' or data.qualification_testing_status == 'Halt'):
                                 ListItems.append(data)
                 elif ParentStatus == 'Performance Testing':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from performance_testing_date)',
+                                'month': 'extract (month from performance_testing_date)',
+                                'day': 'extract (day from performance_testing_date)'},
+                        order_by=['month', 'day', '-year'])
                     if ChildStatus != 'Current Count':
                         ListItems = dataList.filter(performance_testing_date__year = current_year, performance_testing_status=ChildStatus)
                     if ChildStatus == 'Current Count':
@@ -1402,9 +1871,302 @@ class MpmController:
     def GetActiveMotorHistoryList(request):
         try:
             id = request.query_params['id']
-            print(id)
-            data = ActiveMotorsHistory.objects.filter(active_motor_id=id)
-            serializer = ActiveMotorSerializer(data, many=True)
+            ParentStatus = request.query_params['parent_status']
+            print(ParentStatus)
+            dataList = ActiveMotorsHistory.objects.filter(active_motor_id=id)
+            if ParentStatus != '':
+                if ParentStatus == 'Qualification of raw material of insulation':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from qualification_insulation_lining_propellant_rm_date)',
+                                'month': 'extract (month from qualification_insulation_lining_propellant_rm_date)',
+                                'day': 'extract (day from qualification_insulation_lining_propellant_rm_date)'},
+                        order_by=['month', 'day', '-year'])
+
+                elif ParentStatus == 'Lining':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from lining_date)',
+                                'month': 'extract (month from lining_date)',
+                                'day': 'extract (day from lining_date)'},
+                        order_by=['month', 'day', '-year'])
+                elif ParentStatus == 'Qualification of Propellant':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from propellant_mechanical_properties_date)',
+                                'month': 'extract (month from propellant_mechanical_properties_date)',
+                                'day': 'extract (day from propellant_mechanical_properties_date)'},
+                        order_by=['month', 'day', '-year'])
+
+                elif ParentStatus == 'Acceptance of casting':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from acceptance_casting_date)',
+                                'month': 'extract (month from acceptance_casting_date)',
+                                'day': 'extract (day from acceptance_casting_date)'},
+                        order_by=['month', 'day', '-year'])
+
+                elif ParentStatus == 'Sandblasting':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from sandblasting_date)',
+                                'month': 'extract (month from sandblasting_date)',
+                                'day': 'extract (day from sandblasting_date)'},
+                        order_by=['month', 'day', '-year'])
+
+                elif ParentStatus == 'Insulation':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from insulation_date)',
+                                'month': 'extract (month from insulation_date)',
+                                'day': 'extract (day from insulation_date)'},
+                        order_by=['month', 'day', '-year'])
+
+                elif ParentStatus == 'UT and RT of Insulated Case':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from ut_rt_insulated_case_date)',
+                                'month': 'extract (month from ut_rt_insulated_case_date)',
+                                'day': 'extract (day from ut_rt_insulated_case_date)'},
+                        order_by=['month', 'day', '-year'])
+
+                elif ParentStatus == 'Acceptance of Sliver Material':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from acceptance_silver_material_date)',
+                                'month': 'extract (month from acceptance_silver_material_date)',
+                                'day': 'extract (day from acceptance_silver_material_date)'},
+                        order_by=['month', 'day', '-year'])
+
+                elif ParentStatus == 'Silver Application':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from silver_application_date)',
+                                'month': 'extract (month from silver_application_date)',
+                                'day': 'extract (day from silver_application_date)'},
+                        order_by=['month', 'day', '-year'])
+
+                elif ParentStatus == 'Formulation tailoring':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from formulation_tailoring_liner_propellant_date)',
+                                'month': 'extract (month from formulation_tailoring_liner_propellant_date)',
+                                'day': 'extract (day from formulation_tailoring_liner_propellant_date)'},
+                        order_by=['month', 'day', '-year'])
+
+                elif ParentStatus == 'Conditioning of Raw Material':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from conditioning_raw_materials_date)',
+                                'month': 'extract (month from conditioning_raw_materials_date)',
+                                'day': 'extract (day from conditioning_raw_materials_date)'},
+                        order_by=['month', 'day', '-year'])
+
+                elif ParentStatus == 'Conditioning of Lining':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from conditioning_of_lining_date)',
+                                'month': 'extract (month from conditioning_of_lining_date)',
+                                'day': 'extract (day from conditioning_of_lining_date)'},
+                        order_by=['month', 'day', '-year'])
+
+                elif ParentStatus == 'Casing':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from casting_date)',
+                                'month': 'extract (month from casting_date)',
+                                'day': 'extract (day from casting_date)'},
+                        order_by=['month', 'day', '-year'])
+
+                elif ParentStatus == 'Curing':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from curing_date)',
+                                'month': 'extract (month from curing_date)',
+                                'day': 'extract (day from curing_date)'},
+                        order_by=['month', 'day', '-year'])
+
+                elif ParentStatus == 'UT, endoscopy and RT of grain':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from ut_endoscopy_rt_grain_date)',
+                                'month': 'extract (month from ut_endoscopy_rt_grain_date)',
+                                'day': 'extract (day from ut_endoscopy_rt_grain_date)'},
+                        order_by=['month', 'day', '-year'])
+
+
+                elif ParentStatus == 'Mechanical Properties of Liner':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from liner_mechanical_properties_date)',
+                                'month': 'extract (month from liner_mechanical_properties_date)',
+                                'day': 'extract (day from liner_mechanical_properties_date)'},
+                        order_by=['month', 'day', '-year'])
+
+                elif ParentStatus == 'Mechanical Properties of Propellant':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from mechanical_properties_propellant_date)',
+                                'month': 'extract (month from mechanical_properties_propellant_date)',
+                                'day': 'extract (day from mechanical_properties_propellant_date)'},
+                        order_by=['month', 'day', '-year'])
+
+                elif ParentStatus == 'Interface bond strength':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from interface_bond_strength_date)',
+                                'month': 'extract (month from interface_bond_strength_date)',
+                                'day': 'extract (day from interface_bond_strength_date)'},
+                        order_by=['month', 'day', '-year'])
+
+                elif ParentStatus == 'Propellant burn rate':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from propellant_burn_rate_date)',
+                                'month': 'extract (month from propellant_burn_rate_date)',
+                                'day': 'extract (day from propellant_burn_rate_date)'},
+                        order_by=['month', 'day', '-year'])
+
+                elif ParentStatus == 'Trimming of propellant grain':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from trimming_Propellant_grain_date)',
+                                'month': 'extract (month from trimming_Propellant_grain_date)',
+                                'day': 'extract (day from trimming_Propellant_grain_date)'},
+                        order_by=['month', 'day', '-year'])
+
+                elif ParentStatus == 'Mass of liner':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from mass_liner_insulation_propellant_srm_date)',
+                                'month': 'extract (month from mass_liner_insulation_propellant_srm_date)',
+                                'day': 'extract (day from mass_liner_insulation_propellant_srm_date)'},
+                        order_by=['month', 'day', '-year'])
+
+                elif ParentStatus == 'Mass of Insulation':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from mass_insulation_date)',
+                                'month': 'extract (month from mass_insulation_date)',
+                                'day': 'extract (day from mass_insulation_date)'},
+                        order_by=['month', 'day', '-year'])
+
+                elif ParentStatus == 'Mass of Propellant':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from mass_propellant_date)',
+                                'month': 'extract (month from mass_propellant_date)',
+                                'day': 'extract (day from mass_propellant_date)'},
+                        order_by=['month', 'day', '-year'])
+
+                elif ParentStatus == 'BHD Status':
+                    dataList = dataList.filter(bhd_date__year=current_year, bhd_status=ChildStatus).extra(
+                        select={'year': 'extract (year from bhd_date)',
+                                'month': 'extract (month from bhd_date)',
+                                'day': 'extract (day from bhd_date)'},
+                        order_by=['month', 'day', '-year'])
+
+                elif ParentStatus == 'QM Certification Status':
+                    dataList = dataList.filter(qm_certification_date__year=current_year,
+                                                qm_certification_status=ChildStatus).extra(
+                        select={'year': 'extract (year from qm_certification_date)',
+                                'month': 'extract (month from qm_certification_date)',
+                                'day': 'extract (day from qm_certification_date)'},
+                        order_by=['month', 'day', '-year'])
+
+                elif ParentStatus == 'Overall Qualification':
+                    dataList = dataList.filter(overall_qualification_date__year=current_year,
+                                                overall_qualification_status=ChildStatus).extra(
+                        select={'year': 'extract (year from overall_qualification_date)',
+                                'month': 'extract (month from overall_qualification_date)',
+                                'day': 'extract (day from overall_qualification_date)'},
+                        order_by=['month', 'day', '-year'])
+
+
+                elif ParentStatus == 'Material Qualified':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from matiral_qualified_date)',
+                                'month': 'extract (month from matiral_qualified_date)',
+                                'day': 'extract (day from matiral_qualified_date)'},
+                        order_by=['month', 'day', '-year'])
+
+                elif ParentStatus == 'Component Manufacturing':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from compo_manufacturing_date)',
+                                'month': 'extract (month from compo_manufacturing_date)',
+                                'day': 'extract (day from compo_manufacturing_date)'},
+                        order_by=['month', 'day', '-year'])
+
+                elif ParentStatus == 'Power Pack Assembly':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from powerpack_assembly_date)',
+                                'month': 'extract (month from powerpack_assembly_date)',
+                                'day': 'extract (day from powerpack_assembly_date)'},
+                        order_by=['month', 'day', '-year'])
+
+                elif ParentStatus == 'Power Pack Testing':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from powerpack_testing_date)',
+                                'month': 'extract (month from powerpack_testing_date)',
+                                'day': 'extract (day from powerpack_testing_date)'},
+                        order_by=['month', 'day', '-year'])
+
+                elif ParentStatus == 'Raw Material Inspection':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from raw_material_inspection_date)',
+                                'month': 'extract (month from raw_material_inspection_date)',
+                                'day': 'extract (day from raw_material_inspection_date)'},
+                        order_by=['month', 'day', '-year'])
+
+                elif ParentStatus == 'Pressing Electrode':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from pressing_electrode_date)',
+                                'month': 'extract (month from pressing_electrode_date)',
+                                'day': 'extract (day from pressing_electrode_date)'},
+                        order_by=['month', 'day', '-year'])
+
+                elif ParentStatus == 'Formation Process':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from formation_process_date)',
+                                'month': 'extract (month from formation_process_date)',
+                                'day': 'extract (day from formation_process_date)'},
+                        order_by=['month', 'day', '-year'])
+
+                elif ParentStatus == 'Assembly Process':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from assembly_process_date)',
+                                'month': 'extract (month from assembly_process_date)',
+                                'day': 'extract (day from assembly_process_date)'},
+                        order_by=['month', 'day', '-year'])
+
+                elif ParentStatus == 'Battery Testing':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from battery_testing_date)',
+                                'month': 'extract (month from battery_testing_date)',
+                                'day': 'extract (day from battery_testing_date)'},
+                        order_by=['month', 'day', '-year'])
+
+                elif ParentStatus == 'Final Qualification':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from final_qualification_date)',
+                                'month': 'extract (month from final_qualification_date)',
+                                'day': 'extract (day from final_qualification_date)'},
+                        order_by=['month', 'day', '-year'])
+
+
+                elif ParentStatus == 'Qualification of Raw Material':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from qualification_raw_material_date)',
+                                'month': 'extract (month from qualification_raw_material_date)',
+                                'day': 'extract (day from qualification_raw_material_date)'},
+                        order_by=['month', 'day', '-year'])
+
+                elif ParentStatus == 'Filling':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from filling_date)',
+                                'month': 'extract (month from filling_date)',
+                                'day': 'extract (day from filling_date)'},
+                        order_by=['month', 'day', '-year'])
+
+                elif ParentStatus == 'Assembling/Integration':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from assembling_integration_date)',
+                                'month': 'extract (month from assembling_integration_date)',
+                                'day': 'extract (day from assembling_integration_date)'},
+                        order_by=['month', 'day', '-year'])
+
+                elif ParentStatus == 'Qualification Testing':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from qualification_testing_date)',
+                                'month': 'extract (month from qualification_testing_date)',
+                                'day': 'extract (day from qualification_testing_date)'},
+                        order_by=['month', 'day', '-year'])
+
+                elif ParentStatus == 'Performance Testing':
+                    dataList = dataList.extra(
+                        select={'year': 'extract (year from performance_testing_date)',
+                                'month': 'extract (month from performance_testing_date)',
+                                'day': 'extract (day from performance_testing_date)'},
+                        order_by=['month', 'day', '-year'])
+
+            serializer = ActiveMotorSerializer(dataList, many=True)
             print(serializer.data)
             return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
 
