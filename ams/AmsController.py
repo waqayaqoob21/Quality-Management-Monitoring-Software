@@ -255,15 +255,21 @@ class AmsController:
                 return JsonResponse({'message': 'true', 'data': serializer.data}, status=200)
             if selected_year is not '' and selected_group is '':
                 data = TaskSummary.objects.filter(assigned_date__year=selected_year,
-                                                  status=status)
+                                                  status=status).annotate(
+                curr_month=Extract('assigned_date', 'month'),curr_year=Extract('assigned_date', 'year'),
+                curr_day=Extract('assigned_date', 'day')).order_by('curr_day', 'curr_month','-curr_year')
             elif selected_year is '' and selected_group is not '':
                 data = TaskSummary.objects.filter(assigned_to=selected_group,
-                                                  status=status)
+                                                  status=status).annotate(
+                curr_month=Extract('assigned_date', 'month'),curr_year=Extract('assigned_date', 'year'),
+                curr_day=Extract('assigned_date', 'day')).order_by('curr_day', 'curr_month','-curr_year')
 
             elif selected_year is not '' and selected_group is not '':
                 data = TaskSummary.objects.filter(assigned_to=selected_group,
                                                   assigned_date__year=selected_year,
-                                                  status=status)
+                                                  status=status).annotate(
+                curr_month=Extract('assigned_date', 'month'),curr_year=Extract('assigned_date', 'year'),
+                curr_day=Extract('assigned_date', 'day')).order_by('curr_day', 'curr_month','-curr_year')
             if status =='Task in-process':
                 result =[]
                 if data is not None:
