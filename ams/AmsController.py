@@ -166,9 +166,11 @@ class AmsController:
                         'assigned_to', 'equal',
                         selected_group)
                 data = TaskSummary.objects.filter(current_over_due_filter,
-                                                  assigned_date__year=selected_year).annotate(
-                curr_month=Extract('assigned_date', 'month'),curr_year=Extract('assigned_date', 'year'),
-                curr_day=Extract('assigned_date', 'day')).order_by('curr_day', 'curr_month','-curr_year')
+                                                  assigned_date__year=selected_year).extra(
+                        select={'year': 'extract (year from assigned_date)',
+                                'month': 'extract (month from assigned_date)',
+                                'day': 'extract (day from assigned_date)'},
+                        order_by=['month', 'day', '-year'])
                 result = []
                 if data is not None:
                     for item in data:
@@ -186,9 +188,11 @@ class AmsController:
                     current_total_filter &= get_filter(
                         'assigned_to', 'equal',
                         selected_group)
-                data = TaskSummary.objects.filter(current_total_filter, assigned_date__year=selected_year).annotate(
-                curr_month=Extract('assigned_date', 'month'),curr_year=Extract('assigned_date', 'year'),
-                curr_day=Extract('assigned_date', 'day')).order_by('curr_day', 'curr_month','-curr_year')
+                data = TaskSummary.objects.filter(current_total_filter, assigned_date__year=selected_year).extra(
+                        select={'year': 'extract (year from assigned_date)',
+                                'month': 'extract (month from assigned_date)',
+                                'day': 'extract (day from assigned_date)'},
+                        order_by=['month', 'day', '-year'])
                 serializer = TaskSummarySerialzer(data, many=True)
                 return JsonResponse({'message': 'true', 'data': serializer.data}, status=200)
             if status == 'total_overdue':
@@ -197,9 +201,11 @@ class AmsController:
                     'status', 'equal',
                     'Task in-process')
 
-                data = TaskSummary.objects.filter(current_over_due_filter).annotate(
-                curr_month=Extract('assigned_date', 'month'),curr_year=Extract('assigned_date', 'year'),
-                curr_day=Extract('assigned_date', 'day')).order_by('curr_day', 'curr_month','-curr_year')
+                data = TaskSummary.objects.filter(current_over_due_filter).extra(
+                        select={'year': 'extract (year from assigned_date)',
+                                'month': 'extract (month from assigned_date)',
+                                'day': 'extract (day from assigned_date)'},
+                        order_by=['month', 'day', '-year'])
                 result = []
                 if data is not None:
                     for item in data:
@@ -211,9 +217,11 @@ class AmsController:
                 serializer = TaskSummarySerialzer(result, many=True)
                 return JsonResponse({'message': 'true', 'data': serializer.data}, status=200)
             if status == 'all_tasks':
-                data = TaskSummary.objects.filter(all_filter_objects).annotate(
-                curr_month=Extract('assigned_date', 'month'),curr_year=Extract('assigned_date', 'year'),
-                curr_day=Extract('assigned_date', 'day')).order_by('curr_day', 'curr_month','-curr_year')
+                data = TaskSummary.objects.filter(all_filter_objects).extra(
+                        select={'year': 'extract (year from assigned_date)',
+                                'month': 'extract (month from assigned_date)',
+                                'day': 'extract (day from assigned_date)'},
+                        order_by=['month', 'day', '-year'])
                 if assignFrom != '' and assignTo != '':
                     data = data.filter(assigned_date__gte=assignFrom,
                                        assigned_date__lte=assignTo).order_by('-id')
@@ -223,9 +231,11 @@ class AmsController:
                 all_filter_objects &= get_filter(
                     'status', 'equal',
                     'Task Completed')
-                data = TaskSummary.objects.filter(all_filter_objects).annotate(
-                curr_month=Extract('assigned_date', 'month'),curr_year=Extract('assigned_date', 'year'),
-                curr_day=Extract('assigned_date', 'day')).order_by('curr_day', 'curr_month','-curr_year')
+                data = TaskSummary.objects.filter(all_filter_objects).extra(
+                        select={'year': 'extract (year from assigned_date)',
+                                'month': 'extract (month from assigned_date)',
+                                'day': 'extract (day from assigned_date)'},
+                        order_by=['month', 'day', '-year'])
                 serializer = TaskSummarySerialzer(data, many=True)
                 return JsonResponse({'message': 'true', 'data': serializer.data}, status=200)
 
@@ -233,9 +243,11 @@ class AmsController:
                 all_filter_objects &= get_filter(
                     'status', 'not_equal',
                     'Task Completed')
-                data = TaskSummary.objects.filter(all_filter_objects).annotate(
-                curr_month=Extract('assigned_date', 'month'),curr_year=Extract('assigned_date', 'year'),
-                curr_day=Extract('assigned_date', 'day')).order_by('curr_day', 'curr_month','-curr_year')
+                data = TaskSummary.objects.filter(all_filter_objects).extra(
+                        select={'year': 'extract (year from assigned_date)',
+                                'month': 'extract (month from assigned_date)',
+                                'day': 'extract (day from assigned_date)'},
+                        order_by=['month', 'day', '-year'])
                 result = []
                 if data is not None:
                     for item in data:
@@ -248,28 +260,36 @@ class AmsController:
                 return JsonResponse({'message': 'true', 'data': serializer.data}, status=200)
 
             if status == 'all' and selected_year is not '':
-                data = TaskSummary.objects.filter(assigned_date__year=selected_year).annotate(
-                curr_month=Extract('assigned_date', 'month'),curr_year=Extract('assigned_date', 'year'),
-                curr_day=Extract('assigned_date', 'day')).order_by('curr_day', 'curr_month','-curr_year')
+                data = TaskSummary.objects.filter(assigned_date__year=selected_year).extra(
+                        select={'year': 'extract (year from assigned_date)',
+                                'month': 'extract (month from assigned_date)',
+                                'day': 'extract (day from assigned_date)'},
+                        order_by=['month', 'day', '-year'])
                 serializer = TaskSummarySerialzer(data, many=True)
                 return JsonResponse({'message': 'true', 'data': serializer.data}, status=200)
             if selected_year is not '' and selected_group is '':
                 data = TaskSummary.objects.filter(assigned_date__year=selected_year,
-                                                  status=status).annotate(
-                curr_month=Extract('assigned_date', 'month'),curr_year=Extract('assigned_date', 'year'),
-                curr_day=Extract('assigned_date', 'day')).order_by('curr_day', 'curr_month','-curr_year')
+                                                  status=status).extra(
+                        select={'year': 'extract (year from assigned_date)',
+                                'month': 'extract (month from assigned_date)',
+                                'day': 'extract (day from assigned_date)'},
+                        order_by=['month', 'day', '-year'])
             elif selected_year is '' and selected_group is not '':
                 data = TaskSummary.objects.filter(assigned_to=selected_group,
-                                                  status=status).annotate(
-                curr_month=Extract('assigned_date', 'month'),curr_year=Extract('assigned_date', 'year'),
-                curr_day=Extract('assigned_date', 'day')).order_by('curr_day', 'curr_month','-curr_year')
+                                                  status=status).extra(
+                        select={'year': 'extract (year from assigned_date)',
+                                'month': 'extract (month from assigned_date)',
+                                'day': 'extract (day from assigned_date)'},
+                        order_by=['month', 'day', '-year'])
 
             elif selected_year is not '' and selected_group is not '':
                 data = TaskSummary.objects.filter(assigned_to=selected_group,
                                                   assigned_date__year=selected_year,
-                                                  status=status).annotate(
-                curr_month=Extract('assigned_date', 'month'),curr_year=Extract('assigned_date', 'year'),
-                curr_day=Extract('assigned_date', 'day')).order_by('curr_day', 'curr_month','-curr_year')
+                                                  status=status).extra(
+                        select={'year': 'extract (year from assigned_date)',
+                                'month': 'extract (month from assigned_date)',
+                                'day': 'extract (day from assigned_date)'},
+                        order_by=['month', 'day', '-year'])
             if status =='Task in-process':
                 result =[]
                 if data is not None:
@@ -292,9 +312,11 @@ class AmsController:
     def GetTaskListHistory(request):
         try:
             id = request.query_params['id']
-            data = TaskSummaryHistory.objects.filter(task_id=id).annotate(
-                curr_month=Extract('assigned_date', 'month'),curr_year=Extract('assigned_date', 'year'),
-                curr_day=Extract('assigned_date', 'day')).order_by('curr_day', 'curr_month','-curr_year')
+            data = TaskSummaryHistory.objects.filter(task_id=id).extra(
+                        select={'year': 'extract (year from assigned_date)',
+                                'month': 'extract (month from assigned_date)',
+                                'day': 'extract (day from assigned_date)'},
+                        order_by=['month', 'day', '-year'])
 
             serializer = TaskSummarySerialzer(data, many=True)
             return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)

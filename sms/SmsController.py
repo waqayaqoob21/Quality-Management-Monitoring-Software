@@ -2947,7 +2947,7 @@ class SmsController:
                             'month': 'extract (month from launchact_date)',
                             'day': 'extract (day from launchact_date)'},
                     order_by=['month', 'day', '-year'])
-            serializer = FlightSystemSerialzer(data, many=True)
+            serializer = FlightSystemSerialzer(dataList, many=True)
             return JsonResponse({'status': 'true', 'data': serializer.data}, status=200)
 
         except Exception as e:
