@@ -11,8 +11,7 @@ urlpatterns = [
         path('getprodpdf/', GetProductionPDFAPIVIEW.as_view(), name='getprodpdf'),
         path('getprodexl/', GetProductionExcelAPIVIEW.as_view(), name='getprodexl'),
         path('deleteprodsys/', DeleteProductionAPIVIEW.as_view(), name='deleteprodsys'),
-
-
+        path('deleteprodhistory/', DeleteProductionHistoryAPIVIEW.as_view(), name='deleteprodhistory'),
 
         path('addflight/', AddFlightAPIVIEW.as_view(), name='addflight'),
         path('editflight/', EditFlightAPIVIEW.as_view(), name='editflight'),
@@ -21,6 +20,7 @@ urlpatterns = [
         path('getflightpdf/', GetFlightPDFAPIVIEW.as_view(), name='getflightpdf'),
         path('getflightexl/', GetFlightExcelAPIVIEW.as_view(), name='getflightexl'),
         path('deleteflightsys/', DeleteFlightAPIVIEW.as_view(), name='deleteflightsys'),
+        path('deleteflighthistory/', DeleteFlightHistoryAPIVIEW.as_view(), name='deleteflighthistory'),
 
         path('addrelifing/', AddRelifingAPIVIEW.as_view(), name='addrelifing'),
         path('editrelifing/', EditRelifingAPIVIEW.as_view(), name='editrelifing'),
@@ -29,6 +29,7 @@ urlpatterns = [
         path('getrelifingpdf/', GetRelifingPDFAPIVIEW.as_view(), name='getrelifingpdf'),
         path('getrelifingexl/', GetRelifingExcelAPIVIEW.as_view(), name='getrelifingexl'),
         path('deleterelifing/', DeleteRelifingAPIVIEW.as_view(), name='deleterelifing'),
+        path('deleterelifhistory/', DeleteRelifingHistoryAPIVIEW.as_view(), name='deleterelifhistory'),
 
         path('getSystemMonitoringDashboardCount/', getSystemMonitoringDashboardCountAPIVIEW.as_view(), name='getSystemMonitoringDashboardCount'),
 

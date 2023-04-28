@@ -1254,7 +1254,7 @@ class MpmController:
 
             typeQuery = Q()
             filter_objects = Q()
-
+            srm_objects = Q()
             # if current_year !='':
             #     filter_objects &= get_filter(
             #         'creation_date__year', 'equal',
@@ -1286,6 +1286,41 @@ class MpmController:
                     'pd_type', 'equal',
                     pd_type)
 
+            # create dynamic filter
+            if current_comp != '' and current_comp == 'SRMs':
+                srm_objects &= get_filter(
+                    'component_type', 'equal',
+                    current_comp)
+            if system_type != '':
+                srm_objects &= get_filter(
+                    'system_type', 'equal',
+                    system_type)
+            if current_sys != '':
+                srm_objects &= get_filter(
+                    'system_name', 'equal',
+                    current_sys)
+            if pd_type != '':
+                srm_objects &= get_filter(
+                    'pd_type', 'equal',
+                    pd_type)
+            if current_org !='':
+                srm_objects &= get_filter(
+                    'organization', 'equal', current_org)
+            if current_bat !='':
+                srm_objects &= get_filter(
+                    'battery_type', 'equal', current_bat)
+            if current_lot !='':
+                srm_objects &= get_filter(
+                    'lot_id', 'equal', current_lot)
+            if current_comp == 'SRMs':
+                srm_objects &= get_filter(
+                    'motor_id', 'not_equal',
+                    '')
+            if ParentStatus =='Motor' and ChildStatus == 'Total System':
+                srm_total_count = ActiveMotors.objects.filter(srm_objects)
+                serializer = ActiveMotorSerializer(srm_total_count, many=True)
+                return JsonResponse({'status': 'True', 'data': serializer.data},
+                                    status=200)
             dataList = ActiveMotors.objects.filter(filter_objects)
             if ParentStatus != '':
                 ListItems = []
@@ -1780,9 +1815,7 @@ class MpmController:
 
                 serializer = ActiveMotorSerializer(ListItems, many=True)
                 return JsonResponse({'status': 'True', 'data': serializer.data}, status=200)
-            # serializer = ActiveMotorSerializer(dataList, many=True)
-            # return JsonResponse({'status': 'True', 'data': serializer.data},
-            #                     status=200)
+
         except Exception as e:
             print(e)
             return JsonResponse({'status': 'False', "message": "Internal Server Error"}, status=500)
@@ -2487,7 +2520,7 @@ class MpmController:
                     return ~Q(**kwargs)
 
             filter_objects = Q()
-
+            srm_objects = Q()
             data = []
             prod_blt_ok = 0
             prod_blt_observation = 0
@@ -2501,11 +2534,38 @@ class MpmController:
             system_type = request.query_params.get('selected_system_type')
             system = request.query_params['selected_system']
             pd_type = request.query_params['selected_pdType']
+            # parent_status = request.query_params['parent_status']
+            # child_status = request.query_params['child_status']
             # create dynamic filter
-            # if year != '':
-            #     filter_objects &= get_filter(
-            #         'creation_date__year', 'equal',
-            #         year)
+            if component != '' and component == 'SRMs':
+                srm_objects &= get_filter(
+                    'component_type', 'equal',
+                    component)
+            if system_type != '':
+                srm_objects &= get_filter(
+                    'system_type', 'equal',
+                    system_type)
+            if system != '':
+                srm_objects &= get_filter(
+                    'system_name', 'equal',
+                    system)
+            if pd_type != '':
+                srm_objects &= get_filter(
+                    'pd_type', 'equal',
+                    pd_type)
+            if current_org !='':
+                srm_objects &= get_filter(
+                    'organization', 'equal', current_org)
+            if current_bat !='':
+                srm_objects &= get_filter(
+                    'battery_type', 'equal', current_bat)
+            if current_lot !='':
+                srm_objects &= get_filter(
+                    'lot_id', 'equal', current_lot)
+            if component == 'SRMs':
+                srm_objects &= get_filter(
+                    'motor_id', 'not_equal',
+                    '')
 
             if component != '':
                 filter_objects &= get_filter(
@@ -2532,7 +2592,11 @@ class MpmController:
             if current_lot !='':
                 filter_objects &= get_filter(
                     'lot_id', 'equal', current_lot)
+
+
+
             # production system count
+            MotorTotalCount =  ActiveMotors.objects.filter(srm_objects).count()
             qualification_insulation_lining_propellant_rm_OK = ActiveMotors.objects.filter(filter_objects, qualification_insulation_lining_propellant_rm_date__year = year,qualification_insulation_lining_propellant_rm='Ok')
             qualification_insulation_lining_propellant_rm_ObsSame = ActiveMotors.objects.filter(filter_objects,
                                                                              qualification_insulation_lining_propellant_rm_date__year = year,qualification_insulation_lining_propellant_rm='Observation(same stage)')
@@ -3229,7 +3293,7 @@ class MpmController:
                 'overall_status_Ok' : overall_status_Ok.count(),
                 'overall_status_Obs' : overall_status_Obs.count(),
                 'overall_status_Inpro' : overall_status_Inpro.count(),
-
+                'MotorTotalCount' : MotorTotalCount
 
             }
             return JsonResponse({'message': 'true', 'data': dist}, status=200)

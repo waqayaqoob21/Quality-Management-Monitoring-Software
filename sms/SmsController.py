@@ -4421,6 +4421,47 @@ class SmsController:
         return response
 
     @staticmethod
+    def DeleteProdSysHistory(request):
+        try:
+            id = request.query_params['id']
+            print(id)
+            history = ProductionSystemStatusHistory.objects.filter(id=id)
+            history.delete()
+            return JsonResponse({'status': 'True', 'message': "Record Deleted"},
+                                status=200)
+
+        except Exception as e:
+            print(e)
+            return JsonResponse({'status': 'False', "message": "Doc Not Deleted"}, status=500)
+            pass
+
+    @staticmethod
+    def DeleteFlightSysHistory(request):
+        try:
+            id = request.query_params['id']
+            history = FlightSystemStatusHistory.objects.filter(id=id)
+            history.delete()
+            return JsonResponse({'status': 'True', 'message': "Record Deleted"},
+                                status=200)
+
+        except Exception as e:
+            print(e)
+            return JsonResponse({'status': 'False', "message": "Doc Not Deleted"}, status=500)
+            pass
+
+    @staticmethod
+    def DeleteRelifingSysHistory(request):
+        try:
+            id = request.query_params['id']
+            delete = RelifingSystemStatusHistory.objects.filter(id=id).delete()
+            return JsonResponse({'status': 'True', 'message': "Record Deleted"},
+                                status=200)
+
+        except Exception as e:
+            print(e)
+            return JsonResponse({'status': 'False', "message": "Doc Not Deleted"}, status=500)
+            pass
+    @staticmethod
     def getSystemMonitoringDashboardCount(request):
         try:
 

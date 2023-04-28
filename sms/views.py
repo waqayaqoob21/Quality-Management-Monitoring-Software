@@ -100,8 +100,15 @@ class DeleteProductionAPIVIEW(APIView):
         result = task_obj.DeleteProdSys(request)
         return result
 
+class DeleteProductionHistoryAPIVIEW(APIView):
+    permission_classes = [AllowAny]
 
-# Flight System Status
+    def get(self, request):
+        result = task_obj.DeleteProdSysHistory(request)
+        return result
+# ===================================Flight System=======================
+# ===================================Flight System=======================
+# ===================================Flight System=======================
 
 class AddFlightAPIVIEW(APIView):
     permission_classes = [AllowAny]
@@ -159,16 +166,15 @@ class DeleteFlightAPIVIEW(APIView):
         result = task_obj.DeleteFlightSys(request)
         return result
 
-
-class DeleteRelifingAPIVIEW(APIView):
+class DeleteFlightHistoryAPIVIEW(APIView):
     permission_classes = [AllowAny]
 
     def get(self, request):
-        result = task_obj.DeleteRelifingSys(request)
+        result = task_obj.DeleteFlightSysHistory(request)
         return result
-
-
-
+# ===================================Relfing System=======================
+# ===================================Relfing System=======================
+# ===================================Relfing System=======================
 
 class AddRelifingAPIVIEW(APIView):
     permission_classes = [AllowAny]
@@ -218,10 +224,23 @@ class GetRelifingExcelAPIVIEW(APIView):
         result = task_obj.GetRelifingExcelList(request)
         return result
 
+class DeleteRelifingAPIVIEW(APIView):
+    permission_classes = [AllowAny]
 
+    def get(self, request):
+        result = task_obj.DeleteRelifingSys(request)
+        return result
+
+class DeleteRelifingHistoryAPIVIEW(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        result = task_obj.DeleteRelifingSysHistory(request)
+        return result
 class getSystemMonitoringDashboardCountAPIVIEW(APIView):
     permission_classes = [AllowAny]
 
     def get(self, request):
         result = task_obj.getSystemMonitoringDashboardCount(request)
         return result
+
