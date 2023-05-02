@@ -145,7 +145,6 @@ class AmsController:
                     'assigned_to', 'equal',
                     selected_group)
             if status == '!Completed':
-
                 total_filter_objects &= get_filter(
                     'status', 'not_equal',
                     'Task Completed')
@@ -174,10 +173,14 @@ class AmsController:
                 result = []
                 if data is not None:
                     for item in data:
+                        task_date = False
                         if item.task_date is None:
                             item.task_date = datetime.today() + timedelta(hours=5)
                             item.task_date = item.task_date.date()
+                            task_date = True
                         if item.target_date < item.task_date:
+                            if task_date:
+                                item.task_date = None
                             result.append(item)
                 serializer = TaskSummarySerialzer(result, many=True)
                 return JsonResponse({'message': 'true', 'data': serializer.data}, status=200)
@@ -200,7 +203,10 @@ class AmsController:
                 current_over_due_filter &= get_filter(
                     'status', 'equal',
                     'Task in-process')
-
+                if selected_group != '':
+                    current_over_due_filter &= get_filter(
+                        'assigned_to', 'equal',
+                        selected_group)
                 data = TaskSummary.objects.filter(current_over_due_filter).extra(
                         select={'year': 'extract (year from assigned_date)',
                                 'month': 'extract (month from assigned_date)',
@@ -209,10 +215,14 @@ class AmsController:
                 result = []
                 if data is not None:
                     for item in data:
+                        task_date = False
                         if item.task_date is None:
                             item.task_date = datetime.today() + timedelta(hours=5)
                             item.task_date = item.task_date.date()
+                            task_date = True
                         if item.task_date > item.target_date:
+                            if task_date:
+                                item.task_date = None
                             result.append(item)
                 serializer = TaskSummarySerialzer(result, many=True)
                 return JsonResponse({'message': 'true', 'data': serializer.data}, status=200)
@@ -251,10 +261,14 @@ class AmsController:
                 result = []
                 if data is not None:
                     for item in data:
+                        task_date = False
                         if item.task_date is None:
                             item.task_date = datetime.today() + timedelta(hours=5)
                             item.task_date = item.task_date.date()
+                            task_date = True
                         if item.task_date < item.target_date:
+                            if task_date:
+                                item.task_date = None
                             result.append(item)
                 serializer = TaskSummarySerialzer(result, many=True)
                 return JsonResponse({'message': 'true', 'data': serializer.data}, status=200)
@@ -294,10 +308,14 @@ class AmsController:
                 result =[]
                 if data is not None:
                     for item in data:
+                        task_date = False
                         if item.task_date is None:
                             item.task_date = datetime.today() + timedelta(hours=5)
                             item.task_date = item.task_date.date()
+                            task_date = True
                         if item.task_date < item.target_date:
+                            if task_date:
+                                item.task_date = None
                             result.append(item)
                     serializer = TaskSummarySerialzer(result, many=True)
                     return JsonResponse({'message': 'true', 'data': serializer.data}, status=200)
