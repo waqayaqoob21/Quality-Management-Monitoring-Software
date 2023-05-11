@@ -256,6 +256,8 @@ class FlightSystemStatus(models.Model):
     user_id = models.IntegerField(null=True)
 
 
+    blt_sub_status = models.TextField(null=True)
+
 
 
 class FlightSystemStatusHistory(models.Model):

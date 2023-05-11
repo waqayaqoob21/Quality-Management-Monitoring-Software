@@ -20,7 +20,7 @@ from csv import reader
 import os
 import csv
 from django.db.models.functions import *
-
+import json
 from dateutil.relativedelta import relativedelta
 from sms.models import FlightSystemStatus, ProductionSystemStatus, RelifingSystemStatus, ProductionSystemStatusHistory, \
     FlightSystemStatusHistory, RelifingSystemStatusHistory
@@ -1847,6 +1847,7 @@ class SmsController:
             else:
                 flightModel.user_id = None
             flightModel.isActive = is_active
+            flightModel.blt_sub_status = request['remarks_status_json']
             flightModel.save()
             return JsonResponse({'status': 'True', 'message': "Production Status Added Successfully!"},
                                 status=200)
@@ -2138,6 +2139,8 @@ class SmsController:
                 else:
                     get_prod.user_id = None
                 get_prod.isActive = is_active
+                get_prod.blt_sub_status = request['remarks_status_json']
+
                 get_prod.save()
         return JsonResponse({'status': 'True', 'message': "Production Status Updated Successfully!"},
                             status=200)
