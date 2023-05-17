@@ -170,8 +170,6 @@ class FlightSystemSerialzer(Serializer):
     load_unload_on_mlv_hlf_remarks = CharField()
     user_id = models.IntegerField(null=True)
 
-    blt_sub_status = CharField()
-
 class RelifingSystemSerialzer(Serializer):
     id = IntegerField()
     system = CharField()
