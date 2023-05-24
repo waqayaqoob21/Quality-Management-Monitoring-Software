@@ -1466,7 +1466,7 @@ class QmsController:
                             list.append(item)
                 dataList = list
             if current_status == 'Total Overdue(Conducted)':
-                dataList = CespAudit.objects.filter(audit_status = 'Extended').extra(
+                dataList = CespAudit.objects.filter(audit_start_date__gt=F('planned_date'),audit_status = 'Extended').extra(
                         select={'year': 'extract (year from planned_date)',
                                 'month': 'extract (month from planned_date)',
                                 'day': 'extract (day from planned_date)'},
