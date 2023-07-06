@@ -2205,6 +2205,20 @@ class MpmController:
 
         except:
             return JsonResponse({'message': 'Sorry! No Task found.'}, status=200)
+
+    @staticmethod
+    def DeleteActiveMotorHistory(request):
+        try:
+            id = request.query_params['id']
+            history = ActiveMotorsHistory.objects.filter(id=id)
+            history.delete()
+            return JsonResponse({'status': 'True', 'message': "Record Deleted"},
+                                status=200)
+
+        except Exception as e:
+            print(e)
+            return JsonResponse({'status': 'False', "message": "Doc Not Deleted"}, status=500)
+            pass
     @staticmethod
     def GetActiveMotorPDFList(request):
         TABLE_COL_NAMES = ("Process/SRM",
@@ -2479,6 +2493,7 @@ class MpmController:
                 work_sheet.write(row_num, col_num, str(row[col_num]), font_style)
         work_book.save(response)
         return response
+
 
 
     @staticmethod

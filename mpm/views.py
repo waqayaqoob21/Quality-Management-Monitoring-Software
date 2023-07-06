@@ -103,3 +103,9 @@ class GetActiveMotorExcelAPIVIEW(APIView):
     def get(self, request):
         result = motor_obj.GetActiveMotorExcelList(request.data)
         return result
+
+class DeletetActiveMotorHistoryAPIVIEW(APIView):
+    permission_classes = [AllowAny]
+    def get(self, request):
+        result = motor_obj.DeleteActiveMotorHistory(request)
+        return result
