@@ -250,6 +250,11 @@ class QmsController:
 
             dataList = QmsAudit.objects.filter(filter_objects)
 
+            if current_status == 'Overdue Conducted':
+                dataList = QmsAudit.objects.filter(audit_status = 'Conducted').annotate(
+                planned_date__month=Extract('planned_date', 'month'),planned_date__year=Extract('planned_date', 'year'),
+                planned_date__day=Extract('planned_date', 'day')).order_by('planned_date__month', 'planned_date__day','-planned_date__year')
+
             if current_status == 'QMS Total Under Process':
                 dataList = QmsAudit.objects.filter(~Q(audit_status = 'Completed')).annotate(
                 planned_date__month=Extract('planned_date', 'month'),planned_date__year=Extract('planned_date', 'year'),
@@ -264,13 +269,13 @@ class QmsController:
                 planned_date__day=Extract('planned_date', 'day')).order_by('planned_date__month', 'planned_date__day','-planned_date__year')
 
             if current_status == 'Total Overdue(Conducted)':
-                dataList = QmsAudit.objects.filter(audit_start_date__gt=F('planned_date'),audit_status = 'Extended').extra(
+                dataList = QmsAudit.objects.filter(audit_start_date__gt=F('planned_date'),audit_status = 'Conducted').extra(
                         select={'year': 'extract (year from planned_date)',
                                 'month': 'extract (month from planned_date)',
                                 'day': 'extract (day from planned_date)'},
                         order_by=['month', 'day', '-year'])
             if current_status == 'Overdue(Conducted)':
-                dataList = dataList.filter(audit_start_date__gt=F('planned_date'),audit_status = 'Extended').extra(
+                dataList = dataList.filter(audit_start_date__gt=F('planned_date'),audit_status='Conducted').extra(
                         select={'year': 'extract (year from planned_date)',
                                 'month': 'extract (month from planned_date)',
                                 'day': 'extract (day from planned_date)'},
@@ -422,7 +427,7 @@ class QmsController:
                 total_audits = QmsAudit.objects.count()
                 audit_under_process = QmsAudit.objects.filter(~Q(audit_status='Completed')).count()
                 audit_completed = QmsAudit.objects.filter(audit_status='Completed').count()
-                conducted = QmsAudit.objects.filter(audit_start_date__gt=F('planned_date'),audit_status = 'Extended').count()
+                conducted = QmsAudit.objects.filter(audit_start_date__gt=F('planned_date'),audit_status = 'Conducted').count()
                 inprocess_overdueCount = QmsAudit.objects.all()
 
                 list = []
@@ -442,7 +447,7 @@ class QmsController:
                     tot_under_process = QmsAudit.objects.filter(~Q(audit_status='Completed'),
                                                                 standard=stand).count()
                     tot_completed = QmsAudit.objects.filter(audit_status='Completed', standard=stand).count()
-                    tot_overdue_conducted = QmsAudit.objects.filter(audit_start_date__gt=F('planned_date'),audit_status = 'Extended',
+                    tot_overdue_conducted = QmsAudit.objects.filter(audit_start_date__gt=F('planned_date'),audit_status = 'Conducted',
                                                           standard=stand).count()
                     inprocess_overdueCount = QmsAudit.objects.filter(standard=stand)
 
@@ -471,7 +476,7 @@ class QmsController:
                                                                 setup=set).count()
                     tot_completed = QmsAudit.objects.filter(audit_status='Completed', Organization=selected_org,
                                                             setup=set).count()
-                    tot_overdue_conducted = QmsAudit.objects.filter(audit_start_date__gt=F('planned_date'),audit_status = 'Extended',
+                    tot_overdue_conducted = QmsAudit.objects.filter(audit_start_date__gt=F('planned_date'),audit_status = 'Conducted',
                                                           Organization=selected_org, setup=set).count()
                     inprocess_overdueCount = QmsAudit.objects.filter(Organization=selected_org, setup=set)
                     list = []
@@ -500,7 +505,7 @@ class QmsController:
                                                                 standard=stand, setup=set).count()
                     tot_completed = QmsAudit.objects.filter(audit_status='Completed', Organization=selected_org,
                                                             standard=stand, setup=set).count()
-                    tot_overdue_conducted = QmsAudit.objects.filter(audit_start_date__gt=F('planned_date'),audit_status = 'Extended',
+                    tot_overdue_conducted = QmsAudit.objects.filter(audit_start_date__gt=F('planned_date'),audit_status = 'Conducted',
                                                           Organization=selected_org, standard=stand, setup=set).count()
                     inprocess_overdueCount = QmsAudit.objects.filter(Organization=selected_org, standard=stand, setup=set)
 
@@ -555,7 +560,7 @@ class QmsController:
                     currYearToBeCertified = QmsAudit.objects.filter(certification_status='To be Certified',
                                                                         planned_date__year=selected_year).count()
 
-                    currYearOverdueConducted = QmsAudit.objects.filter(audit_start_date__gt=F('planned_date'),audit_status='Extended',
+                    currYearOverdueConducted = QmsAudit.objects.filter(audit_start_date__gt=F('planned_date'),audit_status='Conducted',
                                                                         planned_date__year=selected_year).count()
                     inprocess_overdueCount = QmsAudit.objects.filter(planned_date__year = selected_year)
 
@@ -608,7 +613,7 @@ class QmsController:
                         tot_currYearToBeCertified = QmsAudit.objects.filter(certification_status='To be Certified',Organization = selected_org,setup=set,
                                                                     planned_date__year=selected_year).count()
                         inprocess_overdueCount = QmsAudit.objects.filter(planned_date__year=selected_year,Organization = selected_org,setup=set)
-                        tot_overdue_conducted = QmsAudit.objects.filter(audit_start_date__gt=F('planned_date'),audit_status = 'Extended',Organization = selected_org,setup=set,
+                        tot_overdue_conducted = QmsAudit.objects.filter(audit_start_date__gt=F('planned_date'),audit_status = 'Conducted',Organization = selected_org,setup=set,
                                                                     planned_date__year=selected_year).count()
 
                         list = []
@@ -677,7 +682,7 @@ class QmsController:
                                                                     planned_date__year=selected_year).count()
 
                         inprocess_overdueCount = QmsAudit.objects.filter(planned_date__year=selected_year,standard=stand)
-                        tot_overdue_conducted = QmsAudit.objects.filter(audit_start_date__gt=F('planned_date'),audit_status = 'Extended',standard=stand,
+                        tot_overdue_conducted = QmsAudit.objects.filter(audit_start_date__gt=F('planned_date'),audit_status = 'Conducted',standard=stand,
                                                                     planned_date__year=selected_year).count()
                         list = []
                         if inprocess_overdueCount is not None:
@@ -744,7 +749,7 @@ class QmsController:
                         tot_currYearToBeCertified = QmsAudit.objects.filter(certification_status='To be Certified',Organization=selected_org, standard=stand,
                                                                   setup=set,planned_date__year=selected_year).count()
                         inprocess_overdueCount = QmsAudit.objects.filter(planned_date__year=selected_year,standard=stand,Organization=selected_org,setup=set)
-                        tot_overdue_conducted = QmsAudit.objects.filter(audit_start_date__gt=F('planned_date'),audit_status = 'Extended',Organization=selected_org, standard=stand,
+                        tot_overdue_conducted = QmsAudit.objects.filter(audit_start_date__gt=F('planned_date'),audit_status = 'Conducted',Organization=selected_org, standard=stand,
                                                                   setup=set,planned_date__year=selected_year).count()
                         list = []
                         if inprocess_overdueCount is not None:
@@ -1472,11 +1477,12 @@ class QmsController:
                                 'day': 'extract (day from planned_date)'},
                         order_by=['month', 'day', '-year'])
             if current_status == 'Overdue(Conducted)':
-                dataList = dataList.filter(audit_start_date__gt=F('planned_date'),audit_status = 'Extended').extra(
+                dataList = dataList.filter(audit_start_date__gt=F('planned_date'),audit_status = 'Conducted').extra(
                         select={'year': 'extract (year from planned_date)',
                                 'month': 'extract (month from planned_date)',
                                 'day': 'extract (day from planned_date)'},
                         order_by=['month', 'day', '-year'])
+
             if current_status == 'Total CeSP Audits':
                 dataList = CespAudit.objects.all().annotate(
                 planned_date__month=Extract('planned_date', 'month'),planned_date__year=Extract('planned_date', 'year'),
@@ -1549,7 +1555,7 @@ class QmsController:
                 total_audits = CespAudit.objects.count()
                 audit_completed = CespAudit.objects.filter(audit_status='Completed').count()
                 audit_under_process = CespAudit.objects.filter(~Q(audit_status='Completed')).count()
-                overdue_conducted = CespAudit.objects.filter(audit_start_date__gt=F('planned_date'),audit_status='Extended').count()
+                overdue_conducted = CespAudit.objects.filter(audit_start_date__gt=F('planned_date'),audit_status='Conducted').count()
                 inprocess_overdue = CespAudit.objects.filter(audit_status='Extended').count()
 
                 # list = []
@@ -1569,7 +1575,7 @@ class QmsController:
                     tot_completed = CespAudit.objects.filter(audit_status='Completed', standard=stand).count()
                     tot_under_process = CespAudit.objects.filter(~Q(audit_status='Completed'),
                                                                  standard=stand).count()
-                    tot_overdue_conducted = CespAudit.objects.filter(audit_start_date__gt=F('planned_date'),audit_status='Extended',
+                    tot_overdue_conducted = CespAudit.objects.filter(audit_start_date__gt=F('planned_date'),audit_status='Conducted',
                                                                      standard=stand).count()
                     tot_inporces_overdue = CespAudit.objects.filter(audit_status='Extended',
                                                                     standard=stand).count()
@@ -1604,7 +1610,7 @@ class QmsController:
                     tot_inporces_overdue = CespAudit.objects.filter(audit_status='Extended',
                                                                     commission=selected_comm,
                                                                     Organization=selected_org, setup=set).count()
-                    tot_overdue_conducted = CespAudit.objects.filter(audit_start_date__gt=F('planned_date'),audit_status='Extended',
+                    tot_overdue_conducted = CespAudit.objects.filter(audit_start_date__gt=F('planned_date'),audit_status='Conducted',
                                                                      commission=selected_comm,
                                                                      Organization=selected_org, setup=set).count()
                     total_audits += tot_audits
@@ -1629,7 +1635,7 @@ class QmsController:
                                                                     commission=selected_comm,
                                                                     Organization=selected_org, setup=set,
                                                                     standard=stand).count()
-                    tot_overdue_conducted = CespAudit.objects.filter(audit_start_date__gt=F('planned_date'),audit_status='Extended',
+                    tot_overdue_conducted = CespAudit.objects.filter(audit_start_date__gt=F('planned_date'),audit_status='Conducted',
                                                                      commission=selected_comm,
                                                                      Organization=selected_org, setup=set,
                                                                      standard=stand).count()
@@ -1660,7 +1666,7 @@ class QmsController:
                                                                      audit_status='Planned').count()
 
                     currYearOverdue = CespAudit.objects.filter(planned_date__year = selected_year,audit_status='Extended').count()
-                    currYearOverdueConducted = CespAudit.objects.filter(audit_start_date__gt=F('planned_date'),audit_status='Extended',
+                    currYearOverdueConducted = CespAudit.objects.filter(audit_start_date__gt=F('planned_date'),audit_status='Conducted',
                                                                      planned_date__year = selected_year).count()
                     currYearCertified = CespAudit.objects.filter(planned_date__year=selected_year,
                                                                       certification_status='Certified').count()
@@ -1699,7 +1705,7 @@ class QmsController:
                         countOverdue = CespAudit.objects.filter(planned_date__year=selected_year,
                                                  audit_status='Extended', standard=stand).count()
                         tot_currYearOverdueConducted = CespAudit.objects.filter(audit_start_date__gt=F('planned_date'),
-                                                                            audit_status='Extended',
+                                                                            audit_status='Conducted',
                                                                             planned_date__year=selected_year,standard=stand).count()
                         currYearOverdue += countOverdue
                         currYearOverdueConducted += tot_currYearOverdueConducted
@@ -1751,7 +1757,7 @@ class QmsController:
                         countOverdue = CespAudit.objects.filter(planned_date__year=selected_year,
                                                  audit_status='Extended',Organization=selected_org, setup=set).count()
                         tot_currYearOverdueConducted = CespAudit.objects.filter(audit_start_date__gt=F('planned_date'),
-                                        audit_status='Extended',planned_date__year=selected_year,Organization=selected_org, setup=set).count()
+                                        audit_status='Conducted',planned_date__year=selected_year,Organization=selected_org, setup=set).count()
                         currYearOverdue += countOverdue
                         currYearOverdueConducted += tot_currYearOverdueConducted
 
@@ -1810,7 +1816,7 @@ class QmsController:
                                                                 standard=stand,
                                                                 setup=set).count()
                         tot_currYearOverdueConducted = CespAudit.objects.filter(audit_start_date__gt=F('planned_date'),
-                                        audit_status='Extended',planned_date__year=selected_year,commission = selected_comm,
+                                        audit_status='Conducted',planned_date__year=selected_year,commission = selected_comm,
                                                                             Organization=selected_org,
                                                                             standard=stand,
                                                                             setup=set).count()

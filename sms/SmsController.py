@@ -71,7 +71,9 @@ class SmsController:
                     prodModel.final_integration_date = request['final_integration_date']
                 prodModel.final_integration_status = request['final_integration_status']
                 prodModel.final_integration_remarks = request['final_integration_remarks']
+                print(prodModel.final_integration_remarks)
                 if request['bhd_date'] != '':
+                    prodModel.bhd_date = request['bhd_date']
                     prodModel.bhd_date = request['bhd_date']
                 prodModel.bhd_status = request['bhd_status']
                 prodModel.bhd_remarks = request['bhd_remarks']
