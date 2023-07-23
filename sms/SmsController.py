@@ -26,7 +26,9 @@ from sms.models import FlightSystemStatus, ProductionSystemStatus, RelifingSyste
     FlightSystemStatusHistory, RelifingSystemStatusHistory
 from sms.serializers import FlightSystemSerialzer, ProductionSystemSerialzer, \
     RelifingSystemSerialzer  # install tesseract-ocr-w64-setup-v5.2.0.20220712.exe (64 bit) resp.
+from django.db import connection
 
+import pandas as pd
 
 # from https://github.com/UB-Mannheim/tesseract/wiki
 # pip install pytesseract
@@ -560,40 +562,81 @@ class SmsController:
 
     @staticmethod
     def ImportFlightCsv(request):
-        try:
+        # try:
             id = request['id']
-            importedCsvFile = request["csv_file"]
+            # importedCsvFile = request["csv_file"]
             system_type = request["system_type"]
-            if not os.path.isdir('imported_files'):
-                os.mkdir('imported_files')
-            path = "imported_files/"
-            fs = FileSystemStorage(location=path)
-            fs.save(importedCsvFile.name, importedCsvFile)
-            file_path = path + importedCsvFile.name
+            CsvFileData = request["CsvFileData"]
+            csv_data = json.loads(CsvFileData)
+            # if not os.path.isdir('imported_files'):
+            #     os.mkdir('imported_files')
+            # path = "imported_files/"
+            # fs = FileSystemStorage(location=path)
+            # fs.save(importedCsvFile.name, importedCsvFile)
+            # file_path = path + importedCsvFile.name
             user_id = 0
             if request['user_id'] != '':
                 user_id = request['user_id']
             if id == '0':
-                file = open(file_path)
-                csvf = csv.reader(file)
-                next(csvf, None)
-                data = []
+                # file = open(file_path)
+                # csvf = csv.reader(file)
+                # next(csvf, None)
                 if system_type == "Ballistic":
-                    for system, sys_type, testing_type, organization, set_id, blt_date, blt_status, blt_remarks, pre_hil_date, pre_hil_status, pre_hil_remarks,\
-                            vibration_date, vibration_status, vibration_remarks, cg_balancing_date, cg_balancing_status, cg_balancing_remarks, post_hil_date, post_hil_status, post_hil_remarks,\
-                            final_integrated_testing_date, final_integrated_testing_status, final_integrated_testing_remarks, bhd_date, bhd_status, bhd_remarks, fqm_date, fqm_status, fqm_remarks,\
-                            qm_certification_date, qm_certification_status, qm_certification_remarks, launchact_date, launchact_status, launchact_remarks, remarks, *__ in csvf:
 
-                        flight_system = FlightSystemStatus(system=system,sys_type=sys_type,testing_type=testing_type,organization=organization,set_id=set_id,blt_date= datetime.strptime(blt_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),blt_status=blt_status,blt_remarks=blt_remarks,
-                            pre_hil_date= datetime.strptime(pre_hil_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),pre_hil_status=pre_hil_status,pre_hil_remarks=pre_hil_remarks,vibaration_date= datetime.strptime(vibration_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),vibaration_status=vibration_status,vibaration_remarks=vibration_remarks,
-                            cgbalancing_date=  datetime.strptime(cg_balancing_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),cgbalancing_date_status=cg_balancing_status,cgbalancing_date_remarks=cg_balancing_remarks,post_hil_date= datetime.strptime(post_hil_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),post_hil_status=post_hil_status,post_hil_remarks=post_hil_remarks,
-                            final_integrated_testing_date= datetime.strptime(final_integrated_testing_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),final_integrated_testing=final_integrated_testing_status,final_integrated_testing_remarks=final_integrated_testing_remarks,
-                            bhd_date= datetime.strptime(bhd_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),bhd_status=bhd_status,bhd_remarks=bhd_remarks,fqm_date= datetime.strptime(fqm_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),fqm_status=fqm_status,fqm_remarks=fqm_remarks,
-                            qm_certification_date= datetime.strptime(qm_certification_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),qm_certification_status=qm_certification_status,qm_certification_remarks=qm_certification_remarks,
-                            launchact_date= datetime.strptime(launchact_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),launchact_status=launchact_status, launchact_remarks=launchact_remarks,remarks=remarks,user_id= user_id)
-                        data.append(flight_system)
-                    FlightSystemStatus.objects.bulk_create(data)
-                    os.remove(file_path)
+                    # bhd_remarks, fqm_remarks, qm_certification_remarks, launchact_remarks
+                    for data in csv_data:
+                        prodModel = FlightSystemStatus()
+                        prodModel.system = data["system"]
+                        prodModel.organization = data['organization']
+                        prodModel.set_id = data['set_id']
+                        prodModel.blt_date =  datetime.strptime(data['blt_date'], '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f")
+                        prodModel.testing_type = data['testing_type']
+                        prodModel.sys_type = data['sys_type']
+                        prodModel.blt_status = data['blt_status']
+                        prodModel.blt_remarks = json.dumps(data["blt_remarks"])
+                        prodModel.pre_hil_date = datetime.strptime(data['pre_hil_date'], '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f")
+                        prodModel.pre_hil_status = data['pre_hil_status']
+                        prodModel.pre_hil_remarks = json.dumps(data['pre_hil_remarks'])
+                        prodModel.vibaration_date = datetime.strptime(data['vibaration_date'], '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f")
+                        prodModel.vibaration_status = data['vibaration_status']
+                        prodModel.vibaration_remarks = json.dumps(data['vibaration_remarks'])
+                        prodModel.cgbalancing_date = datetime.strptime(data['cgbalancing_date'], '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f")
+                        prodModel.cgbalancing_date_status = data['cgbalancing_date_status']
+                        prodModel.cgbalancing_date_remarks = json.dumps(data['cgbalancing_date_remarks'])
+                        prodModel.post_hil_date = datetime.strptime(data['post_hil_date'], '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f")
+                        prodModel.post_hil_status = data['post_hil_status']
+                        prodModel.post_hil_remarks = json.dumps(data['post_hil_remarks'])
+                        prodModel.final_integration_date = datetime.strptime(data['final_integration_date'], '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f")
+                        prodModel.final_integration_status = data['final_integration_status']
+                        prodModel.final_integration_remarks = json.dumps(data['final_integration_remarks'])
+                        prodModel.bhd_date = datetime.strptime(data['bhd_date'], '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f")
+                        prodModel.bhd_status = data['bhd_status']
+                        # prodModel.bhd_remarks = json.dumps(data['bhd_remarks'])
+                        prodModel.fqm_date =  datetime.strptime(data['fqm_date'], '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f")
+                        prodModel.fqm_status = data['fqm_status']
+                        # prodModel.fqm_remarks = json.dumps(data['fqm_remarks'])
+                        prodModel.qm_certification_date = datetime.strptime(data['qm_certification_date'], '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f")
+                        prodModel.qm_certification_status = data['qm_certification_status']
+                        # prodModel.qm_certification_remarks = json.dumps(data['qm_certification_remarks'])
+
+                        prodModel.save()
+
+                    # for system, sys_type, testing_type, organization, set_id, blt_date, blt_status, blt_remarks, pre_hil_date, pre_hil_status, pre_hil_remarks,\
+                    #         vibration_date, vibration_status, vibration_remarks, cg_balancing_date, cg_balancing_status, cg_balancing_remarks, post_hil_date, post_hil_status, post_hil_remarks,\
+                    #         final_integration_date, final_integration_status, final_integration_remarks,bhd_date, bhd_status, fqm_date, fqm_status, \
+                    #         qm_certification_date, qm_certification_status,launchact_date, launchact_status in csv_data:
+                    #
+                    #     flight_system = FlightSystemStatus(system=system,sys_type=sys_type,testing_type=testing_type,organization=organization,set_id=set_id,blt_date= datetime.strptime(blt_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),blt_status=blt_status,blt_remarks=blt_remarks,
+                    #         pre_hil_date= datetime.strptime(pre_hil_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),pre_hil_status=pre_hil_status,pre_hil_remarks=pre_hil_remarks,vibaration_date= datetime.strptime(vibration_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),vibaration_status=vibration_status,vibaration_remarks=vibration_remarks,
+                    #         cgbalancing_date=  datetime.strptime(cg_balancing_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),cgbalancing_date_status=cg_balancing_status,cgbalancing_date_remarks=cg_balancing_remarks,post_hil_date= datetime.strptime(post_hil_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),post_hil_status=post_hil_status,post_hil_remarks=post_hil_remarks,
+                    #         final_integration_date= datetime.strptime(final_integration_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"),final_integration_status=final_integration_status,final_integration_remarks=final_integration_remarks,
+                    #         bhd_date = datetime.strptime(bhd_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"), bhd_status = bhd_status,
+                    #         fqm_date = datetime.strptime(fqm_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"), fqm_status = fqm_status,
+                    #         qm_certification_date = datetime.strptime(qm_certification_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"), qm_certification_status = qm_certification_status,
+                    #         launchact_date = datetime.strptime(launchact_date, '%m-%d-%Y').strftime("%Y-%m-%dT%H:%M:%S.%f"), launchact_status = launchact_status,user_id= user_id)
+                    #     data.append(flight_system)
+                    # FlightSystemStatus.objects.bulk_create(data)
+                    # os.remove(file_path)
                 elif system_type == "Cruise":
                     for system, sys_type, testing_type, organization, set_id, blt_date, blt_status, blt_remarks, pre_hil_date, pre_hil_status, pre_hil_remarks, vibration_date, vibration_status, vibration_remarks,\
                             cg_balancing_date, cg_balancing_status, cg_balancing_remarks, post_hil_date, post_hil_status, post_hil_remarks,sys_align_date, sys_align_status, sys_align_remarks, fgt_date, fgt_status, fgt_remarks,\
@@ -672,8 +715,8 @@ class SmsController:
 
             else:
                 return JsonResponse({'status': 'False', "message": "Status Not Saved"}, status=500)
-        except Exception as e:
-            return JsonResponse({'status': 'False', "message": "Status Not Saved"}, status=500)
+        # except Exception as e:
+        #     return JsonResponse({'status': 'False', "message": "Status Not Saved"}, status=500)
 
 
     @staticmethod
