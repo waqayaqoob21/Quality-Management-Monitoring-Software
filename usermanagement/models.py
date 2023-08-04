@@ -33,3 +33,5 @@ class doctracking(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     product_sr_no = models.CharField(max_length=500, null=True)
     tracking_id = models.CharField(max_length=500, null=True)
+    certificate_number = models.CharField(max_length=500, null=True)
+    last_meeting_date = models.DateTimeField(auto_now_add=False, db_index=True, null=True)

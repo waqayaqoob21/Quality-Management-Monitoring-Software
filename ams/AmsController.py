@@ -249,6 +249,18 @@ class AmsController:
                 serializer = TaskSummarySerialzer(data, many=True)
                 return JsonResponse({'message': 'true', 'data': serializer.data}, status=200)
 
+            if status == 'total_task_closed_uncompleted':
+                all_filter_objects &= get_filter(
+                    'status', 'equal',
+                    'Task Closed')
+                data = TaskSummary.objects.filter(all_filter_objects).extra(
+                        select={'year': 'extract (year from assigned_date)',
+                                'month': 'extract (month from assigned_date)',
+                                'day': 'extract (day from assigned_date)'},
+                        order_by=['month', 'day', '-year'])
+                serializer = TaskSummarySerialzer(data, many=True)
+                return JsonResponse({'message': 'true', 'data': serializer.data}, status=200)
+
             if status == 'total_TaskNotCompleted':
                 all_filter_objects &= get_filter(
                     'status', 'not_equal',

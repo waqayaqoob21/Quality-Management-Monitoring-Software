@@ -28,8 +28,6 @@ from sms.serializers import FlightSystemSerialzer, ProductionSystemSerialzer, \
     RelifingSystemSerialzer  # install tesseract-ocr-w64-setup-v5.2.0.20220712.exe (64 bit) resp.
 from django.db import connection
 
-import pandas as pd
-
 # from https://github.com/UB-Mannheim/tesseract/wiki
 # pip install pytesseract
 

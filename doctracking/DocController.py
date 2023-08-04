@@ -42,7 +42,9 @@ class DocController:
                     docModal.sent_date = request['sent_date']
                 docModal.product_sr_no = request['product_sr_no']
                 docModal.tracking_id = request['tracking_id']
-
+                if request['last_meeting_date'] != "":
+                    docModal.last_meeting_date = request['last_meeting_date']
+                docModal.certificate_number = request['certificate_number']
                 if request['isActive'] == 'true':
                     docModal.isActive = 1
                 else:
@@ -70,6 +72,8 @@ class DocController:
                         docHistoryModal.sent_date = get_doc.sent_date
                         docHistoryModal.product_sr_no = get_doc.product_sr_no
                         docHistoryModal.tracking_id = get_doc.tracking_id
+                        docHistoryModal.last_meeting_date = get_doc.last_meeting_date
+                        docHistoryModal.certificate_number = get_doc.certificate_number
                         docHistoryModal.remarks = get_doc.remarks
                         docHistoryModal.doc_id = id
                         docHistoryModal.save()
@@ -94,6 +98,11 @@ class DocController:
                     get_doc.sent_date = None
                 get_doc.product_sr_no = request['product_sr_no']
                 get_doc.tracking_id = request['tracking_id']
+                if request['last_meeting_date'] != "":
+                    get_doc.last_meeting_date = request['last_meeting_date']
+                else:
+                    get_doc.last_meeting_date = None
+                get_doc.certificate_number = request['certificate_number']
                 if request['isActive'] == 'true':
                     get_doc.isActive = 1
                 else:
@@ -2112,6 +2121,8 @@ class DocController:
             task_completed = 0
             task_inprocess = []
             task_follow_up = 0
+            task_closed_uncompleted = 0
+
             total_task_completed = 0
             total_task_inprocess = 0
             total_task_follow_up = 0
@@ -2153,6 +2164,10 @@ class DocController:
 
             total_tasks = TaskSummary.objects.filter(all_filter_objects).count()
             total_task_completed = TaskSummary.objects.filter(all_filter_objects, status='Task Completed').count()
+
+            task_closed_uncompleted = TaskSummary.objects.filter(all_filter_objects,
+                                                           assigned_date__year=selected_year, status = 'Task Closed').count()
+            total_task_closed_uncompleted = TaskSummary.objects.filter(all_filter_objects, status='Task Closed').count()
             if selected_year is not '' and selected_group is '':
                 task_completed = TaskSummary.objects.filter(assigned_date__year=selected_year,
                                                             status='Task Completed').count()
@@ -2160,6 +2175,8 @@ class DocController:
                                                             status='Task in-process')
                 task_follow_up = TaskSummary.objects.filter(assigned_date__year=selected_year,
                                                             status='Task follow-up').count()
+                task_closed_uncompleted = TaskSummary.objects.filter(assigned_date__year=selected_year,
+                                                            status='Task Closed').count()
             elif selected_year is '' and selected_group is not '':
                 task_completed = TaskSummary.objects.filter(assigned_to=selected_group,
                                                             status='Task Completed').count()
@@ -2167,6 +2184,8 @@ class DocController:
                                                             status='Task in-process')
                 task_follow_up = TaskSummary.objects.filter(assigned_to=selected_group,
                                                             status='Task follow-up').count()
+                task_closed_uncompleted = TaskSummary.objects.filter(assigned_to=selected_group,
+                                                            status='Task Closed').count()
             elif selected_year is not '' and selected_group is not '':
                 task_completed = TaskSummary.objects.filter(assigned_to=selected_group,
                                                             assigned_date__year=selected_year,
@@ -2177,6 +2196,9 @@ class DocController:
                 task_follow_up = TaskSummary.objects.filter(assigned_to=selected_group,
                                                             assigned_date__year=selected_year,
                                                             status='Task follow-up').count()
+                task_closed_uncompleted = TaskSummary.objects.filter(assigned_to=selected_group,
+                                                            assigned_date__year=selected_year,
+                                                            status='Task Closed').count()
 
             task_inprocess_count = 0
             if task_inprocess is not None:
@@ -2222,7 +2244,9 @@ class DocController:
                 'total_task_inprocess': total_task_inprocess_count,
                 'total_task_follow_up': total_task_follow_up,
                 'doc_not_completedList': total_task_inprocess_count,
-                'current_over_due': current_over_due_count
+                'current_over_due': current_over_due_count,
+                'task_closed_uncompleted': task_closed_uncompleted,
+                'total_task_closed_uncompleted': total_task_closed_uncompleted
             }
 
             # DataCount.append(dist)

@@ -38,3 +38,5 @@ class DocListSerializer(Serializer):
     created_at = DateTimeField()
     product_sr_no = CharField()
     tracking_id = CharField()
+    certificate_number = CharField()
+    last_meeting_date = DateTimeField()
