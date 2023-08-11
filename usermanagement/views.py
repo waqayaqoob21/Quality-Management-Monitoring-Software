@@ -71,10 +71,12 @@ class UserLoginApiView(TokenObtainPairView):
                 if userRolesData is not None:
                     user_data = {'id': serializer.user.id, 'username': serializer.user.username,
                                  'email': serializer.user.email, 'first_name': serializer.user.first_name,
-                                 'last_name': serializer.user.last_name, 'is_superuser': serializer.user.is_superuser,
+                                 'last_name': serializer.user.last_name, 'is_superuser': serializer.user.is_superuser,'user_type':serializer.user.user_type,
                                  'prod_roles': userRolesData.prod_roles, 'relif_roles': userRolesData.relif_roles,
                                  'flight_roles': userRolesData.flight_roles, 'motor_roles': userRolesData.motor_roles,
-                                 'battery_roles': userRolesData.battery_roles, 'pyro_roles': userRolesData.pyro_roles
+                                 'battery_roles': userRolesData.battery_roles, 'pyro_roles': userRolesData.pyro_roles,
+                                 'bhd_roles': userRolesData.bhd_roles,'task_roles': userRolesData.task_roles,'qms_roles': userRolesData.qms_roles,
+                                 'cesp_roles': userRolesData.cesp_roles
                                  }
                     return JsonResponse(
                         {'message': "Login Successfully", 'Token': serializer.validated_data,

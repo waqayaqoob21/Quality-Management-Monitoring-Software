@@ -2,13 +2,13 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework import serializers
 from .models import *
-from django.contrib.auth.models import User
+# from django.contrib.auth.models import User
 
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta(object):
         model = User
-        fields = ['id', 'first_name','last_name','username','password','email','is_superuser','last_login']
+        fields = '__all__'
 class UserRolesSerializer(serializers.ModelSerializer):
     class Meta(object):
         model = UserRoles

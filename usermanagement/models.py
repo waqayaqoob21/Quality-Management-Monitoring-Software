@@ -1,9 +1,17 @@
 from django.db import models
-
+from django.contrib.auth.models import AbstractUser
+from .manager import UserManager
 
 
 
 # Create User models here.
+class User(AbstractUser):
+    user_type = models.CharField(max_length=300)
+
+    USERNAME_FIELD = 'username'
+    REQUIRED_FIELDS = []
+    objects = UserManager()
+
 class UserRoles(models.Model):
     id = models.AutoField(primary_key=True)
     prod_roles = models.CharField(max_length=555)
@@ -12,6 +20,10 @@ class UserRoles(models.Model):
     motor_roles = models.CharField(max_length=555)
     battery_roles = models.CharField(max_length=555, null=True)
     pyro_roles = models.CharField(max_length=555, null=True)
+    bhd_roles = models.CharField(max_length=555, null=True)
+    task_roles = models.CharField(max_length=555, null=True)
+    qms_roles = models.CharField(max_length=555, null=True)
+    cesp_roles = models.CharField(max_length=555, null=True)
     user_id = models.CharField(max_length=555)
 
 class doctracking(models.Model):

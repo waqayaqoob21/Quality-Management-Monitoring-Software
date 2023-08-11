@@ -1,5 +1,5 @@
 from django.http import JsonResponse
-from django.contrib.auth.models import User
+from .models import User
 from datetime import date
 from usermanagement.serializer import *
 from django.db import connection
@@ -23,6 +23,7 @@ class UserController:
                 userModel.first_name = request['first_name']
                 userModel.last_name = request['last_name']
                 userModel.username = request['username']
+                userModel.user_type = request['user_type']
                 userModel.email = 'nescom@nescom.com'
                 encryptedpassword = make_password(request['password'])
                 userModel.password = encryptedpassword
@@ -43,6 +44,10 @@ class UserController:
                         rolesModel.motor_roles = request['motor_roles']
                         rolesModel.battery_roles = request['battery_roles']
                         rolesModel.pyro_roles = request['pyro_roles']
+                        rolesModel.bhd_roles = request['bhd_roles']
+                        rolesModel.task_roles = request['task_roles']
+                        rolesModel.qms_roles = request['qms_roles']
+                        rolesModel.cesp_roles = request['cesp_roles']
                         rolesModel.save()
                 return JsonResponse({'masssage': 'User Added Successfully!'},status=200)
             else:
@@ -50,6 +55,7 @@ class UserController:
                 userModel.first_name = request['first_name']
                 userModel.last_name = request['last_name']
                 userModel.username = request['username']
+                userModel.user_type = request['user_type']
                 userModel.email = 'nescom@nescom.com'
                 # encryptedpassword = make_password(request['password'])
                 # userModel.password = encryptedpassword
@@ -68,6 +74,10 @@ class UserController:
                     userRole.motor_roles = request['motor_roles']
                     userRole.battery_roles = request['battery_roles']
                     userRole.pyro_roles = request['pyro_roles']
+                    userRole.bhd_roles = request['bhd_roles']
+                    userRole.task_roles = request['task_roles']
+                    userRole.qms_roles = request['qms_roles']
+                    userRole.cesp_roles = request['cesp_roles']
                     userRole.save()
                 return JsonResponse({'masssage': 'User Updated Successfully!'}, status=200)
         except:
@@ -78,12 +88,11 @@ class UserController:
     def GetUserList(request, self=None):
         dataList = []
         try:
-            data = User.objects
             doc_list = []
             cursor = connection.cursor()
             query = "SELECT au.id,au.first_name,au.last_name,au.username,au.password, "\
-                    "ur.prod_roles,ur.flight_roles,ur.relif_roles,ur.motor_roles,ur.battery_roles,ur.pyro_roles  " \
-                    "FROM public.auth_user au " \
+                    "ur.prod_roles,ur.flight_roles,ur.relif_roles,ur.motor_roles,ur.battery_roles,ur.pyro_roles,bhd_roles,task_roles,qms_roles,cesp_roles  " \
+                    "FROM public.usermanagement_user au " \
                     "FULL OUTER JOIN "\
                     "public.usermanagement_userroles ur ON CAST(ur.user_id AS INTEGER) = au.id ORDER BY au.id DESC;"
 
@@ -92,7 +101,6 @@ class UserController:
             for row in cursor.fetchall():
                 row_dict = dict(zip(col_names, row))
                 doc_list.append(row_dict)
-            # serializer = UserSerializer(data, many=True)
             return JsonResponse({'status': 'True', 'data': doc_list},
                                 status=200)
         except:
