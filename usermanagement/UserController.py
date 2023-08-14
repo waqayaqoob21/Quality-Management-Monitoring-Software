@@ -90,7 +90,7 @@ class UserController:
         try:
             doc_list = []
             cursor = connection.cursor()
-            query = "SELECT au.id,au.first_name,au.last_name,au.username,au.password, "\
+            query = "SELECT au.id,au.first_name,au.last_name,au.username,au.password,au.user_type, "\
                     "ur.prod_roles,ur.flight_roles,ur.relif_roles,ur.motor_roles,ur.battery_roles,ur.pyro_roles,bhd_roles,task_roles,qms_roles,cesp_roles  " \
                     "FROM public.usermanagement_user au " \
                     "FULL OUTER JOIN "\
