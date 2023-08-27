@@ -49,6 +49,14 @@ class GetProductionListAPIVIEW(APIView):
         result = task_obj.GetProductionList(request)
         return result
 
+
+class GetProductionObservationStatusAPIVIEW(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        result = task_obj.GetProductionObservationStatus(request)
+        return result
+
 class GetProductionDateNoneListAPIVIEW(APIView):
     permission_classes = [AllowAny]
 

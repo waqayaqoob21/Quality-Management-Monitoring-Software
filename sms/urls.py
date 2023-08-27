@@ -12,6 +12,7 @@ urlpatterns = [
         path('getprodexl/', GetProductionExcelAPIVIEW.as_view(), name='getprodexl'),
         path('deleteprodsys/', DeleteProductionAPIVIEW.as_view(), name='deleteprodsys'),
         path('deleteprodhistory/', DeleteProductionHistoryAPIVIEW.as_view(), name='deleteprodhistory'),
+        path('getproductionobservationstatus/', GetProductionObservationStatusAPIVIEW.as_view(), name='getproductionobservationstatus'),
 
         path('addflight/', AddFlightAPIVIEW.as_view(), name='addflight'),
         path('editflight/', EditFlightAPIVIEW.as_view(), name='editflight'),

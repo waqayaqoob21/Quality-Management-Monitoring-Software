@@ -1427,6 +1427,98 @@ class SmsController:
             return JsonResponse({'status': 'false'}, status=200)
 
     @staticmethod
+    def GetProductionObservationStatus(request):
+        try:
+            org = request.query_params['selected_org']
+            year = request.query_params['selected_year']
+            type = request.query_params['selected_type']
+            system = request.query_params['selected_system']
+            SelectedStatus = request.query_params['selected_status']
+            ChildStatus = request.query_params['child_status']
+            filter_objects = Q()
+
+            def get_filter(field_name, filter_condition, filter_value):
+                # thanks to the below post
+                # https://stackoverflow.com/questions/310732/in-django-how-does-one-filter-a-queryset-with-dynamic-field-lookups
+                # the idea to this below logic is very similar to that in the above mentioned post
+                if filter_condition.strip() == "contains":
+                    kwargs = {
+                        '{0}__icontains'.format(field_name): filter_value
+                    }
+                    return Q(**kwargs)
+
+                if filter_condition.strip() == "not_equal":
+                    kwargs = {
+                        '{0}__iexact'.format(field_name): filter_value
+                    }
+                    return ~Q(**kwargs)
+
+                if filter_condition.strip() == "starts_with":
+                    kwargs = {
+                        '{0}__istartswith'.format(field_name): filter_value
+                    }
+                    return Q(**kwargs)
+                if filter_condition.strip() == "equal":
+                    kwargs = {
+                        '{0}__iexact'.format(field_name): filter_value
+                    }
+                    return Q(**kwargs)
+
+                if filter_condition.strip() == "not_equal":
+                    kwargs = {
+                        '{0}__iexact'.format(field_name): filter_value
+                    }
+
+                    return ~Q(**kwargs)
+
+            # create dynamic filter
+
+            if org != '':
+                filter_objects &= get_filter(
+                    'organization', 'equal',
+                    org)
+            if type != '':
+                filter_objects &= get_filter(
+                    'sys_type', 'equal',
+                    type)
+            if system != '':
+                filter_objects &= get_filter(
+                    'system', 'equal',
+                    system)
+
+
+            # else:
+            dataList = ProductionSystemStatus.objects.filter(filter_objects)
+            if SelectedStatus != '':
+                ListItems = []
+                if SelectedStatus == 'BLT':
+                    for data  in dataList:
+                        if data.blt_date is not None and data.blt_date.strftime("%Y") == year and data.blt_status=='Observation(next stage)':
+                            ListItems.append(data)
+                if SelectedStatus == 'Pre-HIL':
+                    for data  in dataList:
+                        if data.pre_hil_date is not None and data.pre_hil_date.strftime("%Y") == year and data.pre_hil_status=='Observation(next stage)':
+                            ListItems.append(data)
+
+                if SelectedStatus == 'Vibration':
+                    for data  in dataList:
+                        if data.vibaration_date is not None and data.vibaration_date.strftime("%Y") == year and data.vibaration_status=='Observation(next stage)':
+                            ListItems.append(data)
+
+                if SelectedStatus == 'CG Balancing':
+                    for data  in dataList:
+                        if data.cgbalancing_date is not None and data.cgbalancing_date.strftime("%Y") == year and data.cgbalancing_date_status=='Observation(next stage)':
+                            ListItems.append(data)
+
+
+                serializer = ProductionSystemSerialzer(ListItems, many=True)
+                print(serializer.data);
+                return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+
+        except Exception as e:
+            print(e)
+            return JsonResponse({'status': 'false'}, status=200)
+    @staticmethod
     def GetProductionListHistory(request):
         try:
             id = request.query_params['id']
