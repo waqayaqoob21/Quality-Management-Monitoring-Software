@@ -1310,11 +1310,15 @@ class SmsController:
                                 ListItems.append(data)
 
                 if ParentStatus == 'System Alignment':
-                    dataList = dataList.extra(
-                          select={'year': 'extract (year from sys_align_Date)',
-                          'month': 'extract (month from sys_align_Date)',
-                          'day': 'extract (day from sys_align_Date)'},
-                           order_by=['month','day','-year'])
+                    # dataList = dataList.extra(
+                    #       select={'year': 'extract (year from sys_align_Date)',
+                    #       'month': 'extract (month from sys_align_Date)',
+                    #       'day': 'extract (day from sys_align_Date)'},
+                    #        order_by=['month','day','-year'])
+                    dataList = dataList.annotate(sys_align_Date__month=Extract('sys_align_Date', 'month'),
+                        sys_align_Date__year=Extract('sys_align_Date', 'year'),
+                        sys_align_Date__day=Extract('sys_align_Date', 'day')).order_by('sys_align_Date__month','sys_align_Date__day','-sys_align_Date__year')
+
                     if ChildStatus != 'Current Count':
                         ListItems = dataList.filter(sys_align_Date__year = year, sys_align_status = ChildStatus)
 
