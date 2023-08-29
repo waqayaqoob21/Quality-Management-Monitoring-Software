@@ -159,6 +159,13 @@ class QmsController:
             return JsonResponse({'status': 'False', "message": "QMS Audit Not Saved"}, status=500)
 
     @staticmethod
+    def GetNotifications(request):
+        try:
+            pass
+        except Exception as e:
+            print(e)
+            return JsonResponse({'status': 'False', "message": "QMS Audit Not Saved"}, status=500)
+    @staticmethod
     def GetQmsAuditList(request, self=None):
         try:
             current_status = request.query_params.get('audit_status')

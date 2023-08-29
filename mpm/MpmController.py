@@ -2200,7 +2200,6 @@ class MpmController:
                         order_by=['month', 'day', '-year'])
 
             serializer = ActiveMotorSerializer(dataList, many=True)
-            print(serializer.data)
             return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
 
         except:

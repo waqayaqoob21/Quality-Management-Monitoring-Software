@@ -37,5 +37,9 @@ urlpatterns = [
         # re_path(r'^deletecesp/(?P<pk>[0-9]+)$',DeletetCespAuditAPIVIEW.as_view(), name='deletecesp'),
         path('cesppdf/', GetCespAuditPDFAPIVIEW.as_view(), name='cesppdf'),
         path('cespexcel/', GetCespAuditExcelAPIVIEW.as_view(), name='cespexcel'),
-   
+
+
+        path('getnotifications/', GetNotificationsAPIVIEW.as_view(), name='getnotifications'),
+
+
 ]
