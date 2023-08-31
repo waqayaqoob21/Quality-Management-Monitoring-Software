@@ -11,6 +11,9 @@ from qms.models import *
 from qms.serializer import *
 from datetime import date
 from django.db.models.functions import Extract
+from datetime import datetime
+from datetime import timedelta
+from dateutil.relativedelta import relativedelta
 class QmsController:
     @staticmethod
     def AddQmsAudit(request):
@@ -159,12 +162,65 @@ class QmsController:
             return JsonResponse({'status': 'False', "message": "QMS Audit Not Saved"}, status=500)
 
     @staticmethod
-    def GetNotifications(request):
+    def GetNotificationsQMS(request):
         try:
-            pass
+            one_month = datetime.now() - relativedelta(months=1)  # 5 days ago
+            dataList = QmsAudit.objects.filter(certification_validity_date__lt = one_month)
+            serializer = QmsAuditSerializer(dataList,many=True)
+            return JsonResponse({'status': 'True', "message": "QMS Audits fetched successfully!",'data':serializer.data}, status=200)
+
         except Exception as e:
             print(e)
-            return JsonResponse({'status': 'False', "message": "QMS Audit Not Saved"}, status=500)
+            return JsonResponse({'status': 'False', "message": "QMS Audits could not fetch"}, status=500)
+
+    @staticmethod
+    def GetNotificationsDetailQMS(request):
+        try:
+            audit_id = request.query_params.get('audit_id')
+            audit_detail = QmsAudit.objects.get(id = audit_id)
+            serializer = QmsAuditSerializer(audit_detail)
+            return JsonResponse({'status': 'True', "message": "QMS Audits fetched successfully!",'data':serializer.data}, status=200)
+
+        except Exception as e:
+            print(e)
+            return JsonResponse({'status': 'False', "message": "QMS Audits could not fetch"}, status=500)
+    @staticmethod
+    def GetNotificationsCeSP(request):
+        try:
+            one_month = datetime.now() - relativedelta(months=1)  # 5 days ago
+            dataList = CespAudit.objects.filter(certification_validity_date__lt = one_month)
+            serializer = CespAuditSerializer(dataList,many=True)
+            return JsonResponse({'status': 'True', "message": "CeSP Audits fetched successfully!",'data':serializer.data}, status=200)
+
+        except Exception as e:
+            print(e)
+            return JsonResponse({'status': 'False', "message": "CeSP Audits could not fetch"}, status=500)
+
+    @staticmethod
+    def GetNotificationsDetailCeSP(request):
+        try:
+            audit_id = request.query_params.get('audit_id')
+            audit_detail = CespAudit.objects.get(id = audit_id)
+            serializer = CespAuditSerializer(audit_detail)
+            return JsonResponse({'status': 'True', "message": "CeSP Audits fetched successfully!",'data':serializer.data}, status=200)
+
+        except Exception as e:
+            print(e)
+            return JsonResponse({'status': 'False', "message": "CeSP Audits could not fetch"}, status=500)
+
+    @staticmethod
+    def getNotificationCount(request):
+        try:
+            one_month = datetime.now() - relativedelta(months=1)  # 5 days ago
+            cesp_count = CespAudit.objects.filter(certification_validity_date__lt = one_month).count()
+            qms_count = QmsAudit.objects.filter(certification_validity_date__lt = one_month).count()
+            total_notifications = cesp_count + qms_count
+            print(total_notifications)
+            return JsonResponse({'status': 'True', "message": "CeSP Audits fetched successfully!",'data':total_notifications}, status=200)
+
+        except Exception as e:
+            print(e)
+            return JsonResponse({'status': 'False', "message": "CeSP Audits could not fetch"}, status=500)
     @staticmethod
     def GetQmsAuditList(request, self=None):
         try:

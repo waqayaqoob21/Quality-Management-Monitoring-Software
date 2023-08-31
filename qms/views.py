@@ -48,13 +48,40 @@ class GetQmsAuditPDFAPIVIEW(APIView):
         result = qms_obj.GetQmsAuditPDFList(request.data)
         return result
 
-class GetNotificationsAPIVIEW(APIView):
+class GetNotificationsQMSAPIVIEW(APIView):
     permission_classes = [AllowAny]
 
     def get(self, request):
-        result = qms_obj.GetNotifications(request.data)
+        result = qms_obj.GetNotificationsQMS(request.data)
         return result
 
+class GetNotificationsCeSPAPIVIEW(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        result = qms_obj.GetNotificationsCeSP(request.data)
+        return result
+
+class GetNotificationsDetailQMSAPIVIEW(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        result = qms_obj.GetNotificationsDetailQMS(request)
+        return result
+
+class GetNotificationsDetailCeSPAPIVIEW(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        result = qms_obj.GetNotificationsDetailCeSP(request)
+        return result
+
+class GetNotificationsCountAPIVIEW(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        result = qms_obj.getNotificationCount(request.data)
+        return result
 class GetQmsAuditExcelAPIVIEW(APIView):
     permission_classes = [AllowAny]
 

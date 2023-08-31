@@ -39,7 +39,10 @@ urlpatterns = [
         path('cespexcel/', GetCespAuditExcelAPIVIEW.as_view(), name='cespexcel'),
 
 
-        path('getnotifications/', GetNotificationsAPIVIEW.as_view(), name='getnotifications'),
+        path('getnotificationsqms/', GetNotificationsQMSAPIVIEW.as_view(), name='getnotificationsqms'),
+        path('getnotificationscesp/', GetNotificationsCeSPAPIVIEW.as_view(), name='getnotificationscesp'),
 
-
+        path('getnotificationsdetailqms/', GetNotificationsDetailQMSAPIVIEW.as_view(), name='getnotificationsdetailqms'),
+        path('getnotificationsdetailcesp/', GetNotificationsDetailCeSPAPIVIEW.as_view(), name='getnotificationsdetailcesp'),
+        path('getnotificationcount/', GetNotificationsCountAPIVIEW.as_view(),name='getnotificationcount'),
 ]

@@ -1438,7 +1438,7 @@ class SmsController:
             type = request.query_params['selected_type']
             system = request.query_params['selected_system']
             SelectedStatus = request.query_params['selected_status']
-            ChildStatus = request.query_params['child_status']
+            sys_name = request.query_params['sys_name']
             filter_objects = Q()
 
             def get_filter(field_name, filter_condition, filter_value):
@@ -1491,8 +1491,13 @@ class SmsController:
                     system)
 
 
-            # else:
-            dataList = ProductionSystemStatus.objects.filter(filter_objects)
+            dataList = ""
+            if sys_name == 'Production':
+                dataList = ProductionSystemStatus.objects.filter(filter_objects)
+            if sys_name == 'Flight':
+                dataList = FlightSystemStatus.objects.filter(filter_objects)
+            if sys_name == 'Relifing':
+                dataList = RelifingSystemStatus.objects.filter(filter_objects)
             if SelectedStatus != '':
                 ListItems = []
                 if SelectedStatus == 'BLT':
@@ -1514,9 +1519,91 @@ class SmsController:
                         if data.cgbalancing_date is not None and data.cgbalancing_date.strftime("%Y") == year and data.cgbalancing_date_status=='Observation(next stage)':
                             ListItems.append(data)
 
+                if SelectedStatus == 'EMP Proofing':
+                    for data  in dataList:
+                        if data.emp_proofing_date is not None and data.emp_proofing_date.strftime("%Y") == year and data.emp_proofing=='Observation(next stage)':
+                            ListItems.append(data)
 
-                serializer = ProductionSystemSerialzer(ListItems, many=True)
-                print(serializer.data);
+                if SelectedStatus == 'Functional Test W/O Dummy Bird':
+                    for data in dataList:
+                        if data.func_tst_date is not None and data.func_tst_date.strftime(
+                                "%Y") == year and data.func_tst == 'Observation(next stage)':
+                            ListItems.append(data)
+
+                if SelectedStatus == 'Functional Test With Dummy Bird':
+                    for data  in dataList:
+                        if data.func_tst_dummy_bird_date is not None and data.func_tst_dummy_bird_date.strftime("%Y") == year and data.func_tst_dummy_bird=='Observation(next stage)':
+                            ListItems.append(data)
+
+                if SelectedStatus == 'Road Test':
+                    for data  in dataList:
+                        if data.road_test_date is not None and data.road_test_date.strftime("%Y") == year and data.road_test=='Observation(next stage)':
+                            ListItems.append(data)
+
+                if SelectedStatus == 'Post Road Test':
+                    for data  in dataList:
+                        if data.post_road_test_date is not None and data.post_road_test_date.strftime("%Y") == year and data.post_road_test=='Observation(next stage)':
+                            ListItems.append(data)
+
+                if SelectedStatus == 'Integrated Operation':
+                    for data in dataList:
+                        if data.integrated_operation_date is not None and data.integrated_operation_date.strftime(
+                                "%Y") == year and data.integrated_operation == 'Observation(next stage)':
+                            ListItems.append(data)
+
+                if SelectedStatus == 'Rain Test':
+                    for data in dataList:
+                        if data.rain_test_date is not None and data.rain_test_date.strftime(
+                                "%Y") == year and data.rain_test == 'Observation(next stage)':
+                            ListItems.append(data)
+
+                if SelectedStatus == 'Pre User Inspection':
+                    for data  in dataList:
+                        if data.pre_user_inspection_date is not None and data.pre_user_inspection_date.strftime("%Y") == year and data.pre_user_inspection=='Observation(next stage)':
+                            ListItems.append(data)
+
+                if SelectedStatus == 'Final Integration':
+                    for data in dataList:
+                        if data.final_integration_date is not None and data.final_integration_date.strftime(
+                                "%Y") == year and data.final_integration_status == 'Observation(next stage)':
+                            ListItems.append(data)
+
+                if SelectedStatus == 'Loading/Unloading on MLV/HLF':
+                    for data  in dataList:
+                        if data.load_unload_on_mlv_hlf_date is not None and data.load_unload_on_mlv_hlf_date.strftime("%Y") == year and data.load_unload_on_mlv_hlf=='Observation(next stage)':
+                            ListItems.append(data)
+
+                if SelectedStatus == 'Post-HIL':
+                    for data  in dataList:
+                        if data.post_hil_date is not None and data.post_hil_date.strftime("%Y") == year and data.post_hil_status=='Observation(next stage)':
+                            ListItems.append(data)
+
+                if SelectedStatus == 'System Alignment':
+                    for data  in dataList:
+                        if data.sys_align_Date is not None and data.sys_align_Date.strftime("%Y") == year and data.sys_align_status=='Observation(next stage)':
+                            ListItems.append(data)
+
+                if SelectedStatus == 'Incapsulation':
+                    for data  in dataList:
+                        if data.incapsulation_date is not None and data.incapsulation_date.strftime("%Y") == year and data.incapsulation_status=='Observation(next stage)':
+                            ListItems.append(data)
+
+                if SelectedStatus == 'Final Integrated Testing':
+                    for data  in dataList:
+                        if data.final_integrated_testing_date is not None and data.final_integrated_testing_date.strftime("%Y") == year and data.final_integrated_testing=='Observation(next stage)':
+                            ListItems.append(data)
+
+                if SelectedStatus == 'FGT Status':
+                    for data  in dataList:
+                        if data.fgt_date is not None and data.fgt_date.strftime("%Y") == year and data.fgt_status=='Observation(next stage)':
+                            ListItems.append(data)
+                serializer = ""
+                if sys_name == 'Production':
+                    serializer = ProductionSystemSerialzer(ListItems, many=True)
+                if sys_name == 'Flight':
+                    serializer = FlightSystemSerialzer(ListItems, many=True)
+                if sys_name == 'Relifing':
+                    serializer = RelifingSystemSerialzer(ListItems, many=True)
                 return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
 
         except Exception as e:
@@ -2784,11 +2871,14 @@ class SmsController:
                                 ListItems.append(data)
 
                 if ParentStatus == 'System Alignment':
-                    dataList = dataList.extra(
-                        select={'year': 'extract (year from sys_align_Date)',
-                                'month': 'extract (month from sys_align_Date)',
-                                'day': 'extract (day from sys_align_Date)'},
-                        order_by=['month', 'day', '-year'])
+                    # dataList = dataList.extra(
+                    #     select={'year': 'extract (year from sys_align_Date)',
+                    #             'month': 'extract (month from sys_align_Date)',
+                    #             'day': 'extract (day from sys_align_Date)'},
+                    #     order_by=['month', 'day', '-year'])
+                    dataList = dataList.annotate(sys_align_Date__month=Extract('sys_align_Date', 'month'),
+                        sys_align_Date__year=Extract('sys_align_Date', 'year'),
+                        sys_align_Date__day=Extract('sys_align_Date', 'day')).order_by('sys_align_Date__month','sys_align_Date__day','-sys_align_Date__year')
                     if ChildStatus != 'Current Count':
                         ListItems = dataList.filter(sys_align_Date__year=year, sys_align_status=ChildStatus)
 
@@ -4131,11 +4221,14 @@ class SmsController:
                                 ListItems.append(data)
 
                 if ParentStatus == 'System Alignment':
-                    dataList = dataList.extra(
-                        select={'year': 'extract (year from sys_align_Date)',
-                                'month': 'extract (month from sys_align_Date)',
-                                'day': 'extract (day from sys_align_Date)'},
-                        order_by=['month', 'day', '-year'])
+                    # dataList = dataList.extra(
+                    #     select={'year': 'extract (year from sys_align_Date)',
+                    #             'month': 'extract (month from sys_align_Date)',
+                    #             'day': 'extract (day from sys_align_Date)'},
+                    #     order_by=['month', 'day', '-year'])
+                    dataList = dataList.annotate(sys_align_Date__month=Extract('sys_align_Date', 'month'),
+                        sys_align_Date__year=Extract('sys_align_Date', 'year'),
+                        sys_align_Date__day=Extract('sys_align_Date', 'day')).order_by('sys_align_Date__month','sys_align_Date__day','-sys_align_Date__year')
                     if ChildStatus != 'Current Count':
                         ListItems = dataList.filter(sys_align_Date__year=year, sys_align_status=ChildStatus)
 
