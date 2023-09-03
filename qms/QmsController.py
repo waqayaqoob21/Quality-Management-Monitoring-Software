@@ -165,7 +165,7 @@ class QmsController:
     def GetNotificationsQMS(request):
         try:
             one_month = datetime.now() - relativedelta(months=1)  # 5 days ago
-            dataList = QmsAudit.objects.filter(certification_validity_date__lt = one_month)
+            dataList = QmsAudit.objects.filter(certification_validity_date__lt = one_month, audit_status = 'Planned')
             serializer = QmsAuditSerializer(dataList,many=True)
             return JsonResponse({'status': 'True', "message": "QMS Audits fetched successfully!",'data':serializer.data}, status=200)
 
@@ -188,7 +188,7 @@ class QmsController:
     def GetNotificationsCeSP(request):
         try:
             one_month = datetime.now() - relativedelta(months=1)  # 5 days ago
-            dataList = CespAudit.objects.filter(certification_validity_date__lt = one_month)
+            dataList = CespAudit.objects.filter(certification_validity_date__lt = one_month, audit_status = 'Planned')
             serializer = CespAuditSerializer(dataList,many=True)
             return JsonResponse({'status': 'True', "message": "CeSP Audits fetched successfully!",'data':serializer.data}, status=200)
 
@@ -212,11 +212,13 @@ class QmsController:
     def getNotificationCount(request):
         try:
             one_month = datetime.now() - relativedelta(months=1)  # 5 days ago
-            cesp_count = CespAudit.objects.filter(certification_validity_date__lt = one_month).count()
-            qms_count = QmsAudit.objects.filter(certification_validity_date__lt = one_month).count()
-            total_notifications = cesp_count + qms_count
-            print(total_notifications)
-            return JsonResponse({'status': 'True', "message": "CeSP Audits fetched successfully!",'data':total_notifications}, status=200)
+            cesp_count = CespAudit.objects.filter(certification_validity_date__lt = one_month, audit_status = 'Planned').count()
+            qms_count = QmsAudit.objects.filter(certification_validity_date__lt = one_month, audit_status = 'Planned').count()
+            dict ={
+                'qms_count': qms_count,
+                'cesp_count': cesp_count,
+            }
+            return JsonResponse({'status': 'True', "message": "CeSP Audits fetched successfully!",'data':dict}, status=200)
 
         except Exception as e:
             print(e)

@@ -544,6 +544,8 @@ class DocController:
                             'day': 'extract (day from receive_date)'},
                     order_by=['month', 'day', '-year'])
                 docList = docList.filter(total_doc_type_objects)
+                if receiveFrom != '' and receiveTo != '':
+                    docList = docList.filter(receive_date__gte=receiveFrom,receive_date__lte=receiveTo)
                 list = []
                 if docList is not None:
                     for item in docList:
