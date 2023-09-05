@@ -153,3 +153,7 @@ class CespAuditHistorySerializer(Serializer):
     standard = CharField()
     remarks = CharField()
     Created_at = DateTimeField()
+
+class AuditScheduleSerializer(Serializer):
+    id = IntegerField()
+    schedule = CharField()

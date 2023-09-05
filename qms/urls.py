@@ -45,4 +45,8 @@ urlpatterns = [
         path('getnotificationsdetailqms/', GetNotificationsDetailQMSAPIVIEW.as_view(), name='getnotificationsdetailqms'),
         path('getnotificationsdetailcesp/', GetNotificationsDetailCeSPAPIVIEW.as_view(), name='getnotificationsdetailcesp'),
         path('getnotificationcount/', GetNotificationsCountAPIVIEW.as_view(),name='getnotificationcount'),
+
+
+        path('addauditschedule/', AddAuditSchduleAPIVIEW.as_view(), name='addauditschedule'),
+        path('getauditschedule/', GetAuditSchduleAPIVIEW.as_view(), name='getauditschedule'),
 ]

@@ -195,3 +195,10 @@ class CespAuditSchedule(models.Model):
     status = models.CharField(max_length=500)
     current_status = models.CharField(max_length=300)
     Created_at = models.DateTimeField(auto_now_add=True)
+
+
+class AuditSchedule(models.Model):
+    id = models.AutoField(primary_key=True)
+    schedule = models.TextField()
+
+

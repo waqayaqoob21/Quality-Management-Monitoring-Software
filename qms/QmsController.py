@@ -164,7 +164,7 @@ class QmsController:
     @staticmethod
     def GetNotificationsQMS(request):
         try:
-            one_month = datetime.now() - relativedelta(months=1)  # 5 days ago
+            one_month = datetime.now() + relativedelta(months=1)  # 5 days ago
             dataList = QmsAudit.objects.filter(certification_validity_date__lt = one_month, audit_status = 'Planned')
             serializer = QmsAuditSerializer(dataList,many=True)
             return JsonResponse({'status': 'True', "message": "QMS Audits fetched successfully!",'data':serializer.data}, status=200)
@@ -187,7 +187,7 @@ class QmsController:
     @staticmethod
     def GetNotificationsCeSP(request):
         try:
-            one_month = datetime.now() - relativedelta(months=1)  # 5 days ago
+            one_month = datetime.now() + relativedelta(months=1)  # 5 days ago
             dataList = CespAudit.objects.filter(certification_validity_date__lt = one_month, audit_status = 'Planned')
             serializer = CespAuditSerializer(dataList,many=True)
             return JsonResponse({'status': 'True', "message": "CeSP Audits fetched successfully!",'data':serializer.data}, status=200)
@@ -211,7 +211,7 @@ class QmsController:
     @staticmethod
     def getNotificationCount(request):
         try:
-            one_month = datetime.now() - relativedelta(months=1)  # 5 days ago
+            one_month = datetime.now() + relativedelta(months=1)  # 5 days ago
             cesp_count = CespAudit.objects.filter(certification_validity_date__lt = one_month, audit_status = 'Planned').count()
             qms_count = QmsAudit.objects.filter(certification_validity_date__lt = one_month, audit_status = 'Planned').count()
             dict ={
@@ -2254,3 +2254,32 @@ class QmsController:
                 work_sheet.write(row_num, col_num, str(row[col_num]), font_style)
         work_book.save(response)
         return response
+
+    @staticmethod
+    def addAuditSchdule(request):
+        try:
+            existingSchedule = AuditSchedule.objects.first()
+            if existingSchedule is None:
+                scheduleModel = AuditSchedule()
+                scheduleModel.schedule = request['FinalDataOfExcelFile']
+                scheduleModel.save()
+            else:
+                existingSchedule.schedule = request['FinalDataOfExcelFile']
+                existingSchedule.save()
+            data = AuditSchedule.objects.all()
+            serializer = AuditScheduleSerializer(data, many=True)
+            print(serializer.data)
+            return JsonResponse({'status': 'True','message':'data saved successfully!', 'data':serializer.data}, status=200)
+        except Exception as e:
+            print(e)
+            return JsonResponse({'message''data could not  save'}, status=500)
+
+    @staticmethod
+    def getAuditSchedule(request):
+        try:
+            data = AuditSchedule.objects.all()
+            serializer = AuditScheduleSerializer(data, many=True)
+            return JsonResponse({'status': 'True','message':'data saved successfully!', 'data':serializer.data}, status=200)
+        except Exception as e:
+            print(e)
+            return JsonResponse({'message''data could not  save'}, status=500)

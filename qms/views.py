@@ -205,3 +205,18 @@ class DeleteCespAuditScheduledAPIView(APIView):
         result = qms_obj.DeleteCespAuditScheduled(request)
         print(result)
         return result
+
+
+class AddAuditSchduleAPIVIEW(APIView):
+    permission_classes = [AllowAny]
+    def post(self, request):
+        result = qms_obj.addAuditSchdule(request.data)
+        return result
+
+
+class GetAuditSchduleAPIVIEW(APIView):
+    permission_classes = [AllowAny]
+    def get(self, request):
+        result = qms_obj.getAuditSchedule(request)
+        print(result)
+        return result
