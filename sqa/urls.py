@@ -4,4 +4,5 @@ from .views import *
 urlpatterns = [
         path('addSqa/', AddSqaAPIVIEW.as_view(), name='addSqa'),
         path('getSqaList/', GetSqaListAPIVIEW.as_view(), name='getSqaList'),
+        path('deleteSqa/', DeleteSqaAPIVIEW.as_view(), name='deleteSqa'),
 ]

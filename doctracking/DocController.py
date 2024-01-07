@@ -402,35 +402,69 @@ class DocController:
                         'BHD')
                     total_filter_objects &= get_filter(
                         'status', 'equal',
-                        'QM Observations Forwarded')
-                    total_filter_objects |= get_filter(
-                        'status', 'equal',
-                        'QM Observations Repeated')
+                        'Audit in-process')
+                    if current_org != '':
+                        total_filter_objects &= get_filter(
+                            'sender', 'equal',
+                            current_org)
                 else:
                     total_filter_objects &= get_filter(
                         'doc_type', 'equal',
                         'BHD')
                     total_filter_objects &= get_filter(
                         'status', 'equal',
-                        'QM Observations Forwarded')
-                    total_filter_objects |= get_filter(
-                        'status', 'equal',
-                        'QM Observations Repeated')
-                total_doc_type_objects = Q()
-                if current_type == 'document' or current_type == '':
-                    total_doc_type_objects &= get_filter(
-                        'doc_type', 'not_equal',
-                        'BHD')
-                else:
-                    total_doc_type_objects &= get_filter(
-                        'doc_type', 'equal',
-                        'BHD')
+                        'Audit in-process')
+                    if current_org != '':
+                        total_filter_objects &= get_filter(
+                            'sender', 'equal',
+                            current_org)
+
+                # if current_type == 'document' or current_type == '':
+                #     total_filter_objects &= get_filter(
+                #         'doc_type', 'not_equal',
+                #         'BHD')
+                #     total_filter_objects &= get_filter(
+                #         'status', 'equal',
+                #         'QM Observations Forwarded')
+                #     total_filter_objects |= get_filter(
+                #         'status', 'equal',
+                #         'QM Observations Repeated')
+                # else:
+                #     total_filter_objects &= get_filter(
+                #         'doc_type', 'equal',
+                #         'BHD')
+                #     total_filter_objects &= get_filter(
+                #         'status', 'equal',
+                #         'QM Observations Forwarded')
+                #     total_filter_objects |= get_filter(
+                #         'status', 'equal',
+                #         'QM Observations Repeated')
+                # total_doc_type_objects = Q()
+                # if current_type == 'document' or current_type == '':
+                #     total_doc_type_objects &= get_filter(
+                #         'doc_type', 'not_equal',
+                #         'BHD')
+                # else:
+                #     total_doc_type_objects &= get_filter(
+                #         'doc_type', 'equal',
+                #         'BHD')
                 docList = doctracking.objects.filter(total_filter_objects).extra(
                     select={'year': 'extract (year from receive_date)',
                             'month': 'extract (month from receive_date)',
                             'day': 'extract (day from receive_date)'},
                     order_by=['month', 'day', '-year'])
-                docList = docList.filter(total_doc_type_objects)
+                # list = []
+                # if docList is not None:
+                #     for item in docList:
+                #         task_date = False
+                #         if item.task_date is None:
+                #             item.task_date = datetime.today()  # + timedelta(hours=5)
+                #             task_date = True
+                #         if item.due_date.date() >= item.task_date.date():
+                #             if task_date:
+                #                 item.task_date = None
+                #             list.append(item)
+                # docList = list
                 serializer = DocListSerializer(docList, many=True)
                 return JsonResponse({'status': 'True', 'data': serializer.data},
                                     status=200)

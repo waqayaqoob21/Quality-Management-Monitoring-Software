@@ -3,7 +3,7 @@ from rest_framework.views import APIView
 
 from .sqaController import *
 
-qms_obj = sqaController()
+sqa_obj = sqaController()
 # Create your views here.
 
 class AddSqaAPIVIEW(APIView):
@@ -11,7 +11,7 @@ class AddSqaAPIVIEW(APIView):
 
     def post(self, request):
         print(request.data)
-        result = qms_obj.addSqa(request.data)
+        result = sqa_obj.addSqa(request.data)
         return result
 
 class GetSqaListAPIVIEW(APIView):
@@ -19,5 +19,12 @@ class GetSqaListAPIVIEW(APIView):
 
     def get(self, request):
         print(request.data)
-        result = qms_obj.getSqaList(request)
+        result = sqa_obj.getSqaList(request)
+        return result
+
+class DeleteSqaAPIVIEW(APIView):
+    permission_classes = [AllowAny]
+
+    def delete(self, request):
+        result = sqa_obj.deleteSqa(request)
         return result
