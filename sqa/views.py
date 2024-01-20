@@ -13,7 +13,13 @@ class AddSqaAPIVIEW(APIView):
         print(request.data)
         result = sqa_obj.addSqa(request.data)
         return result
+class GetSqaDashbaordCountAPIVIEW(APIView):
+    permission_classes = [AllowAny]
 
+    def get(self, request):
+        print(request.data)
+        result = sqa_obj.getSqaDashboardCount(request)
+        return result
 class GetSqaListAPIVIEW(APIView):
     permission_classes = [AllowAny]
 

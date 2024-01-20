@@ -28,5 +28,7 @@ class Sqa(models.Model):
     status = models.CharField(max_length=300)
     due_date = models.DateTimeField(auto_now_add=False)
     audit_completion_date = models.DateTimeField(auto_now_add=False)
+    organization = models.CharField(max_length=300, null= True)
+    software_type = models.CharField(max_length=300, null= True)
     remarks = models.TextField()
 
