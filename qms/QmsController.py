@@ -308,7 +308,9 @@ class QmsController:
                         'audit_status', 'equal', current_status)
 
             if current_status == 'Certified' or current_status == 'Expired' or current_status == 'Accredited' \
-                    or current_status == 'Un-Certified'or current_status == 'Un-Accredited'or current_status == 'Certified by CeSP'or current_status == 'To be Certified':
+                    or current_status == 'Un-Certified'or current_status == 'Un-Accredited'\
+                    or current_status == 'Certified by CeSP'or current_status == 'To be Certified' \
+                    or current_status == 'Suspended' or current_status == 'Withdrawal':
                 filter_objects &= get_filter(
                     'certification_status', 'equal',
                     current_status)
@@ -485,7 +487,8 @@ class QmsController:
             currYearUnaccredited = 0
             currYearCertifiedByCesp = 0
             currYearToBeCertified = 0
-            currYearOverdueConducted = 0
+            currYearSuspended = 0
+            currYearWithdrawal = 0
             currYearTotalAudits = QmsAudit.objects.filter(planned_date__year=selected_year).count()
 
             if selected_org == '' and standItems == '' and setItems == '':
@@ -628,6 +631,10 @@ class QmsController:
                     currYearOverdueConducted = QmsAudit.objects.filter(Q(audit_status="Conducted") | Q(audit_status="Completed"),audit_start_date__gt=F('planned_date'),
                                                                         planned_date__year=selected_year).count()
                     inprocess_overdueCount = QmsAudit.objects.filter(planned_date__year = selected_year)
+                    currYearSuspended = QmsAudit.objects.filter(certification_status='Suspended',
+                                                                          planned_date__year=selected_year).count()
+                    currYearWithdrawal = QmsAudit.objects.filter(certification_status='Withdrawal',
+                                                                          planned_date__year=selected_year).count()
 
                     list = []
                     if inprocess_overdueCount is not None:
@@ -680,7 +687,10 @@ class QmsController:
                         inprocess_overdueCount = QmsAudit.objects.filter(planned_date__year=selected_year,Organization = selected_org,setup=set)
                         tot_overdue_conducted = QmsAudit.objects.filter(Q(audit_status="Conducted") | Q(audit_status="Completed"),audit_start_date__gt=F('planned_date'),Organization = selected_org,setup=set,
                                                                     planned_date__year=selected_year).count()
-
+                        tot_currYearSuspended = QmsAudit.objects.filter(certification_status='Suspended',Organization = selected_org,setup=set,
+                                                                    planned_date__year=selected_year).count()
+                        tot_currYearWithdrawal = QmsAudit.objects.filter(certification_status='Withdrawal',Organization = selected_org,setup=set,
+                                                                    planned_date__year=selected_year).count()
                         list = []
                         if inprocess_overdueCount is not None:
                             for item in inprocess_overdueCount:
@@ -712,6 +722,8 @@ class QmsController:
                         currYearCertifiedByCesp = tot_currYearCertifiedByCesp
                         currYearToBeCertified = tot_currYearToBeCertified
                         currYearOverdueConducted = tot_overdue_conducted
+                        currYearSuspended = tot_currYearSuspended
+                        currYearWithdrawal = currYearWithdrawal
                 elif selected_org == ''  and setItems == '' and standItems != '':
                     for stand in standItems:
                         tot_audit_in_process = QmsAudit.objects.filter(planned_date__year=selected_year,
@@ -749,6 +761,10 @@ class QmsController:
                         inprocess_overdueCount = QmsAudit.objects.filter(planned_date__year=selected_year,standard=stand)
                         tot_overdue_conducted = QmsAudit.objects.filter(Q(audit_status="Conducted") | Q(audit_status="Completed"),audit_start_date__gt=F('planned_date'),standard=stand,
                                                                     planned_date__year=selected_year).count()
+                        tot_currYearSuspended = QmsAudit.objects.filter(certification_status='Suspended',standard=stand,
+                                                                    planned_date__year= selected_year).count()
+                        tot_currYearWithdrawal = QmsAudit.objects.filter(certification_status='Withdrawal',standard=stand,
+                                                                    planned_date__year=selected_year).count()
                         list = []
                         if inprocess_overdueCount is not None:
                             for item in inprocess_overdueCount:
@@ -779,6 +795,8 @@ class QmsController:
                         currYearCertifiedByCesp = tot_currYearCertifiedByCesp
                         currYearToBeCertified = tot_currYearToBeCertified
                         currYearOverdueConducted = tot_overdue_conducted
+                        currYearSuspended = tot_currYearSuspended
+                        currYearWithdrawal = tot_currYearWithdrawal
 
                 else:
                     for (stand, set) in itertools.zip_longest(standItems, setItems):
@@ -816,6 +834,10 @@ class QmsController:
                         inprocess_overdueCount = QmsAudit.objects.filter(planned_date__year=selected_year,standard=stand,Organization=selected_org,setup=set)
                         tot_overdue_conducted = QmsAudit.objects.filter(Q(audit_status="Conducted") | Q(audit_status="Completed"),audit_start_date__gt=F('planned_date'),Organization=selected_org, standard=stand,
                                                                   setup=set,planned_date__year=selected_year).count()
+                        tot_currYearSuspended = QmsAudit.objects.filter(certification_status='Suspended',Organization=selected_org, standard=stand,
+                                                                  setup=set,planned_date__year=selected_year).count()
+                        tot_currYearWithdrawal = QmsAudit.objects.filter(certification_status='Withdrawal',Organization=selected_org, standard=stand,
+                                                                  setup=set,planned_date__year=selected_year).count()
                         list = []
                         if inprocess_overdueCount is not None:
                             for item in inprocess_overdueCount:
@@ -845,6 +867,8 @@ class QmsController:
                         currYearCertifiedByCesp = tot_currYearCertifiedByCesp
                         currYearToBeCertified = tot_currYearToBeCertified
                         currYearOverdueConducted = tot_overdue_conducted
+                        currYearSuspended = tot_currYearSuspended
+                        currYearWithdrawal = tot_currYearWithdrawal
 
             dist = {
                 'currYearTotalAudits': currYearTotalAudits,
@@ -867,7 +891,9 @@ class QmsController:
                 'audit_under_process': audit_under_process,
                 'inprocess_overdue': inprocess_overdue,
                 'conducted': conducted,
-                'currYearOverdueConducted': currYearOverdueConducted
+                'currYearOverdueConducted': currYearOverdueConducted,
+                'currYearSuspended': currYearSuspended,
+                'currYearWithdrawal': currYearWithdrawal
             }
             return JsonResponse({'status': 'True', 'data': dist},
                                 status=200)
@@ -2268,18 +2294,17 @@ class QmsController:
                 existingSchedule.save()
             data = AuditSchedule.objects.all()
             serializer = AuditScheduleSerializer(data, many=True)
-            print(serializer.data)
-            return JsonResponse({'status': 'True','message':'data saved successfully!', 'data':serializer.data}, status=200)
+            return JsonResponse({'status': 'True','message':'data saved successfully!', 'data':serializer.data},safe=False, status=200)
         except Exception as e:
             print(e)
-            return JsonResponse({'message''data could not  save'}, status=500)
+            return JsonResponse({'status': 'False','message':'data could not  save'}, status=500)
 
     @staticmethod
     def getAuditSchedule(request):
         try:
             data = AuditSchedule.objects.all()
             serializer = AuditScheduleSerializer(data, many=True)
-            return JsonResponse({'status': 'True','message':'data saved successfully!', 'data':serializer.data}, status=200)
+            return JsonResponse({'status': 'True','message':'data saved successfully!', 'data':serializer.data},safe=False, status=200)
         except Exception as e:
             print(e)
-            return JsonResponse({'message''data could not  save'}, status=500)
+            return JsonResponse({'status': 'False','message':'data could not  get'}, status=500)
