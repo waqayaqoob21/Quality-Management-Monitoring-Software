@@ -18,46 +18,124 @@ class sqaController:
     @staticmethod
     def addSqa(request):
         try:
-            ems_obj = Sqa()
+            sqa_obj = Sqa()
             id = request['id']
             if id == '0':
-                ems_obj.sys_type = request['sys_type']
-                ems_obj.system_name = request['system_name']
-                ems_obj.module_name = request['module_name']
-                ems_obj.module_id = request['module_id']
-                ems_obj.organization = request['organization']
-                ems_obj.software_type = request['software_type']
-                ems_obj.software_version = request['software_version']
-                ems_obj.sqa_certificate_no = request['sqa_certificate_no']
-                ems_obj.request_date = request['request_date']
-                ems_obj.urd = request['urd']
-                ems_obj.srs = request['srs']
-                ems_obj.sdd = request['sdd']
-                ems_obj.rtm = request['rtm']
-                ems_obj.stp = request['stp']
-                ems_obj.unit_test = request['unit_test']
-                ems_obj.static_analysis_report = request['static_analysis_report']
-                ems_obj.assertion_density = request['assertion']
-                ems_obj.eng_change_proposal = request['eng_change_proposal']
-                ems_obj.bugs_observation = request['bugs_observation']
-                ems_obj.cyclomatic_complexity = request['cyclomatic_complexity']
-                ems_obj.code_coverage = request['code_coverage']
-                ems_obj.functional_testing = request['functional_testing']
-                ems_obj.formal_testing = request['formal_testing']
-                ems_obj.status = request['status']
-                ems_obj.due_date = request['due_date']
-                ems_obj.audit_completion_date = request['audit_completion_date']
-                ems_obj.remarks = request['remarks']
-                ems_obj.save()
+                sqa_obj.sys_type = request['sys_type']
+                sqa_obj.system_name = request['system_name']
+                sqa_obj.module_name = request['module_name']
+                sqa_obj.module_id = request['module_id']
+                sqa_obj.organization = request['organization']
+                sqa_obj.software_type = request['software_type']
+                sqa_obj.svc_no = request['svc_no']
+                sqa_obj.svc_date = request['svc_date']
+                sqa_obj.received_date = request['received_date']
+                sqa_obj.revision_no = request['revision_no']
+                sqa_obj.revision_date = request['revision_date']
+                sqa_obj.purpose = request['purpose']
+                sqa_obj.set_no = request['set_no']
+                sqa_obj.software_size = request['software_size']
+                sqa_obj.attachment = request['attachment']
+                sqa_obj.software_version = request['software_version']
+                sqa_obj.sqa_certificate_no = request['sqa_certificate_no']
+                sqa_obj.request_date = request['request_date']
+                sqa_obj.urd = request['urd']
+                sqa_obj.srs = request['srs']
+                sqa_obj.sdd = request['sdd']
+                sqa_obj.rtm = request['rtm']
+                sqa_obj.stp = request['stp']
+                sqa_obj.unit_test = request['unit_test']
+                sqa_obj.static_analysis_report = request['static_analysis_report']
+                sqa_obj.assertion_density = request['assertion']
+                sqa_obj.eng_change_proposal = request['eng_change_proposal']
+                sqa_obj.bugs_observation = request['bugs_observation']
+                sqa_obj.cyclomatic_complexity = request['cyclomatic_complexity']
+                sqa_obj.code_coverage = request['code_coverage']
+                sqa_obj.functional_testing = request['functional_testing']
+                sqa_obj.formal_testing = request['formal_testing']
+                sqa_obj.status = request['status']
+                sqa_obj.due_date = request['due_date']
+                sqa_obj.audit_completion_date = request['audit_completion_date']
+                sqa_obj.remarks = request['remarks']
+                sqa_obj.save()
                 return JsonResponse({'Success': 'SQA record inserted Successfully!'})
             else:
                 get_obj = Sqa.objects.filter(id=id).first()
+                if get_obj.sys_type != request['sys_type'] or get_obj.system_name != request['system_name'] or \
+                    get_obj.organization != request['organization'] or get_obj.module_name != request['module_name'] or \
+                    get_obj.module_id != request['module_id'] or get_obj.software_type != request['software_type'] or \
+                    get_obj.svc_no != request['svc_no'] or get_obj.svc_date != request['svc_date'] or \
+                    get_obj.received_date != request['received_date'] or get_obj.revision_no != request['revision_no'] or \
+                    get_obj.revision_date != request['revision_date'] or get_obj.purpose != request['purpose'] or \
+                    get_obj.set_no != request['set_no'] or get_obj.set_no != request['set_no'] or \
+                    get_obj.software_size != request['software_size'] or get_obj.attachment != request['attachment'] or \
+                    get_obj.software_version != request['software_version'] or get_obj.sqa_certificate_no != request['sqa_certificate_no'] or \
+                    get_obj.request_date != request['request_date'] or get_obj.urd != request['urd'] or \
+                    get_obj.srs != request['srs'] or get_obj.sdd != request['sdd'] or \
+                    get_obj.rtm != request['rtm'] or get_obj.stp != request['stp'] or \
+                    get_obj.unit_test != request['unit_test'] or get_obj.static_analysis_report != request['static_analysis_report'] or \
+                    get_obj.assertion_density != request['assertion_density'] or get_obj.eng_change_proposal != request['eng_change_proposal'] or \
+                    get_obj.bugs_observation != request['bugs_observation'] or get_obj.cyclomatic_complexity != request['cyclomatic_complexity'] or \
+                    get_obj.code_coverage != request['code_coverage'] or get_obj.functional_testing != request['functional_testing'] or \
+                    get_obj.formal_testing != request['formal_testing'] or get_obj.status != request['status'] or \
+                    get_obj.due_date != request['due_date'] or get_obj.audit_completion_date != request['audit_completion_date'] or \
+                    get_obj.remarks != request['remarks']:
+                    sqaHistoryObj = SqaHistory()
+                    sqaHistoryObj.sys_type = get_obj.sys_type
+                    sqaHistoryObj.system_name = get_obj.system_name
+                    sqaHistoryObj.module_name = get_obj.module_name
+                    sqaHistoryObj.module_id = get_obj.module_id
+                    sqaHistoryObj.organization = get_obj.organization
+                    sqaHistoryObj.software_type = get_obj.software_type
+                    sqaHistoryObj.svc_no = get_obj.svc_no
+                    sqaHistoryObj.svc_date = get_obj.svc_date
+                    sqaHistoryObj.received_date = get_obj.received_date
+                    sqaHistoryObj.revision_no = get_obj.revision_no
+                    sqaHistoryObj.revision_date = get_obj.revision_date
+                    sqaHistoryObj.purpose = get_obj.purpose
+                    sqaHistoryObj.set_no = get_obj.set_no
+                    sqaHistoryObj.software_size = get_obj.software_size
+                    sqaHistoryObj.attachment = get_obj.attachment
+                    sqaHistoryObj.software_version = get_obj.software_version
+                    sqaHistoryObj.sqa_certificate_no = get_obj.sqa_certificate_no
+                    sqaHistoryObj.request_date = get_obj.request_date
+                    sqaHistoryObj.urd = get_obj.urd
+                    sqaHistoryObj.srs = get_obj.srs
+                    sqaHistoryObj.sdd = get_obj.sdd
+                    sqaHistoryObj.rtm = get_obj.rtm
+                    sqaHistoryObj.stp = get_obj.stp
+                    sqaHistoryObj.unit_test = get_obj.unit_test
+                    sqaHistoryObj.static_analysis_report = get_obj.static_analysis_report
+                    sqaHistoryObj.assertion_density = get_obj.assertion_density
+                    sqaHistoryObj.eng_change_proposal = get_obj.eng_change_proposal
+                    sqaHistoryObj.bugs_observation = get_obj.bugs_observation
+                    sqaHistoryObj.cyclomatic_complexity = get_obj.cyclomatic_complexity
+                    sqaHistoryObj.code_coverage = get_obj.code_coverage
+                    sqaHistoryObj.functional_testing = get_obj.functional_testing
+                    sqaHistoryObj.formal_testing = get_obj.formal_testing
+                    sqaHistoryObj.status = get_obj.status
+                    sqaHistoryObj.due_date = get_obj.due_date
+                    sqaHistoryObj.audit_completion_date = get_obj.audit_completion_date
+                    sqaHistoryObj.remarks = get_obj.remarks
+                    sqaHistoryObj.sqa = id
+                    sqaHistoryObj.save()
+                    print("SQA History has been saved!")
+
                 get_obj.sys_type = request['sys_type']
                 get_obj.system_name = request['system_name']
                 get_obj.module_name = request['module_name']
                 get_obj.module_id = request['module_id']
                 get_obj.organization = request['organization']
                 get_obj.software_type = request['software_type']
+                get_obj.svc_no = request['svc_no']
+                get_obj.svc_date = request['svc_date']
+                get_obj.received_date = request['received_date']
+                get_obj.revision_no = request['revision_no']
+                get_obj.revision_date = request['revision_date']
+                get_obj.purpose = request['purpose']
+                get_obj.set_no = request['set_no']
+                get_obj.software_size = request['software_size']
+                get_obj.attachment = request['attachment']
                 get_obj.software_version = request['software_version']
                 get_obj.sqa_certificate_no = request['sqa_certificate_no']
                 get_obj.request_date = request['request_date']
@@ -353,4 +431,31 @@ class sqaController:
         except Exception as e:
             print(e)
             return JsonResponse({'message': 'SQA could not delete.', 'data': [], 'success': False, 'staus': '500'},
+                                status=500)
+
+    @staticmethod
+    def getSqaHistory(request):
+        try:
+            sqa_id = request.query_params.get('id')
+            sqaObj = SqaHistory.objects.filter(sqa = sqa_id)
+            serializer = SqaSerializer(sqaObj, many=True)
+            return JsonResponse({'Success': 'SQA history has successfully fetched', 'data': serializer.data, 'success': True, 'status': '200'},
+                            status=200)
+        except Exception as e:
+            print(e)
+            return JsonResponse({'message': 'SQA history could not save.', 'data': [], 'success': False, 'staus': '500'},
+                                status=500)
+
+    @staticmethod
+    def getSqa(request):
+        try:
+            module_id = request.query_params.get('module_id')
+            module_name = request.query_params.get('module_name')
+            sqaObj = Sqa.objects.filter(module_id = module_id, module_name = module_name).first()
+            serializer = SqaSerializer(sqaObj)
+            return JsonResponse({'Success': 'SQA history has successfully fetched', 'data': serializer.data, 'success': True, 'status': '200'},
+                            status=200)
+        except Exception as e:
+            print(e)
+            return JsonResponse({'message': 'SQA history could not save.', 'data': [], 'success': False, 'staus': '500'},
                                 status=500)
