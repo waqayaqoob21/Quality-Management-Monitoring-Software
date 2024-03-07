@@ -8,4 +8,5 @@ urlpatterns = [
         path('deleteSqa/', DeleteSqaAPIVIEW.as_view(), name='deleteSqa'),
         path('getSqaHistory/', GetSqaHistoryAPIVIEW.as_view(), name='getSqaHistory'),
         path('getSqa/', GetSqaAPIVIEW.as_view(), name='getSqa'),
+        path('getModuleNameIDList/', GetModuleNameIDListAPIVIEW.as_view(), name='getModuleNameIDList'),
 ]

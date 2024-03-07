@@ -15,6 +15,18 @@ from datetime import datetime
 from datetime import timedelta
 from dateutil.relativedelta import relativedelta
 class sqaController:
+
+    @staticmethod
+    def getModuleNameIDList(request):
+       try:
+            data = Sqa.objects.all().distinct("module_name")
+            serializer = SqaSerializer(data, many=True)
+            return JsonResponse({'message':'record fetched successfully!','success': True, 'data': serializer.data, 'status': '200'}, status=200)
+       except Exception as e:
+           print(e)
+           return JsonResponse({'message':'record could not fetch','data':[],'success':False, 'status': '500'},status=500)
+
+
     @staticmethod
     def addSqa(request):
         try:
@@ -35,6 +47,7 @@ class sqaController:
                 sqa_obj.purpose = request['purpose']
                 sqa_obj.set_no = request['set_no']
                 sqa_obj.software_size = request['software_size']
+                sqa_obj.installation_date = request['installation_date']
                 sqa_obj.attachment = request['attachment']
                 sqa_obj.software_version = request['software_version']
                 sqa_obj.sqa_certificate_no = request['sqa_certificate_no']
@@ -71,7 +84,7 @@ class sqaController:
                     get_obj.software_size != request['software_size'] or get_obj.attachment != request['attachment'] or \
                     get_obj.software_version != request['software_version'] or get_obj.sqa_certificate_no != request['sqa_certificate_no'] or \
                     get_obj.request_date != request['request_date'] or get_obj.urd != request['urd'] or \
-                    get_obj.srs != request['srs'] or get_obj.sdd != request['sdd'] or \
+                    get_obj.srs != request['srs'] or get_obj.sdd != request['sdd'] or get_obj.installation_date != request['installation_date'] or \
                     get_obj.rtm != request['rtm'] or get_obj.stp != request['stp'] or \
                     get_obj.unit_test != request['unit_test'] or get_obj.static_analysis_report != request['static_analysis_report'] or \
                     get_obj.assertion_density != request['assertion_density'] or get_obj.eng_change_proposal != request['eng_change_proposal'] or \
@@ -95,6 +108,7 @@ class sqaController:
                     sqaHistoryObj.purpose = get_obj.purpose
                     sqaHistoryObj.set_no = get_obj.set_no
                     sqaHistoryObj.software_size = get_obj.software_size
+                    sqaHistoryObj.installation_date = get_obj.installation_date
                     sqaHistoryObj.attachment = get_obj.attachment
                     sqaHistoryObj.software_version = get_obj.software_version
                     sqaHistoryObj.sqa_certificate_no = get_obj.sqa_certificate_no
@@ -135,6 +149,7 @@ class sqaController:
                 get_obj.purpose = request['purpose']
                 get_obj.set_no = request['set_no']
                 get_obj.software_size = request['software_size']
+                get_obj.installation_date = request['installation_date']
                 get_obj.attachment = request['attachment']
                 get_obj.software_version = request['software_version']
                 get_obj.sqa_certificate_no = request['sqa_certificate_no']

@@ -6,6 +6,13 @@ from .sqaController import *
 sqa_obj = sqaController()
 # Create your views here.
 
+class GetModuleNameIDListAPIVIEW(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        print(request.data)
+        result = sqa_obj.getModuleNameIDList(request)
+        return result
 class AddSqaAPIVIEW(APIView):
     permission_classes = [AllowAny]
 
