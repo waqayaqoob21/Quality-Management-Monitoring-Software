@@ -357,7 +357,7 @@ class sqaController:
 
             sqaList = ""
             if selected_status == 'total_sbhds':
-                sqaList = Sqa.objects.all()
+                sqaList = Sqa.objects.all().order_by('-id')
             if selected_status == 'totalApproved':
                 sqaList = Sqa.objects.filter(status = 'QM Qualified')
             if selected_status == 'totaln_sbhd_inprocess_qm':
@@ -458,7 +458,7 @@ class sqaController:
                             status=200)
         except Exception as e:
             print(e)
-            return JsonResponse({'message': 'SQA history could not save.', 'data': [], 'success': False, 'staus': '500'},
+            return JsonResponse({'message': 'SQA history could not find.', 'data': [], 'success': False, 'staus': '500'},
                                 status=500)
 
     @staticmethod
@@ -467,10 +467,31 @@ class sqaController:
             module_id = request.query_params.get('module_id')
             module_name = request.query_params.get('module_name')
             sqaObj = Sqa.objects.filter(module_id = module_id, module_name = module_name).first()
-            serializer = SqaSerializer(sqaObj)
-            return JsonResponse({'Success': 'SQA history has successfully fetched', 'data': serializer.data, 'success': True, 'status': '200'},
-                            status=200)
+            if sqaObj is not None:
+                serializer = SqaSerializer(sqaObj)
+                return JsonResponse({'Success': 'SQA has successfully fetched', 'data': serializer.data, 'success': True, 'status': '200'},
+                                status=200)
+            else:
+                return JsonResponse({'Success': 'SQA could not fetch', 'data': '', 'success': True, 'status': '200'},
+                                status=200)
         except Exception as e:
             print(e)
-            return JsonResponse({'message': 'SQA history could not save.', 'data': [], 'success': False, 'staus': '500'},
+            return JsonResponse({'message': 'SQA could not fetch.', 'data': [], 'success': False, 'staus': '500'},
+                                status=500)
+
+    @staticmethod
+    def deleteSqaHistory(request):
+        try:
+            id = request.query_params['id']
+            sqa = SqaHistory.objects.filter(id=id).first()
+            if sqa is None:
+                return JsonResponse(
+                    {'Success': 'No SQA history found.', 'data': [], 'success': True, 'status': '401'},
+                    status=401)
+            else:
+                sqa.delete()
+                return JsonResponse({'Success': 'SQA history deleted successfully', 'data':[],'success': True,'status':'201'},status=201)
+        except Exception as e:
+            print(e)
+            return JsonResponse({'message': 'SQA history could not delete.', 'data': [], 'success': False, 'staus': '500'},
                                 status=500)
