@@ -19,9 +19,25 @@ class sqaController:
     @staticmethod
     def getModuleNameIDList(request):
        try:
-            data = Sqa.objects.all().distinct("module_name")
-            serializer = SqaSerializer(data, many=True)
-            return JsonResponse({'message':'record fetched successfully!','success': True, 'data': serializer.data, 'status': '200'}, status=200)
+            data = Sqa.objects.all()
+            temp_module_name = ""
+            module_name_list = []
+            temp_module_id = ""
+            module_id_list = []
+            for item in data:
+                if item.module_name != temp_module_name and item.module_name not in module_name_list:
+                    module_name_list.append(item.module_name)
+                temp_module_name = item.module_name
+            for item in data:
+                if item.module_id != temp_module_id and item.module_id not in module_id_list:
+                    module_id_list.append(item.module_id)
+                temp_module_id = item.module_id
+
+            dict = {
+                'module_name' : module_name_list,
+                'module_id' : module_id_list
+            }
+            return JsonResponse({'message':'record fetched successfully!','success': True, 'data': dict, 'status': '200'}, status=200)
        except Exception as e:
            print(e)
            return JsonResponse({'message':'record could not fetch','data':[],'success':False, 'status': '500'},status=500)
