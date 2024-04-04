@@ -232,6 +232,8 @@ class sqaController:
 
             selected_year = request.query_params.get('selected_year')
             selected_org = request.query_params.get('selected_org')
+            selected_type = request.query_params.get('selected_type')
+            selected_sys = request.query_params.get('selected_system')
 
             typeQuery = Q()
             filter_objects = Q()
@@ -241,6 +243,18 @@ class sqaController:
             if selected_org != '':
                 filter_objects &= get_filter('organization', 'equal',selected_org)
                 total_filter_objects &= get_filter('organization', 'equal',selected_org)
+                total_filter_objects &= get_filter(
+                    'status', 'not_equal',
+                    'Certified')
+            if selected_type != "":
+                filter_objects &= get_filter('sys_type', 'equal', selected_type)
+                total_filter_objects &= get_filter('sys_type', 'equal', selected_type)
+                total_filter_objects &= get_filter(
+                    'status', 'not_equal',
+                    'Certified')
+            if selected_sys != "":
+                filter_objects &= get_filter('system_name', 'equal', selected_sys)
+                total_filter_objects &= get_filter('system_name', 'equal', selected_sys)
                 total_filter_objects &= get_filter(
                     'status', 'not_equal',
                     'Certified')
@@ -355,6 +369,8 @@ class sqaController:
 
             selected_year = request.query_params.get('selected_year')
             selected_org = request.query_params.get('selected_org')
+            selected_type = request.query_params.get('selected_type')
+            selected_sys = request.query_params.get('selected_system')
             selected_status = request.query_params.get('selected_status')
 
             typeQuery = Q()
@@ -369,6 +385,12 @@ class sqaController:
                 total_filter_objects &= get_filter(
                     'status', 'not_equal',
                     'Audit in-process')
+            if selected_type != "":
+                filter_objects &= get_filter('sys_type', 'equal', selected_type)
+                total_filter_objects &= get_filter('sys_type', 'equal', selected_type)
+            if selected_sys != "":
+                filter_objects &= get_filter('system_name', 'equal', selected_sys)
+                total_filter_objects &= get_filter('system_name', 'equal', selected_sys)
 
 
             sqaList = ""
@@ -436,8 +458,6 @@ class sqaController:
                             list.append(item)
 
                     sqaList = list
-
-
             serializer = SqaSerializer(sqaList, many=True)
 
             return JsonResponse({'message': 'Data fetched successfully!', 'data': serializer.data,'success':'True'},
