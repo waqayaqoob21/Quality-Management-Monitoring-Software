@@ -448,11 +448,17 @@ class DocController:
                 #     total_doc_type_objects &= get_filter(
                 #         'doc_type', 'equal',
                 #         'BHD')
-                docList = doctracking.objects.filter(total_filter_objects).extra(
+                docList = doctracking.objects.filter(total_filter_objects,receive_date__year = current_year).extra(
                     select={'year': 'extract (year from receive_date)',
                             'month': 'extract (month from receive_date)',
                             'day': 'extract (day from receive_date)'},
                     order_by=['month', 'day', '-year'])
+                list = []
+                for item in docList:
+                    if item.task_date is None:
+                        item.task_date = datetime.today() + timedelta(hours=5)
+                    if item.due_date.date() < item.task_date.date():
+                        list.append(item)
                 # list = []
                 # if docList is not None:
                 #     for item in docList:
@@ -464,7 +470,7 @@ class DocController:
                 #             if task_date:
                 #                 item.task_date = None
                 #             list.append(item)
-                # docList = list
+                docList = list
                 serializer = DocListSerializer(docList, many=True)
                 return JsonResponse({'status': 'True', 'data': serializer.data},
                                     status=200)

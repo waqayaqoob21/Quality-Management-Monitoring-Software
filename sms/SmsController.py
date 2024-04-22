@@ -3000,7 +3000,8 @@ class SmsController:
         # serializer = FlightSystemSerialzer(dataList, many=True)
         # return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
 
-        except:
+        except Exception as e:
+            print(e)
             return JsonResponse({'message': 'Sorry! No Task found.'}, status=500)
 
     # API for PDF generator with table and Text_wraping
