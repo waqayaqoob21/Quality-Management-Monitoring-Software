@@ -22,6 +22,13 @@ class AddEmcAPIVIEW(APIView):
         result = emc_obj.addEmc(request.data)
         return result
 
+class GetEmcDashboardCountAPIVIEW(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        print(request.data)
+        result = emc_obj.getEmcDashboardCount(request)
+        return result
 class GetEmcListAPIVIEW(APIView):
     permission_classes = [AllowAny]
 

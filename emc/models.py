@@ -3,6 +3,7 @@ from django.db import models
 # Create your models here.
 class Emc(models.Model):
     id = models.AutoField(primary_key=True)
+    organization = models.CharField(max_length=300, null=True)
     sys_type = models.CharField(max_length=300)
     sys_name = models.CharField(max_length=300)
     product = models.CharField(max_length=300, null=True)

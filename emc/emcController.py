@@ -38,6 +38,7 @@ class emcController:
                 emc_records = json.loads(product_tests)
                 for item in emc_records:
                     emc_obj = Emc()
+                    emc_obj.organization = item["organization"]
                     emc_obj.sys_type = item["sys_type"]
                     emc_obj.sys_name = item["sys_name"]
                     emc_obj.product = item["product"]
@@ -56,6 +57,7 @@ class emcController:
                     print("record saved successfully!")
                 return JsonResponse({'Success': 'EMS&ES record inserted Successfully!'})
             else:
+                is_emc.organization = request["organization"]
                 is_emc.sys_type = request['sys_type']
                 is_emc.sys_name = request['system_name']
                 is_emc.product = request['product']
@@ -75,6 +77,94 @@ class emcController:
             print(e)
             return JsonResponse({'message':'Record could not add.','data':[],'success':False,'staus':'500'},status=500)
 
+    @staticmethod
+    def getEmcDashboardCount(request):
+        try:
+            selected_year = request.query_params.get('selected_year')
+            selected_org = request.query_params.get('selected_org')
+            selected_type = request.query_params.get('selected_type')
+            selected_sys = request.query_params.get('selected_system')
+            current_status = request.query_params.get('current_status')
+            def get_filter(field_name, filter_condition, filter_value):
+                if filter_condition.strip() == "contains":
+                    kwargs = {
+                        '{0}__icontains'.format(field_name): filter_value
+                    }
+                    return Q(**kwargs)
+
+                if filter_condition.strip() == "not_equal":
+                    kwargs = {
+                        '{0}__iexact'.format(field_name): filter_value
+                    }
+                    return ~Q(**kwargs)
+
+                if filter_condition.strip() == "starts_with":
+                    kwargs = {
+                        '{0}__istartswith'.format(field_name): filter_value
+                    }
+                    return Q(**kwargs)
+                if filter_condition.strip() == "equal":
+                    kwargs = {
+                        '{0}__iexact'.format(field_name): filter_value
+                    }
+                    return Q(**kwargs)
+
+                if filter_condition.strip() == "not_equal":
+                    kwargs = {
+                        '{0}__iexact'.format(field_name): filter_value
+                    }
+
+                    return ~Q(**kwargs)
+            typeQuery = Q()
+            filter_objects = Q()
+            if selected_year != '':
+                filter_objects &= get_filter('created_at__year', 'equal',selected_year)
+            if selected_org != '':
+                filter_objects &= get_filter('organization', 'equal',selected_org)
+            if selected_type != '':
+                filter_objects &= get_filter('sys_type', 'equal',selected_type)
+            if selected_sys != '':
+                filter_objects &= get_filter('sys_name', 'equal',selected_sys)
+            current_year_modules = 0
+            current_year_compliant_modules = 0
+            current_year_non_compliant_modules = 0
+
+            total_modules = 0
+            total_compliant_modules = 0
+            total_non_compliant_modules = 0
+            dataList = Emc.objects.filter(filter_objects)
+
+            if selected_org != '':
+                filter_objects &= get_filter('organization', 'equal',selected_org)
+            if selected_type != "":
+                filter_objects &= get_filter('sys_type', 'equal', selected_type)
+            if selected_sys != "":
+                filter_objects &= get_filter('sys_name', 'equal', selected_sys)
+
+            total_modules = Emc.objects.filter(filter_objects).count()
+            total_compliant_modules = dataList.filter(filter_objects, selected_status = 'Compliant Modules').count()
+            total_non_compliant_modules = dataList.filter(filter_objects, selected_status = 'Non Compliant Modules').count()
+
+            if selected_year != '':
+                filter_objects &= get_filter('created_at__year', 'equal',selected_year)
+            current_year_modules = Emc.objects.filter(filter_objects).count()
+            current_year_compliant_modules = Emc.objects.filter(selected_status = 'Compliant Modules').count()
+            current_year_non_compliant_modules = Emc.objects.filter(selected_status = 'Non Compliant Modules').count()
+
+
+
+            dict = {
+                'current_year_modules': current_year_modules,
+                'current_year_compliant_modules': current_year_compliant_modules,
+                'current_year_non_compliant_modules': current_year_non_compliant_modules,
+                'total_modules': total_modules,
+                'total_compliant_modules': total_compliant_modules,
+                'total_non_compliant_modules': total_non_compliant_modules
+            }
+            return JsonResponse({'Success': 'EMS&ES List Fetched Successfully!','data':dict,'success':True,'status':'200'},status=200)
+        except Exception as e:
+            print(e)
+            return JsonResponse({'message':'Record could not add.','data':[],'success':False,'staus':'500'},status=500)
     @staticmethod
     def getEmc(request):
         try:
