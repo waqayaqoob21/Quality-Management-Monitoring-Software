@@ -34,7 +34,7 @@ class GetEmcListAPIVIEW(APIView):
 
     def get(self, request):
         print(request.data)
-        result = emc_obj.getEmc(request)
+        result = emc_obj.getEmcList(request)
         return result
     
 class DeleteEmcAPIVIEW(APIView):

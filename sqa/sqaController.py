@@ -22,20 +22,20 @@ class sqaController:
             data = Sqa.objects.all()
             temp_module_name = ""
             module_name_list = []
-            temp_module_id = ""
-            module_id_list = []
+            temp_software_versions = ""
+            software_version_list = []
             for item in data:
                 if item.module_name != temp_module_name and item.module_name not in module_name_list:
                     module_name_list.append(item.module_name)
                 temp_module_name = item.module_name
             for item in data:
-                if item.module_id != temp_module_id and item.module_id not in module_id_list:
-                    module_id_list.append(item.module_id)
-                temp_module_id = item.module_id
+                if item.software_version != temp_software_versions and item.software_version not in software_version_list:
+                    software_version_list.append(item.software_version)
+                temp_software_versions = item.software_version
 
             dict = {
                 'module_name' : module_name_list,
-                'module_id' : module_id_list
+                'software_version' : software_version_list
             }
             return JsonResponse({'message':'record fetched successfully!','success': True, 'data': dict, 'status': '200'}, status=200)
        except Exception as e:
@@ -82,6 +82,7 @@ class sqaController:
                 sqa_obj.code_coverage = request['code_coverage']
                 sqa_obj.functional_testing = request['functional_testing']
                 sqa_obj.formal_testing = request['formal_testing']
+                sqa_obj.design_coverage = request['design_coverage']
                 sqa_obj.status = request['status']
                 sqa_obj.due_date = request['due_date']
                 sqa_obj.audit_completion_date = request['audit_completion_date']
@@ -108,7 +109,7 @@ class sqaController:
                     get_obj.code_coverage != request['code_coverage'] or get_obj.functional_testing != request['functional_testing'] or \
                     get_obj.formal_testing != request['formal_testing'] or get_obj.status != request['status'] or \
                     get_obj.due_date != request['due_date'] or get_obj.audit_completion_date != request['audit_completion_date'] or \
-                    get_obj.remarks != request['remarks']:
+                    get_obj.remarks != request['remarks'] or get_obj.design_coverage != request['design_coverage']:
                     sqaHistoryObj = SqaHistory()
                     sqaHistoryObj.sys_type = get_obj.sys_type
                     sqaHistoryObj.system_name = get_obj.system_name
@@ -141,6 +142,7 @@ class sqaController:
                     sqaHistoryObj.bugs_observation = get_obj.bugs_observation
                     sqaHistoryObj.cyclomatic_complexity = get_obj.cyclomatic_complexity
                     sqaHistoryObj.code_coverage = get_obj.code_coverage
+                    sqaHistoryObj.design_coverage = get_obj.design_coverage
                     sqaHistoryObj.functional_testing = get_obj.functional_testing
                     sqaHistoryObj.formal_testing = get_obj.formal_testing
                     sqaHistoryObj.status = get_obj.status
@@ -182,6 +184,7 @@ class sqaController:
                 get_obj.bugs_observation = request['bugs_observation']
                 get_obj.cyclomatic_complexity = request['cyclomatic_complexity']
                 get_obj.code_coverage = request['code_coverage']
+                get_obj.design_coverage = request['design_coverage']
                 get_obj.functional_testing = request['functional_testing']
                 get_obj.formal_testing = request['formal_testing']
                 get_obj.status = request['status']
@@ -500,9 +503,9 @@ class sqaController:
     @staticmethod
     def getSqa(request):
         try:
-            module_id = request.query_params.get('module_id')
+            software_version = request.query_params.get('software_version')
             module_name = request.query_params.get('module_name')
-            sqaObj = Sqa.objects.filter(module_id = module_id, module_name = module_name).first()
+            sqaObj = Sqa.objects.filter(software_version = software_version, module_name = module_name).first()
             if sqaObj is not None:
                 serializer = SqaSerializer(sqaObj)
                 return JsonResponse({'Success': 'SQA has successfully fetched', 'data': serializer.data, 'success': True, 'status': '200'},

@@ -41,6 +41,7 @@ class Sqa(models.Model):
     software_size = models.CharField(max_length=300, null=True)
     installation_date = models.DateTimeField(auto_now_add=False, null=True)
     attachment = models.TextField(null=True)
+    design_coverage = models.TextField(null=True)
 
 class SqaHistory(models.Model):
     id = models.AutoField(primary_key = True)
@@ -82,3 +83,4 @@ class SqaHistory(models.Model):
     software_size = models.CharField(max_length=300, null=True)
     installation_date = models.DateTimeField(auto_now_add=False, null=True)
     attachment = models.TextField(null=True)
+    design_coverage = models.TextField(null=True)
