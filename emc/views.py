@@ -43,3 +43,11 @@ class DeleteEmcAPIVIEW(APIView):
     def delete(self, request):
         result = emc_obj.deleteEmc(request)
         return result
+
+class GetEmcHistoryAPIVIEW(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        print(request.data)
+        result = emc_obj.getEmcHistory(request)
+        return result
