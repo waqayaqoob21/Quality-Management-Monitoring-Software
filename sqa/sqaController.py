@@ -25,13 +25,15 @@ class sqaController:
             temp_software_versions = ""
             software_version_list = []
             for item in data:
-                if item.module_name != temp_module_name and item.module_name not in module_name_list:
-                    module_name_list.append(item.module_name)
-                temp_module_name = item.module_name
+                if item.module_name != '' and item.module_name != 'other':
+                    if item.module_name != temp_module_name and item.module_name not in module_name_list:
+                        module_name_list.append(item.module_name)
+                    temp_module_name = item.module_name
             for item in data:
-                if item.software_version != temp_software_versions and item.software_version not in software_version_list:
-                    software_version_list.append(item.software_version)
-                temp_software_versions = item.software_version
+                if item.software_version != '' and item.software_version != 'other':
+                    if item.software_version != temp_software_versions and item.software_version not in software_version_list:
+                        software_version_list.append(item.software_version)
+                    temp_software_versions = item.software_version
 
             dict = {
                 'module_name' : module_name_list,
