@@ -29,4 +29,5 @@ urlpatterns = [
     url(r'^emc/', include('emc.urls')),
     url(r'^sqa/', include('sqa.urls')),
     url(r'^reliability/', include('reliability.urls')),
+    url(r'^power/', include('power.urls')),
 ]
