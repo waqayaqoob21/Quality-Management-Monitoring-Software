@@ -5,6 +5,7 @@ from django.db import models
 class Sqa(models.Model):
     id = models.AutoField(primary_key = True)
     sys_type = models.CharField(max_length=300)
+    optional_system_types = models.CharField(max_length=300, null=True)
     system_name = models.CharField(max_length=300)
     module_name = models.CharField(max_length=300)
     module_id = models.CharField(max_length=300)
@@ -46,6 +47,7 @@ class Sqa(models.Model):
 class SqaHistory(models.Model):
     id = models.AutoField(primary_key = True)
     sys_type = models.CharField(max_length=300)
+    optional_system_types = models.CharField(max_length=300, null=True)
     system_name = models.CharField(max_length=300)
     module_name = models.CharField(max_length=300)
     module_id = models.CharField(max_length=300)

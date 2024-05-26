@@ -24,6 +24,8 @@ class sqaController:
             module_name_list = []
             temp_software_versions = ""
             software_version_list = []
+            optional_system_types_list = []
+            temp_optional_system_types = ""
             for item in data:
                 if item.module_name != '' and item.module_name != 'other':
                     if item.module_name != temp_module_name and item.module_name not in module_name_list:
@@ -35,9 +37,15 @@ class sqaController:
                         software_version_list.append(item.software_version)
                     temp_software_versions = item.software_version
 
+            for item in data:
+                if item.optional_system_types != '' and item.optional_system_types != 'Add More':
+                    if item.optional_system_types != temp_optional_system_types and item.optional_system_types not in optional_system_types_list:
+                        optional_system_types_list.append(item.optional_system_types)
+                    temp_optional_system_types = item.optional_system_types
             dict = {
                 'module_name' : module_name_list,
-                'software_version' : software_version_list
+                'software_version' : software_version_list,
+                'optional_system_types': optional_system_types_list
             }
             return JsonResponse({'message':'record fetched successfully!','success': True, 'data': dict, 'status': '200'}, status=200)
        except Exception as e:
@@ -49,10 +57,19 @@ class sqaController:
     def addSqa(request):
         try:
             sqa_obj = Sqa()
-            id = request['id']
-            if id == '0':
+            id_from_frontend = request['id']
+            previous_record = ''
+            record_id = ''
+            endSign = '&'
+            if id_from_frontend != '0' and endSign in id_from_frontend:
+                previous_record = id_from_frontend.split("&")[1]
+                record_id = '0'
+            elif id_from_frontend != '0':
+                previous_record = id_from_frontend
+            if record_id == '0':
                 sqa_obj.sys_type = request['sys_type']
                 sqa_obj.system_name = request['system_name']
+                sqa_obj.optional_system_types = request['optional_system_types']
                 sqa_obj.module_name = request['module_name']
                 sqa_obj.module_id = request['module_id']
                 sqa_obj.organization = request['organization']
@@ -90,10 +107,10 @@ class sqaController:
                 sqa_obj.audit_completion_date = request['audit_completion_date']
                 sqa_obj.remarks = request['remarks']
                 sqa_obj.save()
-                return JsonResponse({'Success': 'SQA record inserted Successfully!'})
-            else:
-                get_obj = Sqa.objects.filter(id=id).first()
+            if previous_record != '':
+                get_obj = Sqa.objects.filter(id=previous_record).first()
                 if get_obj.sys_type != request['sys_type'] or get_obj.system_name != request['system_name'] or \
+                    get_obj.optional_system_types != request['optional_system_types'] or \
                     get_obj.organization != request['organization'] or get_obj.module_name != request['module_name'] or \
                     get_obj.module_id != request['module_id'] or get_obj.software_type != request['software_type'] or \
                     get_obj.svc_no != request['svc_no'] or get_obj.svc_date != request['svc_date'] or \
@@ -112,9 +129,12 @@ class sqaController:
                     get_obj.formal_testing != request['formal_testing'] or get_obj.status != request['status'] or \
                     get_obj.due_date != request['due_date'] or get_obj.audit_completion_date != request['audit_completion_date'] or \
                     get_obj.remarks != request['remarks'] or get_obj.design_coverage != request['design_coverage']:
+
+
                     sqaHistoryObj = SqaHistory()
                     sqaHistoryObj.sys_type = get_obj.sys_type
                     sqaHistoryObj.system_name = get_obj.system_name
+                    sqaHistoryObj.optional_system_types = get_obj.optional_system_types
                     sqaHistoryObj.module_name = get_obj.module_name
                     sqaHistoryObj.module_id = get_obj.module_id
                     sqaHistoryObj.organization = get_obj.organization
@@ -151,12 +171,13 @@ class sqaController:
                     sqaHistoryObj.due_date = get_obj.due_date
                     sqaHistoryObj.audit_completion_date = get_obj.audit_completion_date
                     sqaHistoryObj.remarks = get_obj.remarks
-                    sqaHistoryObj.sqa = id
+                    sqaHistoryObj.sqa = previous_record
                     sqaHistoryObj.save()
                     print("SQA History has been saved!")
 
                 get_obj.sys_type = request['sys_type']
                 get_obj.system_name = request['system_name']
+                get_obj.optional_system_types = request['optional_system_types']
                 get_obj.module_name = request['module_name']
                 get_obj.module_id = request['module_id']
                 get_obj.organization = request['organization']
@@ -194,7 +215,12 @@ class sqaController:
                 get_obj.audit_completion_date = request['audit_completion_date']
                 get_obj.remarks = request['remarks']
                 get_obj.save()
-                return JsonResponse({'Success': 'SQA Record Updated Successfully!'})
+            msg = ""
+            if id_from_frontend != '0':
+                msg  = "New record added and previous record updated"
+            else:
+                msg = "Record updated successfully!"
+            return JsonResponse({'message': msg, 'data':{}},status=201)
         except Exception as e:
             print(e)
             return JsonResponse({'message': 'Record could not add.', 'data': [], 'success': False, 'staus': '500'},

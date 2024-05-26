@@ -106,14 +106,8 @@ class reliabilityController:
                     return ~Q(**kwargs)
             typeQuery = Q()
             filter_objects = Q()
-            if selected_year != '':
-                filter_objects &= get_filter('created_at__year', 'equal',selected_year)
 
-            if selected_type != '':
-                filter_objects &= get_filter('sys_type', 'equal',selected_type)
 
-            if estimation_type != '':
-                filter_objects &= get_filter('estimation_type', 'equal',estimation_type)
             current_year_modules = 0
             current_year_under_process = 0
             current_year_completed = 0
@@ -121,19 +115,23 @@ class reliabilityController:
             total_modules = 0
             total_under_process = 0
             total_completed = 0
+
+            if selected_type != '':
+                filter_objects &= get_filter('system_type', 'equal',selected_type)
+            if estimation_type != '':
+                filter_objects &= get_filter('estimation_type', 'equal',estimation_type)
             dataList = Reliability.objects.filter(filter_objects)
 
-            if selected_type != "":
-                filter_objects &= get_filter('sys_type', 'equal', selected_type)
 
-            total_modules = Reliability.objects.filter(filter_objects).count()
-            total_under_process = dataList.filter(filter_objects, current_status = 'Under Process').count()
-            total_completed = dataList.filter(filter_objects, current_status = 'Completed').count()
+            total_modules = dataList.count()
+            total_under_process = dataList.filter(current_status = 'Under Process').count()
+            total_completed = dataList.filter(current_status = 'Completed').count()
 
             if selected_year != '':
-                filter_objects &= get_filter('created_at__year', 'equal',selected_year)
-            current_year_modules = Reliability.objects.filter(filter_objects).count()
-            current_year_under_process = Reliability.objects.filter(filter_objects,current_status = 'Under Process').count()
+                filter_objects &= get_filter('completion_date__year', 'equal',selected_year)
+            current_year_modules = dataList.filter(filter_objects).count()
+            current_year_under_process = dataList.filter(current_status = 'Under Process').count()
+            current_year_completed = dataList.filter(current_status = 'Completed').count()
 
 
             dict = {
@@ -156,7 +154,7 @@ class reliabilityController:
             selected_year = request.query_params.get('selected_year')
             selected_type = request.query_params.get('selected_type')
             estimation_type = request.query_params.get('estimation_type')
-            current_status = request.query_params.get('selected_status')
+            current_status = request.query_params.get('current_status')
             def get_filter(field_name, filter_condition, filter_value):
                 if filter_condition.strip() == "contains":
                     kwargs = {
@@ -189,35 +187,27 @@ class reliabilityController:
                     return ~Q(**kwargs)
             typeQuery = Q()
             filter_objects = Q()
-            if selected_year != '':
-                filter_objects &= get_filter('created_at__year', 'equal',selected_year)
-            # if selected_org != '':
-            #     filter_objects &= get_filter('organization', 'equal',selected_org)
+
             if selected_type != '':
-                filter_objects &= get_filter('sys_type', 'equal',selected_type)
+                filter_objects &= get_filter('system_type', 'equal',selected_type)
 
-            if selected_type != "":
-                filter_objects &= get_filter('sys_type', 'equal', selected_type)
+            if estimation_type != "":
+                filter_objects &= get_filter('estimation_type', 'equal', estimation_type)
 
-            dataList = Reliability.objects.all().order_by('-id')
-            if current_status == 'total_modules':
-                dataList = dataList.filter(filter_objects)
-            if current_status == 'total_compliant_modules':
-                dataList = dataList.filter(filter_objects, compliance_status = 'Compliant')
-            if current_status == 'total_non_compliant_modules':
-                dataList = dataList.filter(filter_objects, compliance_status = 'Non Compliant')
-            if current_status == 'total_partial_compliant_modules':
-                dataList = dataList.filter(filter_objects, compliance_status = 'Partial Compliant')
+            dataList = Reliability.objects.filter(filter_objects)
+            if current_status == 'total_under_process':
+                dataList = dataList.filter(current_status = 'Under Process')
+            if current_status == 'total_completed':
+                dataList = dataList.filter(current_status = 'Completed')
 
 
             if current_status == 'current_year_modules':
-                dataList = dataList.filter(filter_objects, created_at__year = selected_year)
+                dataList = dataList.filter(filter_objects,completion_date__year = selected_year, current_status = 'Under Process')
             if current_status == 'current_year_compliant_modules':
-                dataList = dataList.filter(filter_objects, created_at__year = selected_year,compliance_status = 'Compliant')
-            if current_status == 'current_year_non_compliant_modules':
-                dataList = dataList.filter(filter_objects, created_at__year = selected_year,compliance_status = 'Non Compliant')
-            if current_status == 'current_year_partial_compliant_modules':
-                dataList = dataList.filter(filter_objects, created_at__year = selected_year,compliance_status = 'Partial Compliant')
+                dataList = dataList.filter(filter_objects, completion_date__year = selected_year, current_status = 'Under Process')
+            if current_status == 'current_year_completed':
+                dataList = dataList.filter(filter_objects, completion_date__year = selected_year, current_status = 'Completed')
+
             serializer = ReliabilitySerializer(dataList, many=True)
             return JsonResponse({'Success': 'EMI/EMC List Fetched Successfully!','data':serializer.data,'success':True,'status':'200'},status=200)
         except Exception as e:
@@ -227,8 +217,8 @@ class reliabilityController:
     @staticmethod
     def getReliabilityHistory(request):
         try:
-            emc_id = request.query_params.get('id')
-            data = Reliability.objects.filter(emc_id = emc_id)
+            reliability_id = request.query_params.get('id')
+            data = ReliabilityHistory.objects.filter(reliability_id = reliability_id)
             serializer = ReliabilitySerializer(data, many=True)
             return JsonResponse({'Success': 'EMS&ES List Fetched Successfully!','data':serializer.data,'success':True,'status':'200'},status=200)
         except Exception as e:
@@ -237,23 +227,11 @@ class reliabilityController:
     @staticmethod
     def deleteReliability(request):
         try:
-            emc_id = request.query_params['emc_id']
-            emc = Reliability.objects.filter(id=emc_id).first()
-            emc.delete()
-            return JsonResponse({'Success': 'EMC deleted successfully', 'data':[],'success': True,'status':'201'},status=201)
+            reliability_id = request.query_params['id']
+            reliability = Reliability.objects.filter(id=reliability_id).first()
+            reliability.delete()
+            return JsonResponse({'Success': 'Reliability deleted successfully', 'data':[],'success': True,'status':'201'},status=201)
         except Exception as e:
             print(e)
-            return JsonResponse({'message': 'EMC could not delete.', 'data': [], 'success': False, 'staus': '500'},
-                                status=500)
-    @staticmethod
-    def getReliabilityList(request):
-        try:
-            data = Reliability.objects.all()
-            serializer = ReliabilitySerializer(data, many=True)
-            return JsonResponse(
-                {'Success': 'Reliability List Fetched Successfully!', 'data': serializer.data, 'success': True,
-                 'status': '200'}, status=200)
-        except Exception as e:
-            print(e)
-            return JsonResponse({'message': 'Record could not add.', 'data': [], 'success': False, 'staus': '500'},
+            return JsonResponse({'message': 'Reliability could not delete.', 'data': [], 'success': False, 'staus': '500'},
                                 status=500)

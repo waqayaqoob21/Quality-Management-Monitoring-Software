@@ -71,7 +71,7 @@ class emcController:
                     emc_obj.remarks = item["remarks"]
                     emc_obj.save()
                     print("record saved successfully!")
-                return JsonResponse({'Success': 'EMS&ES record inserted Successfully!'})
+                return JsonResponse({'message': 'EMS&ES record inserted Successfully!', 'data': {}}, status=201)
             else:
                 get_obj = Emc.objects.filter(id=emc_id).first()
                 if (get_obj.sys_type != request['sys_type'] or get_obj.sys_name != request['system_name'] or \
@@ -156,7 +156,7 @@ class emcController:
                 is_emc.compliance_date = request['compliance_date']
                 is_emc.remarks = request['remarks']
                 is_emc.save()
-                return JsonResponse({'Success': 'EMS&ES Record Updated Successfully!'})
+                return JsonResponse({'Success': 'EMS&ES Record Updated Successfully!', 'data': {}}, status=201)
         except Exception as e:
             print(e)
             return JsonResponse({'message':'Record could not add.','data':[],'success':False,'staus':'500'},status=500)
@@ -199,8 +199,8 @@ class emcController:
                     return ~Q(**kwargs)
             typeQuery = Q()
             filter_objects = Q()
-            if selected_year != '':
-                filter_objects &= get_filter('created_at__year', 'equal',selected_year)
+            # if selected_year != '':
+            #     filter_objects &= get_filter('compliance_date__year', 'equal',selected_year)
 
             if selected_type != '':
                 filter_objects &= get_filter('sys_type', 'equal',selected_type)
@@ -284,10 +284,7 @@ class emcController:
                     return ~Q(**kwargs)
             typeQuery = Q()
             filter_objects = Q()
-            if selected_year != '':
-                filter_objects &= get_filter('created_at__year', 'equal',selected_year)
-            # if selected_org != '':
-            #     filter_objects &= get_filter('organization', 'equal',selected_org)
+
             if selected_type != '':
                 filter_objects &= get_filter('sys_type', 'equal',selected_type)
 
@@ -304,15 +301,16 @@ class emcController:
             if current_status == 'total_partial_compliant_modules':
                 dataList = dataList.filter(filter_objects, compliance_status = 'Partial Compliant')
 
-
+            if selected_year != '':
+                filter_objects &= get_filter('compliance_date__year', 'equal',selected_year)
             if current_status == 'current_year_modules':
-                dataList = dataList.filter(filter_objects, created_at__year = selected_year)
+                dataList = dataList.filter(filter_objects)
             if current_status == 'current_year_compliant_modules':
-                dataList = dataList.filter(filter_objects, created_at__year = selected_year,compliance_status = 'Compliant')
+                dataList = dataList.filter(filter_objects, compliance_status = 'Compliant')
             if current_status == 'current_year_non_compliant_modules':
-                dataList = dataList.filter(filter_objects, created_at__year = selected_year,compliance_status = 'Non Compliant')
+                dataList = dataList.filter(filter_objects, compliance_status = 'Non Compliant')
             if current_status == 'current_year_partial_compliant_modules':
-                dataList = dataList.filter(filter_objects, created_at__year = selected_year,compliance_status = 'Partial Compliant')
+                dataList = dataList.filter(filter_objects, compliance_status = 'Partial Compliant')
             serializer = EmcSerializer(dataList, many=True)
             return JsonResponse({'Success': 'EMI/EMC List Fetched Successfully!','data':serializer.data,'success':True,'status':'200'},status=200)
         except Exception as e:
