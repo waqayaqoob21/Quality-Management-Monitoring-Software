@@ -38,7 +38,7 @@ class sqaController:
                     temp_software_versions = item.software_version
 
             for item in data:
-                if item.optional_system_types != '' and item.optional_system_types != 'Add More':
+                if item.optional_system_types != '' and item.optional_system_types is not None and item.optional_system_types != 'Add More':
                     if item.optional_system_types != temp_optional_system_types and item.optional_system_types not in optional_system_types_list:
                         optional_system_types_list.append(item.optional_system_types)
                     temp_optional_system_types = item.optional_system_types
@@ -58,14 +58,15 @@ class sqaController:
         try:
             sqa_obj = Sqa()
             id_from_frontend = request['id']
-            previous_record = ''
-            record_id = ''
+            previous_record = '0'
+            record_id = '0'
             endSign = '&'
-            if id_from_frontend != '0' and endSign in id_from_frontend:
+            if endSign in id_from_frontend:
                 previous_record = id_from_frontend.split("&")[1]
-                record_id = '0'
             elif id_from_frontend != '0':
                 previous_record = id_from_frontend
+            else:
+                record_id = id_from_frontend
             if record_id == '0':
                 sqa_obj.sys_type = request['sys_type']
                 sqa_obj.system_name = request['system_name']
@@ -83,6 +84,7 @@ class sqaController:
                 sqa_obj.set_no = request['set_no']
                 sqa_obj.software_size = request['software_size']
                 sqa_obj.installation_date = request['installation_date']
+                sqa_obj.installation_date_obs = request['installation_date_obs']
                 sqa_obj.attachment = request['attachment']
                 sqa_obj.software_version = request['software_version']
                 sqa_obj.sqa_certificate_no = request['sqa_certificate_no']
@@ -107,7 +109,7 @@ class sqaController:
                 sqa_obj.audit_completion_date = request['audit_completion_date']
                 sqa_obj.remarks = request['remarks']
                 sqa_obj.save()
-            if previous_record != '':
+            if previous_record != '0':
                 get_obj = Sqa.objects.filter(id=previous_record).first()
                 if get_obj.sys_type != request['sys_type'] or get_obj.system_name != request['system_name'] or \
                     get_obj.optional_system_types != request['optional_system_types'] or \
@@ -121,7 +123,7 @@ class sqaController:
                     get_obj.software_version != request['software_version'] or get_obj.sqa_certificate_no != request['sqa_certificate_no'] or \
                     get_obj.request_date != request['request_date'] or get_obj.urd != request['urd'] or \
                     get_obj.srs != request['srs'] or get_obj.sdd != request['sdd'] or get_obj.installation_date != request['installation_date'] or \
-                    get_obj.rtm != request['rtm'] or get_obj.stp != request['stp'] or \
+                    get_obj.installation_date_obs != request['installation_date_obs'] or get_obj.rtm != request['rtm'] or get_obj.stp != request['stp'] or \
                     get_obj.unit_test != request['unit_test'] or get_obj.static_analysis_report != request['static_analysis_report'] or \
                     get_obj.assertion_density != request['assertion_density'] or get_obj.eng_change_proposal != request['eng_change_proposal'] or \
                     get_obj.bugs_observation != request['bugs_observation'] or get_obj.cyclomatic_complexity != request['cyclomatic_complexity'] or \
@@ -148,6 +150,7 @@ class sqaController:
                     sqaHistoryObj.set_no = get_obj.set_no
                     sqaHistoryObj.software_size = get_obj.software_size
                     sqaHistoryObj.installation_date = get_obj.installation_date
+                    sqaHistoryObj.installation_date_obs = get_obj.installation_date_obs
                     sqaHistoryObj.attachment = get_obj.attachment
                     sqaHistoryObj.software_version = get_obj.software_version
                     sqaHistoryObj.sqa_certificate_no = get_obj.sqa_certificate_no
@@ -191,6 +194,7 @@ class sqaController:
                 get_obj.set_no = request['set_no']
                 get_obj.software_size = request['software_size']
                 get_obj.installation_date = request['installation_date']
+                get_obj.installation_date_obs = request['installation_date_obs']
                 get_obj.attachment = request['attachment']
                 get_obj.software_version = request['software_version']
                 get_obj.sqa_certificate_no = request['sqa_certificate_no']
@@ -561,4 +565,87 @@ class sqaController:
         except Exception as e:
             print(e)
             return JsonResponse({'message': 'SQA history could not delete.', 'data': [], 'success': False, 'staus': '500'},
+                                status=500)
+
+    @staticmethod
+    def getSqaSummary(request):
+        try:
+            system_type = request.query_params.get('system_type')
+            system_name = request.query_params.get('system_name')
+            software_version = request.query_params.get('software_version')
+            module_name = request.query_params.get('module_name')
+            def get_filter(field_name, filter_condition, filter_value):
+                if filter_condition.strip() == "contains":
+                    kwargs = {
+                        '{0}__icontains'.format(field_name): filter_value
+                    }
+                    return Q(**kwargs)
+
+                if filter_condition.strip() == "not_equal":
+                    kwargs = {
+                        '{0}__iexact'.format(field_name): filter_value
+                    }
+                    return ~Q(**kwargs)
+
+                if filter_condition.strip() == "starts_with":
+                    kwargs = {
+                        '{0}__istartswith'.format(field_name): filter_value
+                    }
+                    return Q(**kwargs)
+                if filter_condition.strip() == "equal":
+                    kwargs = {
+                        '{0}__iexact'.format(field_name): filter_value
+                    }
+                    return Q(**kwargs)
+
+                if filter_condition.strip() == "not_equal":
+                    kwargs = {
+                        '{0}__iexact'.format(field_name): filter_value
+                    }
+
+                    return ~Q(**kwargs)
+            sys_name_list = []
+            sys_type_list = []
+            module_name_list = []
+            software_version_list = []
+
+            typeQuery = Q()
+            filter_objects = Q()
+            dataList = []
+            if system_type != '' and system_type.__contains__(","):
+                system_type_list = system_type.split(",")
+                for type in system_type_list:
+                    filter_objects |= get_filter('sys_type', 'equal', system_type)
+            elif system_type != '' and not system_type.__contains__(","):
+                filter_objects &= get_filter('sys_type', 'equal', system_type)
+
+            if system_name != '' and system_name.__contains__(","):
+                system_name_list = system_name.split(",")
+                for name in system_name_list:
+                    filter_objects |= get_filter('system_name', 'equal', name)
+            elif system_name != '' and not system_name.__contains__(","):
+                filter_objects &= get_filter('system_name', 'equal', system_name)
+
+            if module_name != '' and module_name.__contains__(","):
+                module_name_list = module_name.split(",")
+                for module in module_name_list:
+                    filter_objects |= get_filter('module_name', 'equal',module)
+
+            elif module_name != '' and not module_name.__contains__(","):
+                filter_objects &= get_filter('module_name', 'equal', module_name)
+
+            if software_version != '' and software_version.__contains__(","):
+                software_version_list = software_version.split(",")
+                for version in software_version_list:
+                    filter_objects |= get_filter('software_version', 'equal', version)
+            elif software_version != '' and not software_version.__contains__(","):
+                filter_objects &= get_filter('software_version', 'equal', software_version)
+
+            dataList = Sqa.objects.filter(filter_objects)
+            serializer = SqaSerializer(dataList, many=True)
+            return JsonResponse({'Success': 'SQA Summary could not fetch', 'data': serializer.data, 'success': True, 'status': '200'},
+                                    status=200)
+        except Exception as e:
+            print(e)
+            return JsonResponse({'message': 'SQA Summary could not fetch.', 'data': [], 'success': False, 'staus': '500'},
                                 status=500)

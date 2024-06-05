@@ -62,3 +62,10 @@ class DeleteSqaHistoryAPIVIEW(APIView):
         print(request.data)
         result = sqa_obj.deleteSqaHistory(request)
         return result
+
+class GetSqaSummaryAPIVIEW(APIView):
+    permission_classes = [AllowAny]
+    def get(self,request):
+        print(request.data)
+        result = sqa_obj.getSqaSummary(request)
+        return result
