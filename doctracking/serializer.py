@@ -40,3 +40,18 @@ class DocListSerializer(Serializer):
     tracking_id = CharField()
     certificate_number = CharField()
     last_meeting_date = DateTimeField()
+
+class CertificationSerializer(Serializer):
+    id = IntegerField()
+    organization = CharField()
+    certificate_serial_number = CharField()
+    certificate_issue_date = DateTimeField()
+    product_name = CharField()
+    identification_no = CharField()
+    qualification_date = DateTimeField()
+    manufacturer = CharField()
+    bhd_no = CharField()
+    certificate_number = CharField()
+    certificate_date = DateTimeField()
+    audit_report_no = CharField()
+    audit_report_date = DateTimeField()

@@ -614,30 +614,51 @@ class sqaController:
             dataList = []
             if system_type != '' and system_type.__contains__(","):
                 system_type_list = system_type.split(",")
+                counter = 0
                 for type in system_type_list:
-                    filter_objects |= get_filter('sys_type', 'equal', system_type)
+                    if counter >0:
+                        filter_objects |= get_filter('sys_type', 'equal', system_type)
+                    else:
+                        filter_objects &= get_filter('sys_type', 'equal', system_type)
+                    counter += 1
             elif system_type != '' and not system_type.__contains__(","):
+
                 filter_objects &= get_filter('sys_type', 'equal', system_type)
 
             if system_name != '' and system_name.__contains__(","):
                 system_name_list = system_name.split(",")
+                counter = 0
                 for name in system_name_list:
-                    filter_objects |= get_filter('system_name', 'equal', name)
+                    if counter >0:
+                        filter_objects |= get_filter('system_name', 'equal', name)
+                    else:
+                        filter_objects &= get_filter('system_name', 'equal', name)
+                    counter += 1
             elif system_name != '' and not system_name.__contains__(","):
                 filter_objects &= get_filter('system_name', 'equal', system_name)
 
             if module_name != '' and module_name.__contains__(","):
                 module_name_list = module_name.split(",")
+                counter = 0
                 for module in module_name_list:
-                    filter_objects |= get_filter('module_name', 'equal',module)
+                    if counter >0:
+                        filter_objects |= get_filter('module_name', 'equal',module)
+                    else:
+                        filter_objects &= get_filter('module_name', 'equal',module)
+                    counter += 1
 
             elif module_name != '' and not module_name.__contains__(","):
                 filter_objects &= get_filter('module_name', 'equal', module_name)
 
             if software_version != '' and software_version.__contains__(","):
                 software_version_list = software_version.split(",")
+                counter = 0
                 for version in software_version_list:
-                    filter_objects |= get_filter('software_version', 'equal', version)
+                    if counter > 0:
+                        filter_objects |= get_filter('software_version', 'equal', version)
+                    else:
+                        filter_objects |= get_filter('software_version', 'equal', version)
+                    counter += 1
             elif software_version != '' and not software_version.__contains__(","):
                 filter_objects &= get_filter('software_version', 'equal', software_version)
 

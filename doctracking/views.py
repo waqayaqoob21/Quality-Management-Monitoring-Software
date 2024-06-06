@@ -72,7 +72,12 @@ class GetDocumentsExcelAPIVIEW(APIView):
         result = doc_obj.GetDocumentExcelList(request)
         return result
 
+class GenerateCertificateAPIVIEW(APIView):
+    permission_classes = [AllowAny]
 
+    def post(self, request):
+        result = doc_obj.generateCertificate(request.data)
+        return result
 class GetDashboardAPIVIEW(APIView):
     permission_classes = [AllowAny]
 

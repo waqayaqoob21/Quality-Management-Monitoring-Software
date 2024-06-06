@@ -25,3 +25,20 @@ class doctrackingHistory(models.Model):
     tracking_id = models.CharField(max_length=500, null=True)
     certificate_number = models.CharField(max_length=500, null=True)
     last_meeting_date = models.DateTimeField(auto_now_add=False, db_index=True, null=True)
+
+
+class Certification(models.Model):
+    id = models.AutoField(primary_key=True)
+    organization = models.CharField(max_length=500)
+    certificate_serial_number = models.CharField(max_length=500, null=True)
+    certificate_issue_date = models.DateTimeField(auto_now_add=False, db_index=True, null=True)
+    product_name = models.CharField(max_length=300, null=True)
+    identification_no = models.CharField(max_length=300, null=True)
+    qualification_date = models.DateTimeField(auto_now_add=False, db_index=True, null=True)
+    manufacturer = models.CharField(max_length=100, null=True)
+    bhd_no = models.CharField(max_length=100, null=False)
+    certificate_number = models.CharField(max_length=500, null=True)
+    certificate_date = models.DateTimeField(auto_now_add=False, db_index=True, null=True)
+    audit_report_no = models.CharField(max_length=500, null=True)
+    audit_report_date = models.DateTimeField(auto_now_add=False, db_index=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
