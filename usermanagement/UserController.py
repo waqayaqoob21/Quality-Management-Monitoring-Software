@@ -48,6 +48,10 @@ class UserController:
                         rolesModel.task_roles = request['task_roles']
                         rolesModel.qms_roles = request['qms_roles']
                         rolesModel.cesp_roles = request['cesp_roles']
+                        rolesModel.sqa_roles = request['sqa_roles']
+                        rolesModel.emc_roles = request['emc_roles']
+                        rolesModel.reliability_roles = request['reliability_roles']
+                        rolesModel.power_roles = request['power_roles']
                         rolesModel.save()
                 return JsonResponse({'masssage': 'User Added Successfully!'},status=200)
             else:
@@ -78,6 +82,10 @@ class UserController:
                     userRole.task_roles = request['task_roles']
                     userRole.qms_roles = request['qms_roles']
                     userRole.cesp_roles = request['cesp_roles']
+                    userRole.sqa_roles = request['sqa_roles']
+                    userRole.emc_roles = request['emc_roles']
+                    userRole.reliability_roles = request['reliability_roles']
+                    userRole.power_roles = request['power_roles']
                     userRole.save()
                 return JsonResponse({'masssage': 'User Updated Successfully!'}, status=200)
         except:
@@ -91,7 +99,7 @@ class UserController:
             doc_list = []
             cursor = connection.cursor()
             query = "SELECT au.id,au.first_name,au.last_name,au.username,au.password,au.user_type, "\
-                    "ur.prod_roles,ur.flight_roles,ur.relif_roles,ur.motor_roles,ur.battery_roles,ur.pyro_roles,bhd_roles,task_roles,qms_roles,cesp_roles  " \
+                    "ur.prod_roles,ur.flight_roles,ur.relif_roles,ur.motor_roles,ur.battery_roles,ur.pyro_roles,bhd_roles,task_roles,qms_roles,cesp_roles,sqa_roles,emc_roles,reliability_roles,power_roles  " \
                     "FROM public.usermanagement_user au " \
                     "FULL OUTER JOIN "\
                     "public.usermanagement_userroles ur ON CAST(ur.user_id AS INTEGER) = au.id ORDER BY au.id DESC;"

@@ -24,6 +24,10 @@ class UserRoles(models.Model):
     task_roles = models.CharField(max_length=555, null=True)
     qms_roles = models.CharField(max_length=555, null=True)
     cesp_roles = models.CharField(max_length=555, null=True)
+    sqa_roles = models.CharField(max_length=555, null=True)
+    emc_roles = models.CharField(max_length=555, null=True)
+    reliability_roles = models.CharField(max_length=555, null=True)
+    power_roles = models.CharField(max_length=555, null=True)
     user_id = models.CharField(max_length=555)
 
 class doctracking(models.Model):

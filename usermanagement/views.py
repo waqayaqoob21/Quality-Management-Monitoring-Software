@@ -76,7 +76,8 @@ class UserLoginApiView(TokenObtainPairView):
                                  'flight_roles': userRolesData.flight_roles, 'motor_roles': userRolesData.motor_roles,
                                  'battery_roles': userRolesData.battery_roles, 'pyro_roles': userRolesData.pyro_roles,
                                  'bhd_roles': userRolesData.bhd_roles,'task_roles': userRolesData.task_roles,'qms_roles': userRolesData.qms_roles,
-                                 'cesp_roles': userRolesData.cesp_roles
+                                 'cesp_roles': userRolesData.cesp_roles,'sqa_roles': userRolesData.sqa_roles,'emc_roles': userRolesData.emc_roles,
+                                 'reliability_roles': userRolesData.reliability_roles,'power_roles': userRolesData.power_roles
                                  }
                     return JsonResponse(
                         {'message': "Login Successfully", 'Token': serializer.validated_data,
