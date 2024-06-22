@@ -10,8 +10,8 @@ from fpdf import FPDF
 import xlwt
 
 from ams.models import TaskSummary
-from doctracking.models import doctrackingHistory
-from doctracking.serializer import DocListSerializer
+from doctracking.models import *
+from doctracking.serializer import DocListSerializer, CertificationSerializer
 from mpm.models import ActiveMotors
 from qms.models import QmsAudit, CespAudit
 from sms.models import ProductionSystemStatus, FlightSystemStatus, RelifingSystemStatus
@@ -2294,6 +2294,53 @@ class DocController:
             # DataCount.append(dist)
             return JsonResponse({'status': 'True', 'data': dist},
                                 status=200)
+
+        except Exception as e:
+            print(e)
+            return JsonResponse({'status': 'False', "message": "Internal Server Error"}, status=500)
+            pass
+
+    @staticmethod
+    def generateCertificate(request):
+
+        try:
+            id = request['id']
+            if id == '0':
+                certModal = Certification()
+                current_organization = request['organization']
+                certModal.organization = current_organization
+                last_record = Certification.objects.filter(organization = current_organization).last()
+                if last_record is None:
+                    if current_organization == 'AWC':
+                        certModal.certificate_serial_number = 800
+                    elif current_organization == 'PMO':
+                        certModal.certificate_serial_number = 275
+                    elif current_organization == 'D&E':
+                        certModal.certificate_serial_number = 219
+                    elif current_organization == 'NDC':
+                        certModal.certificate_serial_number = 1682
+                    elif current_organization == 'DESTO':
+                        certModal.certificate_serial_number = 265
+                    elif current_organization == 'MTC':
+                        certModal.certificate_serial_number = 35
+                else:
+                    certModal.certificate_serial_number = int(last_record.certificate_serial_number) + 1
+                certModal.certificate_issue_date = request['certificate_issue_date']
+                certModal.product_name = request['product_name']
+                certModal.identification_no = request['identification_no']
+                certModal.qualification_date = request['qualification_date']
+                certModal.manufacturer = request['manufacturer']
+                certModal.bhd_no = request['bhd_no']
+                certModal.certificate_number = request['certificate_number']
+                certModal.certificate_date = request['certificate_date']
+                certModal.audit_report_no = request['audit_report_no']
+                certModal.audit_report_date = request['audit_report_date']
+                certModal.software_description = request['software_description']
+                certModal.telemetry_modules = request['telemetry_modules']
+                certModal.save()
+                last_record = Certification.objects.filter(organization = current_organization).last()
+                serializer = CertificationSerializer(last_record)
+                return JsonResponse({'status': 'True', "message": "Certificate saved successfully!", 'data': serializer.data}, status=201)
 
         except Exception as e:
             print(e)

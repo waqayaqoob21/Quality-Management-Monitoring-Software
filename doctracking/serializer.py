@@ -55,3 +55,5 @@ class CertificationSerializer(Serializer):
     certificate_date = DateTimeField()
     audit_report_no = CharField()
     audit_report_date = DateTimeField()
+    software_description = CharField()
+    telemetry_modules = CharField()
