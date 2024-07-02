@@ -292,7 +292,7 @@ class powerController:
             print(e)
             return JsonResponse({'message':'Record could not add.','data':[],'success':False,'staus':'500'},status=500)
     @staticmethod
-    def deletepower(request):
+    def deletePower(request):
         try:
             power_id = request.query_params['power_id']
             power = Power.objects.filter(id=power_id).first()

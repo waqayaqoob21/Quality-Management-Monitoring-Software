@@ -202,8 +202,8 @@ class reliabilityController:
 
 
             if current_status == 'current_year_modules':
-                dataList = dataList.filter(filter_objects,completion_date__year = selected_year, current_status = 'Under Process')
-            if current_status == 'current_year_compliant_modules':
+                dataList = dataList.filter(filter_objects,completion_date__year = selected_year)
+            if current_status == 'current_year_under_process':
                 dataList = dataList.filter(filter_objects, completion_date__year = selected_year, current_status = 'Under Process')
             if current_status == 'current_year_completed':
                 dataList = dataList.filter(filter_objects, completion_date__year = selected_year, current_status = 'Completed')

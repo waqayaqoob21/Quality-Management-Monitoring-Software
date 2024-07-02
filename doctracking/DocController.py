@@ -2336,6 +2336,8 @@ class DocController:
                 certModal.audit_report_no = request['audit_report_no']
                 certModal.audit_report_date = request['audit_report_date']
                 certModal.software_description = request['software_description']
+                certModal.quantity = request['quantity']
+                certModal.id_no = request['id_no']
                 certModal.telemetry_modules = request['telemetry_modules']
                 certModal.save()
                 last_record = Certification.objects.filter(organization = current_organization).last()

@@ -43,4 +43,6 @@ class Certification(models.Model):
     audit_report_date = models.DateTimeField(auto_now_add=False, db_index=True, null=True)
     software_description = models.TextField(null=True)
     telemetry_modules = models.TextField(null=True)
+    id_no = models.CharField(max_length=500, null=True)
+    quantity = models.CharField(max_length=500, null=True)
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
