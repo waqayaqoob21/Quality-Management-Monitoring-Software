@@ -24,6 +24,7 @@ SECRET_KEY = 'django-insecure-(#ucv_$v1a=n^%kvwa!8*urndmvb4@_ub&cwij5yfq)s=j&988
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+AUTH_USER_MODEL='usermanagement.User'
 
 ALLOWED_HOSTS = ["127.0.0.1", '192.168.2.112', '192.168.11.10']
 
@@ -43,7 +44,11 @@ INSTALLED_APPS = [
     'ams',
     'sms',
     'mpm',
-    'qms'
+    'qms',
+    'emc',
+    'sqa',
+    'reliability',
+    'power'
 ]
 
 MIDDLEWARE = [
@@ -86,9 +91,9 @@ CORS_ORIGIN_ALLOW_ALL = True
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'nescdb',
+        'NAME': 'nescdb_v2',
         'USER': 'postgres',
-        'PASSWORD': 'postgres',
+        'PASSWORD': '1234',
         'HOST': '127.0.0.1',
         #'HOST': '192.168.11.225',
         'PORT': '5432',

@@ -3,6 +3,7 @@ from django.db import models
 # Create your models here.
 class Emc(models.Model):
     id = models.AutoField(primary_key=True)
+    org_type = models.CharField(max_length=300)
     sys_type = models.CharField(max_length=300)
     sys_name = models.CharField(max_length=300)
     module_name = models.CharField(max_length=300,null=True)
@@ -40,6 +41,7 @@ class Emc(models.Model):
 class EmcHistory(models.Model):
     id = models.AutoField(primary_key=True)
     emc_id = models.IntegerField(null=True)
+    org_type = models.CharField(max_length=300)
     sys_type = models.CharField(max_length=300)
     sys_name = models.CharField(max_length=300)
     module_name = models.CharField(max_length=300,null=True)

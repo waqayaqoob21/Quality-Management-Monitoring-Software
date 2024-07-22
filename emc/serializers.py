@@ -5,6 +5,7 @@ from rest_framework.fields import CharField, IntegerField, DateTimeField
 
 class EmcSerializer(Serializer):
     id = IntegerField()
+    org_type = CharField()
     sys_type = CharField()
     sys_name = CharField()
     design_version = CharField()
@@ -41,7 +42,9 @@ class EmcSerializer(Serializer):
 class EmcHistorySerializer(Serializer):
     id = IntegerField()
     emc_id = IntegerField()
+    org_type = CharField()
     sys_type = CharField()
+    sys_name = CharField()
     design_version = CharField()
     lot_no = CharField()
     module_name = CharField()

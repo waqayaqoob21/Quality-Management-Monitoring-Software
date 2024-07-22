@@ -18,7 +18,6 @@ class AddEmcAPIVIEW(APIView):
     permission_classes = [AllowAny]
 
     def post(self, request):
-        print(request.data)
         result = emc_obj.addEmc(request.data)
         return result
 
