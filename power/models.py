@@ -4,7 +4,9 @@ from django.db import models
 # Create your models here.
 class Power(models.Model):
     id = models.AutoField(primary_key=True)
+    org_type = models.CharField(max_length=300)
     system_type = models.CharField(max_length=300,null=True)
+    sys_name = models.CharField(max_length=300)
     module_name = models.CharField(max_length=300, null=True)
     pc_module_id = models.CharField(max_length=300, null=True)
     lot_no = models.CharField(max_length=300, null=True)
@@ -31,7 +33,9 @@ class Power(models.Model):
 class PowerHistory(models.Model):
     id = models.AutoField(primary_key=True)
     power_id = models.IntegerField(null=True)
+    org_type = models.CharField(max_length=300)
     system_type = models.CharField(max_length=300,null=True)
+    sys_name = models.CharField(max_length=300)
     module_name = models.CharField(max_length=300, null=True)
     pc_module_id = models.CharField(max_length=300, null=True)
     lot_no = models.CharField(max_length=300, null=True)

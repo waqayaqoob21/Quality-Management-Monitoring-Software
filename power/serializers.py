@@ -5,7 +5,9 @@ from rest_framework.fields import CharField, IntegerField, DateTimeField
 
 class PowerSerializer(Serializer):
     id = IntegerField()
+    org_type = CharField()
     system_type = CharField()
+    sys_name = CharField()
     module_name = CharField()
     pc_module_id = CharField()
     lot_no = CharField()

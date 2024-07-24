@@ -41,7 +41,9 @@ class powerController:
                 power_records = json.loads(product_tests)
                 for item in power_records:
                     power_obj = Power()
+                    power_obj.org_type = item["organization"]
                     power_obj.system_type = item["sys_type"]
+                    power_obj.sys_name = item["sys_name"]
                     power_obj.module_name = item['module_name']
                     power_obj.pc_module_id = item['pc_module_id']
                     power_obj.lot_no = item['lot_no']
@@ -67,7 +69,8 @@ class powerController:
                 return JsonResponse({'Success': 'Power record inserted Successfully!'})
             else:
                 get_obj = Power.objects.filter(id=power_id).first()
-                if (get_obj.system_type != request['sys_type'] or get_obj.module_name != request['module_name'] or \
+                if (get_obj.org_type != request['organization'] or get_obj.system_type != request['sys_type'] or get_obj.sys_name != request['system_name'] or 
+                    get_obj.module_name != request['module_name'] or \
                     get_obj.lot_no != request['lot_no'] or get_obj.pc_module_id != request['pc_module_id'] or \
                     get_obj.design_version != request['design_version'] or \
                     get_obj.compliance_status != request['compliance_status'] or get_obj.compliance_date != request['compliance_date'] or
@@ -81,7 +84,9 @@ class powerController:
 
                     powerHistoryObj = PowerHistory()
                     powerHistoryObj.power_id = power_id
+                    powerHistoryObj.org_type = get_obj.org_type
                     powerHistoryObj.system_type = get_obj.system_type
+                    powerHistoryObj.sys_name = get_obj.sys_name
                     powerHistoryObj.module_name = get_obj.module_name
                     powerHistoryObj.pc_module_id = get_obj.pc_module_id
                     powerHistoryObj.lot_no = get_obj.lot_no
@@ -103,7 +108,9 @@ class powerController:
                     powerHistoryObj.compliance_date = get_obj.compliance_date
                     powerHistoryObj.remarks = get_obj.remarks
                     powerHistoryObj.save()
+                is_power.org_type = request["organization"]
                 is_power.system_type = request["sys_type"]
+                is_power.sys_name = request["system_name"]
                 is_power.module_name = request['module_name']
                 is_power.pc_module_id = request['pc_module_id']
                 is_power.lot_no = request['lot_no']
@@ -133,7 +140,9 @@ class powerController:
     def getPowerDashboardCount(request):
         try:
             selected_year = request.query_params.get('selected_year')
+            selected_org = request.query_params.get('selected_org')
             selected_type = request.query_params.get('selected_type')
+            selected_system = request.query_params.get('selected_system')
             current_status = request.query_params.get('current_status')
             def get_filter(field_name, filter_condition, filter_value):
                 if filter_condition.strip() == "contains":
@@ -168,6 +177,29 @@ class powerController:
             typeQuery = Q()
             filter_objects = Q()
 
+            if selected_org != '':
+                filter_objects &= get_filter('org_type', 'equal',selected_org)
+
+            current_year_modules = 0
+            current_year_compliant_modules = 0
+            current_year_non_compliant_modules = 0
+
+            total_modules_2 = 0
+            total_compliant_modules_2 = 0
+            total_non_compliant_modules_2 = 0
+            dataList = Power.objects.filter(filter_objects)
+
+            if selected_org != "":
+                filter_objects &= get_filter('org_type', 'equal', selected_org)
+
+            total_modules_2 = Power.objects.filter(filter_objects).count()
+            total_compliant_modules_2 = dataList.filter(filter_objects, compliance_status = 'Compliant').count()
+            total_non_compliant_modules_2 = dataList.filter(filter_objects, compliance_status = 'Non Compliant').count()
+            total_partial_compliant_modules_2 = dataList.filter(filter_objects, compliance_status = 'Partial Compliant').count()
+
+            if selected_type != '':
+                filter_objects &= get_filter('system_type', 'equal',selected_type)
+
             current_year_modules = 0
             current_year_compliant_modules = 0
             current_year_non_compliant_modules = 0
@@ -175,12 +207,32 @@ class powerController:
             total_modules = 0
             total_compliant_modules = 0
             total_non_compliant_modules = 0
-            dataList = Power.objects.all()
+            dataList = Power.objects.filter(filter_objects)
 
             if selected_type != "":
-                filter_objects &= get_filter('sys_type', 'equal', selected_type)
+                filter_objects &= get_filter('system_type', 'equal', selected_type)
 
-            total_modules = dataList.filter(filter_objects).count()
+            total_modules = Power.objects.filter(filter_objects).count()
+            total_compliant_modules = dataList.filter(filter_objects, compliance_status = 'Compliant').count()
+            total_non_compliant_modules = dataList.filter(filter_objects, compliance_status = 'Non Compliant').count()
+            total_partial_compliant_modules = dataList.filter(filter_objects, compliance_status = 'Partial Compliant').count()
+
+            if selected_system != '':
+                filter_objects &= get_filter('sys_name', 'contains',selected_system)
+
+            current_year_modules = 0
+            current_year_compliant_modules = 0
+            current_year_non_compliant_modules = 0
+
+            total_modules = 0
+            total_compliant_modules = 0
+            total_non_compliant_modules = 0
+            dataList = Power.objects.filter(filter_objects)
+
+            if selected_system != "":
+                filter_objects &= get_filter('sys_name', 'contains', selected_system)
+
+            total_modules = Power.objects.filter(filter_objects).count()
             total_compliant_modules = dataList.filter(filter_objects, compliance_status = 'Compliant').count()
             total_non_compliant_modules = dataList.filter(filter_objects, compliance_status = 'Non Compliant').count()
             total_partial_compliant_modules = dataList.filter(filter_objects, compliance_status = 'Partial Compliant').count()
@@ -203,7 +255,11 @@ class powerController:
                 'total_modules': total_modules,
                 'total_compliant_modules': total_compliant_modules,
                 'total_non_compliant_modules': total_non_compliant_modules,
-                'total_partial_compliant_modules': total_partial_compliant_modules
+                'total_partial_compliant_modules': total_partial_compliant_modules,
+                'total_modules_2': total_modules_2,
+                'total_compliant_modules_2': total_compliant_modules_2,
+                'total_non_compliant_modules_2': total_non_compliant_modules_2,
+                'total_partial_compliant_modules_2': total_partial_compliant_modules_2
             }
             return JsonResponse({'Success': 'EMS&ES List Fetched Successfully!','data':dict,'success':True,'status':'200'},status=200)
         except Exception as e:
@@ -214,7 +270,9 @@ class powerController:
     def getPowerList(request):
         try:
             selected_year = request.query_params.get('selected_year')
+            selected_org = request.query_params.get('selected_org')
             selected_type = request.query_params.get('selected_type')
+            selected_system = request.query_params.get('selected_system')
             current_status = request.query_params.get('selected_status')
             def get_filter(field_name, filter_condition, filter_value):
                 if filter_condition.strip() == "contains":
@@ -249,9 +307,14 @@ class powerController:
             typeQuery = Q()
             filter_objects = Q()
 
+            if selected_org != '':
+                filter_objects &= get_filter('org_type', 'equal',selected_org)
 
             if selected_type != '':
-                filter_objects &= get_filter('sys_type', 'equal',selected_type)
+                filter_objects &= get_filter('system_type', 'equal',selected_type)
+
+            if selected_system != '':
+                filter_objects &= get_filter('sys_name', 'contains',selected_system)
 
 
             dataList = Power.objects.all().order_by('-id')
@@ -262,6 +325,14 @@ class powerController:
             if current_status == 'total_non_compliant_modules':
                 dataList = dataList.filter(filter_objects, compliance_status = 'Non Compliant')
             if current_status == 'total_partial_compliant_modules':
+                dataList = dataList.filter(filter_objects, compliance_status = 'Partial Compliant')
+            if current_status == 'total_systems':
+                dataList = dataList.filter(filter_objects)
+            if current_status == 'total_compliant_system':
+                dataList = dataList.filter(filter_objects, compliance_status = 'Compliant')
+            if current_status == 'total_non_compliant_system':
+                dataList = dataList.filter(filter_objects, compliance_status = 'Non Compliant')
+            if current_status == 'total_partial_compliant_system':
                 dataList = dataList.filter(filter_objects, compliance_status = 'Partial Compliant')
 
             if selected_year != '':
