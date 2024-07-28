@@ -3,7 +3,9 @@ from django.db import models
 # Create your models here.
 class Reliability(models.Model):
     id = models.AutoField(primary_key = True)
+    org_type = models.CharField(max_length=300)
     system_type = models.CharField(max_length=300, null=True)
+    sys_name = models.CharField(max_length=300)
     module_name = models.CharField(max_length=300, null=True)
     estimation_type = models.CharField(max_length=300, null=True)
     estimation_method = models.CharField(max_length=300, null=True)
@@ -17,7 +19,9 @@ class Reliability(models.Model):
 class ReliabilityHistory(models.Model):
     id = models.AutoField(primary_key = True)
     reliability_id = models.IntegerField(null=True)
+    org_type = models.CharField(max_length=300)
     system_type = models.CharField(max_length=300, null=True)
+    sys_name = models.CharField(max_length=300)
     module_name = models.CharField(max_length=300, null=True)
     estimation_type = models.CharField(max_length=300, null=True)
     estimation_method = models.CharField(max_length=300, null=True)

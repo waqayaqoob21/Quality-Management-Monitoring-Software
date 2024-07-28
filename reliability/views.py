@@ -5,7 +5,13 @@ from .reliabilityController import *
 
 reliability_obj = reliabilityController()
 # Create your views here.
+class GetReliabilityToBeUpdatedAPIVIEW(APIView):
+    permission_classes = [AllowAny]
 
+    def get(self, request):
+        print(request.data)
+        result = reliability_obj.getReliabilityToBeUpdated(request)
+        return result
 class AddReliabilityAPIVIEW(APIView):
     permission_classes = [AllowAny]
 
