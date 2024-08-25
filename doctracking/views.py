@@ -24,6 +24,12 @@ class DeleteDocAPIVIEW(APIView):
         result = doc_obj.DeleteDocument(request)
         return result
 
+class DeleteCertificateAPIVIEW(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        result = doc_obj.DeleteCertificate(request)
+        return result
 
 class DeleteTaskAPIVIEW(APIView):
     permission_classes = [AllowAny]
@@ -78,6 +84,20 @@ class GenerateCertificateAPIVIEW(APIView):
     def post(self, request):
         result = doc_obj.generateCertificate(request.data)
         return result
+
+class certificateListAPIVIEW(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+         result = doc_obj.GetCertificateList(request)
+         return result
+
+class GetCertificateSerialNumberAPIVIEW(APIView):
+        permission_classes = [AllowAny]
+        def get(self, request):
+            result = doc_obj.GetCertificateSerialNumber(request)
+            return result
+        
 class GetDashboardAPIVIEW(APIView):
     permission_classes = [AllowAny]
 
