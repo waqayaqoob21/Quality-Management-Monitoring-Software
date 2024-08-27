@@ -137,6 +137,21 @@ class DocController:
             pass
 
     @staticmethod
+    def DeleteCertificate(request):
+
+        try:
+            id = request.query_params['id']
+            delete = Certification.objects.filter(id=id).delete()
+
+            return JsonResponse({'status': 'True', 'message': "Record Deleted"},
+                                status=200)
+
+        except Exception as e:
+            print(e)
+            return JsonResponse({'status': 'False', "message": "Certificate Not Deleted"}, status=500)
+            pass
+
+    @staticmethod
     def DeleteTask(request):
 
         try:
@@ -2305,28 +2320,17 @@ class DocController:
 
         try:
             id = request['id']
-            if id == '0':
+            get_obj = Certification.objects.filter(id=id).first()
+            if get_obj is None:
                 certModal = Certification()
                 current_organization = request['organization']
                 certModal.organization = current_organization
-                last_record = Certification.objects.filter(organization = current_organization).last()
-                if last_record is None:
-                    if current_organization == 'AWC':
-                        certModal.certificate_serial_number = 800
-                    elif current_organization == 'PMO':
-                        certModal.certificate_serial_number = 275
-                    elif current_organization == 'D&E':
-                        certModal.certificate_serial_number = 219
-                    elif current_organization == 'NDC':
-                        certModal.certificate_serial_number = 1682
-                    elif current_organization == 'DESTO':
-                        certModal.certificate_serial_number = 265
-                    elif current_organization == 'MTC':
-                        certModal.certificate_serial_number = 35
-                else:
-                    certModal.certificate_serial_number = int(last_record.certificate_serial_number) + 1
+                certModal.certificate_serial_number = request['certificate_serial_number']
+                certModal.certificate_copy = request['certificate_copy']
+                certModal.certificate_type = request['certificate_type']
                 certModal.certificate_issue_date = request['certificate_issue_date']
                 certModal.product_name = request['product_name']
+                certModal.product = request['product']
                 certModal.identification_no = request['identification_no']
                 certModal.qualification_date = request['qualification_date']
                 certModal.manufacturer = request['manufacturer']
@@ -2335,16 +2339,126 @@ class DocController:
                 certModal.certificate_date = request['certificate_date']
                 certModal.audit_report_no = request['audit_report_no']
                 certModal.audit_report_date = request['audit_report_date']
-                certModal.software_description = request['software_description']
-                certModal.quantity = request['quantity']
-                certModal.id_no = request['id_no']
-                certModal.telemetry_modules = request['telemetry_modules']
+                certModal.table_1_description = request['table_1_description']
+                # certModal.quantity = request['quantity']
+                # certModal.id_no = request['id_no']
+                # certModal.telemetry_modules = request['telemetry_modules']
+                certModal.table_2_heading = request['table_2_heading']
+                certModal.table_2_description = request['table_2_description']
+                certModal.remarks = request['remarks']
                 certModal.save()
                 last_record = Certification.objects.filter(organization = current_organization).last()
                 serializer = CertificationSerializer(last_record)
                 return JsonResponse({'status': 'True', "message": "Certificate saved successfully!", 'data': serializer.data}, status=201)
+            else:
+                current_organization = request['organization']
+                get_obj.organization = current_organization
+                get_obj.certificate_serial_number = request['certificate_serial_number']
+                get_obj.certificate_copy = request['certificate_copy']
+                get_obj.certificate_type = request['certificate_type']
+                get_obj.certificate_issue_date = request['certificate_issue_date']
+                get_obj.product_name = request['product_name']
+                get_obj.product = request['product']
+                get_obj.identification_no = request['identification_no']
+                get_obj.qualification_date = request['qualification_date']
+                get_obj.manufacturer = request['manufacturer']
+                get_obj.bhd_no = request['bhd_no']
+                get_obj.certificate_number = request['certificate_number']
+                get_obj.certificate_date = request['certificate_date']
+                get_obj.audit_report_no = request['audit_report_no']
+                get_obj.audit_report_date = request['audit_report_date']
+                get_obj.table_1_description = request['table_1_description']
+                # certModal.quantity = request['quantity']
+                # certModal.id_no = request['id_no']
+                # certModal.telemetry_modules = request['telemetry_modules']
+                get_obj.table_2_heading = request['table_2_heading']
+                get_obj.table_2_description = request['table_2_description']
+                get_obj.remarks = request['remarks']
+                get_obj.save()
+                return JsonResponse(
+                    {'status': 'True', "message": "Certificate updated successfully!"},
+                    status=201)
 
         except Exception as e:
             print(e)
             return JsonResponse({'status': 'False', "message": "Internal Server Error"}, status=500)
             pass
+
+    @staticmethod
+    def GetCertificateList(request):
+        print(request)
+        try:
+            current_year = request.query_params.get('year')
+            current_org = request.query_params.get('org')
+            def get_filter(field_name, filter_condition, filter_value):
+
+                if filter_condition.strip() == "contains":
+                    kwargs = {
+                        '{0}__icontains'.format(field_name): filter_value
+                    }
+                    return Q(**kwargs)
+
+                if filter_condition.strip() == "not_equal":
+                    kwargs = {
+                        '{0}__iexact'.format(field_name): filter_value
+                    }
+                    return ~Q(**kwargs)
+
+                if filter_condition.strip() == "starts_with":
+                    kwargs = {
+                        '{0}__istartswith'.format(field_name): filter_value
+                    }
+                    return Q(**kwargs)
+                if filter_condition.strip() == "equal":
+                    kwargs = {
+                        '{0}__iexact'.format(field_name): filter_value
+                    }
+                    return Q(**kwargs)
+
+                if filter_condition.strip() == "not_equal":
+                    kwargs = {
+                        '{0}__iexact'.format(field_name): filter_value
+                    }
+
+                    return ~Q(**kwargs)
+
+            typeQuery = Q()
+            filter_objects = Q()
+
+            if current_org != '':
+                filter_objects &= get_filter('organization', 'equal', current_org)
+
+            dataList = Certification.objects.all().order_by('-id')
+
+            if current_year != '':
+                filter_objects &= get_filter('certificate_issue_date__year', 'equal', current_year)
+                dataList = dataList.filter(filter_objects, certificate_issue_date__year=current_year)
+
+            serializer = CertificationSerializer(dataList, many=True)
+            # print("certificate list", serializer.data)
+            return JsonResponse(
+                {'Success': 'Certificate List Fetched Successfully!', 'data': serializer.data, 'success': True,
+                 'status': '200'}, status=200)
+        except Exception as e:
+            print(e)
+            return JsonResponse({'message': 'Record could not add.', 'data': [], 'success': False, 'staus': '500'},
+                                status=500)
+
+    @staticmethod
+    def GetCertificateSerialNumber(request):
+        print(request)
+        try:
+            certModal = Certification()
+            current_organization = request.query_params.get('organization')
+            certModal.organization = current_organization
+            last_record = Certification.objects.filter(organization=current_organization).last()
+            if last_record is None:
+                return JsonResponse(
+                    {'status': 'False', "message": "No certificate serial number found", 'data': ''},
+                    status=201)
+            else:
+                certificate_serial_number = int(last_record.certificate_serial_number) + 1
+                return JsonResponse({'status': 'True', "message": "Serial Number fetched successfully!", 'data': certificate_serial_number},status=201)
+
+        except Exception as e:
+            return JsonResponse({'status': 'False', "message": "Error in fetching certificate serial number", 'data': ''},status=500)

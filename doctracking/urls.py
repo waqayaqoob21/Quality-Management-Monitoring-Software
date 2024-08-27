@@ -19,9 +19,11 @@ from django.urls import path
 from django.urls import path, include
 
 from doctracking.views import AddDocAPIVIEW, docTracingListAPIVIEW, docPendingListAPIVIEW, GetDocumentsPDFAPIVIEW, \
-    GetDocumentsExcelAPIVIEW, GetDashboardAPIVIEW, DeleteDocAPIVIEW, DeleteTaskAPIVIEW, docTracingHistoryAPIVIEW, \
-    GetDocTrackingDashboardCountAPIVIEW, getTaskMonitoringDashboardCountAPIVIEW, GenerateCertificateAPIVIEW
+    GetDocumentsExcelAPIVIEW, GetDashboardAPIVIEW, DeleteDocAPIVIEW,DeleteCertificateAPIVIEW, DeleteTaskAPIVIEW, docTracingHistoryAPIVIEW, \
+    GetDocTrackingDashboardCountAPIVIEW, getTaskMonitoringDashboardCountAPIVIEW, GenerateCertificateAPIVIEW, \
+    certificateListAPIVIEW, GetCertificateSerialNumberAPIVIEW
 from usermanagement.views import UserLoginApiView
+
 
 urlpatterns = [
     path('addDoc/', AddDocAPIVIEW.as_view(), name='addDoc'),
@@ -35,6 +37,9 @@ urlpatterns = [
     path('getTaskMonitoringDashboardCount/', getTaskMonitoringDashboardCountAPIVIEW.as_view(), name='getTaskMonitoringDashboardCount'),
     path('DeleteDoc/', DeleteDocAPIVIEW.as_view(), name='DeleteDoc'),
     path('DeleteTask/', DeleteTaskAPIVIEW.as_view(), name='DeleteTask'),
+    path('DeleteCertificate/', DeleteCertificateAPIVIEW.as_view(), name='DeleteCertificate'),
     path('generateCertificate/', GenerateCertificateAPIVIEW.as_view(), name='generateCertificate'),
+    path('certificateList/', certificateListAPIVIEW.as_view(), name='certificateList'),
+    path('certificateSerialNumber/', GetCertificateSerialNumberAPIVIEW.as_view(), name='certificateSerialNumber'),
 
 ]
