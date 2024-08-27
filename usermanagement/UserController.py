@@ -24,6 +24,7 @@ class UserController:
                 userModel.last_name = request['last_name']
                 userModel.username = request['username']
                 userModel.user_type = request['user_type']
+                userModel.group = request['task_group']
                 userModel.email = 'nescom@nescom.com'
                 encryptedpassword = make_password(request['password'])
                 userModel.password = encryptedpassword
@@ -60,6 +61,7 @@ class UserController:
                 userModel.last_name = request['last_name']
                 userModel.username = request['username']
                 userModel.user_type = request['user_type']
+                userModel.group = request['task_group']
                 userModel.email = 'nescom@nescom.com'
                 # encryptedpassword = make_password(request['password'])
                 # userModel.password = encryptedpassword
@@ -98,7 +100,7 @@ class UserController:
         try:
             doc_list = []
             cursor = connection.cursor()
-            query = "SELECT au.id,au.first_name,au.last_name,au.username,au.password,au.user_type, "\
+            query = "SELECT au.id,au.first_name,au.last_name,au.username,au.password,au.user_type,au.group, "\
                     "ur.prod_roles,ur.flight_roles,ur.relif_roles,ur.motor_roles,ur.battery_roles,ur.pyro_roles,bhd_roles,task_roles,qms_roles,cesp_roles,sqa_roles,emc_roles,reliability_roles,power_roles  " \
                     "FROM public.usermanagement_user au " \
                     "FULL OUTER JOIN "\

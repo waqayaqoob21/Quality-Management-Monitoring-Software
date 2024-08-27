@@ -7,7 +7,7 @@ from .manager import UserManager
 # Create User models here.
 class User(AbstractUser):
     user_type = models.CharField(max_length=300)
-
+    group = models.CharField(max_length=300, null= True)
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = []
     objects = UserManager()
