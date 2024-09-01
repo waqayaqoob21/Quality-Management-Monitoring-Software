@@ -40,6 +40,7 @@ class DocListSerializer(Serializer):
     tracking_id = CharField()
     certificate_number = CharField()
     last_meeting_date = DateTimeField()
+    product_type = CharField()
 
 class CertificationSerializer(Serializer):
     id = IntegerField()

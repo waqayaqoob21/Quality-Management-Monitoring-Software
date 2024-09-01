@@ -109,3 +109,11 @@ class DeletetActiveMotorHistoryAPIVIEW(APIView):
     def get(self, request):
         result = motor_obj.DeleteActiveMotorHistory(request)
         return result
+
+
+class GetProcessObservationStatusAPIVIEW(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        result = motor_obj.getProcessObservationStatus(request)
+        return result

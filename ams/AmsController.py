@@ -36,6 +36,7 @@ class AmsController:
                 taskModel.status = request['status']
                 taskModel.remarks = request['remarks']
                 taskModel.follow_up = request['follow_up']
+                taskModel.priority = request['priority']
                 taskModel.save()
                 return JsonResponse({'Success': "Task Created Successfully"}, status=200)
             else:
@@ -59,6 +60,7 @@ class AmsController:
                         taskHistoryModal.status = get_task.status
                         taskHistoryModal.remarks = get_task.remarks
                         taskHistoryModal.follow_up = get_task.follow_up
+                        taskHistoryModal.priority = get_task.priority
                         taskHistoryModal.save()
                 task = TaskSummary.objects.get(id=request['id'])
                 task.task_name = request['task_name']
@@ -73,6 +75,7 @@ class AmsController:
                 task.status = request['status']
                 task.remarks = request['remarks']
                 task.follow_up = request['follow_up']
+                task.priority = request['priority']
                 task.save()
                 return JsonResponse({'Success': 'Task Updated Successfully!'}, status=200)
         except Exception as e:
@@ -584,3 +587,69 @@ class AmsController:
         except:
             return JsonResponse({'Success': 'OCR data', 'data': serializer.data},
                                 status=200)
+
+    @staticmethod
+    def sendIntimation(request):
+        try:
+            intimationModel = PriorityNotification()
+            intimationModel.task_id = int(request['task_id'])
+            intimationModel.task_group = request['group']
+            intimationModel.message = request['message']
+            intimationModel.save()
+            data = PriorityNotification.objects.filter(task_id = int(request['task_id']))
+            serializers = PriorityNotificationSerialzer(data, many= True)
+            return JsonResponse({'message': 'User Intimidated Successfully!','success': True, 'data': serializers.data},
+                                status=200)
+        except Exception as e:
+            print(e)
+            return JsonResponse({'message': 'Intimation could not send!', 'data': [], 'success': False},
+                                status=500)
+    @staticmethod
+    def getTaskNotifications(request):
+        try:
+            group = request.query_params['group']
+
+            def get_filter(field_name, filter_condition, filter_value):
+                # thanks to the below post
+                # https://stackoverflow.com/questions/310732/in-django-how-does-one-filter-a-queryset-with-dynamic-field-lookups
+                # the idea to this below logic is very similar to that in the above mentioned post
+                if filter_condition.strip() == "contains":
+                    kwargs = {
+                        '{0}__icontains'.format(field_name): filter_value
+                    }
+                    return Q(**kwargs)
+
+            filter_objects = Q()
+
+            group_list = []
+            group_list = group.split(",")
+            dataList = []
+            for item in group_list:
+                data = PriorityNotification.objects.all()
+                # list = []
+                if data is not None:
+                    for item in data:
+                        if item not in dataList:
+                            dataList.append(item)
+                # dataList.append(list)
+            serializers = PriorityNotificationSerialzer(dataList, many=True)
+            return JsonResponse({'message': 'User Intimidated Successfully!','success': True, 'data': serializers.data},
+                                status=200)
+        except Exception as e:
+            print(e)
+            return JsonResponse({'message': 'Notifications could not fetch!', 'data': [], 'success': False},
+                                status=500)
+
+
+    @staticmethod
+    def getNotifiedTask(request):
+        try:
+            task_id = request.query_params['task_id']
+            data = TaskSummary.objects.filter(id = task_id)
+            serializers = TaskSummarySerialzer(data,many=True)
+            return JsonResponse({'message': 'User Intimidated Successfully!','success': True, 'data': serializers.data},
+                                status=200)
+        except Exception as e:
+            print(e)
+            return JsonResponse({'message': 'Notifications could not fetch!', 'data': [], 'success': False},
+                                status=500)

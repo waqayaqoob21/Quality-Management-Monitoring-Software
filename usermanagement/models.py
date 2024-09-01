@@ -52,4 +52,5 @@ class doctracking(models.Model):
     certificate_number = models.CharField(max_length=500, null=True)
     last_meeting_date = models.DateTimeField(auto_now_add=False, db_index=True, null=True)
     product_sr_no = models.CharField(max_length=500, null=True)
+    product_type = models.CharField(max_length=500, null= True)
 

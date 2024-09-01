@@ -3314,3 +3314,297 @@ class MpmController:
         # except Exception as e:
         #     print(e)
         #     return JsonResponse({'message': 'Sorry! No Task found.'}, status=500)
+
+
+    @staticmethod
+    def getProcessObservationStatus(request):
+        try:
+            org = request.query_params['selected_org']
+            year = request.query_params['selected_year']
+            type = request.query_params['selected_type']
+            system = request.query_params['selected_system']
+            SelectedStatus = request.query_params['selected_status']
+            sys_name = request.query_params['sys_name']
+            child_status = request.query_params['child_status']
+            filter_objects = Q()
+
+            def get_filter(field_name, filter_condition, filter_value):
+                # thanks to the below post
+                # https://stackoverflow.com/questions/310732/in-django-how-does-one-filter-a-queryset-with-dynamic-field-lookups
+                # the idea to this below logic is very similar to that in the above mentioned post
+                if filter_condition.strip() == "contains":
+                    kwargs = {
+                        '{0}__icontains'.format(field_name): filter_value
+                    }
+                    return Q(**kwargs)
+
+                if filter_condition.strip() == "not_equal":
+                    kwargs = {
+                        '{0}__iexact'.format(field_name): filter_value
+                    }
+                    return ~Q(**kwargs)
+
+                if filter_condition.strip() == "starts_with":
+                    kwargs = {
+                        '{0}__istartswith'.format(field_name): filter_value
+                    }
+                    return Q(**kwargs)
+                if filter_condition.strip() == "equal":
+                    kwargs = {
+                        '{0}__iexact'.format(field_name): filter_value
+                    }
+                    return Q(**kwargs)
+
+                if filter_condition.strip() == "not_equal":
+                    kwargs = {
+                        '{0}__iexact'.format(field_name): filter_value
+                    }
+
+                    return ~Q(**kwargs)
+
+            # create dynamic filter
+
+            if org != '':
+                filter_objects &= get_filter(
+                    'organization', 'equal',
+                    org)
+            if type != '':
+                filter_objects &= get_filter(
+                    'system_type', 'equal',
+                    type)
+            if system != '':
+                filter_objects &= get_filter(
+                    'system_name', 'equal',
+                    system)
+
+
+            dataList  = ActiveMotors.objects.filter(filter_objects)
+
+            if SelectedStatus != '':
+                ListItems = []
+                if SelectedStatus == 'Qualification of raw material of insulation':
+                    for data  in dataList:
+                        if data.qualification_insulation_lining_propellant_rm_date is not None and data.qualification_insulation_lining_propellant_rm_date.strftime("%Y") == year and data.qualification_insulation_lining_propellant_rm==child_status:
+                            ListItems.append(data)
+                if SelectedStatus == 'Lining':
+                    for data  in dataList:
+                        if data.lining_date is not None and data.lining_date.strftime("%Y") == year and data.lining==child_status:
+                            ListItems.append(data)
+
+                if SelectedStatus == 'Qualification of Propellant':
+                    for data  in dataList:
+                        if data.propellant_mechanical_properties_date is not None and data.propellant_mechanical_properties_date.strftime("%Y") == year and data.propellant_mechanical_properties==child_status:
+                            ListItems.append(data)
+
+                if SelectedStatus == 'Sandblasting':
+                    for data  in dataList:
+                        if data.sandblasting_date is not None and data.sandblasting_date.strftime("%Y") == year and data.sandblasting==child_status:
+                            ListItems.append(data)
+
+                if SelectedStatus == 'Insulation':
+                    for data  in dataList:
+                        if data.insulation_date is not None and data.insulation_date.strftime("%Y") == year and data.insulation==child_status:
+                            ListItems.append(data)
+
+                if SelectedStatus == 'UT and RT of Insulated Case':
+                    for data in dataList:
+                        if data.ut_rt_insulated_case_date is not None and data.ut_rt_insulated_case_date.strftime(
+                                "%Y") == year and data.ut_rt_insulated_case ==child_status:
+                            ListItems.append(data)
+
+                if SelectedStatus == 'Acceptance of Sliver Material':
+                    for data  in dataList:
+                        if data.acceptance_silver_material_date is not None and data.acceptance_silver_material_date.strftime("%Y") == year and data.acceptance_silver_material==child_status:
+                            ListItems.append(data)
+
+                if SelectedStatus == 'Silver Application':
+                    for data  in dataList:
+                        if data.silver_application_date is not None and data.silver_application_date.strftime("%Y") == year and data.silver_application==child_status:
+                            ListItems.append(data)
+
+                if SelectedStatus == 'Formulation tailoring':
+                    for data  in dataList:
+                        if data.formulation_tailoring_liner_propellant_date is not None and data.formulation_tailoring_liner_propellant_date.strftime("%Y") == year and data.formulation_tailoring_liner_propellant==child_status:
+                            ListItems.append(data)
+
+                if SelectedStatus == 'Conditioning of Raw Material':
+                    for data in dataList:
+                        if data.conditioning_raw_materials_date is not None and data.conditioning_raw_materials_date.strftime(
+                                "%Y") == year and data.conditioning_raw_materials ==child_status:
+                            ListItems.append(data)
+
+                if SelectedStatus == 'Conditioning of Lining':
+                    for data in dataList:
+                        if data.conditioning_of_lining_date is not None and data.conditioning_of_lining_date.strftime(
+                                "%Y") == year and data.conditioning_of_lining ==child_status:
+                            ListItems.append(data)
+
+                if SelectedStatus == 'Casing':
+                    for data  in dataList:
+                        if data.casting_date is not None and data.casting_date.strftime("%Y") == year and data.casting==child_status:
+                            ListItems.append(data)
+
+                if SelectedStatus == 'Curing':
+                    for data in dataList:
+                        if data.curing_date is not None and data.curing_date.strftime(
+                                "%Y") == year and data.curing == child_status:
+                            ListItems.append(data)
+
+                if SelectedStatus == 'UT, endoscopy and RT of grain':
+                    for data  in dataList:
+                        if data.ut_endoscopy_rt_grain_date is not None and data.ut_endoscopy_rt_grain_date.strftime("%Y") == year and data.ut_endoscopy_rt_grain==child_status:
+                            ListItems.append(data)
+
+                if SelectedStatus == 'Mechanical Properties of Liner':
+                    for data  in dataList:
+                        if data.liner_mechanical_properties_date is not None and data.liner_mechanical_properties_date.strftime("%Y") == year and data.liner_mechanical_properties==child_status:
+                            ListItems.append(data)
+
+                if SelectedStatus == 'Mechanical Properties of Propellant':
+                    for data  in dataList:
+                        if data.mechanical_properties_propellant_date is not None and data.mechanical_properties_propellant_date.strftime("%Y") == year and data.mechanical_properties_propellant==child_status:
+                            ListItems.append(data)
+
+                if SelectedStatus == 'Interface bond strength':
+                    for data  in dataList:
+                        if data.interface_bond_strength_date is not None and data.interface_bond_strength_date.strftime("%Y") == year and data.interface_bond_strength==child_status:
+                            ListItems.append(data)
+
+                if SelectedStatus == 'Propellant burn rate':
+                    for data  in dataList:
+                        if data.propellant_burn_rate_date is not None and data.propellant_burn_rate_date.strftime("%Y") == year and data.propellant_burn_rate==child_status:
+                            ListItems.append(data)
+
+                if SelectedStatus == 'Mass of liner':
+                    for data  in dataList:
+                        if data.mass_liner_insulation_propellant_srm_date is not None and data.mass_liner_insulation_propellant_srm_date.strftime("%Y") == year and data.mass_liner_insulation_propellant_srm==child_status:
+                            ListItems.append(data)
+                if SelectedStatus == 'Mass of Insulation':
+                    for data  in dataList:
+                        if data.mass_insulation_date is not None and data.mass_insulation_date.strftime("%Y") == year and data.mass_insulation==child_status:
+                            ListItems.append(data)
+                if SelectedStatus == 'Mass of Propellant':
+                    for data  in dataList:
+                        if data.mass_propellant_date is not None and data.mass_propellant_date.strftime("%Y") == year and data.mass_propellant==child_status:
+                            ListItems.append(data)
+                if SelectedStatus == 'Overall Qualification':
+                    for data  in dataList:
+                        if data.overall_qualification_date is not None and data.overall_qualification_date.strftime("%Y") == year and data.overall_qualification_status==child_status:
+                            ListItems.append(data)
+
+                if SelectedStatus == 'Material Qualified':
+                    for data in dataList:
+                        if data.matiral_qualified_date is not None and data.matiral_qualified_date.strftime(
+                                "%Y") == year and data.matiral_qualified_status == child_status:
+                            ListItems.append(data)
+
+                if SelectedStatus == 'Component Manufacturing':
+                    for data in dataList:
+                        if data.compo_manufacturing_date is not None and data.compo_manufacturing_date.strftime(
+                                "%Y") == year and data.compo_manufacturing_status == child_status:
+                            ListItems.append(data)
+
+                if SelectedStatus == 'Power Pack Assembly':
+                    for data in dataList:
+                        if data.powerpack_assembly_date is not None and data.powerpack_assembly_date.strftime(
+                                "%Y") == year and data.powerpack_assembly_status == child_status:
+                            ListItems.append(data)
+
+                if SelectedStatus == 'Power Pack Testing':
+                    for data in dataList:
+                        if data.powerpack_testing_date is not None and data.powerpack_testing_date.strftime(
+                                "%Y") == year and data.powerpack_testing_status == child_status:
+                            ListItems.append(data)
+
+                if SelectedStatus == 'Assembly Process':
+                    for data in dataList:
+                        if data.assembly_process_date is not None and data.assembly_process_date.strftime(
+                                "%Y") == year and data.assembly_process_remarks == child_status:
+                            ListItems.append(data)
+
+                if SelectedStatus == 'Battery Testing':
+                    for data in dataList:
+                        if data.battery_testing_date is not None and data.battery_testing_date.strftime(
+                                "%Y") == year and data.battery_testing_status == child_status:
+                            ListItems.append(data)
+
+                if SelectedStatus == 'Final Qualification':
+                    for data in dataList:
+                        if data.final_qualification_date is not None and data.final_qualification_date.strftime(
+                                "%Y") == year and data.final_qualification_status == child_status:
+                            ListItems.append(data)
+
+                if SelectedStatus == 'Raw Material Inspection':
+                    for data in dataList:
+                        if data.raw_material_inspection_date is not None and data.raw_material_inspection_date.strftime(
+                                "%Y") == year and data.raw_material_inspection_status == child_status:
+                            ListItems.append(data)
+
+                if SelectedStatus == 'Pressing Electrode':
+                    for data in dataList:
+                        if data.pressing_electrode_date is not None and data.pressing_electrode_date.strftime(
+                                "%Y") == year and data.pressing_electrode_status == child_status:
+                            ListItems.append(data)
+
+                if SelectedStatus == 'Formation Process':
+                    for data in dataList:
+                        if data.formation_process_date is not None and data.formation_process_status.strftime(
+                                "%Y") == year and data.fgt_status == child_status:
+                            ListItems.append(data)
+
+                if SelectedStatus == 'Assembly Process':
+                    for data in dataList:
+                        if data.assembly_process_date is not None and data.assembly_process_date.strftime(
+                                "%Y") == year and data.assembly_process_status == child_status:
+                            ListItems.append(data)
+
+                if SelectedStatus == 'Battery Testing':
+                    for data in dataList:
+                        if data.battery_testing_date is not None and data.battery_testing_date.strftime(
+                                "%Y") == year and data.battery_testing_status == child_status:
+                            ListItems.append(data)
+
+                if SelectedStatus == 'Final Qualification':
+                    for data in dataList:
+                        if data.final_qualification_date is not None and data.final_qualification_date.strftime(
+                                "%Y") == year and data.final_qualification_status == child_status:
+                            ListItems.append(data)
+
+                if SelectedStatus == 'Qualification of Raw Material':
+                    for data in dataList:
+                        if data.qualification_raw_material_date is not None and data.qualification_raw_material_date.strftime(
+                                "%Y") == year and data.qualification_raw_material_status == child_status:
+                            ListItems.append(data)
+
+                if SelectedStatus == 'Filling':
+                    for data in dataList:
+                        if data.filling_date is not None and data.filling_date.strftime(
+                                "%Y") == year and data.filling_status == child_status:
+                            ListItems.append(data)
+
+                if SelectedStatus == 'Assembling/Integration':
+                    for data in dataList:
+                        if data.assembling_integration_date is not None and data.assembling_integration_date.strftime(
+                                "%Y") == year and data.assembling_integration_status == child_status:
+                            ListItems.append(data)
+
+                if SelectedStatus == 'Qualification Testing':
+                    for data in dataList:
+                        if data.qualification_testing_date is not None and data.qualification_testing_date.strftime(
+                                "%Y") == year and data.qualification_testing_status == child_status:
+                            ListItems.append(data)
+
+                if SelectedStatus == 'Performance Testing':
+                    for data in dataList:
+                        if data.performance_testing_date is not None and data.performance_testing_date.strftime(
+                                "%Y") == year and data.performance_testing_status == child_status:
+                            ListItems.append(data)
+
+                print(ListItems)
+                serializer = ActiveMotorSerializer(ListItems, many=True)
+                print(serializer.data)
+                return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+
+        except Exception as e:
+            print(e)
+            return JsonResponse({'status': 'false'}, status=200)
