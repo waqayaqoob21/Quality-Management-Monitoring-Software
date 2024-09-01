@@ -45,6 +45,7 @@ class DocController:
                 if request['last_meeting_date'] != "":
                     docModal.last_meeting_date = request['last_meeting_date']
                 docModal.certificate_number = request['certificate_number']
+                docModal.product_type = request['product_type']
                 if request['isActive'] == 'true':
                     docModal.isActive = 1
                 else:
@@ -75,6 +76,7 @@ class DocController:
                         docHistoryModal.last_meeting_date = get_doc.last_meeting_date
                         docHistoryModal.certificate_number = get_doc.certificate_number
                         docHistoryModal.remarks = get_doc.remarks
+                        docHistoryModal.product_type = get_doc.product_type
                         docHistoryModal.doc_id = id
                         docHistoryModal.save()
                         # save data in history end
@@ -103,6 +105,7 @@ class DocController:
                 else:
                     get_doc.last_meeting_date = None
                 get_doc.certificate_number = request['certificate_number']
+                get_doc.product_type = request['product_type']
                 if request['isActive'] == 'true':
                     get_doc.isActive = 1
                 else:
@@ -2462,3 +2465,13 @@ class DocController:
 
         except Exception as e:
             return JsonResponse({'status': 'False', "message": "Error in fetching certificate serial number", 'data': ''},status=500)
+
+    @staticmethod
+    def deleteDocumentHistory(request):
+        try:
+            id = request.query_params['id']
+            delete = doctrackingHistory.objects.filter(id=id).delete()
+            return JsonResponse({'status': 'True', 'message': "Record Deleted"},
+                                status=200)
+        except Exception as e:
+            return JsonResponse({'status': 'False', "message": "Document could not delete", 'data': ''},status=500)
