@@ -322,10 +322,9 @@ class QmsController:
             dataList = QmsAudit.objects.filter(filter_objects)
 
             if current_status == 'Overdue Conducted':
-                dataList = QmsAudit.objects.filter(Q(audit_status="Conducted") | Q(audit_status="Completed"),audit_start_date__gt=F('planned_date'),
-                                                                    planned_date__year=current_year).annotate(
-                planned_date__month=Extract('planned_date', 'month'),planned_date__year=Extract('planned_date', 'year'),
-                planned_date__day=Extract('planned_date', 'day')).order_by('planned_date__month', 'planned_date__day','-planned_date__year')
+                dataList = QmsAudit.objects.filter(
+                    Q(audit_status="Conducted") | Q(audit_status="Completed"), audit_start_date__gt=F('planned_date'),
+                    planned_date__year=current_year)
 
             if current_status == 'QMS Total Under Process':
                 dataList = QmsAudit.objects.filter(audit_status = 'In-Process').annotate(
