@@ -417,7 +417,6 @@ class SmsController:
                     get_prod.func_tst = request['func_tst']
                     get_prod.func_tst_dummy_bird = request['func_tst_dummy_bird']
                     get_prod.road_test = request['road_test']
-                    get_prod.post_road_test = request['post_road_test']
                     get_prod.integrated_operation = request['integrated_operation']
                     get_prod.rain_test = request['rain_test']
                     get_prod.pre_user_inspection = request['pre_user_inspection']
@@ -438,6 +437,7 @@ class SmsController:
                     get_prod.road_test_remarks = request['road_test_remarks']
                     if request['post_road_test_date'] != '':
                         get_prod.post_road_test_date = request['post_road_test_date']
+                    get_prod.post_road_test = request['post_road_test']
                     get_prod.post_road_test_remarks = request['post_road_test_remarks']
                     if request['integrated_operation_date'] != '':
                         get_prod.integrated_operation_date = request['integrated_operation_date']
