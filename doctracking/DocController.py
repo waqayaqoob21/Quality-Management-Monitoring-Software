@@ -45,6 +45,7 @@ class DocController:
                 if request['last_meeting_date'] != "":
                     docModal.last_meeting_date = request['last_meeting_date']
                 docModal.certificate_number = request['certificate_number']
+                docModal.product_type = request['product_type']
                 if request['isActive'] == 'true':
                     docModal.isActive = 1
                 else:
@@ -75,6 +76,7 @@ class DocController:
                         docHistoryModal.last_meeting_date = get_doc.last_meeting_date
                         docHistoryModal.certificate_number = get_doc.certificate_number
                         docHistoryModal.remarks = get_doc.remarks
+                        docHistoryModal.product_type = get_doc.product_type
                         docHistoryModal.doc_id = id
                         docHistoryModal.save()
                         # save data in history end
@@ -103,6 +105,7 @@ class DocController:
                 else:
                     get_doc.last_meeting_date = None
                 get_doc.certificate_number = request['certificate_number']
+                get_doc.product_type = request['product_type']
                 if request['isActive'] == 'true':
                     get_doc.isActive = 1
                 else:
@@ -221,11 +224,7 @@ class DocController:
                     'sender', 'equal',
                     current_org)
             if current_status == 'Total Documents':
-                docList = doctracking.objects.all().extra(
-                    select={'year': 'extract (year from receive_date)',
-                            'month': 'extract (month from receive_date)',
-                            'day': 'extract (day from receive_date)'},
-                    order_by=['month', 'day', '-year'])
+                docList = doctracking.objects.all().order_by('-task_date')
                 if current_year != '':
                     docList = docList.filter(receive_date__year=current_year)
                 if current_org != '':
@@ -255,22 +254,22 @@ class DocController:
                     total_filter_objects &= get_filter(
                         'status', 'not_equal',
                         'QM Certificate issued')
-                    docList = doctracking.objects.filter(total_filter_objects).extra(
-                        select={'year': 'extract (year from receive_date)',
-                                'month': 'extract (month from receive_date)',
-                                'day': 'extract (day from receive_date)'},
-                        order_by=['month', 'day', '-year'])
-
+                    # docList = doctracking.objects.filter(total_filter_objects).extra(
+                    #     select={'year': 'extract (year from task_date)',
+                    #             'month': 'extract (month from task_date)',
+                    #             'day': 'extract (day from task_date)'},
+                    #     order_by=['month', 'day', '-year'])
+                    docList = doctracking.objects.filter(total_filter_objects).order_by('-task_date')
                     if receiveFrom != '' and receiveTo != '':
+                        # docList = docList.filter(receive_date__gte=receiveFrom,
+                        #                          receive_date__lte=receiveTo).extra(
+                        #     select={'year': 'extract (year from task_date)',
+                        #             'month': 'extract (month from task_date)',
+                        #             'day': 'extract (day from task_date)'},
+                        #     order_by=['month', 'day', '-year'])
                         docList = docList.filter(receive_date__gte=receiveFrom,
-                                                 receive_date__lte=receiveTo).extra(
-                            select={'year': 'extract (year from receive_date)',
-                                    'month': 'extract (month from receive_date)',
-                                    'day': 'extract (day from receive_date)'},
-                            order_by=['month', 'day', '-year'])
-                        # serializer = DocListSerializer(docList, many=True)
-                        # return JsonResponse({'status': 'True', 'data': serializer.data},
-                        #                     status=200)
+                                                 receive_date__lte=receiveTo).order_by('-task_date')
+
                     serializer = DocListSerializer(docList, many=True)
                     return JsonResponse({'status': 'True', 'data': serializer.data},
                                         status=200)
@@ -279,18 +278,15 @@ class DocController:
                     total_filter_objects &= get_filter(
                         'doc_type', 'equal',
                         'BHD')
-                    docList = doctracking.objects.filter(total_filter_objects).extra(
-                        select={'year': 'extract (year from receive_date)',
-                                'month': 'extract (month from receive_date)',
-                                'day': 'extract (day from receive_date)'},
-                        order_by=['month', 'day', '-year'])
+                    docList = doctracking.objects.filter(total_filter_objects).order_by('-task_date')
+                    # .extra(
+                    #     select={'year': 'extract (year from task_date)',
+                    #             'month': 'extract (month from task_date)',
+                    #             'day': 'extract (day from task_date)'},
+                    #     order_by=['-month', '-day', '-year']))
                     if receiveFrom != '' and receiveTo != '':
                         docList = docList.filter(receive_date__gte=receiveFrom,
-                                                 receive_date__lte=receiveTo).extra(
-                            select={'year': 'extract (year from receive_date)',
-                                    'month': 'extract (month from receive_date)',
-                                    'day': 'extract (day from receive_date)'},
-                            order_by=['month', 'day', '-year'])
+                                                 receive_date__lte=receiveTo).order_by('-task_date')
                         # serializer = DocListSerializer(docList, many=True)
                         # return JsonResponse({'status': 'True', 'data': serializer.data},
                         #                     status=200)
@@ -310,20 +306,12 @@ class DocController:
                     total_filter_objects &= get_filter(
                         'doc_type', 'equal',
                         'BHD')
-                docList = doctracking.objects.filter(total_filter_objects).extra(
-                    select={'year': 'extract (year from receive_date)',
-                            'month': 'extract (month from receive_date)',
-                            'day': 'extract (day from receive_date)'},
-                    order_by=['month', 'day', '-year'])
+                docList = doctracking.objects.filter(total_filter_objects).order_by('-task_date')
                 serializer = DocListSerializer(docList, many=True)
                 return JsonResponse({'status': 'True', 'data': serializer.data},
                                     status=200)
             if current_status == 'totalQMIssued':
-                docList = doctracking.objects.filter(doc_type='BHD', status='QM Certificate issued').extra(
-                    select={'year': 'extract (year from receive_date)',
-                            'month': 'extract (month from receive_date)',
-                            'day': 'extract (day from receive_date)'},
-                    order_by=['month', 'day', '-year'])
+                docList = doctracking.objects.filter(doc_type='BHD', status='QM Certificate issued').order_by('-task_date')
                 serializer = DocListSerializer(docList, many=True)
                 return JsonResponse({'status': 'True', 'data': serializer.data},
                                     status=200)
@@ -359,11 +347,7 @@ class DocController:
                             'sender', 'equal',
                             current_org)
 
-                total_over_due_all = doctracking.objects.filter(total_filter_document_totaloverdue).extra(
-                    select={'year': 'extract (year from receive_date)',
-                            'month': 'extract (month from receive_date)',
-                            'day': 'extract (day from receive_date)'},
-                    order_by=['month', 'day', '-year'])
+                total_over_due_all = doctracking.objects.filter(total_filter_document_totaloverdue).order_by('-task_date')
                 list = []
                 if total_over_due_all is not None:
                     for item in total_over_due_all:
@@ -401,91 +385,38 @@ class DocController:
                     total_filter_objects &= get_filter(
                         'sender', 'equal',
                         current_org)
-                docList = doctracking.objects.filter(total_filter_objects).extra(
-                    select={'year': 'extract (year from receive_date)',
-                            'month': 'extract (month from receive_date)',
-                            'day': 'extract (day from receive_date)'},
-                    order_by=['month', 'day', '-year'])
+                docList = doctracking.objects.filter(total_filter_objects).order_by('-task_date')
                 serializer = DocListSerializer(docList, many=True)
                 return JsonResponse({'status': 'True', 'data': serializer.data},
                                     status=200)
             if current_status == 'totalnotApprovedGM':
-
+                total_filter_objects &= get_filter(
+                    'status', 'equal',
+                    'QM Observations Forwarded')
+                total_filter_objects |= get_filter(
+                    'status', 'equal',
+                    'QM Observations Repeated')
                 if current_type == 'document' or current_type == '':
                     total_filter_objects &= get_filter(
                         'doc_type', 'not_equal',
                         'BHD')
-                    total_filter_objects &= get_filter(
-                        'status', 'equal',
-                        'Audit in-process')
-                    if current_org != '':
-                        total_filter_objects &= get_filter(
-                            'sender', 'equal',
-                            current_org)
                 else:
                     total_filter_objects &= get_filter(
                         'doc_type', 'equal',
                         'BHD')
+                if current_org != '':
                     total_filter_objects &= get_filter(
-                        'status', 'equal',
-                        'Audit in-process')
-                    if current_org != '':
-                        total_filter_objects &= get_filter(
                             'sender', 'equal',
                             current_org)
-
-                # if current_type == 'document' or current_type == '':
-                #     total_filter_objects &= get_filter(
-                #         'doc_type', 'not_equal',
-                #         'BHD')
-                #     total_filter_objects &= get_filter(
-                #         'status', 'equal',
-                #         'QM Observations Forwarded')
-                #     total_filter_objects |= get_filter(
-                #         'status', 'equal',
-                #         'QM Observations Repeated')
-                # else:
-                #     total_filter_objects &= get_filter(
-                #         'doc_type', 'equal',
-                #         'BHD')
-                #     total_filter_objects &= get_filter(
-                #         'status', 'equal',
-                #         'QM Observations Forwarded')
-                #     total_filter_objects |= get_filter(
-                #         'status', 'equal',
-                #         'QM Observations Repeated')
-                # total_doc_type_objects = Q()
-                # if current_type == 'document' or current_type == '':
-                #     total_doc_type_objects &= get_filter(
-                #         'doc_type', 'not_equal',
-                #         'BHD')
-                # else:
-                #     total_doc_type_objects &= get_filter(
-                #         'doc_type', 'equal',
-                #         'BHD')
-                docList = doctracking.objects.filter(total_filter_objects,receive_date__year = current_year).extra(
-                    select={'year': 'extract (year from receive_date)',
-                            'month': 'extract (month from receive_date)',
-                            'day': 'extract (day from receive_date)'},
-                    order_by=['month', 'day', '-year'])
-                list = []
-                for item in docList:
-                    if item.task_date is None:
-                        item.task_date = datetime.today() + timedelta(hours=5)
-                    if item.due_date.date() < item.task_date.date():
-                        list.append(item)
+                docList = doctracking.objects.filter(total_filter_objects).order_by('-task_date')
                 # list = []
-                # if docList is not None:
-                #     for item in docList:
-                #         task_date = False
-                #         if item.task_date is None:
-                #             item.task_date = datetime.today()  # + timedelta(hours=5)
-                #             task_date = True
-                #         if item.due_date.date() >= item.task_date.date():
-                #             if task_date:
-                #                 item.task_date = None
-                #             list.append(item)
-                docList = list
+                # for item in docList:
+                #     if item.task_date is None:
+                #         item.task_date = datetime.today() + timedelta(hours=5)
+                #     if item.due_date.date() < item.task_date.date():
+                #         list.append(item)
+
+                # docList = list
                 serializer = DocListSerializer(docList, many=True)
                 return JsonResponse({'status': 'True', 'data': serializer.data},
                                     status=200)
@@ -531,11 +462,7 @@ class DocController:
                     total_doc_type_objects &= get_filter(
                         'doc_type', 'equal',
                         'BHD')
-                docList = doctracking.objects.filter(total_filter_objects).extra(
-                    select={'year': 'extract (year from receive_date)',
-                            'month': 'extract (month from receive_date)',
-                            'day': 'extract (day from receive_date)'},
-                    order_by=['month', 'day', '-year'])
+                docList = doctracking.objects.filter(total_filter_objects).order_by('-task_date')
                 docList = docList.filter(total_doc_type_objects)
                 list = []
                 if docList is not None:
@@ -593,11 +520,7 @@ class DocController:
                     total_doc_type_objects &= get_filter(
                         'doc_type', 'equal',
                         'BHD')
-                docList = doctracking.objects.filter(total_filter_objects, receive_date__year=current_year).extra(
-                    select={'year': 'extract (year from receive_date)',
-                            'month': 'extract (month from receive_date)',
-                            'day': 'extract (day from receive_date)'},
-                    order_by=['month', 'day', '-year'])
+                docList = doctracking.objects.filter(total_filter_objects, receive_date__year=current_year).order_by('-task_date')
                 docList = docList.filter(total_doc_type_objects)
                 if receiveFrom != '' and receiveTo != '':
                     docList = docList.filter(receive_date__gte=receiveFrom,receive_date__lte=receiveTo)
@@ -644,11 +567,7 @@ class DocController:
                         current_filter_objects &= get_filter(
                             'sender', 'equal',
                             current_org)
-                docList = doctracking.objects.filter(current_filter_objects, receive_date__year=current_year).extra(
-                    select={'year': 'extract (year from receive_date)',
-                            'month': 'extract (month from receive_date)',
-                            'day': 'extract (day from receive_date)'},
-                    order_by=['month', 'day', '-year'])
+                docList = doctracking.objects.filter(current_filter_objects, receive_date__year=current_year).order_by('-task_date')
                 serializer = DocListSerializer(docList, many=True)
                 return JsonResponse({'status': 'True', 'data': serializer.data},
                                     status=200)
@@ -671,11 +590,7 @@ class DocController:
                         current_filter_objects &= get_filter(
                             'sender', 'equal',
                             current_org)
-                docList = doctracking.objects.filter(current_filter_objects, receive_date__year=current_year).extra(
-                    select={'year': 'extract (year from receive_date)',
-                            'month': 'extract (month from receive_date)',
-                            'day': 'extract (day from receive_date)'},
-                    order_by=['month', 'day', '-year'])
+                docList = doctracking.objects.filter(current_filter_objects, receive_date__year=current_year).order_by('-task_date')
                 serializer = DocListSerializer(docList, many=True)
                 return JsonResponse({'status': 'True', 'data': serializer.data},
                                     status=200)
@@ -699,11 +614,7 @@ class DocController:
                         current_filter_objects &= get_filter(
                             'sender', 'equal',
                             current_org)
-                docList = doctracking.objects.filter(current_filter_objects, receive_date__year=current_year).extra(
-                    select={'year': 'extract (year from receive_date)',
-                            'month': 'extract (month from receive_date)',
-                            'day': 'extract (day from receive_date)'},
-                    order_by=['month', 'day', '-year'])
+                docList = doctracking.objects.filter(current_filter_objects, receive_date__year=current_year).order_by('-task_date')
                 serializer = DocListSerializer(docList, many=True)
                 return JsonResponse({'status': 'True', 'data': serializer.data},
                                     status=200)
@@ -727,11 +638,7 @@ class DocController:
                         current_filter_objects &= get_filter(
                             'sender', 'equal',
                             current_org)
-                docList = doctracking.objects.filter(current_filter_objects, receive_date__year=current_year).extra(
-                    select={'year': 'extract (year from receive_date)',
-                            'month': 'extract (month from receive_date)',
-                            'day': 'extract (day from receive_date)'},
-                    order_by=['month', 'day', '-year'])
+                docList = doctracking.objects.filter(current_filter_objects, receive_date__year=current_year).order_by('-task_date')
                 serializer = DocListSerializer(docList, many=True)
                 return JsonResponse({'status': 'True', 'data': serializer.data},
                                     status=200)
@@ -755,11 +662,7 @@ class DocController:
                         current_filter_objects &= get_filter(
                             'sender', 'equal',
                             current_org)
-                docList = doctracking.objects.filter(current_filter_objects, receive_date__year=current_year).extra(
-                    select={'year': 'extract (year from receive_date)',
-                            'month': 'extract (month from receive_date)',
-                            'day': 'extract (day from receive_date)'},
-                    order_by=['month', 'day', '-year'])
+                docList = doctracking.objects.filter(current_filter_objects, receive_date__year=current_year).order_by('-task_date')
                 serializer = DocListSerializer(docList, many=True)
                 return JsonResponse({'status': 'True', 'data': serializer.data},
                                     status=200)
@@ -783,11 +686,7 @@ class DocController:
                         current_filter_objects &= get_filter(
                             'sender', 'equal',
                             current_org)
-                docList = doctracking.objects.filter(current_filter_objects, receive_date__year=current_year).extra(
-                    select={'year': 'extract (year from receive_date)',
-                            'month': 'extract (month from receive_date)',
-                            'day': 'extract (day from receive_date)'},
-                    order_by=['month', 'day', '-year'])
+                docList = doctracking.objects.filter(current_filter_objects, receive_date__year=current_year).order_by('-task_date')
                 serializer = DocListSerializer(docList, many=True)
                 return JsonResponse({'status': 'True', 'data': serializer.data},
                                     status=200)
@@ -811,11 +710,7 @@ class DocController:
                         current_filter_objects &= get_filter(
                             'sender', 'equal',
                             current_org)
-                docList = doctracking.objects.filter(current_filter_objects, receive_date__year=current_year).extra(
-                    select={'year': 'extract (year from receive_date)',
-                            'month': 'extract (month from receive_date)',
-                            'day': 'extract (day from receive_date)'},
-                    order_by=['month', 'day', '-year'])
+                docList = doctracking.objects.filter(current_filter_objects, receive_date__year=current_year).order_by('-task_date')
                 serializer = DocListSerializer(docList, many=True)
                 return JsonResponse({'status': 'True', 'data': serializer.data},
                                     status=200)
@@ -839,11 +734,7 @@ class DocController:
                         current_filter_objects &= get_filter(
                             'sender', 'equal',
                             current_org)
-                docList = doctracking.objects.filter(current_filter_objects, receive_date__year=current_year).extra(
-                    select={'year': 'extract (year from receive_date)',
-                            'month': 'extract (month from receive_date)',
-                            'day': 'extract (day from receive_date)'},
-                    order_by=['month', 'day', '-year'])
+                docList = doctracking.objects.filter(current_filter_objects, receive_date__year=current_year).order_by('-task_date')
                 serializer = DocListSerializer(docList, many=True)
                 return JsonResponse({'status': 'True', 'data': serializer.data},
                                     status=200)
@@ -867,11 +758,7 @@ class DocController:
                         current_filter_objects &= get_filter(
                             'sender', 'equal',
                             current_org)
-                docList = doctracking.objects.filter(current_filter_objects, receive_date__year=current_year).extra(
-                    select={'year': 'extract (year from receive_date)',
-                            'month': 'extract (month from receive_date)',
-                            'day': 'extract (day from receive_date)'},
-                    order_by=['month', 'day', '-year'])
+                docList = doctracking.objects.filter(current_filter_objects, receive_date__year=current_year).order_by('-task_date')
                 serializer = DocListSerializer(docList, many=True)
                 return JsonResponse({'status': 'True', 'data': serializer.data},
                                     status=200)
@@ -893,11 +780,7 @@ class DocController:
                     current_filter_objects &= get_filter(
                         'status', 'not_equal',
                         'Approved')
-                docList = doctracking.objects.filter(current_filter_objects, receive_date__year=current_year).extra(
-                    select={'year': 'extract (year from receive_date)',
-                            'month': 'extract (month from receive_date)',
-                            'day': 'extract (day from receive_date)'},
-                    order_by=['month', 'day', '-year'])
+                docList = doctracking.objects.filter(current_filter_objects, receive_date__year=current_year).order_by('-task_date')
                 serializer = DocListSerializer(docList, many=True)
                 return JsonResponse({'status': 'True', 'data': serializer.data},
                                     status=200)
@@ -908,11 +791,7 @@ class DocController:
                 current_filter_objects &= get_filter(
                     'status', 'equal',
                     'QM Certificate issued')
-                docList = doctracking.objects.filter(current_filter_objects, receive_date__year=current_year).extra(
-                    select={'year': 'extract (year from receive_date)',
-                            'month': 'extract (month from receive_date)',
-                            'day': 'extract (day from receive_date)'},
-                    order_by=['month', 'day', '-year'])
+                docList = doctracking.objects.filter(current_filter_objects, receive_date__year=current_year).order_by('-task_date')
                 serializer = DocListSerializer(docList, many=True)
                 return JsonResponse({'status': 'True', 'data': serializer.data},
                                     status=200)
@@ -932,11 +811,7 @@ class DocController:
                     current_filter_objects &= get_filter(
                         'status', 'equal',
                         'QM Observations Forwarded')
-                docList = doctracking.objects.filter(current_filter_objects, receive_date__year=current_year).extra(
-                    select={'year': 'extract (year from receive_date)',
-                            'month': 'extract (month from receive_date)',
-                            'day': 'extract (day from receive_date)'},
-                    order_by=['month', 'day', '-year'])
+                docList = doctracking.objects.filter(current_filter_objects, receive_date__year=current_year).order_by('-task_date')
                 serializer = DocListSerializer(docList, many=True)
                 return JsonResponse({'status': 'True', 'data': serializer.data},
                                     status=200)
@@ -956,11 +831,7 @@ class DocController:
                     current_filter_objects &= get_filter(
                         'status', 'equal',
                         'QM Observations Repeated')
-                docList = doctracking.objects.filter(current_filter_objects, receive_date__year=current_year).extra(
-                    select={'year': 'extract (year from receive_date)',
-                            'month': 'extract (month from receive_date)',
-                            'day': 'extract (day from receive_date)'},
-                    order_by=['month', 'day', '-year'])
+                docList = doctracking.objects.filter(current_filter_objects, receive_date__year=current_year).order_by('-task_date')
                 serializer = DocListSerializer(docList, many=True)
                 return JsonResponse({'status': 'True', 'data': serializer.data},
                                     status=200)
@@ -980,11 +851,7 @@ class DocController:
                     current_filter_objects &= get_filter(
                         'status', 'equal',
                         'Audit in-process')
-                docList = doctracking.objects.filter(current_filter_objects, receive_date__year=current_year).extra(
-                    select={'year': 'extract (year from receive_date)',
-                            'month': 'extract (month from receive_date)',
-                            'day': 'extract (day from receive_date)'},
-                    order_by=['month', 'day', '-year'])
+                docList = doctracking.objects.filter(current_filter_objects, receive_date__year=current_year).order_by('-task_date')
 
                 list = []
                 if docList is not None:
@@ -1034,11 +901,7 @@ class DocController:
                         #     'Approved')
 
                     total_over_due_current = doctracking.objects.filter(total_filter_document_totaloverdue,
-                                                                        receive_date__year=current_year).extra(
-                        select={'year': 'extract (year from receive_date)',
-                                'month': 'extract (month from receive_date)',
-                                'day': 'extract (day from receive_date)'},
-                        order_by=['month', 'day', '-year'])
+                                                                        receive_date__year=current_year).order_by('-task_date')
                     list = []
                     if total_over_due_current is not None:
                         for item in total_over_due_current:
@@ -1065,11 +928,7 @@ class DocController:
                         total_filter_objects &= get_filter(
                             'status', 'equal',
                             current_status)
-                    docList = doctracking.objects.filter(total_filter_objects).extra(
-                        select={'year': 'extract (year from receive_date)',
-                                'month': 'extract (month from receive_date)',
-                                'day': 'extract (day from receive_date)'},
-                        order_by=['month', 'day', '-year'])
+                    docList = doctracking.objects.filter(total_filter_objects).order_by('-task_date')
                     if current_year != '':
                         docList = docList.filter(receive_date__year=current_year)
                     if current_org != '':
@@ -2462,3 +2321,13 @@ class DocController:
 
         except Exception as e:
             return JsonResponse({'status': 'False', "message": "Error in fetching certificate serial number", 'data': ''},status=500)
+
+    @staticmethod
+    def deleteDocumentHistory(request):
+        try:
+            id = request.query_params['id']
+            delete = doctrackingHistory.objects.filter(id=id).delete()
+            return JsonResponse({'status': 'True', 'message': "Record Deleted"},
+                                status=200)
+        except Exception as e:
+            return JsonResponse({'status': 'False', "message": "Document could not delete", 'data': ''},status=500)

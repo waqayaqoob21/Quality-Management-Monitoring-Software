@@ -21,7 +21,7 @@ from django.urls import path, include
 from doctracking.views import AddDocAPIVIEW, docTracingListAPIVIEW, docPendingListAPIVIEW, GetDocumentsPDFAPIVIEW, \
     GetDocumentsExcelAPIVIEW, GetDashboardAPIVIEW, DeleteDocAPIVIEW,DeleteCertificateAPIVIEW, DeleteTaskAPIVIEW, docTracingHistoryAPIVIEW, \
     GetDocTrackingDashboardCountAPIVIEW, getTaskMonitoringDashboardCountAPIVIEW, GenerateCertificateAPIVIEW, \
-    certificateListAPIVIEW, GetCertificateSerialNumberAPIVIEW
+    certificateListAPIVIEW, GetCertificateSerialNumberAPIVIEW, DeleteDocumentHistoryAPIVIEW
 from usermanagement.views import UserLoginApiView
 
 
@@ -41,5 +41,6 @@ urlpatterns = [
     path('generateCertificate/', GenerateCertificateAPIVIEW.as_view(), name='generateCertificate'),
     path('certificateList/', certificateListAPIVIEW.as_view(), name='certificateList'),
     path('certificateSerialNumber/', GetCertificateSerialNumberAPIVIEW.as_view(), name='certificateSerialNumber'),
+    path('deleteDocHistory/', DeleteDocumentHistoryAPIVIEW.as_view(), name='deleteDocHistory'),
 
 ]

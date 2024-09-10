@@ -17,6 +17,7 @@ urlpatterns = [
         path('deletelotids/', DeleteLotIdAPIVIEW.as_view(), name='deletelotids'),
 
         path('gethistory/', GetActiveMotorHistoryAPIVIEW.as_view(), name='gethistory'),
+        path('getProcessObservationStatus/', GetProcessObservationStatusAPIVIEW.as_view(), name='getProcessObservationStatus'),
 
         path('datenone/', GetActiveMotorListDateNoneAPIVIEW.as_view(), name='datenone'),
         path('historydatenone/', GetActiveMotorHistoryListDateNoneAPIVIEW.as_view(), name='historydatenone'),

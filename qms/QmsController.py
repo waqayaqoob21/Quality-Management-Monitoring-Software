@@ -165,7 +165,8 @@ class QmsController:
     def GetNotificationsQMS(request):
         try:
             one_month = datetime.now() + relativedelta(months=1)  # 5 days ago
-            dataList = QmsAudit.objects.filter(certification_validity_date__lt = one_month, audit_status = 'Planned')
+            dataList = QmsAudit.objects.filter(Q(audit_status="Conducted") | Q(audit_status="Completed"),
+                                                  planned_date__lt = one_month)
             serializer = QmsAuditSerializer(dataList,many=True)
             return JsonResponse({'status': 'True', "message": "QMS Audits fetched successfully!",'data':serializer.data}, status=200)
 
@@ -188,7 +189,8 @@ class QmsController:
     def GetNotificationsCeSP(request):
         try:
             one_month = datetime.now() + relativedelta(months=1)  # 5 days ago
-            dataList = CespAudit.objects.filter(certification_validity_date__lt = one_month, audit_status = 'Planned')
+            dataList = CespAudit.objects.filter(Q(audit_status="Conducted") | Q(audit_status="Completed"),
+                                                  planned_date__lt = one_month)
             serializer = CespAuditSerializer(dataList,many=True)
             return JsonResponse({'status': 'True', "message": "CeSP Audits fetched successfully!",'data':serializer.data}, status=200)
 
@@ -212,8 +214,10 @@ class QmsController:
     def getNotificationCount(request):
         try:
             one_month = datetime.now() + relativedelta(months=1)  # 5 days ago
-            cesp_count = CespAudit.objects.filter(certification_validity_date__lt = one_month, audit_status = 'Planned').count()
-            qms_count = QmsAudit.objects.filter(certification_validity_date__lt = one_month, audit_status = 'Planned').count()
+            cesp_count = CespAudit.objects.filter(Q(audit_status="Conducted") | Q(audit_status="Completed"),
+                                                  planned_date__lt = one_month).count()
+            qms_count = QmsAudit.objects.filter(Q(audit_status="Conducted") | Q(audit_status="Completed"),
+                                                  planned_date__lt = one_month).count()
             dict ={
                 'qms_count': qms_count,
                 'cesp_count': cesp_count,
@@ -318,10 +322,9 @@ class QmsController:
             dataList = QmsAudit.objects.filter(filter_objects)
 
             if current_status == 'Overdue Conducted':
-                dataList = QmsAudit.objects.filter(Q(audit_status="Conducted") | Q(audit_status="Completed"),audit_start_date__gt=F('planned_date'),
-                                                                    planned_date__year=current_year).annotate(
-                planned_date__month=Extract('planned_date', 'month'),planned_date__year=Extract('planned_date', 'year'),
-                planned_date__day=Extract('planned_date', 'day')).order_by('planned_date__month', 'planned_date__day','-planned_date__year')
+                dataList = QmsAudit.objects.filter(
+                    Q(audit_status="Conducted") | Q(audit_status="Completed"), audit_start_date__gt=F('planned_date'),
+                    planned_date__year=current_year)
 
             if current_status == 'QMS Total Under Process':
                 dataList = QmsAudit.objects.filter(audit_status = 'In-Process').annotate(

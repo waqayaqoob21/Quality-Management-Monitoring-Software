@@ -74,3 +74,25 @@ class GetTaskListHistoryAPIVIEW(APIView):
     def get(self, request):
         result = task_obj.GetTaskListHistory(request)
         return result
+
+class SendIntimationAPIVIEW(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        result = task_obj.sendIntimation(request.data)
+        return result
+
+class GetTaskNotificationsAPIVIEW(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        result = task_obj.getTaskNotifications(request)
+        return result
+
+
+class GetNotifiedTaskAPIVIEW(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        result = task_obj.getNotifiedTask(request)
+        return result

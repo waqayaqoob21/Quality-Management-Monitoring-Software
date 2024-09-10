@@ -12,7 +12,7 @@ class TaskSummary(models.Model):
     remarks = models.TextField()
     task_date = models.DateField(null=True)
     follow_up = models.CharField(max_length=100, null=True)
-
+    priority = models.CharField(max_length=300, null= True)
 
 class TaskSummaryHistory(models.Model):
     task_id = models.IntegerField(null=True)
@@ -26,6 +26,14 @@ class TaskSummaryHistory(models.Model):
     task_date = models.DateField(null=True)
     follow_up = models.CharField(max_length=100, null=True)
     created_at = models.DateField(auto_now_add=True)
+    priority = models.CharField(max_length=300, null= True)
+
+class PriorityNotification(models.Model):
+    id = models.AutoField(primary_key = True)
+    task_id = models.IntegerField()
+    task_group = models.CharField(max_length=300)
+    message = models.TextField()
+    created_at = models.DateTimeField(auto_now_add= True)
 
 
 class OcrDataModel(models.Model):

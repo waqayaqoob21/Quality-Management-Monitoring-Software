@@ -120,3 +120,10 @@ class getTaskMonitoringDashboardCountAPIVIEW(APIView):
     def get(self, request):
         result = doc_obj.getTaskMonitoringDashboardCount(request)
         return result
+
+class DeleteDocumentHistoryAPIVIEW(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        result = doc_obj.deleteDocumentHistory(request)
+        return result

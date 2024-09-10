@@ -338,46 +338,66 @@ class SmsController:
                     get_prod.set_id = request['set_id']
                     if request['blt_date'] != '':
                         get_prod.blt_date = request['blt_date']
+                    else:
+                        get_prod.blt_date = None
                     get_prod.testing_date = request['testing_date']
                     get_prod.sys_type = request['sys_type']
                     get_prod.blt_status = request['blt_status']
                     get_prod.blt_remarks = request['blt_remarks']
                     if request['pre_hil_date'] != '':
                         get_prod.pre_hil_date = request['pre_hil_date']
+                    else:
+                        get_prod.pre_hil_date = None
                     get_prod.pre_hil_status = request['pre_hil_status']
                     get_prod.pre_hil_remarks = request['pre_hil_remarks']
                     if request['vibaration_date'] != '':
                         get_prod.vibaration_date = request['vibaration_date']
+                    else:
+                        get_prod.vibaration_date = None
                     get_prod.vibaration_status = request['vibaration_status']
                     get_prod.vibaration_remarks = request['vibaration_remarks']
                     if request['post_hil_date'] != '':
                         get_prod.post_hil_date = request['post_hil_date']
+                    else:
+                        get_prod.post_hil_date = None
                     get_prod.post_hil_status = request['post_hil_status']
                     get_prod.post_hil_remarks = request['post_hil_remarks']
                     if request['fgt_date'] != '':
                         get_prod.fgt_date = request['fgt_date']
+                    else:
+                        get_prod.fgt_date = None
                     get_prod.fgt_status = request['fgt_status']
                     get_prod.fgt_remarks = request['fgt_remarks']
                     if request['final_integration_date'] != '':
                         get_prod.final_integration_date = request['final_integration_date']
+                    else:
+                        get_prod.final_integration_date = None
                     get_prod.final_integration_status = request['final_integration_status']
                     get_prod.final_integration_remarks = request['final_integration_remarks']
                     if request['bhd_date'] != '':
                         get_prod.bhd_date = request['bhd_date']
+                    else:
+                        get_prod.bhd_date = None
                     get_prod.bhd_status = request['bhd_status']
                     get_prod.bhd_remarks = request['bhd_remarks']
                     if request['fqm_date'] != '':
                         get_prod.fqm_date = request['fqm_date']
+                    else:
+                        get_prod.fqm_date = None
                     get_prod.fqm_status = request['fqm_status']
                     get_prod.fqm_remarks = request['fqm_remarks']
                     if request['qm_certification_date'] != '':
                         get_prod.qm_certification_date = request['qm_certification_date']
+                    else:
+                        get_prod.qm_certification_date = None
                     get_prod.qm_certification_status = request['qm_certification_status']
                     get_prod.qm_certification_remarks = request['qm_certification_remarks']
                     get_prod.attachment = request['attachment']
                     get_prod.remarks = request['remarks']
                     if request['cgbalancing_date'] != '':
                         get_prod.cgbalancing_date = request['cgbalancing_date']
+                    else:
+                        get_prod.cgbalancing_date = None
                     get_prod.cgbalancing_date_status = request['cgbalancing_date_status']
                     get_prod.cgbalancing_date_remarks = request['cgbalancing_date_remarks']
                     if request['enduser_date'] != '':
@@ -397,7 +417,6 @@ class SmsController:
                     get_prod.func_tst = request['func_tst']
                     get_prod.func_tst_dummy_bird = request['func_tst_dummy_bird']
                     get_prod.road_test = request['road_test']
-                    get_prod.post_road_test = request['post_road_test']
                     get_prod.integrated_operation = request['integrated_operation']
                     get_prod.rain_test = request['rain_test']
                     get_prod.pre_user_inspection = request['pre_user_inspection']
@@ -418,6 +437,7 @@ class SmsController:
                     get_prod.road_test_remarks = request['road_test_remarks']
                     if request['post_road_test_date'] != '':
                         get_prod.post_road_test_date = request['post_road_test_date']
+                    get_prod.post_road_test = request['post_road_test']
                     get_prod.post_road_test_remarks = request['post_road_test_remarks']
                     if request['integrated_operation_date'] != '':
                         get_prod.integrated_operation_date = request['integrated_operation_date']
@@ -1647,6 +1667,7 @@ class SmsController:
             system = request.query_params['selected_system']
             SelectedStatus = request.query_params['selected_status']
             sys_name = request.query_params['sys_name']
+            child_status = request.query_params['child_status']
             filter_objects = Q()
 
             def get_filter(field_name, filter_condition, filter_value):
@@ -1710,101 +1731,102 @@ class SmsController:
                 ListItems = []
                 if SelectedStatus == 'BLT':
                     for data  in dataList:
-                        if data.blt_date is not None and data.blt_date.strftime("%Y") == year and data.blt_status=='Observation(next stage)':
+                        if data.blt_date is not None and data.blt_date.strftime("%Y") == year and data.blt_status==child_status:
                             ListItems.append(data)
                 if SelectedStatus == 'Pre-HIL':
                     for data  in dataList:
-                        if data.pre_hil_date is not None and data.pre_hil_date.strftime("%Y") == year and data.pre_hil_status=='Observation(next stage)':
+                        if data.pre_hil_date is not None and data.pre_hil_date.strftime("%Y") == year and data.pre_hil_status==child_status:
                             ListItems.append(data)
 
                 if SelectedStatus == 'Vibration':
                     for data  in dataList:
-                        if data.vibaration_date is not None and data.vibaration_date.strftime("%Y") == year and data.vibaration_status=='Observation(next stage)':
+                        if data.vibaration_date is not None and data.vibaration_date.strftime("%Y") == year and data.vibaration_status==child_status:
                             ListItems.append(data)
 
                 if SelectedStatus == 'CG Balancing':
                     for data  in dataList:
-                        if data.cgbalancing_date is not None and data.cgbalancing_date.strftime("%Y") == year and data.cgbalancing_date_status=='Observation(next stage)':
+                        if data.cgbalancing_date is not None and data.cgbalancing_date.strftime("%Y") == year and data.cgbalancing_date_status==child_status:
                             ListItems.append(data)
 
                 if SelectedStatus == 'EMP Proofing':
                     for data  in dataList:
-                        if data.emp_proofing_date is not None and data.emp_proofing_date.strftime("%Y") == year and data.emp_proofing=='Observation(next stage)':
+                        if data.emp_proofing_date is not None and data.emp_proofing_date.strftime("%Y") == year and data.emp_proofing==child_status:
                             ListItems.append(data)
 
                 if SelectedStatus == 'Functional Test W/O Dummy Bird':
                     for data in dataList:
                         if data.func_tst_date is not None and data.func_tst_date.strftime(
-                                "%Y") == year and data.func_tst == 'Observation(next stage)':
+                                "%Y") == year and data.func_tst ==child_status:
                             ListItems.append(data)
 
                 if SelectedStatus == 'Functional Test With Dummy Bird':
                     for data  in dataList:
-                        if data.func_tst_dummy_bird_date is not None and data.func_tst_dummy_bird_date.strftime("%Y") == year and data.func_tst_dummy_bird=='Observation(next stage)':
+                        if data.func_tst_dummy_bird_date is not None and data.func_tst_dummy_bird_date.strftime("%Y") == year and data.func_tst_dummy_bird==child_status:
                             ListItems.append(data)
 
                 if SelectedStatus == 'Road Test':
                     for data  in dataList:
-                        if data.road_test_date is not None and data.road_test_date.strftime("%Y") == year and data.road_test=='Observation(next stage)':
+                        if data.road_test_date is not None and data.road_test_date.strftime("%Y") == year and data.road_test==child_status:
                             ListItems.append(data)
 
                 if SelectedStatus == 'Post Road Test':
                     for data  in dataList:
-                        if data.post_road_test_date is not None and data.post_road_test_date.strftime("%Y") == year and data.post_road_test=='Observation(next stage)':
+                        if data.post_road_test_date is not None and data.post_road_test_date.strftime("%Y") == year and data.post_road_test==child_status:
                             ListItems.append(data)
 
                 if SelectedStatus == 'Integrated Operation':
                     for data in dataList:
                         if data.integrated_operation_date is not None and data.integrated_operation_date.strftime(
-                                "%Y") == year and data.integrated_operation == 'Observation(next stage)':
+                                "%Y") == year and data.integrated_operation ==child_status:
                             ListItems.append(data)
 
                 if SelectedStatus == 'Rain Test':
                     for data in dataList:
                         if data.rain_test_date is not None and data.rain_test_date.strftime(
-                                "%Y") == year and data.rain_test == 'Observation(next stage)':
+                                "%Y") == year and data.rain_test ==child_status:
                             ListItems.append(data)
 
                 if SelectedStatus == 'Pre User Inspection':
                     for data  in dataList:
-                        if data.pre_user_inspection_date is not None and data.pre_user_inspection_date.strftime("%Y") == year and data.pre_user_inspection=='Observation(next stage)':
+                        if data.pre_user_inspection_date is not None and data.pre_user_inspection_date.strftime("%Y") == year and data.pre_user_inspection==child_status:
                             ListItems.append(data)
 
                 if SelectedStatus == 'Final Integration':
                     for data in dataList:
                         if data.final_integration_date is not None and data.final_integration_date.strftime(
-                                "%Y") == year and data.final_integration_status == 'Observation(next stage)':
+                                "%Y") == year and data.final_integration_status == child_status:
                             ListItems.append(data)
 
                 if SelectedStatus == 'Loading/Unloading on MLV/HLF':
                     for data  in dataList:
-                        if data.load_unload_on_mlv_hlf_date is not None and data.load_unload_on_mlv_hlf_date.strftime("%Y") == year and data.load_unload_on_mlv_hlf=='Observation(next stage)':
+                        if data.load_unload_on_mlv_hlf_date is not None and data.load_unload_on_mlv_hlf_date.strftime("%Y") == year and data.load_unload_on_mlv_hlf==child_status:
                             ListItems.append(data)
 
                 if SelectedStatus == 'Post-HIL':
                     for data  in dataList:
-                        if data.post_hil_date is not None and data.post_hil_date.strftime("%Y") == year and data.post_hil_status=='Observation(next stage)':
+                        if data.post_hil_date is not None and data.post_hil_date.strftime("%Y") == year and data.post_hil_status==child_status:
                             ListItems.append(data)
 
                 if SelectedStatus == 'System Alignment':
                     for data  in dataList:
-                        if data.sys_align_Date is not None and data.sys_align_Date.strftime("%Y") == year and data.sys_align_status=='Observation(next stage)':
+                        if data.sys_align_Date is not None and data.sys_align_Date.strftime("%Y") == year and data.sys_align_status==child_status:
                             ListItems.append(data)
 
                 if SelectedStatus == 'Incapsulation':
                     for data  in dataList:
-                        if data.incapsulation_date is not None and data.incapsulation_date.strftime("%Y") == year and data.incapsulation_status=='Observation(next stage)':
+                        if data.incapsulation_date is not None and data.incapsulation_date.strftime("%Y") == year and data.incapsulation_status==child_status:
                             ListItems.append(data)
 
                 if SelectedStatus == 'Final Integrated Testing':
                     for data  in dataList:
-                        if data.final_integrated_testing_date is not None and data.final_integrated_testing_date.strftime("%Y") == year and data.final_integrated_testing=='Observation(next stage)':
+                        if data.final_integrated_testing_date is not None and data.final_integrated_testing_date.strftime("%Y") == year and data.final_integrated_testing==child_status:
                             ListItems.append(data)
 
                 if SelectedStatus == 'FGT Status':
                     for data  in dataList:
-                        if data.fgt_date is not None and data.fgt_date.strftime("%Y") == year and data.fgt_status=='Observation(next stage)':
+                        if data.fgt_date is not None and data.fgt_date.strftime("%Y") == year and data.fgt_status==child_status:
                             ListItems.append(data)
+                print(ListItems)
                 serializer = ""
                 if sys_name == 'Production':
                     serializer = ProductionSystemSerialzer(ListItems, many=True)
@@ -1812,6 +1834,7 @@ class SmsController:
                     serializer = FlightSystemSerialzer(ListItems, many=True)
                 if sys_name == 'Relifing':
                     serializer = RelifingSystemSerialzer(ListItems, many=True)
+                print(serializer.data)
                 return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
 
         except Exception as e:
@@ -5202,7 +5225,11 @@ class SmsController:
             prod_bhd_not_submitted = ProductionSystemStatus.objects.filter(filter_objects,
                                                                        bhd_date__year=year,bhd_status='Not Submitted')
             prod_bhd_qm_forwarded = ProductionSystemStatus.objects.filter(filter_objects,
-                                                                         bhd_date__year=year,bhd_status='QM observations forwarded')
+                                                                         bhd_date__year=year,bhd_status='QM Observations Forwarded')
+
+            prod_bhd_qm_repeated = ProductionSystemStatus.objects.filter(filter_objects,
+                                                                         bhd_date__year=year,bhd_status='QM Observations Repeated')
+
             prod_bhd_inprocess= ProductionSystemStatus.objects.filter(filter_objects,
                                                                          bhd_date__year=year,bhd_status='Audit in-process')
 
@@ -5557,7 +5584,11 @@ class SmsController:
             flight_bhd_inprocess = FlightSystemStatus.objects.filter(filter_objects,
                                                                      bhd_date__year=year,bhd_status='Audit in-process')
             flight_bhd_qm_forwarded = FlightSystemStatus.objects.filter(filter_objects,
-                                                                       bhd_date__year=year,bhd_status='QM observations forwarded')
+                                                                       bhd_date__year=year,bhd_status='QM Observations Forwarded')
+
+            flight_bhd_qm_repeated = FlightSystemStatus.objects.filter(filter_objects,
+                                                                       bhd_date__year=year,bhd_status='QM Observations Repeated')
+
             flight_bhd_ok = FlightSystemStatus.objects.filter(filter_objects,
                                                                        bhd_date__year=year,bhd_status='Ok')
             flight_bhd_submitted = FlightSystemStatus.objects.filter(filter_objects,
@@ -5930,7 +5961,11 @@ class SmsController:
             relifing_bhd_inprocess = RelifingSystemStatus.objects.filter(filter_objects,
                                                                          bhd_date__year=year,bhd_status='Audit in-process')
             relifing_bhd_qm_forwarded = RelifingSystemStatus.objects.filter(filter_objects,
-                                                                           bhd_date__year=year,bhd_status='QM observations forwarded')
+                                                                           bhd_date__year=year,bhd_status='QM Observations Forwarded')
+
+            relifing_bhd_qm_repeated = RelifingSystemStatus.objects.filter(filter_objects,
+                                                                           bhd_date__year=year,bhd_status='QM Observations Repeated')
+
             relifing_bhd_ok = RelifingSystemStatus.objects.filter(filter_objects,
                                                                        bhd_date__year=year,bhd_status='Ok')
             relifing_bhd_submitted = RelifingSystemStatus.objects.filter(filter_objects,
@@ -6236,6 +6271,7 @@ class SmsController:
                 'prod_bhd_submitted': prod_bhd_submitted.count(),
                 'prod_bhd_not_submitted' : prod_bhd_not_submitted.count(),
                 'prod_bhd_qm_forwarded' : prod_bhd_qm_forwarded.count(),
+                'prod_bhd_qm_repeated' : prod_bhd_qm_repeated.count(),
                 'prod_bhd_inprocess' : prod_bhd_inprocess.count(),
 
                 'flight_bhd_ok': flight_bhd_ok.count(),
@@ -6243,13 +6279,14 @@ class SmsController:
                 'flight_bhd_not_submit' : flight_bhd_not_submit.count(),
                 'flight_bhd_inprocess' : flight_bhd_inprocess.count(),
                 'flight_bhd_qm_forwarded' : flight_bhd_qm_forwarded.count(),
-
+                'flight_bhd_qm_repeated': flight_bhd_qm_repeated.count(),
 
                 'relifing_bhd_ok': relifing_bhd_ok.count(),
                 'relifing_bhd_submitted': relifing_bhd_submitted.count(),
                 'relifing_bhd_not_submit' : relifing_bhd_not_submit.count(),
                 'relifing_bhd_inprocess' : relifing_bhd_inprocess.count(),
                 'relifing_bhd_qm_forwarded' : relifing_bhd_qm_forwarded.count(),
+                'relifing_bhd_qm_repeated': relifing_bhd_qm_repeated.count(),
 
                 'prod_fqm_planned': prod_fqm_planned.count(),
                 'prod_fqm_conducted': prod_fqm_conducted.count(),
