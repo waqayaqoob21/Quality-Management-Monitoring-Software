@@ -41,6 +41,13 @@ class EditProductionAPIVIEW(APIView):
         print(result)
         return result
 
+class GetTotalSystemsAPIVIEW(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        result = task_obj.GetTotalSystems(request)
+        return result
+
 
 class GetProductionListAPIVIEW(APIView):
     permission_classes = [AllowAny]

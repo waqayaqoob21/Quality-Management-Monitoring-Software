@@ -6,6 +6,7 @@ urlpatterns = [
 
         path('addprod/', AddProductionAPIVIEW.as_view(), name='addprod'),
         path('editprod/', EditProductionAPIVIEW.as_view(), name='editprod'),
+        path('totalsystemlist/', GetTotalSystemsAPIVIEW.as_view(), name='totalsystemlist'),
         path('prodlist/', GetProductionListAPIVIEW.as_view(), name='prodlist'),
         path('prodlistHistory/', GetProductionHistoryListAPIVIEW.as_view(), name='prodlistHistory'),
         path('getprodpdf/', GetProductionPDFAPIVIEW.as_view(), name='getprodpdf'),

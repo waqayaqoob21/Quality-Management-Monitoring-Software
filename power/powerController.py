@@ -144,6 +144,12 @@ class powerController:
             selected_type = request.query_params.get('selected_type')
             selected_system = request.query_params.get('selected_system')
             current_status = request.query_params.get('current_status')
+            systemItems = ""
+            noVal = ['']
+            if selected_system != noVal:
+                systemItems = selected_system.split(',')
+                # for item in systemItems:
+                #     systemItems = item.split(',')
             def get_filter(field_name, filter_condition, filter_value):
                 if filter_condition.strip() == "contains":
                     kwargs = {
@@ -217,8 +223,9 @@ class powerController:
             total_non_compliant_modules = dataList.filter(filter_objects, compliance_status = 'Non Compliant').count()
             total_partial_compliant_modules = dataList.filter(filter_objects, compliance_status = 'Partial Compliant').count()
 
-            if selected_system != '':
-                filter_objects &= get_filter('sys_name', 'contains',selected_system)
+            if systemItems != '':
+                for system in systemItems:
+                 filter_objects &= get_filter('sys_name', 'contains',system)
 
             current_year_modules = 0
             current_year_compliant_modules = 0
@@ -229,8 +236,9 @@ class powerController:
             total_non_compliant_modules = 0
             dataList = Power.objects.filter(filter_objects)
 
-            if selected_system != "":
-                filter_objects &= get_filter('sys_name', 'contains', selected_system)
+            if systemItems != "":
+                for system in systemItems:
+                 filter_objects &= get_filter('sys_name', 'contains',system)
 
             total_modules = Power.objects.filter(filter_objects).count()
             total_compliant_modules = dataList.filter(filter_objects, compliance_status = 'Compliant').count()

@@ -912,6 +912,214 @@ class SmsController:
         ListItem = ProductionSystemStatusHistory.objects.all()
         serializer = ProductionSystemSerialzer(ListItem, many=True)
         return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+
+    @staticmethod
+    def GetTotalSystems(request):
+        try:
+            org = request.query_params['selected_org']
+            year = request.query_params['selected_year']
+            type = request.query_params['selected_type']
+            system = request.query_params['selected_system']
+            ParentStatus = request.query_params['selected_status']
+            ChildStatus = request.query_params['child_status']
+            # print(ParentStatus)
+            # print(ChildStatus)
+            filter_objects = Q()
+
+            def get_filter(field_name, filter_condition, filter_value):
+                # thanks to the below post
+                # https://stackoverflow.com/questions/310732/in-django-how-does-one-filter-a-queryset-with-dynamic-field-lookups
+                # the idea to this below logic is very similar to that in the above mentioned post
+                if filter_condition.strip() == "contains":
+                    kwargs = {
+                        '{0}__icontains'.format(field_name): filter_value
+                    }
+                    return Q(**kwargs)
+
+                if filter_condition.strip() == "not_equal":
+                    kwargs = {
+                        '{0}__iexact'.format(field_name): filter_value
+                    }
+                    return ~Q(**kwargs)
+
+                if filter_condition.strip() == "starts_with":
+                    kwargs = {
+                        '{0}__istartswith'.format(field_name): filter_value
+                    }
+                    return Q(**kwargs)
+                if filter_condition.strip() == "equal":
+                    kwargs = {
+                        '{0}__iexact'.format(field_name): filter_value
+                    }
+                    return Q(**kwargs)
+
+                if filter_condition.strip() == "not_equal":
+                    kwargs = {
+                        '{0}__iexact'.format(field_name): filter_value
+                    }
+
+                    return ~Q(**kwargs)
+
+            # create dynamic filter
+            # if year != '':
+            #     filter_objects &= get_filter(
+            #         'testing_date__year', 'equal',
+            #         year)
+            if org != '':
+                filter_objects &= get_filter(
+                    'organization', 'equal',
+                    org)
+            if type != '':
+                filter_objects &= get_filter(
+                    'sys_type', 'equal',
+                    type)
+            if system != '':
+                filter_objects &= get_filter(
+                    'system', 'equal',
+                    system)
+
+            setid_filter = Q()
+            setid_filter &= get_filter(
+                    'set_id', 'not_equal',
+                    '')
+            if org != '':
+                setid_filter &= get_filter(
+                    'organization', 'equal',
+                    org)
+            if type != '':
+                setid_filter &= get_filter(
+                    'sys_type', 'equal',
+                    type)
+            if system != '':
+                setid_filter &= get_filter(
+                    'system', 'equal',
+                    system)
+
+            # else:
+            dataList = ProductionSystemStatus.objects.filter(filter_objects)
+            if ParentStatus != '':
+                ListItems = []
+                totCount = ProductionSystemStatus.objects.filter(setid_filter)
+                for set in totCount:
+                    count_id = 0
+                    if set.blt_status != 'None' and set.set_id != '' and set.blt_date is not None:
+                        if count_id == 0 and set.blt_date.strftime("%Y") == year:
+                            count_id = set.id
+                            ListItems.append(set)
+                    if set.pre_hil_status != 'None' and set.set_id != '' and set.pre_hil_date is not None:
+                        if count_id == 0 and set.pre_hil_date.strftime("%Y") == year:
+                            count_id = set.id
+                            ListItems.append(set)
+                    if set.vibaration_status != 'None' and set.set_id != '' and set.vibaration_date is not None:
+                        if count_id == 0 and set.vibaration_date.strftime("%Y") == year:
+                            count_id = set.id
+                            ListItems.append(set)
+                    if set.post_hil_status != 'None' and set.set_id != '' and set.post_hil_date is not None:
+                        if count_id == 0 and set.post_hil_date.strftime("%Y") == year:
+                            count_id = set.id
+                            ListItems.append(set)
+                    if set.fgt_status != 'None' and set.set_id != '' and set.fgt_date is not None:
+                        if count_id == 0 and set.fgt_date.strftime("%Y") == year:
+                            count_id = set.id
+                            ListItems.append(set)
+
+                    if set.final_integration_status != 'None' and set.set_id != '' and set.final_integration_date is not None:
+                        if count_id == 0 and set.final_integration_date.strftime("%Y") == year:
+                            count_id = set.id
+                            ListItems.append(set)
+                    if set.bhd_status != 'None' and set.set_id != '' and set.bhd_date is not None:
+                        if count_id == 0 and set.bhd_date.strftime("%Y") == year:
+                            count_id = set.id
+                            ListItems.append(set)
+                    if set.fqm_status != 'None' and set.set_id != '' and set.fqm_date is not None:
+                        if count_id == 0 and set.fqm_date.strftime("%Y") == year:
+                            count_id = set.id
+                            ListItems.append(set)
+                    if set.qm_certification_status != 'None' and set.set_id != '' and set.qm_certification_date is not None:
+                        if count_id == 0 and set.qm_certification_date.strftime("%Y") == year:
+                            count_id = set.id
+                            ListItems.append(set)
+                    if set.cgbalancing_date_status != 'None' and set.set_id != '' and set.cgbalancing_date is not None:
+                        if count_id == 0 and set.cgbalancing_date.strftime("%Y") == year:
+                            count_id = set.id
+                            ListItems.append(set)
+
+                    if set.enduser_status != 'None' and set.set_id != '' and set.enduser_date is not None:
+                        if count_id == 0 and set.enduser_date.strftime("%Y") == year:
+                            count_id = set.id
+                            ListItems.append(set)
+                    if set.incapsulation_status != 'None' and set.set_id != '' and set.incapsulation_date is not None:
+                        if count_id == 0 and set.incapsulation_date.strftime("%Y") == year:
+                            count_id = set.id
+                            ListItems.append(set)
+                    if set.sys_align_status != 'None' and set.set_id != '' and set.sys_align_Date is not None:
+                        if count_id == 0 and set.sys_align_Date.strftime("%Y") == year:
+                            count_id = set.id
+                            ListItems.append(set)
+                    if set.emp_proofing != 'None' and set.set_id != '' and set.emp_proofing_date is not None:
+                        if count_id == 0 and set.emp_proofing_date.strftime("%Y") == year:
+                            count_id = set.id
+                            ListItems.append(set)
+                    if set.func_tst != 'None' and set.set_id != '' and set.func_tst_date is not None:
+                        if count_id == 0 and set.func_tst_date.strftime("%Y") == year:
+                            count_id = set.id
+                            ListItems.append(set)
+
+                    if set.func_tst_dummy_bird != 'None' and set.set_id != '' and set.func_tst_dummy_bird_date is not None:
+                        if count_id == 0 and set.func_tst_dummy_bird_date.strftime("%Y") == year:
+                            count_id = set.id
+                            ListItems.append(set)
+                    if set.road_test != 'None' and set.set_id != '' and set.road_test_date is not None:
+                        if count_id == 0 and set.road_test_date.strftime("%Y") == year:
+                            count_id = set.id
+                            ListItems.append(set)
+                    if set.post_road_test != 'None' and set.set_id != '' and set.post_road_test_date is not None:
+                        if count_id == 0 and set.post_road_test_date.strftime("%Y") == year:
+                            count_id = set.id
+                            ListItems.append(set)
+                    if set.integrated_operation != 'None' and set.set_id != '' and set.integrated_operation_date is not None:
+                        if count_id == 0 and set.integrated_operation_date.strftime("%Y") == year:
+                            count_id = set.id
+                            ListItems.append(set)
+                    if set.rain_test != 'None' and set.set_id != '' and set.rain_test_date is not None:
+                        if count_id == 0 and set.rain_test_date.strftime("%Y") == year:
+                            count_id = set.id
+                            ListItems.append(set)
+
+                    if set.pre_user_inspection != 'None' and set.set_id != '' and set.pre_user_inspection_date is not None:
+                        if count_id == 0 and set.pre_user_inspection_date.strftime("%Y") == year:
+                            count_id = set.id
+                            ListItems.append(set)
+                    if set.final_integrated_testing != 'None' and set.set_id != '' and set.final_integrated_testing_date is not None:
+                        if count_id == 0 and set.final_integrated_testing_date.strftime("%Y") == year:
+                            count_id = set.id
+                            ListItems.append(set)
+                    if set.load_unload_on_mlv_hlf != 'None' and set.set_id != '' and set.load_unload_on_mlv_hlf_date is not None:
+                        if count_id == 0 and set.load_unload_on_mlv_hlf_date.strftime("%Y") == year:
+                            count_id = set.id
+                            ListItems.append(set)
+
+                # if ParentStatus == 'BLT':
+                #     dataList = dataList.extra(
+                #           select={
+                #           'year': 'extract (year from blt_date)',
+                #           'month': 'extract (month from blt_date)',
+                #           'day': 'extract (day from blt_date)'},
+                #            order_by=['month','day','-year']
+                #             )
+                #     if ChildStatus != 'Current Count':
+                #         ListItems = dataList.filter(blt_date__year = year,blt_status = ChildStatus)
+                #     if ChildStatus == 'Current Count':
+                #         for data  in dataList:
+                #             if data.blt_date.strftime("%Y") == year and (data.blt_status == 'Under process' or data.blt_status=='Observation(same stage)' or data.blt_status=='Halt'):
+                #                 ListItems.append(data)
+
+                serializer = ProductionSystemSerialzer(ListItems, many=True)
+                return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
+        except Exception as e:
+            print(e)
+            return JsonResponse({'status': 'false'}, status=200)
+
     @staticmethod
     def GetProductionList(request):
         try:

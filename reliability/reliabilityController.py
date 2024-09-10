@@ -92,6 +92,12 @@ class reliabilityController:
             selected_type = request.query_params.get('selected_type')
             selected_system = request.query_params.get('selected_system')
             estimation_type = request.query_params.get('estimation_type')
+            systemItems = ""
+            noVal = ['']
+            if selected_system != noVal:
+                systemItems = selected_system.split(',')
+                # for item in systemItems:
+                #     systemItems = item.split(',')
             def get_filter(field_name, filter_condition, filter_value):
                 if filter_condition.strip() == "contains":
                     kwargs = {
@@ -156,8 +162,9 @@ class reliabilityController:
             if selected_type != '':
                 filter_objects &= get_filter('system_type', 'equal',selected_type)
 
-            if selected_system != '':
-                filter_objects &= get_filter('sys_name', 'contains',selected_system)
+            if systemItems != '':
+                for system in systemItems:
+                 filter_objects &= get_filter('sys_name', 'contains',system)
 
             if selected_year != '':
                 filter_objects &= get_filter('completion_date__year', 'equal',selected_year)

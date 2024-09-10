@@ -1287,7 +1287,7 @@ class MpmController:
                     pd_type)
 
             # create dynamic filter
-            if current_comp != '' and current_comp == 'SRMs':
+            if current_comp != '':
                 srm_objects &= get_filter(
                     'component_type', 'equal',
                     current_comp)
