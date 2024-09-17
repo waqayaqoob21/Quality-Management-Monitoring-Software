@@ -304,7 +304,7 @@ class emcController:
             total_partial_compliant_modules = dataList.filter(filter_objects, compliance_status = 'Partial Compliant').count()
 
             if selected_year != '':
-                filter_objects &= get_filter('created_at__year', 'equal',selected_year)
+                filter_objects &= get_filter('compliance_date__year', 'equal',selected_year)
             current_year_modules = Emc.objects.filter(filter_objects).count()
             current_year_compliant_modules = Emc.objects.filter(filter_objects,compliance_status = 'Compliant').count()
             current_year_non_compliant_modules = Emc.objects.filter(filter_objects,compliance_status = 'Non Compliant').count()

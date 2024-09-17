@@ -44,6 +44,11 @@ class Sqa(models.Model):
     installation_date_obs = models.TextField(null=True)
     attachment = models.TextField(null=True)
     design_coverage = models.TextField(null=True)
+    software_name = models.CharField(max_length=300, null=True)
+    sbhd_submission_date = models.DateTimeField(auto_now_add=False, null=True)
+    cdd = models.TextField(null=True)
+    wbt = models.TextField(null=True)
+    formal_varification = models.TextField(null=True)
 
 class SqaHistory(models.Model):
     id = models.AutoField(primary_key = True)
@@ -88,3 +93,8 @@ class SqaHistory(models.Model):
     installation_date_obs = models.TextField(null=True)
     attachment = models.TextField(null=True)
     design_coverage = models.TextField(null=True)
+    software_name = models.CharField(max_length=300, null=True)
+    sbhd_submission_date = models.DateTimeField(auto_now_add=False, null=True)
+    cdd = models.TextField(null=True)
+    wbt = models.TextField(null=True)
+    formal_varification = models.TextField(null=True)
