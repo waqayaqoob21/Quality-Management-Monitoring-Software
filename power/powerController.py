@@ -151,6 +151,8 @@ class powerController:
                 # for item in systemItems:
                 #     systemItems = item.split(',')
             def get_filter(field_name, filter_condition, filter_value):
+                if filter_value is None:
+                    return Q()  # Return an empty Q object instead of None
                 if filter_condition.strip() == "contains":
                     kwargs = {
                         '{0}__icontains'.format(field_name): filter_value
@@ -180,6 +182,11 @@ class powerController:
                     }
 
                     return ~Q(**kwargs)
+                if filter_condition.strip() == "iregex":
+                    kwargs = {
+                        '{0}__iregex'.format(field_name): filter_value
+                    }
+                    return Q(**kwargs)
             typeQuery = Q()
             filter_objects = Q()
 
@@ -223,9 +230,19 @@ class powerController:
             total_non_compliant_modules = dataList.filter(filter_objects, compliance_status = 'Non Compliant').count()
             total_partial_compliant_modules = dataList.filter(filter_objects, compliance_status = 'Partial Compliant').count()
 
-            if systemItems != '':
+            # if systemItems != '':
+            #     for system in systemItems:
+            #      filter_objects &= get_filter('sys_name', 'contains',system)
+
+            if systemItems and any(system for system in systemItems if system and system.strip()):
                 for system in systemItems:
-                 filter_objects &= get_filter('sys_name', 'contains',system)
+                    if system == 'S2':
+                        # Use a regex to match exact 'S2' and exclude 'S2B'
+                        filter_objects &= get_filter('sys_name', 'iregex', r'^(?!S2B$)S2$')
+                    if system == 'S1':
+                        filter_objects &= get_filter('sys_name', 'iregex', r'^(?!S1A$)S1$')
+                    else:
+                        filter_objects &= get_filter('sys_name', 'contains', system)
 
             current_year_modules = 0
             current_year_compliant_modules = 0
@@ -236,9 +253,9 @@ class powerController:
             total_non_compliant_modules = 0
             dataList = Power.objects.filter(filter_objects)
 
-            if systemItems != "":
-                for system in systemItems:
-                 filter_objects &= get_filter('sys_name', 'contains',system)
+            # if systemItems != "":
+            #     for system in systemItems:
+            #      filter_objects &= get_filter('sys_name', 'contains',system)
 
             total_modules = Power.objects.filter(filter_objects).count()
             total_compliant_modules = dataList.filter(filter_objects, compliance_status = 'Compliant').count()
@@ -282,7 +299,13 @@ class powerController:
             selected_type = request.query_params.get('selected_type')
             selected_system = request.query_params.get('selected_system')
             current_status = request.query_params.get('selected_status')
+            systemItems = ""
+            noVal = ['']
+            if selected_system != noVal:
+                systemItems = selected_system.split(',')
             def get_filter(field_name, filter_condition, filter_value):
+                if filter_value is None:
+                    return Q()
                 if filter_condition.strip() == "contains":
                     kwargs = {
                         '{0}__icontains'.format(field_name): filter_value
@@ -312,6 +335,11 @@ class powerController:
                     }
 
                     return ~Q(**kwargs)
+                if filter_condition.strip() == "iregex":
+                    kwargs = {
+                        '{0}__iregex'.format(field_name): filter_value
+                    }
+                    return Q(**kwargs)
             typeQuery = Q()
             filter_objects = Q()
 
@@ -321,8 +349,18 @@ class powerController:
             if selected_type != '':
                 filter_objects &= get_filter('system_type', 'equal',selected_type)
 
-            if selected_system != '':
-                filter_objects &= get_filter('sys_name', 'contains',selected_system)
+            # if selected_system != '':
+            #     filter_objects &= get_filter('sys_name', 'contains',selected_system)
+
+            if systemItems and any(system for system in systemItems if system and system.strip()):
+                for system in systemItems:
+                    if system == 'S2':
+                        # Use a regex to match exact 'S2' and exclude 'S2B'
+                        filter_objects &= get_filter('sys_name', 'iregex', r'^(?!S2B$)S2$')
+                    if system == 'S1':
+                        filter_objects &= get_filter('sys_name', 'iregex', r'^(?!S1A$)S1$')
+                    else:
+                        filter_objects &= get_filter('sys_name', 'contains', system)
 
 
             dataList = Power.objects.all().order_by('-id')
