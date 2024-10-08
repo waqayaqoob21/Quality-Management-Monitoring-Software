@@ -1,6 +1,6 @@
 import os
 from datetime import datetime, timedelta
-
+from django.db.models import Case, When
 import xlwt
 from django.db.models import F, Q
 from django.http import JsonResponse, FileResponse, HttpResponse
@@ -168,11 +168,17 @@ class AmsController:
                         'assigned_to', 'equal',
                         selected_group)
                 data = TaskSummary.objects.filter(current_over_due_filter,
-                                                  assigned_date__year=selected_year).extra(
-                        select={'year': 'extract (year from assigned_date)',
-                                'month': 'extract (month from assigned_date)',
-                                'day': 'extract (day from assigned_date)'},
-                        order_by=['month', 'day', '-year'])
+                                                  assigned_date__year=selected_year).order_by(
+            Case(
+                When(priority='high', then=0),  # High priority first
+                When(priority='medium', then=1),  # Medium priority second
+                When(priority='low', then=2),  # Low priority last
+                default=3  # If any other priorities exist, sort them last
+            ),
+            'task_date'  # Sort by planned_date as secondary criterion
+        )
+
+
                 result = []
                 if data is not None:
                     for item in data:
@@ -194,11 +200,16 @@ class AmsController:
                     current_total_filter &= get_filter(
                         'assigned_to', 'equal',
                         selected_group)
-                data = TaskSummary.objects.filter(current_total_filter, assigned_date__year=selected_year).extra(
-                        select={'year': 'extract (year from assigned_date)',
-                                'month': 'extract (month from assigned_date)',
-                                'day': 'extract (day from assigned_date)'},
-                        order_by=['month', 'day', '-year'])
+                data = TaskSummary.objects.filter(current_total_filter, assigned_date__year=selected_year).order_by(
+            Case(
+                When(priority='high', then=0),  # High priority first
+                When(priority='medium', then=1),  # Medium priority second
+                When(priority='low', then=2),  # Low priority last
+                default=3  # If any other priorities exist, sort them last
+            ),
+            'task_date'  # Sort by planned_date as secondary criterion
+        )
+
                 serializer = TaskSummarySerialzer(data, many=True)
                 return JsonResponse({'message': 'true', 'data': serializer.data}, status=200)
             if status == 'total_overdue':
@@ -210,11 +221,16 @@ class AmsController:
                     current_over_due_filter &= get_filter(
                         'assigned_to', 'equal',
                         selected_group)
-                data = TaskSummary.objects.filter(current_over_due_filter).extra(
-                        select={'year': 'extract (year from assigned_date)',
-                                'month': 'extract (month from assigned_date)',
-                                'day': 'extract (day from assigned_date)'},
-                        order_by=['month', 'day', '-year'])
+                data = TaskSummary.objects.filter(current_over_due_filter).order_by(
+            Case(
+                When(priority='high', then=0),  # High priority first
+                When(priority='medium', then=1),  # Medium priority second
+                When(priority='low', then=2),  # Low priority last
+                default=3  # If any other priorities exist, sort them last
+            ),
+            'task_date'  # Sort by planned_date as secondary criterion
+        )
+
                 result = []
                 if data is not None:
                     for item in data:
@@ -230,11 +246,16 @@ class AmsController:
                 serializer = TaskSummarySerialzer(result, many=True)
                 return JsonResponse({'message': 'true', 'data': serializer.data}, status=200)
             if status == 'all_tasks':
-                data = TaskSummary.objects.filter(all_filter_objects).extra(
-                        select={'year': 'extract (year from assigned_date)',
-                                'month': 'extract (month from assigned_date)',
-                                'day': 'extract (day from assigned_date)'},
-                        order_by=['month', 'day', '-year'])
+                data = TaskSummary.objects.filter(all_filter_objects).order_by(
+            Case(
+                When(priority='high', then=0),  # High priority first
+                When(priority='medium', then=1),  # Medium priority second
+                When(priority='low', then=2),  # Low priority last
+                default=3  # If any other priorities exist, sort them last
+            ),
+            'task_date'  # Sort by planned_date as secondary criterion
+        )
+
                 if assignFrom != '' and assignTo != '':
                     data = data.filter(assigned_date__gte=assignFrom,
                                        assigned_date__lte=assignTo).order_by('-id')
@@ -244,11 +265,16 @@ class AmsController:
                 all_filter_objects &= get_filter(
                     'status', 'equal',
                     'Task Completed')
-                data = TaskSummary.objects.filter(all_filter_objects).extra(
-                        select={'year': 'extract (year from assigned_date)',
-                                'month': 'extract (month from assigned_date)',
-                                'day': 'extract (day from assigned_date)'},
-                        order_by=['month', 'day', '-year'])
+                data = TaskSummary.objects.filter(all_filter_objects).order_by(
+            Case(
+                When(priority='high', then=0),  # High priority first
+                When(priority='medium', then=1),  # Medium priority second
+                When(priority='low', then=2),  # Low priority last
+                default=3  # If any other priorities exist, sort them last
+            ),
+            'task_date'  # Sort by planned_date as secondary criterion
+        )
+
                 serializer = TaskSummarySerialzer(data, many=True)
                 return JsonResponse({'message': 'true', 'data': serializer.data}, status=200)
 
@@ -256,11 +282,16 @@ class AmsController:
                 all_filter_objects &= get_filter(
                     'status', 'equal',
                     'Task Closed')
-                data = TaskSummary.objects.filter(all_filter_objects).extra(
-                        select={'year': 'extract (year from assigned_date)',
-                                'month': 'extract (month from assigned_date)',
-                                'day': 'extract (day from assigned_date)'},
-                        order_by=['month', 'day', '-year'])
+                data = TaskSummary.objects.filter(all_filter_objects).order_by(
+            Case(
+                When(priority='high', then=0),  # High priority first
+                When(priority='medium', then=1),  # Medium priority second
+                When(priority='low', then=2),  # Low priority last
+                default=3  # If any other priorities exist, sort them last
+            ),
+            'task_date'  # Sort by planned_date as secondary criterion
+        )
+
                 serializer = TaskSummarySerialzer(data, many=True)
                 return JsonResponse({'message': 'true', 'data': serializer.data}, status=200)
 
@@ -268,11 +299,16 @@ class AmsController:
                 all_filter_objects &= get_filter(
                     'status', 'not_equal',
                     'Task Completed')
-                data = TaskSummary.objects.filter(all_filter_objects).extra(
-                        select={'year': 'extract (year from assigned_date)',
-                                'month': 'extract (month from assigned_date)',
-                                'day': 'extract (day from assigned_date)'},
-                        order_by=['month', 'day', '-year'])
+                data = TaskSummary.objects.filter(all_filter_objects).order_by(
+            Case(
+                When(priority='high', then=0),  # High priority first
+                When(priority='medium', then=1),  # Medium priority second
+                When(priority='low', then=2),  # Low priority last
+                default=3  # If any other priorities exist, sort them last
+            ),
+            'task_date'  # Sort by planned_date as secondary criterion
+        )
+
                 result = []
                 if data is not None:
                     for item in data:
@@ -289,36 +325,56 @@ class AmsController:
                 return JsonResponse({'message': 'true', 'data': serializer.data}, status=200)
 
             if status == 'all' and selected_year is not '':
-                data = TaskSummary.objects.filter(assigned_date__year=selected_year).extra(
-                        select={'year': 'extract (year from assigned_date)',
-                                'month': 'extract (month from assigned_date)',
-                                'day': 'extract (day from assigned_date)'},
-                        order_by=['month', 'day', '-year'])
+                data = TaskSummary.objects.filter(assigned_date__year=selected_year).order_by(
+            Case(
+                When(priority='high', then=0),  # High priority first
+                When(priority='medium', then=1),  # Medium priority second
+                When(priority='low', then=2),  # Low priority last
+                default=3  # If any other priorities exist, sort them last
+            ),
+            'task_date'  # Sort by planned_date as secondary criterion
+        )
+
                 serializer = TaskSummarySerialzer(data, many=True)
                 return JsonResponse({'message': 'true', 'data': serializer.data}, status=200)
             if selected_year is not '' and selected_group is '':
                 data = TaskSummary.objects.filter(assigned_date__year=selected_year,
-                                                  status=status).extra(
-                        select={'year': 'extract (year from assigned_date)',
-                                'month': 'extract (month from assigned_date)',
-                                'day': 'extract (day from assigned_date)'},
-                        order_by=['month', 'day', '-year'])
+                                                  status=status).order_by(
+            Case(
+                When(priority='high', then=0),  # High priority first
+                When(priority='medium', then=1),  # Medium priority second
+                When(priority='low', then=2),  # Low priority last
+                default=3  # If any other priorities exist, sort them last
+            ),
+            'task_date'  # Sort by planned_date as secondary criterion
+        )
+
             elif selected_year is '' and selected_group is not '':
                 data = TaskSummary.objects.filter(assigned_to=selected_group,
-                                                  status=status).extra(
-                        select={'year': 'extract (year from assigned_date)',
-                                'month': 'extract (month from assigned_date)',
-                                'day': 'extract (day from assigned_date)'},
-                        order_by=['month', 'day', '-year'])
+                                                  status=status).order_by(
+            Case(
+                When(priority='high', then=0),  # High priority first
+                When(priority='medium', then=1),  # Medium priority second
+                When(priority='low', then=2),  # Low priority last
+                default=3  # If any other priorities exist, sort them last
+            ),
+            'task_date'  # Sort by planned_date as secondary criterion
+        )
+
 
             elif selected_year is not '' and selected_group is not '':
                 data = TaskSummary.objects.filter(assigned_to=selected_group,
                                                   assigned_date__year=selected_year,
-                                                  status=status).extra(
-                        select={'year': 'extract (year from assigned_date)',
-                                'month': 'extract (month from assigned_date)',
-                                'day': 'extract (day from assigned_date)'},
-                        order_by=['month', 'day', '-year'])
+                                                  status=status).order_by(
+            Case(
+                When(priority='high', then=0),  # High priority first
+                When(priority='medium', then=1),  # Medium priority second
+                When(priority='low', then=2),  # Low priority last
+                default=3  # If any other priorities exist, sort them last
+            ),
+            'task_date'  # Sort by planned_date as secondary criterion
+        )
+
             if status =='Task in-process':
                 result =[]
                 if data is not None:
