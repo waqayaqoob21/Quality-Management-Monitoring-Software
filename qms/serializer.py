@@ -26,6 +26,8 @@ class QmsAuditSerializer(Serializer):
     follow_up_remarks = CharField()
     remarks = CharField()
     certification_setup = CharField()
+    report_forward_date = DateTimeField()
+    report_forward_in_time = CharField()
     Created_at = DateTimeField()
 
 

@@ -26,6 +26,8 @@ class QmsAudit(models.Model):
     remarks = models.TextField()
     certification_setup = models.TextField(null=True)
     Created_at = models.DateTimeField(auto_now_add=True)
+    report_forward_date = models.DateTimeField(auto_now_add=False, db_index=True, null=True)
+    report_forward_in_time = models.CharField(max_length=300, null=True)
 
 
 class QmsAuditHistory(models.Model):
@@ -53,6 +55,8 @@ class QmsAuditHistory(models.Model):
     remarks = models.TextField()
     certification_setup = models.TextField(null=True)
     Created_at = models.DateTimeField(auto_now_add=True)
+    report_forward_date = models.DateTimeField(auto_now_add=False, db_index=True, null=True)
+    report_forward_in_time = models.CharField(max_length=300, null=True)
     qms_audit = models.ForeignKey(QmsAudit, on_delete=models.CASCADE)
 
 
