@@ -295,6 +295,25 @@ class AmsController:
                 serializer = TaskSummarySerialzer(data, many=True)
                 return JsonResponse({'message': 'true', 'data': serializer.data}, status=200)
 
+            if status == 'Task in-process':
+                    all_filter_objects &= get_filter(
+                        'status', 'equal',
+                        'Task in-process')
+                    data = TaskSummary.objects.filter(all_filter_objects).order_by(
+                        Case(
+                            When(priority='high', then=0),  # High priority first
+                            When(priority='medium', then=1),  # Medium priority second
+                            When(priority='low', then=2),  # Low priority last
+                            default=3  # If any other priorities exist, sort them last
+                        ),
+                        'task_date'  # Sort by planned_date as secondary criterion
+                    )
+
+                    serializer = TaskSummarySerialzer(data, many=True)
+                    return JsonResponse({'message': 'true', 'data': serializer.data}, status=200)
+
+
+
             if status == 'total_TaskNotCompleted':
                 all_filter_objects &= get_filter(
                     'status', 'not_equal',
@@ -375,27 +394,209 @@ class AmsController:
             'task_date'  # Sort by planned_date as secondary criterion
         )
 
-            if status =='Task in-process':
-                result =[]
-                if data is not None:
-                    for item in data:
-                        task_date = False
-                        if item.task_date is None:
-                            item.task_date = datetime.today() + timedelta(hours=5)
-                            item.task_date = item.task_date.date()
-                            task_date = True
-                        if item.task_date < item.target_date:
-                            if task_date:
-                                item.task_date = None
-                            result.append(item)
-                    serializer = TaskSummarySerialzer(result, many=True)
-                    return JsonResponse({'message': 'true', 'data': serializer.data}, status=200)
+            # if status =='Task in-process':
+            #     result =[]
+            #     if data is not None:
+            #         for item in data:
+            #             task_date = False
+            #             if item.task_date is None:
+            #                 item.task_date = datetime.today() + timedelta(hours=5)
+            #                 item.task_date = item.task_date.date()
+            #                 task_date = True
+            #             if item.task_date < item.target_date:
+            #                 if task_date:
+            #                     item.task_date = None
+            #                 result.append(item)
+            #         serializer = TaskSummarySerialzer(result, many=True)
+            #         return JsonResponse({'message': 'true', 'data': serializer.data}, status=200)
 
 
             serializer = TaskSummarySerialzer(data, many=True)
             return JsonResponse({'message': 'Welcome to Home Page', 'data': serializer.data}, status=200)
         except Exception as e:
             return JsonResponse({'message': 'Sorry! No Task found.'}, status=500)
+
+    @staticmethod
+    def getTaskMonitoringDashboardCount(request):
+        try:
+            def get_filter(field_name, filter_condition, filter_value):
+                # thanks to the below post
+                # https://stackoverflow.com/questions/310732/in-django-how-does-one-filter-a-queryset-with-dynamic-field-lookups
+                # the idea to this below logic is very similar to that in the above mentioned post
+                if filter_condition.strip() == "contains":
+                    kwargs = {
+                        '{0}__icontains'.format(field_name): filter_value
+                    }
+                    return Q(**kwargs)
+
+                if filter_condition.strip() == "not_equal":
+                    kwargs = {
+                        '{0}__iexact'.format(field_name): filter_value
+                    }
+                    return ~Q(**kwargs)
+
+                if filter_condition.strip() == "starts_with":
+                    kwargs = {
+                        '{0}__istartswith'.format(field_name): filter_value
+                    }
+                    return Q(**kwargs)
+                if filter_condition.strip() == "equal":
+                    kwargs = {
+                        '{0}__iexact'.format(field_name): filter_value
+                    }
+                    return Q(**kwargs)
+
+                if filter_condition.strip() == "not_equal":
+                    kwargs = {
+                        '{0}__iexact'.format(field_name): filter_value
+                    }
+
+                    return ~Q(**kwargs)
+
+            selected_year = request.query_params.get('selected_year')
+            selected_group = request.query_params.get('selected_group')
+            task_completed = 0
+            task_inprocess = []
+            task_follow_up = 0
+            task_closed_uncompleted = 0
+
+            total_task_completed = 0
+            total_task_inprocess = 0
+            total_task_follow_up = 0
+            total_tasks = 0
+            doc_not_completedList = 0
+            total_over_due = 0
+            current_year = datetime.today().year
+
+            total_filter_objects = Q()
+            total_filter_objects &= get_filter(
+                'status', 'not_equal',
+                'Task Completed')
+            if selected_group != '':
+                total_filter_objects &= get_filter(
+                    'assigned_to', 'equal',
+                    selected_group)
+
+            all_filter_objects = Q()
+            if selected_group != '':
+                all_filter_objects &= get_filter(
+                    'assigned_to', 'equal',
+                    selected_group)
+            current_over_due_filter = Q()
+            current_over_due_filter &= get_filter(
+                'status', 'equal',
+                'Task in-process')
+            if selected_group != '':
+                current_over_due_filter &= get_filter(
+                    'assigned_to', 'equal',
+                    selected_group)
+            current_year_task = TaskSummary.objects.filter(all_filter_objects,
+                                                           assigned_date__year=selected_year).count()
+            doc_not_completedList = TaskSummary.objects.filter(total_filter_objects).count()
+            total_task_inprocess = TaskSummary.objects.filter(all_filter_objects, status='Task in-process').count()
+            total_task_follow_up = TaskSummary.objects.filter(all_filter_objects, status='Task follow-up').count()
+            total_over_due = TaskSummary.objects.filter(current_over_due_filter)
+            current_over_due = TaskSummary.objects.filter(current_over_due_filter,
+                                                          assigned_date__year=selected_year)
+
+            total_tasks = TaskSummary.objects.filter(all_filter_objects).count()
+            total_task_completed = TaskSummary.objects.filter(all_filter_objects, status='Task Completed').count()
+
+            task_closed_uncompleted = TaskSummary.objects.filter(all_filter_objects,
+                                                           assigned_date__year=selected_year, status = 'Task Closed').count()
+            total_task_closed_uncompleted = TaskSummary.objects.filter(all_filter_objects, status='Task Closed').count()
+            if selected_year is not '' and selected_group is '':
+                task_completed = TaskSummary.objects.filter(assigned_date__year=selected_year,
+                                                            status='Task Completed').count()
+                task_inprocess = TaskSummary.objects.filter(assigned_date__year=selected_year,
+                                                            status='Task in-process').count()
+                task_follow_up = TaskSummary.objects.filter(assigned_date__year=selected_year,
+                                                            status='Task follow-up').count()
+                task_closed_uncompleted = TaskSummary.objects.filter(assigned_date__year=selected_year,
+                                                            status='Task Closed').count()
+            elif selected_year is '' and selected_group is not '':
+                task_completed = TaskSummary.objects.filter(assigned_to=selected_group,
+                                                            status='Task Completed').count()
+                task_inprocess = TaskSummary.objects.filter(assigned_to=selected_group,
+                                                            status='Task in-process').count()
+                task_follow_up = TaskSummary.objects.filter(assigned_to=selected_group,
+                                                            status='Task follow-up').count()
+                task_closed_uncompleted = TaskSummary.objects.filter(assigned_to=selected_group,
+                                                            status='Task Closed').count()
+            elif selected_year is not '' and selected_group is not '':
+                task_completed = TaskSummary.objects.filter(assigned_to=selected_group,
+                                                            assigned_date__year=selected_year,
+                                                            status='Task Completed').count()
+                task_inprocess = TaskSummary.objects.filter(assigned_to=selected_group,
+                                                            assigned_date__year=selected_year,
+                                                            status='Task in-process').count()
+                task_follow_up = TaskSummary.objects.filter(assigned_to=selected_group,
+                                                            assigned_date__year=selected_year,
+                                                            status='Task follow-up').count()
+                task_closed_uncompleted = TaskSummary.objects.filter(assigned_to=selected_group,
+                                                            assigned_date__year=selected_year,
+                                                            status='Task Closed').count()
+
+            # task_inprocess_count = 0
+            # if task_inprocess is not None:
+            #     for item in task_inprocess:
+            #         if item.task_date is None:
+            #             item.task_date = datetime.today() + timedelta(hours=5)
+            #             item.task_date = item.task_date.date()
+            #         if item.task_date < item.target_date:
+            #             task_inprocess_count = task_inprocess_count + 1
+            # total_task_inprocess_count = 0
+            # if total_task_inprocess is not None:
+            #     for item in total_task_inprocess:
+            #         if item.task_date is None:
+            #             item.task_date = datetime.today() + timedelta(hours=5)
+            #             item.task_date = item.task_date.date()
+            #         if item.task_date < item.target_date:
+            #             total_task_inprocess_count = total_task_inprocess_count + 1
+            current_over_due_count = 0
+            if current_over_due is not None:
+                for item in current_over_due:
+                    if item.task_date is None:
+                        item.task_date = datetime.today() + timedelta(hours=5)
+                        item.task_date = item.task_date.date()
+                    if item.target_date < item.task_date:
+                        current_over_due_count = current_over_due_count + 1
+
+            total_over_due_count = 0
+            if total_over_due is not None:
+                for item in total_over_due:
+                    if item.task_date is None:
+                        item.task_date = datetime.today() + timedelta(hours=5)
+                        item.task_date = item.task_date.date()
+                    if item.target_date < item.task_date:
+                        total_over_due_count = total_over_due_count + 1
+            dist = {
+                'task_completed': task_completed,
+                # 'task_inprocess': task_inprocess_count,
+                'task_inprocess': task_inprocess,
+                'task_follow_up': task_follow_up,
+                'total_over_due': total_over_due_count,
+                'total_tasks': total_tasks,
+                'total_current_year': current_year_task,
+                'total_task_completed': total_task_completed,
+                # 'total_task_inprocess': total_task_inprocess_count,
+                'total_task_inprocess': total_task_inprocess,
+                'total_task_follow_up': total_task_follow_up,
+                # 'doc_not_completedList': total_task_inprocess_count,
+                'doc_not_completedList': total_task_inprocess,
+                'current_over_due': current_over_due_count,
+                'task_closed_uncompleted': task_closed_uncompleted,
+                'total_task_closed_uncompleted': total_task_closed_uncompleted
+            }
+
+            # DataCount.append(dist)
+            return JsonResponse({'status': 'True', 'data': dist},
+                                status=200)
+
+        except Exception as e:
+            print(e)
+            return JsonResponse({'status': 'False', "message": "Internal Server Error"}, status=500)
+            pass
 
     @staticmethod
     def GetTaskListHistory(request):

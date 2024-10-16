@@ -35,6 +35,14 @@ class GetTaskListAPIVIEW(APIView):
         result = task_obj.GetTaskList(request)
         return result
 
+class getTaskMonitoringDashboardCountAPIVIEW(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        result = task_obj.getTaskMonitoringDashboardCount(request)
+        return result
+
+
 
 class GetDocumentExcelAPIVIEW(APIView):
     permission_classes = [AllowAny]

@@ -90,6 +90,8 @@ class CespAuditSerializer(Serializer):
     commission = CharField()
     audit_revise_date = DateTimeField()
     audit_due_date = DateTimeField()
+    report_forward_date = DateTimeField()
+    report_forward_in_time = CharField()
 
 
 class CespTrainingScheduleSerializer(Serializer):
@@ -154,6 +156,8 @@ class CespAuditHistorySerializer(Serializer):
     audit_status = CharField()
     standard = CharField()
     remarks = CharField()
+    report_forward_date = DateTimeField()
+    report_forward_in_time = CharField()
     Created_at = DateTimeField()
 
 class AuditScheduleSerializer(Serializer):

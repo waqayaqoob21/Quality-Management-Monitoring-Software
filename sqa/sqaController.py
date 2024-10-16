@@ -319,7 +319,7 @@ class sqaController:
             total_sbhd_offered_to_qm = Sqa.objects.filter(total_filter_objects,status = 'SBHD Offered to QM').count()
             total_QM_Observations_Forwarded = Sqa.objects.filter(total_filter_objects,status = 'QM Observations Forwarded').count()
             total_QM_Observations_Repeated = Sqa.objects.filter(total_filter_objects,status = 'QM Observations Repeated').count()
-            total_sbhd_qm_certified = Sqa.objects.filter(total_filter_objects,status = 'QM Certified').count()
+            total_sbhd_qm_certified = Sqa.objects.filter(total_filter_objects,status = 'QM Certificate Issued').count()
             total_sbhd_inprocess_qm = Sqa.objects.filter(total_filter_objects,status = 'Audit in-process').count()
             total_sbhd_inprocess_nco = Sqa.objects.filter(status = 'Audit in-process').count()
             # total_audit_inprocess_overdue = Sqa.objects.filter(total_filter_objects,status = 'total_audit_inprocess_overdue').count()
@@ -347,7 +347,7 @@ class sqaController:
 
             current_year_count = Sqa.objects.filter(filter_objects).count()
             sbhd_offered_to_qm = Sqa.objects.filter(total_filter_objects,status = 'SBHD Offered to QM').count()
-            qm_certified = Sqa.objects.filter(filter_objects, status = 'QM Certified').count()
+            qm_certified = Sqa.objects.filter(filter_objects, status = 'QM Certificate Issued').count()
             qm_observation_forwarded = Sqa.objects.filter(filter_objects, status = 'QM Observations Forwarded').count()
             qm_observation_repeated = Sqa.objects.filter(filter_objects, status = 'QM Observations Repeated').count()
             audit_inProcess = Sqa.objects.filter(filter_objects, status = 'Audit in-process').count()
@@ -469,12 +469,14 @@ class sqaController:
                 sqaList = sqaList.filter(filter_objects)
             if selected_status == 'total_sbhd_offered_to_qm':
                 sqaList = sqaList.filter(filter_objects, status='SBHD Offered to QM')
+            if selected_status == 'total_sbhd_certified_qm':
+                sqaList = sqaList.filter(filter_objects, status='QM Certificate Issued')
             if selected_status == 'total_QM_Observations_Forwarded':
                 sqaList = sqaList.filter(filter_objects, status='QM Observations Forwarded')
             if selected_status == 'total_QM_Observations_Repeated':
                 sqaList = sqaList.filter(filter_objects, status='QM Observations Repeated')
             if selected_status == 'totalApproved':
-                sqaList = sqaList.filter(status = 'QM Certified')
+                sqaList = sqaList.filter(status = 'QM Certificate Issued')
             if selected_status == 'totaln_sbhd_inprocess_qm':
                 sqaList = sqaList.filter(total_filter_objects, status='Audit in-process')
             if selected_status == 'total_sbhd_inprocess_nco':
@@ -507,7 +509,7 @@ class sqaController:
             if selected_status == 'current_sbhd_offered_to_qm':
                 sqaList = sqaList.filter(filter_objects,status='SBHD Offered to QM')
             if selected_status == 'current_qm_certified':
-                sqaList = sqaList.filter(filter_objects,status='QM Certified')
+                sqaList = sqaList.filter(filter_objects,status='QM Certificate Issued')
             if selected_status == 'current_QM_Observations_Forwarded':
                 sqaList = sqaList.filter(filter_objects,status='QM Observations Forwarded')
 

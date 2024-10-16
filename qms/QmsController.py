@@ -1625,6 +1625,9 @@ class QmsController:
                 cespModel.audit_status = request['audit_status']
                 cespModel.standard = request['standard']
                 cespModel.remarks = request['remarks']
+                if request['report_forward_date'] != '':
+                    cespModel.report_forward_date = request['report_forward_date']
+                cespModel.report_forward_in_time = request['report_forward_in_time']
                 cespModel.save()
                 return JsonResponse({'status': 'True', 'message': "CeSP Audit Created Successfully!"},
                                 status=200)
@@ -1637,6 +1640,7 @@ class QmsController:
                             or str(get_cesp.audit_start_date) != request['audit_start_date']\
                             or str(get_cesp.audit_close_date) != request['audit_close_date']\
                             or str(get_cesp.audit_due_date) != request['audit_due_date'] \
+                            or str(get_cesp.report_forward_date) != request['report_forward_date'] or get_cesp.report_forward_in_time != request['report_forward_in_time'] \
                             or str(get_cesp.audit_revise_date) != request['audit_revise_date']:
 
                         CespHistory = CespAuditHistory()
@@ -1675,6 +1679,11 @@ class QmsController:
                         CespHistory.audit_status = get_cesp.audit_status
                         CespHistory.standard = get_cesp.standard
                         CespHistory.remarks = get_cesp.remarks
+                        if request['report_forward_date'] != '':
+                            CespHistory.report_forward_date = request['report_forward_date']
+                        else:
+                            CespHistory.report_forward_date = None
+                        CespHistory.report_forward_in_time = get_cesp.report_forward_in_time
                         CespHistory.cesp_audit_id = id
                         CespHistory.save()
 
@@ -1713,6 +1722,9 @@ class QmsController:
                 get_cesp.audit_status = request['audit_status']
                 get_cesp.standard = request['standard']
                 get_cesp.remarks = request['remarks']
+                if request['report_forward_date'] != '':
+                    get_cesp.report_forward_date = request['report_forward_date']
+                get_cesp.report_forward_in_time = request['report_forward_in_time']
                 get_cesp.save()
                 return JsonResponse({'status': 'True', 'message': "CeSP Audit Updated Successfully!"},
                                     status=200)

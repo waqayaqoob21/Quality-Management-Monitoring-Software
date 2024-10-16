@@ -8,6 +8,7 @@ urlpatterns = [
         path('tasklistHistory/', GetTaskListHistoryAPIVIEW.as_view(), name='tasklistHistory'),
         path('getpdf/', GetDocumentPDFAPIVIEW.as_view(), name='getpdf'),
         path('getexcel/', GetDocumentExcelAPIVIEW.as_view(), name='getexcel'),
+        path('getTaskMonitoringDashboardCount/', getTaskMonitoringDashboardCountAPIVIEW.as_view(),name='getTaskMonitoringDashboardCount'),
         path('ocr/', OcrPdfAPIVIEW.as_view(), name='ocr'),
         path('getocrdata/', GetOcrDataAPIVIEW.as_view(), name='getocrdata'),
         path('sendIntimation/', SendIntimationAPIVIEW.as_view(), name='sendIntimation'),

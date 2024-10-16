@@ -118,6 +118,8 @@ class CespAudit(models.Model):
     standard = models.CharField(max_length=300)
     remarks = models.TextField()
     Created_at = models.DateTimeField(auto_now_add=True)
+    report_forward_date = models.DateTimeField(auto_now_add=False, db_index=True, null=True)
+    report_forward_in_time = models.CharField(max_length=300, null=True)
 
 
 class CespAuditHistory(models.Model):
@@ -140,6 +142,8 @@ class CespAuditHistory(models.Model):
     standard = models.CharField(max_length=300)
     remarks = models.TextField()
     Created_at = models.DateTimeField(auto_now_add=True)
+    report_forward_date = models.DateTimeField(auto_now_add=False, db_index=True, null=True)
+    report_forward_in_time = models.CharField(max_length=300, null=True)
     cesp_audit = models.ForeignKey(CespAudit, on_delete=models.CASCADE)
 
 
