@@ -30,4 +30,5 @@ urlpatterns = [
     url(r'^sqa/', include('sqa.urls')),
     url(r'^reliability/', include('reliability.urls')),
     url(r'^power/', include('power.urls')),
+    url(r'^chat/', include('chat.urls')),
 ]

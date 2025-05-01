@@ -4,11 +4,61 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="552a5704-c8ac-46ed-8a4e-2cfa46ed2096" name="Changes" comment="" />
+    <list default="true" id="552a5704-c8ac-46ed-8a4e-2cfa46ed2096" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ams/migrations/0001_initial.py" beforeDir="false" afterPath="$PROJECT_DIR$/ams/migrations/0001_initial.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ams/migrations/0002_tasksummary_task_date.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ams/migrations/0003_ocrdatamodel.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ams/migrations/0004_tasksummary_follow_up.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ams/migrations/0005_tasksummaryhistory.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ams/migrations/0006_tasksummaryhistory_task_id.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doctracking/migrations/0001_initial.py" beforeDir="false" afterPath="$PROJECT_DIR$/doctracking/migrations/0001_initial.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/doctracking/migrations/0002_auto_20221001_1301.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ems_es/admin.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ems_es/apps.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ems_es/emsController.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ems_es/models.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ems_es/serializers.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ems_es/tests.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ems_es/urls.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ems_es/views.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mpm/migrations/0001_initial.py" beforeDir="false" afterPath="$PROJECT_DIR$/mpm/migrations/0001_initial.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nescServices/FlightSystem.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/nescServices/Page1Image1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/nescServices/ProductionSystem.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/nescServices/QMS_Report.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/nescServices/RelifingReport.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/nescServices/ams-report.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/nescServices/report.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/nescServices/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/nescServices/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nescServices/test.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/nescServices/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/nescServices/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nescServices/weekly-report.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/qms/migrations/0001_initial.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/qms/migrations/0002_alter_qmsaudit_setup.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/sms/migrations/0001_initial.py" beforeDir="false" afterPath="$PROJECT_DIR$/sms/migrations/0001_initial.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sms/migrations/0002_auto_20220925_1312.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/sms/migrations/0003_auto_20220925_2006.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/sms/migrations/0004_productionsystemstatushistory.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/sms/migrations/0005_flightsystemstatushistory.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/sms/migrations/0006_relifingsystemstatushistory.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/sms/migrations/0007_auto_20221126_0829.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/usermanagement/migrations/0001_initial.py" beforeDir="false" afterPath="$PROJECT_DIR$/usermanagement/migrations/0001_initial.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/usermanagement/migrations/0002_doctracking_product_sr_no.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/usermanagement/migrations/0003_auto_20220919_2106.py" beforeDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -16,33 +66,53 @@
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 8
+}</component>
   <component name="ProjectId" id="2Ijso2zsK5PJwfkbI0mxTxdP2nZ" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="1" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/waqar/Documents/GitHub/NESC-Repository/manage.py&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Notification.DisplayName-DoNotAsk-Vcs Important Messages": "VCS important messages",
+    "Notification.DoNotAsk-Vcs Important Messages": "true",
+    "Python.NescRepository.executor": "Run",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "V2",
+    "last_opened_file_path": "/home/waqar/Documents/Personal Projects/DjnagoAngularAPIs (1)",
+    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable"
   }
-}</component>
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/power" />
+    </key>
+  </component>
   <component name="RunManager">
-    <configuration default="true" type="PythonConfigurationType" factoryName="Python">
+    <configuration name="NescRepository" type="PythonConfigurationType" factoryName="Python">
+      <module name="NESC-Repository" />
+      <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="" />
+      <option name="SDK_HOME" value="$PROJECT_DIR$/venv/bin/python" />
+      <option name="SDK_NAME" value="Python 3.8 (NESC-Repository)" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="" />
-      <option name="SCRIPT_NAME" value="" />
-      <option name="PARAMETERS" value="" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/manage.py" />
+      <option name="PARAMETERS" value="runserver 8001" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
@@ -50,66 +120,13 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration default="true" type="Tox" factoryName="Tox">
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="" />
-      <option name="IS_MODULE_SDK" value="false" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <method v="2" />
-    </configuration>
-    <configuration default="true" type="docs" factoryName="Docutils task">
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="" />
-      <option name="IS_MODULE_SDK" value="false" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="" />
-      <option name="docutils_input_file" value="" />
-      <option name="docutils_output_file" value="" />
-      <option name="docutils_params" value="" />
-      <option name="docutils_task" value="" />
-      <option name="docutils_open_in_browser" value="false" />
-      <method v="2" />
-    </configuration>
-    <configuration default="true" type="docs" factoryName="Sphinx task">
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="" />
-      <option name="IS_MODULE_SDK" value="false" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="" />
-      <option name="docutils_input_file" value="" />
-      <option name="docutils_output_file" value="" />
-      <option name="docutils_params" value="" />
-      <option name="docutils_task" value="" />
-      <option name="docutils_open_in_browser" value="false" />
-      <method v="2" />
-    </configuration>
-    <configuration default="true" type="tests" factoryName="Doctests">
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="" />
-      <option name="IS_MODULE_SDK" value="false" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="" />
-      <option name="SCRIPT_NAME" value="" />
-      <option name="CLASS_NAME" value="" />
-      <option name="METHOD_NAME" value="" />
-      <option name="FOLDER_NAME" value="" />
-      <option name="TEST_TYPE" value="TEST_SCRIPT" />
-      <option name="PATTERN" value="" />
-      <option name="USE_PATTERN" value="false" />
-      <method v="2" />
-    </configuration>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-python-sdk-1b1018131e27-aa17d162503b-com.jetbrains.pycharm.community.sharedIndexes.bundled-PC-243.22562.180" />
+      </set>
+    </attachedChunks>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -121,5 +138,31 @@
       <updated>1670706498012</updated>
     </task>
     <servers />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/ems_es/emsController.py</url>
+          <line>20</line>
+          <option name="timeStamp" value="14" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/sqa/sqaController.py</url>
+          <line>59</line>
+          <option name="timeStamp" value="17" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/mpm/MpmController.py</url>
+          <line>1993</line>
+          <option name="timeStamp" value="18" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/qms/QmsController.py</url>
+          <line>1736</line>
+          <option name="timeStamp" value="33" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>
